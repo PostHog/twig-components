@@ -74,7 +74,7 @@ export const characters: readonly CharacterContent[] = [
     species: "Eurasian magpie",
     portrait: null,
     biography:
-      "I'm from Paris. I own fewer things than most magpies, but each one has earned its place. The studio is small; the standards are not. Bring the outfit you were saving. The city is the occasion.",
+      "I'm from Paris. I own fewer things than most magpies, but each one has earned its place. The studio is small. The standards are not. Bring the outfit you were saving. The city is the occasion.",
     voiceGuidance:
       "Sarah's character direction: Colette is a Eurasian magpie from Paris, impossibly chic and effortlessly cool. Her voice is spare, self-assured, and fashion-forward. Keep practical stay details clear and avoid making her sound impressed with herself.",
     approvedExamples: [],

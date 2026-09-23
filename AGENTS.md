@@ -17,6 +17,7 @@ This package supplies reusable Twig views and local PostHog teaching labs. It do
 - Preserve existing props, public import paths, and React 18/19 compatibility. Avoid adding a dependency when a small component or existing helper will do.
 - Teaching events and AI/booking examples are local simulations. Do not send them to PostHog or another service. Do not use real visitor data, secrets, or production credentials in fixtures or previews.
 - Reuse the established catalog and assets in `src/catalog.ts` and `assets/`. Do not invent Twig characters, stays, or character voice while implementing UI; leave new editorial content for review.
+- Do not use semicolons in Twig-facing copy. Prefer a period, or an em dash when it reads better. Keep semicolons where code syntax requires them.
 
 ## Finish a component change
 

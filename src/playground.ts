@@ -8,7 +8,7 @@ export const touchpointDefinitions = {
     lab: "ai-discovery",
     description:
       "Configure AI observability fields, then test a simulated recommendation or timeout.",
-    evidence: "Local generation events only; no model or PostHog connection.",
+    evidence: "Local generation events only. No model or PostHog connection.",
   },
   catalog: {
     title: "Stay filters",
@@ -28,7 +28,7 @@ export const touchpointDefinitions = {
       "Watch a ghost visit, then record and inspect your own interactions.",
     lab: "session-replay",
     description: "Explore interaction sequences and input masking.",
-    evidence: "Local interaction reconstruction; no PostHog recording.",
+    evidence: "Local interaction reconstruction. No PostHog recording.",
   },
   stay: {
     title: "Stay details",
