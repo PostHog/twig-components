@@ -48,4 +48,12 @@ The playground provider order is:
 3. After publishing is configured, release a version and update the pinned version in each site that needs the change. A published package does **not** update sites on its own.
 4. Build each changed site and inspect the affected page at narrow and wide widths, in light and dark themes, and with reduced motion. Check that Twig styling stays inside Twig UI and the PostHog inspector keeps PostHog styling.
 
-Publishing and automated dependency update PRs are not configured yet. Do not describe local workspace changes as a published package release.
+Dependabot proposes dependency updates each week after a seven-day cooldown for routine releases. Security updates are not delayed by that cooldown. Do not describe local workspace changes as a published package release.
+
+## First npm release and later updates
+
+The package is not published yet. The first `0.1.0` release must be published by an authorized `@posthog` npm maintainer with npm two-factor authentication after this PR is reviewed and merged. From a clean `main` checkout, run `npm ci`, `npm test`, and `npm pack --dry-run`; verify the package name, version, and contents. Then run `npm login` and `npm publish --access public`. Do not store an npm token in GitHub.
+
+After the first release, configure npm trusted publishing for **PostHog/twig-components**, workflow **`publish.yml`**, environment **`npm-publish`**, and allow direct publishing. Protect that GitHub environment so only `main` may deploy and a reviewer must approve each run. Then release a new version by merging its reviewed version change to `main` and manually running **Publish to npm** on `main`. The workflow tests and previews the package before publishing with a short-lived identity token. Never run it from a feature branch.
+
+After the first workflow release succeeds, set the package's npm **Publishing access** to **Require two-factor authentication and disallow tokens**. Verify the version and provenance on npm, then update only the consuming sites that need it. See [npm's trusted publishing guide](https://docs.npmjs.com/trusted-publishers/) for the npm settings.
