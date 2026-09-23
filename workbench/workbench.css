@@ -1,0 +1,32 @@
+:root { font: 16px/1.5 Arial, sans-serif; color: #252725; background: #f4f4ef; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+button, select { font: inherit; }
+button { cursor: pointer; }
+.workbench-shell { min-height: 100vh; display: grid; grid-template-columns: 250px minmax(0, 1fr); }
+.workbench-sidebar { background: #20342b; color: #fff; padding: 28px 20px; display: flex; flex-direction: column; gap: 12px; }
+.workbench-sidebar h1 { font-size: 26px; line-height: 1.1; margin: 0; }
+.workbench-sidebar p { color: #d3dfd5; margin: 0 0 12px; }
+.workbench-sidebar small { margin-top: auto; color: #cbd9ce; }
+.workbench-sidebar nav { display: grid; gap: 5px; }
+.workbench-sidebar nav button { border: 0; border-radius: 6px; background: transparent; color: inherit; padding: 10px 12px; text-align: left; }
+.workbench-sidebar nav button:hover, .workbench-sidebar nav button[aria-current="page"] { background: #3b5a46; }
+.workbench-eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; }
+.workbench-shell main { min-width: 0; padding: 32px clamp(18px, 4vw, 54px) 70px; }
+.workbench-shell main > header { max-width: 1100px; margin: 0 auto 24px; }
+.workbench-shell main > header h2 { font-size: 30px; margin: 4px 0; }
+.workbench-shell main > header p { margin: 0; color: #5e6560; }
+.workbench-preview { max-width: 1100px; margin: auto; }
+.workbench-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 0 18px; }
+.workbench-controls button, .workbench-controls select, .workbench-fixture button { border: 1px solid #aab5ab; background: #fff; border-radius: 5px; padding: 7px 12px; color: #252725; }
+.workbench-controls button[aria-pressed="true"] { background: #20342b; border-color: #20342b; color: #fff; }
+.workbench-controls label { display: flex; gap: 12px; align-items: center; font-weight: 600; }
+.workbench-twig { padding: 24px; margin: 16px 0 24px; }
+.workbench-twig h3 { margin: 0; }
+.workbench-twig p { margin: 0; }
+.workbench-lab { padding: 24px; border: 1px solid #d2d6d0; border-radius: 7px; background: #fff; }
+.workbench-fixture { border: 1px dashed #aab5ab; border-radius: 6px; padding: 16px; margin: 0 0 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.workbench-fixture p { margin: 0; flex-basis: 100%; }
+.workbench-fixture small { color: #667068; }
+.workbench-fixture button:disabled { cursor: not-allowed; opacity: .5; }
+@media (max-width: 760px) { .workbench-shell { display: block; } .workbench-sidebar { padding: 16px; } .workbench-sidebar nav { display: flex; overflow-x: auto; } .workbench-sidebar nav button { white-space: nowrap; } .workbench-sidebar small { display: none; } .workbench-shell main { padding: 22px 16px 50px; } }

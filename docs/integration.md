@@ -43,7 +43,7 @@ The playground provider order is:
 
 ## How changes reach the sites
 
-1. Change this repo. Run `npm test` and `npm run gallery`; review the relevant gallery view. Run `npm pack --dry-run` before a release.
+1. Change this repo. Use the [workbench](workbench.md) to click through the affected view or lab as you build it. Run `npm test`, `npm run workbench:build`, and `npm run gallery`; review the relevant preview. Run `npm pack --dry-run` before a release.
 2. Until npm publishing is set up, mirror reviewed package changes into Twig.com’s `packages/twig-components/` workspace copy. Compare copies before calling them in sync. PostHog.com has no package integration to update yet.
 3. After publishing is configured, release a version and update the pinned version in each site that needs the change. A published package does **not** update sites on its own.
 4. Build each changed site and inspect the affected page at narrow and wide widths, in light and dark themes, and with reduced motion. Check that Twig styling stays inside Twig UI and the PostHog inspector keeps PostHog styling.

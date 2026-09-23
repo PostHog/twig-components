@@ -1,4 +1,5 @@
 node_modules/
 dist/
 gallery/output/
+workbench/dist/
 *.tgz

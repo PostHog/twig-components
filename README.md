@@ -5,9 +5,11 @@
 | Need | Start here |
 | --- | --- |
 | Find a component, its purpose, props, and current use | [Component reference](docs/components.md) |
+| Contribute with a coding agent | [Agent guidance](AGENTS.md) |
 | Decide which repo to change for a new lab or guide | [Integration and authoring scenarios](docs/integration.md#authoring-scenarios) |
 | Understand package setup and updates | [Integration and updates](docs/integration.md) |
-| See the components | `npm run gallery`, then open `gallery/output/index.html` |
+| Develop and click through components | [Workbench guide](docs/workbench.md) |
+| See static release snapshots | `npm run gallery`, then open `gallery/output/index.html` |
 
 ## How it fits
 
@@ -39,9 +41,18 @@ For the interactive website filters, use [`StayFilters`](docs/components.md#webs
 
 ```sh
 npm ci
+npm run workbench
+```
+
+Open the URL printed in the terminal. The workbench shows Twig views and all five labs, with local fixtures you can click through. See the [workbench guide](docs/workbench.md) for adding a component or lab preview. The gallery remains a static snapshot for release review.
+
+Before asking for review:
+
+```sh
 npm test
+npm run workbench:build
 npm run gallery
 npm pack --dry-run
 ```
 
-`npm test` builds the package and runs its tests. The gallery renders real package exports for visual review. `npm pack --dry-run` lists the files a release would contain. Changes here do not update either website automatically.
+`npm test` builds the package and runs its tests. `workbench:build` checks the live preview. `npm pack --dry-run` lists the files a release would contain. Changes here do not update either website automatically.
