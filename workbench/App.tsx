@@ -28,7 +28,7 @@ function Preview() {
   const [selected, setSelected] = useState<Exclude<StaySetting, "All">>("Coast");
   const [filter, setFilter] = useState<StaySetting>("All");
   return <>
-    <div className="workbench-controls"><label>Selected guide preview <select value={selected} onChange={(event) => setSelected(event.target.value as typeof selected)}><option>Forest</option><option>Coast</option><option>Mountain</option></select></label></div>
+    <div className="workbench-controls"><label>Selected guide preview <select value={selected} onChange={(event) => setSelected(event.target.value as typeof selected)}><option>Forest</option><option>Coast</option><option>City</option></select></label></div>
     <BrowseStaysPreview selected={selected} />
     <div className="twig-browser workbench-twig"><h3>Website filter control</h3><StayFilters value={filter} onChange={setFilter} className="vac-filters" buttonClassName="vac-filter" /><p>Selected: {filter}</p></div>
   </>;

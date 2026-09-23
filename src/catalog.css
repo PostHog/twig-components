@@ -42,7 +42,7 @@
   position: relative;
   display: grid;
   place-items: center;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 3 / 2;
   background: var(--vac-fill);
   border: 1px solid var(--vac-line);
   border-radius: 4px;
