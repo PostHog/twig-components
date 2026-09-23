@@ -5,7 +5,8 @@
 | Need | Start here |
 | --- | --- |
 | Find a component, its purpose, props, and current use | [Component reference](docs/components.md) |
-| Understand what belongs in this repo or each website | [Integration and updates](docs/integration.md) |
+| Decide which repo to change for a new lab or guide | [Integration and authoring scenarios](docs/integration.md#authoring-scenarios) |
+| Understand package setup and updates | [Integration and updates](docs/integration.md) |
 | See the components | `npm run gallery`, then open `gallery/output/index.html` |
 
 ## How it fits
