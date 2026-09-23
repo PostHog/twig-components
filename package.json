@@ -1,0 +1,237 @@
+{
+  "name": "@posthog/twig-components",
+  "version": "0.1.0",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PostHog/twig-components.git"
+  },
+  "homepage": "https://github.com/PostHog/twig-components#readme",
+  "type": "module",
+  "description": "Shared Twig website components, styles, assets, and teaching scenarios.",
+  "files": [
+    "dist",
+    "README.md",
+    "docs",
+    "build-assets.mjs"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    "./filters": {
+      "types": "./dist/StayFilters.d.ts",
+      "import": "./dist/StayFilters.js"
+    },
+    "./filter-lab": {
+      "types": "./dist/filter-lab.d.ts",
+      "import": "./dist/filter-lab.js"
+    },
+    "./ai-lab": {
+      "types": "./dist/ai-lab.d.ts",
+      "import": "./dist/ai-lab.js"
+    },
+    "./ai-lab-ui": {
+      "types": "./dist/AiLab.d.ts",
+      "import": "./dist/AiLab.js"
+    },
+    "./booking-lab": {
+      "types": "./dist/booking-lab.d.ts",
+      "import": "./dist/booking-lab.js"
+    },
+    "./booking-lab-ui": {
+      "types": "./dist/BookingLab.d.ts",
+      "import": "./dist/BookingLab.js"
+    },
+    "./stay-lab": {
+      "types": "./dist/stay-lab.d.ts",
+      "import": "./dist/stay-lab.js"
+    },
+    "./stay-lab-ui": {
+      "types": "./dist/StayLab.d.ts",
+      "import": "./dist/StayLab.js"
+    },
+    "./replay-lab": {
+      "types": "./dist/replay-lab.d.ts",
+      "import": "./dist/replay-lab.js"
+    },
+    "./replay-lab-ui": {
+      "types": "./dist/ReplayLab.d.ts",
+      "import": "./dist/ReplayLab.js"
+    },
+    "./replay-recorder": {
+      "types": "./dist/ReplayRecorder.d.ts",
+      "import": "./dist/ReplayRecorder.js"
+    },
+    "./session-player": {
+      "types": "./dist/SessionPlayer.d.ts",
+      "import": "./dist/SessionPlayer.js"
+    },
+    "./trip-dates": {
+      "types": "./dist/trip-dates.d.ts",
+      "import": "./dist/trip-dates.js"
+    },
+    "./playground": {
+      "types": "./dist/playground.d.ts",
+      "import": "./dist/playground.js"
+    },
+    "./playground-panels": {
+      "types": "./dist/PlaygroundPanels.d.ts",
+      "import": "./dist/PlaygroundPanels.js"
+    },
+    "./playground-controller": {
+      "types": "./dist/PlaygroundController.d.ts",
+      "import": "./dist/PlaygroundController.js"
+    },
+    "./filter-inspector": {
+      "types": "./dist/FilterInspector.d.ts",
+      "import": "./dist/FilterInspector.js"
+    },
+    "./filter-lab-exercise": {
+      "types": "./dist/FilterLabExercise.d.ts",
+      "import": "./dist/FilterLabExercise.js"
+    },
+    "./lab-choices": {
+      "types": "./dist/LabChoices.d.ts",
+      "import": "./dist/LabChoices.js"
+    },
+    "./lab-checklist": {
+      "types": "./dist/LabChecklist.d.ts",
+      "import": "./dist/LabChecklist.js"
+    },
+    "./lab-navigation": {
+      "types": "./dist/LabNavigation.d.ts",
+      "import": "./dist/LabNavigation.js"
+    },
+    "./finish-lab-button": {
+      "types": "./dist/FinishLabButton.d.ts",
+      "import": "./dist/FinishLabButton.js"
+    },
+    "./lab-completion-view": {
+      "types": "./dist/LabCompletionView.d.ts",
+      "import": "./dist/LabCompletionView.js"
+    },
+    "./catalog": {
+      "types": "./dist/catalog.d.ts",
+      "import": "./dist/catalog.js"
+    },
+    "./stay-card": {
+      "types": "./dist/StayCard.d.ts",
+      "import": "./dist/StayCard.js"
+    },
+    "./browse-stays-preview": {
+      "types": "./dist/BrowseStaysPreview.d.ts",
+      "import": "./dist/BrowseStaysPreview.js"
+    },
+    "./catalog.css": "./dist/catalog.css",
+    "./lab.css": "./dist/lab.css",
+    "./assets/*": "./dist/assets/*"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node build-assets.mjs",
+    "prepack": "npm run build",
+    "test": "npm run build && node --test tests/*.test.mjs",
+    "gallery": "npm run build && node gallery/generate.mjs"
+  },
+  "peerDependencies": {
+    "react": "^18.3.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "@rrweb/record": "^2.1.6",
+    "@rrweb/replay": "^2.1.6",
+    "@rrweb/types": "^2.1.6"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.0.0"
+  },
+  "typesVersions": {
+    "*": {
+      "filters": [
+        "dist/StayFilters.d.ts"
+      ],
+      "filter-lab": [
+        "dist/filter-lab.d.ts"
+      ],
+      "ai-lab": [
+        "dist/ai-lab.d.ts"
+      ],
+      "ai-lab-ui": [
+        "dist/AiLab.d.ts"
+      ],
+      "booking-lab": [
+        "dist/booking-lab.d.ts"
+      ],
+      "booking-lab-ui": [
+        "dist/BookingLab.d.ts"
+      ],
+      "stay-lab": [
+        "dist/stay-lab.d.ts"
+      ],
+      "stay-lab-ui": [
+        "dist/StayLab.d.ts"
+      ],
+      "replay-lab": [
+        "dist/replay-lab.d.ts"
+      ],
+      "replay-lab-ui": [
+        "dist/ReplayLab.d.ts"
+      ],
+      "replay-recorder": [
+        "dist/ReplayRecorder.d.ts"
+      ],
+      "session-player": [
+        "dist/SessionPlayer.d.ts"
+      ],
+      "trip-dates": [
+        "dist/trip-dates.d.ts"
+      ],
+      "playground": [
+        "dist/playground.d.ts"
+      ],
+      "playground-panels": [
+        "dist/PlaygroundPanels.d.ts"
+      ],
+      "playground-controller": [
+        "dist/PlaygroundController.d.ts"
+      ],
+      "filter-inspector": [
+        "dist/FilterInspector.d.ts"
+      ],
+      "filter-lab-exercise": [
+        "dist/FilterLabExercise.d.ts"
+      ],
+      "lab-choices": [
+        "dist/LabChoices.d.ts"
+      ],
+      "lab-checklist": [
+        "dist/LabChecklist.d.ts"
+      ],
+      "lab-navigation": [
+        "dist/LabNavigation.d.ts"
+      ],
+      "finish-lab-button": [
+        "dist/FinishLabButton.d.ts"
+      ],
+      "lab-completion-view": [
+        "dist/LabCompletionView.d.ts"
+      ],
+      "catalog": [
+        "dist/catalog.d.ts"
+      ],
+      "stay-card": [
+        "dist/StayCard.d.ts"
+      ],
+      "browse-stays-preview": [
+        "dist/BrowseStaysPreview.d.ts"
+      ]
+    }
+  }
+}

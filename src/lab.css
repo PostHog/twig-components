@@ -1,0 +1,774 @@
+/* PostHog-styled playground and lab UI. Twig site styling lives in catalog.css. */
+/* Exact accents: brand.posthog.com/colors; neutrals: posthog.com brand assets and Tailwind config. */
+.vac-app {
+  --ph-brand-cobalt: #0457ff;
+  /* posthog.com/tailwind.config.js: colors.button, OSButton outline. */
+  --ph-os-button-border: #b17816;
+  --ph-brand-yellow: #ffa81c;
+  --ph-brand-tangerine: #ff5c1c;
+  --ph-neutral-ink: #151515;
+  --ph-neutral-background: #eeefe9;
+  --ph-neutral-accent: #e5e7e0;
+  --ph-neutral-border: #d0d1c9;
+  --ph-neutral-white: #ffffff;
+  --ph-neutral-muted: #4d4f46;
+}
+
+/* Portable baseline for the Filter Lab inside a host-provided .vac-app shell. */
+.vac-app .vac-developer-theme {
+  font-size: 15px;
+  line-height: 1.6;
+}
+.vac-app .vac-developer-theme * { box-sizing: border-box; }
+.vac-app .vac-developer-theme :is(button, input) { font: inherit; }
+.vac-app .vac-developer-theme button:not(:disabled) { cursor: pointer; }
+.vac-app .vac-developer-theme .vac-muted { color: var(--vac-muted); font-size: 13px; }
+.vac-app .vac-developer-theme .vac-lab { margin: 16px 0 28px; }
+.vac-app .vac-developer-theme .vac-lab h3 { font-size: 23px; line-height: 1.2; margin: 16px 0; }
+.vac-app .vac-developer-theme .vac-lab h4,
+.vac-app .vac-developer-theme .vac-lab legend { font-size: 14px; font-weight: 600; }
+.vac-app .vac-developer-theme .vac-lab-step { border: 0; border-top: 1px solid var(--vac-line); padding: 16px 0; margin-top: 16px; }
+.vac-app .vac-developer-theme .vac-lab summary { cursor: pointer; font-size: 14px; font-weight: 500; }
+.vac-app .vac-developer-theme .vac-lab-output { padding: 16px; background: var(--vac-paper); border: 1px solid var(--vac-line); border-radius: 8px; }
+.vac-app .vac-developer-theme .vac-lab pre { font: 12px/1.65 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre-wrap; overflow-wrap: anywhere; background: var(--vac-ink); color: var(--vac-paper); padding: 12px; border-radius: 4px; margin: 12px 0; }
+.vac-app .vac-developer-theme .vac-lab-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+.vac-app .vac-developer-theme .vac-browse-link { display: block; width: fit-content; margin: 8px 0; text-decoration: underline; text-underline-offset: 4px; font-size: 14px; }
+.vac-app .vac-developer-theme .vac-inspect-name { display: block; font-size: 12px; overflow-wrap: anywhere; margin: 8px 0 16px; }
+.vac-app .vac-developer-theme .vac-event-comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.vac-app .vac-developer-theme .vac-event-comparison dt { font-size: 11px; color: var(--vac-muted); }
+.vac-app .vac-developer-theme .vac-event-comparison dd { margin: 6px 0 0; overflow-wrap: anywhere; font-size: 16px; }
+.vac-app .vac-developer-theme .vac-lab pre mark { background: var(--ph-brand-yellow); color: var(--ph-neutral-ink); }
+@media (max-width: 520px) {
+  .vac-app .vac-developer-theme .vac-event-comparison { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Adapted from PostHog base.scss and Lemon UI; fonts from @posthog/brand. */
+@font-face {
+  font-family: PlaygroundRoundHog;
+  src: url("./assets/RoundHog.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: PlaygroundRoundHog;
+  src: url("./assets/RoundHog-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: PlaygroundRoundHog;
+  src: url("./assets/RoundHog-SemiBold.woff2") format("woff2");
+  font-weight: 600 700;
+  font-display: swap;
+}
+.vac-app .vac-developer-theme {
+  --vac-paper: var(--ph-neutral-white);
+  --vac-fill: var(--ph-neutral-background);
+  --vac-ink: var(--ph-neutral-ink);
+  --vac-muted: var(--ph-neutral-muted);
+  --vac-line: var(--ph-neutral-border);
+  --ph-accent: var(--ph-brand-tangerine);
+  --vac-highlight: var(--ph-brand-yellow);
+  --ph-highlight: var(--ph-brand-yellow);
+  --ph-light-1: var(--ph-neutral-white);
+  --ph-light-12: var(--ph-neutral-ink);
+  font-family: PlaygroundRoundHog, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  color: var(--vac-ink);
+  background: var(--vac-fill);
+  border-color: var(--ph-neutral-border);
+  border-radius: 6px;
+  box-shadow: 0 3px 0 var(--ph-neutral-border);
+}
+.vac-app .vac-developer-theme :is(h1, h2, h3, h4) {
+  font-family: inherit;
+  color: var(--vac-ink);
+  font-weight: 600;
+  letter-spacing: normal;
+}
+.vac-app .vac-developer-theme h3 {
+  font-size: 18px;
+  line-height: 1.35;
+}
+.vac-app .vac-developer-theme p {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.vac-app .vac-developer-theme .vac-dock-header {
+  background: var(--ph-neutral-background);
+  border-bottom-color: var(--vac-line);
+  padding: 12px 20px;
+}
+.vac-app .vac-developer-theme .vac-dock-header h2 {
+  font-size: 16px;
+}
+.vac-app .vac-developer-theme .vac-dock-header button {
+  font-size: 12px;
+}
+.vac-app .vac-developer-theme .vac-lab-badge {
+  background: var(--ph-neutral-background);
+  border-color: var(--vac-line);
+  border-radius: 4px;
+  font-size: 11px;
+}
+.vac-app .vac-developer-theme .vac-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+}
+.vac-app .vac-developer-theme :is(code, pre) {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.vac-app .vac-developer-theme .vac-lab-directory-list > li {
+  border-radius: 6px;
+}
+.vac-app .vac-developer-theme .vac-event-picker {
+  gap: 0;
+  padding: 0;
+  border: 1px solid var(--vac-line);
+  border-radius: 6px;
+  background: var(--ph-neutral-white);
+}
+.vac-app .vac-developer-theme .vac-event-choice {
+  border: 0;
+  border-bottom: 1px solid var(--vac-line);
+  border-radius: 0;
+  padding: 8px;
+}
+.vac-app .vac-developer-theme .vac-event-choice:last-child {
+  border-bottom: 0;
+}
+.vac-app .vac-developer-theme .vac-event-choice:hover {
+  background: var(--ph-neutral-background);
+}
+.vac-app .vac-developer-theme .vac-event-choice[aria-pressed="true"] {
+  background: var(--ph-neutral-accent);
+  box-shadow: inset 3px 0 var(--ph-accent);
+}
+.vac-app .vac-developer-theme .vac-event-comparison {
+  grid-template-columns: 1fr;
+  gap: 0;
+  border: 1px solid var(--vac-line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.vac-app .vac-developer-theme .vac-event-comparison > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: 12px;
+  border: 0;
+  border-bottom: 1px solid var(--vac-line);
+  border-radius: 0;
+  padding: 8px;
+}
+.vac-app .vac-developer-theme .vac-event-comparison > div:last-child {
+  border-bottom: 0;
+}
+.vac-app .vac-developer-theme .vac-event-comparison dd {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  margin: 0;
+}
+.vac-app .vac-developer-theme .vac-event-comparison [data-mismatch="true"] {
+  background: var(--ph-neutral-accent);
+}
+
+.vac-ai-fields {
+  border: 0;
+  padding: 0;
+  margin: 16px 0;
+  min-width: 0;
+}
+.vac-ai-fields label {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--vac-line);
+}
+.vac-ai-fields input {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  accent-color: var(--ph-brand-cobalt);
+}
+.vac-ai-fields code {
+  display: block;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+  color: var(--vac-muted);
+}
+.vac-ai-checks {
+  list-style: none;
+  padding: 0;
+}
+.vac-ai-checks li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--vac-line);
+}
+.vac-ai-checks p {
+  margin: 4px 0;
+}
+.vac-ai-compare {
+  background: var(--ph-neutral-white);
+  border: 1px solid var(--vac-line);
+  border-radius: 6px;
+  padding: 12px;
+}
+.vac-ai-compare h4 {
+  margin-top: 0;
+}
+.vac-ai-compare dt {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--vac-muted);
+}
+.vac-ai-compare dd {
+  margin: 4px 0 16px;
+  overflow-wrap: anywhere;
+}
+.vac-ai-lab pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+}
+
+.vac-app .vac-developer-theme .vac-ai-code-highlight {
+  background: var(--ph-highlight);
+  color: var(--ph-light-12);
+  border-radius: 2px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.vac-ai-mapping {
+  margin: 16px 0;
+}
+.vac-ai-mapping > span {
+  font-size: 12px;
+}
+.vac-ai-mapping pre {
+  margin-top: 8px;
+}
+
+.vac-app .vac-developer-theme pre .vac-ai-code-highlight {
+  background: var(--ph-highlight);
+  color: var(--ph-light-12);
+}
+.vac-app .vac-developer-theme .vac-ai-code-context {
+  background: transparent;
+  color: inherit;
+}
+
+.vac-ghost-cursor {
+  position: fixed;
+  z-index: 10000;
+  pointer-events: none;
+  font: 32px/1 sans-serif;
+  color: var(--ph-neutral-ink);
+  filter: drop-shadow(0 0 2px var(--ph-neutral-white));
+  transition: left 0.6s ease, top 0.6s ease;
+}
+.vac-ghost-cursor span {
+  display: block;
+  font: 12px/1.4 sans-serif;
+  background: var(--ph-brand-yellow);
+  color: var(--ph-neutral-ink);
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.vac-replay-recording {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--vac-line);
+  font-size: 12px;
+}
+.vac-replay-mask {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+.vac-replay-mask input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--ph-neutral-ink);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vac-ghost-cursor,
+  .vac-replay-pointer {
+    transition: none;
+  }
+}
+
+.vac-ghost-cursor {
+  font-size: initial;
+  filter: none;
+}
+.vac-ghost-cursor svg {
+  display: block;
+}
+.vac-ghost-cursor span {
+  background: var(--ph-brand-yellow);
+  color: var(--ph-neutral-ink);
+}
+.vac-replay-stop {
+  position: fixed;
+  z-index: 10001;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border: 1px solid var(--ph-neutral-ink);
+  border-radius: 6px;
+  background: var(--ph-neutral-background);
+  color: var(--ph-neutral-ink);
+  box-shadow: 0 2px 8px var(--ph-neutral-border);
+  font: 14px/1.4 sans-serif;
+}
+.vac-replay-stop button {
+  background: var(--ph-brand-cobalt);
+  color: var(--ph-neutral-white);
+  border: 0;
+  border-radius: 4px;
+  padding: 10px 14px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.vac-replay-stop button:focus-visible {
+  outline: 3px solid var(--ph-neutral-ink);
+  outline-offset: 3px;
+}
+.vac-session-viewport {
+  position: relative;
+  width: 100%;
+  min-height: 120px;
+  overflow: hidden;
+  background: var(--ph-neutral-background);
+  border: 1px solid var(--vac-line);
+}
+.vac-session-player:fullscreen {
+  box-sizing: border-box;
+  width: 100vw;
+  height: 100vh;
+  padding: 16px;
+  overflow: auto;
+  background: var(--ph-neutral-background);
+  color: var(--ph-neutral-ink);
+}
+.vac-session-controls {
+  padding-top: 8px;
+}
+.vac-session-controls > input {
+  display: block;
+  width: 100%;
+  margin: 12px 0;
+}
+.vac-session-controls > button {
+  margin: 8px 12px 8px 0;
+}
+@media (max-width: 600px) {
+  .vac-replay-stop {
+    width: calc(100% - 24px);
+    bottom: 12px;
+    font-size: 12px;
+    gap: 8px;
+  }
+  .vac-replay-stop span {
+    display: none;
+  }
+}
+.vac-session-player input[type="range"] {
+  appearance: auto;
+  accent-color: var(--ph-brand-cobalt);
+  height: 24px;
+  cursor: pointer;
+}
+
+.vac-app .vac-developer-theme .vac-dock-header {
+  padding: 10px 20px;
+}
+.vac-app .vac-developer-theme .vac-dock-header h2 {
+  margin: 0;
+}
+.vac-lab-navigation {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-top: 4px;
+}
+.vac-lab-navigation .vac-lab-reset {
+  margin-inline-start: auto;
+}
+.vac-lab-navigation .vac-text-button {
+  padding: 4px 0;
+  text-align: left;
+}
+
+.vac-app .vac-developer-theme :focus-visible {
+  outline-color: var(--ph-brand-cobalt);
+}
+.vac-app .vac-developer-theme input {
+  accent-color: var(--ph-brand-cobalt);
+}
+.vac-session-player .replayer-mouse::after {
+  background: var(--ph-brand-cobalt);
+  opacity: 1;
+  animation: none;
+}
+.vac-session-player .replayer-mouse.touch-device.touch-active {
+  border-color: var(--ph-brand-cobalt);
+}
+
+.vac-page-replay-marker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px clamp(20px, 4vw, 64px) 0;
+  color: var(--ph-neutral-ink);
+  font: 13px/1.4 PlaygroundRoundHog, sans-serif;
+}
+
+.vac-lab-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.vac-lab-card-actions .vac-text-button {
+  padding-inline: 0;
+  text-align: left;
+}
+
+/* Adapted from posthog.com OSButton (secondary, md), using brand yellow for the base. */
+.vac-app .vac-developer-theme .vac-button {
+  display: inline-block;
+  position: relative;
+  min-height: 0;
+  padding: 0;
+  border: 1.5px solid var(--ph-os-button-border);
+  border-radius: 6px;
+  background: var(--ph-brand-yellow);
+  color: var(--vac-ink);
+  font-size: 13px;
+  line-height: 1.5;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: none;
+}
+.vac-os-button-face {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-inline: -1.5px;
+  padding: 4px 10px;
+  border: 1.5px solid var(--ph-os-button-border);
+  border-radius: 6px;
+  background: var(--ph-neutral-white);
+  color: var(--ph-neutral-ink);
+  transform: translateY(-2px);
+  user-select: none;
+}
+.vac-app .vac-developer-theme .vac-button:hover:not(:disabled) {
+  background: var(--ph-brand-yellow);
+  border-color: var(--ph-os-button-border);
+}
+.vac-button:hover:not(:disabled) > .vac-os-button-face {
+  transform: translateY(-3px);
+}
+.vac-app .vac-developer-theme .vac-button:active:not(:disabled) {
+  transform: none;
+  box-shadow: none;
+}
+.vac-button:active:not(:disabled) > .vac-os-button-face {
+  transform: translateY(-1.5px);
+  transition: transform 100ms;
+}
+.vac-app .vac-developer-theme .vac-button:disabled {
+  opacity: 1;
+  background: var(--vac-line);
+  border-color: var(--vac-line);
+  cursor: not-allowed;
+}
+.vac-button:disabled > .vac-os-button-face {
+  color: var(--vac-muted);
+  background: var(--vac-fill);
+  border-color: var(--vac-line);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vac-os-button-face {
+    transition: none !important;
+  }
+}
+
+.vac-app .vac-developer-theme .vac-dock-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.vac-dock-header h2 img {
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.vac-booking-funnel {
+  padding: 0;
+  list-style: none;
+}
+.vac-booking-funnel li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--vac-line);
+}
+.vac-booking-funnel code {
+  overflow-wrap: anywhere;
+  min-width: 0;
+  font-size: 12px;
+}
+
+.vac-app .vac-developer-theme .vac-booking-overview {
+  display: grid;
+  justify-content: stretch;
+  justify-items: start;
+  gap: 8px;
+  padding: 14px;
+  margin: 16px 0;
+  text-align: left;
+}
+.vac-app .vac-developer-theme .vac-booking-overview p {
+  margin: 0;
+}
+
+.vac-app .vac-developer-theme pre.vac-booking-code {
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: auto;
+}
+
+.vac-app .vac-developer-theme .vac-selected-lab {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin: 8px 0 18px;
+  padding: 0;
+  border: 0;
+}
+.vac-lab-context {
+  font-size: 12px;
+  color: var(--vac-muted);
+}
+.vac-app .vac-developer-theme #guide-panel h3 {
+  font-size: 22px;
+  line-height: 1.25;
+  margin: 0 0 16px;
+}
+
+.vac-booking-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+}
+.vac-booking-checklist li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-bottom: 1px solid var(--vac-line);
+  color: var(--vac-muted);
+}
+.vac-booking-checklist li[data-state="current"] {
+  background: var(--vac-paper);
+  color: var(--vac-ink);
+  box-shadow: inset 3px 0 var(--ph-brand-cobalt);
+}
+.vac-booking-checklist li[data-state="done"] {
+  color: var(--vac-ink);
+}
+.vac-check-status {
+  flex: 0 0 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.vac-lab-completion {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+}
+.vac-lab-completion h3,
+.vac-lab-completion h4,
+.vac-lab-completion p {
+  margin: 0;
+}
+.vac-completion-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.vac-completion-check {
+  display: grid;
+  place-items: center;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--ph-brand-cobalt);
+  color: var(--ph-neutral-white);
+  font-size: 18px;
+}
+.vac-lab-completion ul {
+  padding-left: 20px;
+  margin-bottom: 0;
+}
+.vac-lab-completion li + li {
+  margin-top: 10px;
+}
+
+.vac-app .vac-developer-theme .vac-lab-completion > * {
+  margin: 0;
+}
+.vac-app .vac-developer-theme .vac-lab-completion .vac-guide-example {
+  display: block;
+  text-align: left;
+  padding: 16px;
+}
+.vac-app .vac-developer-theme .vac-lab-completion ul {
+  list-style: disc;
+  margin-top: 12px;
+}
+.vac-app .vac-developer-theme .vac-lab-completion h4 {
+  text-align: left;
+}
+
+.vac-filter-comparisons {
+  margin: 16px 0;
+  border: 1px solid var(--ph-neutral-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.vac-filter-comparison-head,
+.vac-filter-comparison-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 64px;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  text-align: left;
+}
+.vac-filter-comparison-head {
+  font-size: 11px;
+  color: var(--ph-neutral-muted);
+}
+.vac-filter-comparison-list {
+  max-height: 240px;
+  overflow-y: auto;
+}
+.vac-filter-comparison-row {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid var(--ph-neutral-border);
+  background: var(--ph-neutral-white);
+  color: var(--ph-neutral-ink);
+  cursor: pointer;
+  font-size: 12px;
+}
+.vac-filter-comparison-row[aria-pressed="true"] {
+  background: var(--ph-neutral-accent);
+  box-shadow: inset 3px 0 var(--ph-brand-cobalt);
+}
+.vac-filter-comparison-row:focus-visible {
+  outline-offset: -3px;
+}
+.vac-filter-comparison-row small {
+  color: var(--ph-neutral-muted);
+}
+.vac-filter-match {
+  font-size: 11px;
+}
+.vac-filter-match[data-mismatch="true"] {
+  font-weight: 600;
+}
+
+.vac-source-picker {
+  border: 0;
+  padding: 0;
+  margin: 16px 0;
+  min-width: 0;
+}
+.vac-source-picker legend {
+  margin-bottom: 10px;
+}
+.vac-app .vac-developer-theme .vac-source-picker label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  margin: 0;
+  border: 1px solid var(--ph-neutral-border);
+  background: var(--ph-neutral-white);
+  cursor: pointer;
+}
+.vac-source-picker label + label {
+  border-top: 0 !important;
+}
+.vac-app .vac-developer-theme .vac-source-picker label[data-selected="true"] {
+  background: var(--ph-neutral-accent);
+  box-shadow: inset 3px 0 var(--ph-brand-cobalt);
+}
+.vac-app .vac-developer-theme .vac-source-picker input {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  margin: 0;
+}
+.vac-source-picker span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.vac-lab-choice-list {
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.vac-ghost-progress {
+  text-align: center;
+  padding: 24px 0;
+}
+.vac-ghost-loader {
+  width: 40px;
+  height: 40px;
+  margin: 32px auto 24px;
+  border: 3px solid var(--ph-neutral-border);
+  border-top-color: var(--ph-brand-cobalt);
+  border-radius: 50%;
+  animation: vac-ghost-loading 1s linear infinite;
+}
+.vac-ghost-progress [role="status"] {
+  min-height: 3.2em;
+}
+@keyframes vac-ghost-loading {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vac-ghost-loader {
+    animation: none;
+  }
+}

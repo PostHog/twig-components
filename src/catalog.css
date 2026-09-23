@@ -1,0 +1,259 @@
+.vac-app,
+.twig-browser {
+  --vac-paper: #f7eddf;
+  --vac-ink: #2d2b29;
+  --vac-muted: #6d6258;
+  --vac-line: #d7c8b6;
+  --vac-fill: #efe1ce;
+}
+.vac-filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  border: 0;
+  margin: 20px 0 12px;
+}
+.vac-filter {
+  padding: 8px 16px;
+  border: 1px solid var(--vac-line);
+  border-radius: 4px;
+}
+.vac-filter[aria-pressed="true"] {
+  background: var(--vac-ink);
+  color: var(--vac-paper);
+  border-color: var(--vac-ink);
+}
+.vac-card {
+  min-width: 0;
+}
+.vac-card a {
+  display: block;
+  border-radius: 4px;
+}
+.vac-card a:hover h3 {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.vac-card-body {
+  padding: 14px 0;
+}
+.vac-image {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  background: var(--vac-fill);
+  border: 1px solid var(--vac-line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.vac-image span {
+  color: var(--vac-muted);
+  font-size: 12px;
+}
+.vac-image img {
+  object-fit: cover;
+}
+.vac-image-large {
+  aspect-ratio: 2.3 / 1;
+}
+
+@font-face {
+  font-family: TwigHalfre;
+  src: url("./assets/Halfre.ttf") format("truetype");
+  font-display: swap;
+}
+.twig-browser {
+  container-type: inline-size;
+  background: var(--vac-paper);
+  color: var(--vac-ink);
+  font: 15px/1.6 TwigHalfre, sans-serif;
+  border: 1px solid var(--vac-line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.twig-browser * {
+  box-sizing: border-box;
+}
+.twig-browser header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--vac-line);
+}
+.twig-browser header img {
+  width: 54px;
+  height: auto;
+}
+.twig-browser header span {
+  font-size: 12px;
+  text-decoration: underline;
+}
+.twig-browser main {
+  padding: 20px;
+}
+.twig-browser :is(h2, h3, p) {
+  font-family: inherit;
+  color: inherit;
+  letter-spacing: normal;
+}
+.twig-browser h2 {
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.2;
+  margin: 4px 0 16px;
+}
+.twig-browser h3 {
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.3;
+  margin: 0;
+}
+.twig-browser p {
+  margin: 8px 0;
+}
+.twig-browser .vac-muted {
+  color: var(--vac-muted);
+  font-size: 13px;
+}
+.twig-browser .vac-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.twig-browser .vac-filters {
+  padding: 0;
+}
+.twig-browser .vac-filter {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+.twig-browser .vac-filter[aria-pressed="true"] {
+  background: var(--vac-ink);
+  color: var(--vac-paper);
+}
+.twig-browser button:focus-visible {
+  outline: 3px solid var(--vac-ink);
+  outline-offset: 3px;
+}
+.twig-browser .vac-image img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+.twig-browser-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+.twig-browser-hero {
+  position: relative;
+  padding: 8px 0 28px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--vac-line);
+}
+.twig-browser-hero h2 {
+  font-size: 34px;
+  letter-spacing: -0.035em;
+}
+.twig-browser-hero p {
+  max-width: 270px;
+}
+.twig-browser-hero img {
+  display: none;
+}
+@container (min-width: 500px) {
+  .twig-browser-hero {
+    padding-right: 170px;
+  }
+  .twig-browser-hero img {
+    display: block;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 150px;
+  }
+}
+@container (max-width: 340px) {
+  .twig-browser-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .twig-browser .vac-filter {
+    padding: 6px 10px;
+  }
+}
+
+/* Read-only Twig excerpt. All selectors stay inside this Twig-owned root. */
+.twig-stays-preview {
+  --twig-paper: #f7eddf;
+  --twig-ink: #2d2b29;
+  --twig-muted: #6d6258;
+  --twig-line: #d7c8b6;
+  --twig-fill: #efe1ce;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: var(--twig-paper);
+  color: var(--twig-ink);
+  border: 1px solid var(--twig-line);
+  border-radius: 4px;
+  font: 16px/1.45 TwigHalfre, sans-serif;
+}
+.twig-stays-preview *,
+.twig-stays-preview *::before,
+.twig-stays-preview *::after {
+  box-sizing: border-box;
+}
+.twig-stays-preview-inner {
+  padding: 20px;
+}
+.twig-stays-preview-kicker {
+  color: var(--twig-muted);
+  font-size: 13px;
+  text-transform: uppercase;
+}
+.twig-stays-preview h3 {
+  margin: 4px 0 18px;
+  color: var(--twig-ink);
+  font: 600 27px/1.2 TwigHalfre, sans-serif;
+}
+.twig-stays-preview-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.twig-stays-preview-filter {
+  padding: 9px 14px;
+  border: 1px solid var(--twig-line);
+  border-radius: 4px;
+}
+.twig-stays-preview-filter[data-selected="true"] {
+  background: var(--twig-ink);
+  border-color: var(--twig-ink);
+  color: var(--twig-paper);
+}
+.twig-stays-preview-count {
+  margin: 16px 0 11px;
+  color: var(--twig-muted);
+}
+.twig-stays-preview-stay {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 9px;
+  border: 1px solid var(--twig-line);
+  border-radius: 4px;
+}
+.twig-stays-preview-image {
+  flex: none;
+  width: 68px;
+  height: 50px;
+  border-radius: 4px;
+  background: var(--twig-fill);
+}
