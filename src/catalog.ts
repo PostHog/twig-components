@@ -144,7 +144,7 @@ export const stays: readonly Stay[] = [
     accommodationType: "Beachfront condo",
     vibe: "So much '80s Miami that even the flamingos are jealous.",
     description:
-      "A flashy beachfront condo on Australia's Gold Coast with two bedrooms, two baths, and a double pullout couch for a fifth guest.",
+      "Flamingo's Envy doesn't do understated. The pastel exterior makes the introduction, and Dolores has taken the same approach indoors. The Gold Coast beach is just outside, with a balcony and ocean view worth lingering over. Two queen bedrooms, two bathrooms, and a pullout couch make room for five. There's a full kitchen for the hours between beach trips.",
     nightlyRate: 240,
     currency: "USD",
     capacity: 5,
@@ -193,7 +193,7 @@ export const stays: readonly Stay[] = [
     accommodationType: "Paris studio",
     vibe: "The outfit has its own itinerary.",
     description:
-      "A compact Paris studio for two, set up for mornings at the mirror and days spent chasing art, clothes, and the city.",
+      "Colette has made every inch of Le Nid Chic count. The Paris studio has a double bed for two, a kitchenette, and a full-length mirror for one last look before going out. Open the balcony doors, take in the city, then head out for art, clothes, and whatever catches your eye. When you come back, there's room to put it all away.",
     nightlyRate: 220,
     currency: "USD",
     capacity: 2,

@@ -58,7 +58,7 @@ export type TouchpointId = keyof typeof touchpointDefinitions;
 type PageKind = "discover" | "stay" | "about";
 
 const pageTouchpoints: Record<PageKind, readonly TouchpointId[]> = {
-  discover: ["discovery", "catalog", "replay"],
+  discover: ["catalog", "replay"],
   about: [],
   stay: ["stay", "booking", "replay"],
 };

@@ -2,7 +2,7 @@
 
 Import only the pieces you need from `@posthog/twig-components/<path>`. React is a peer dependency: the host supplies React 18 or 19. Import `catalog.css` for Twig views and `lab.css` for the playground. See [integration](integration.md) for styling and update boundaries.
 
-“Used in Twig” describes the code in [Twig.com PR #13](https://github.com/PostHog/twig.com/pull/13), which pins the published `0.1.0` package. The PostHog 101 guide integration is still in progress.
+“Used in Twig” describes the Twig.com integration. Twig.com pins a published package version, while the PostHog 101 guide integration is still in progress.
 
 ## Website views and data
 

@@ -38,7 +38,7 @@ export function StayFilters({
           className={buttonClassName}
           onClick={() => onChange(setting)}
         >
-          {setting === "All" ? "All stays" : setting}
+          {setting === "All" ? "All locations" : setting}
         </button>
       ))}
     </fieldset>

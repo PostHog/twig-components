@@ -10,6 +10,7 @@ import { BookingLab, BookingLabProvider, useBookingLab } from "../src/BookingLab
 import { StayLab, StayLabProvider, useStayLab } from "../src/StayLab.js";
 import { stays, stayLabel } from "../src/catalog.js";
 import { ReplayLab, type ReplayLabViewState } from "../src/ReplayLab.js";
+import { ReplayProvider, useReplay } from "../src/ReplayRecorder.js";
 import "../src/catalog.css";
 import "../src/lab.css";
 import "./workbench.css";
@@ -79,12 +80,17 @@ function StayContent() {
 }
 function Stay() { return <StayLabProvider><StayContent /></StayLabProvider>; }
 
+function ReplayRecordingPreview() {
+  const replay = useReplay();
+  return <div className="workbench-fixture"><strong>Floating recording control</strong><p>Start a local visit to preview the control used while browsing Twig.</p><button disabled={replay.mode === "manual" || replay.starting} onClick={() => replay.start("manual")}>Start recording</button></div>;
+}
+
 function Replay() {
   const [stage, setStage] = useState(0);
   const [exercise, setExercise] = useState<"ghost" | "manual">("ghost");
   const [recording, setRecording] = useState<unknown[]>([]);
   const replay: ReplayLabViewState = { exercise, recording, starting: false, frames: [], mode: null, masked: true, setMasked: () => {}, capturedMasked: true, message: "", start: () => setRecording([{}, {}]), stop: () => {}, clear: () => setRecording([]), setExercise };
-  return <LabPreview><div className="workbench-controls"><button onClick={() => setStage(0)} aria-pressed={stage === 0}>Intro</button><button onClick={() => setStage(1)} aria-pressed={stage === 1}>Exercise</button><button onClick={() => setStage(2)} aria-pressed={stage === 2}>Review</button><button onClick={() => setRecording([{}, {}])}>Add fixture visit</button></div><ReplayLab stage={stage} onStage={setStage} replay={replay} pathname="/discover" returnHome={<span>Return to Twig</span>} sessionPlayer={<div className="workbench-fixture">Fixture visit preview</div>} /></LabPreview>;
+  return <ReplayProvider open pathname="/"><LabPreview><div className="workbench-controls"><button onClick={() => setStage(0)} aria-pressed={stage === 0}>Intro</button><button onClick={() => setStage(1)} aria-pressed={stage === 1}>Exercise</button><button onClick={() => setStage(2)} aria-pressed={stage === 2}>Review</button><button onClick={() => setRecording([{}, {}])}>Add fixture visit</button></div><ReplayRecordingPreview /><ReplayLab stage={stage} onStage={setStage} replay={replay} pathname="/discover" returnHome={<span>Return to Twig</span>} sessionPlayer={<div className="workbench-fixture">Fixture visit preview</div>} /></LabPreview></ReplayProvider>;
 }
 
 export default function App() {

@@ -23,7 +23,7 @@ flowchart LR
     package -. "planned read-only Twig views" .-> guide
 ```
 
-**Current status:** Version `0.1.0` is published on npm. [Twig.com PR #13](https://github.com/PostHog/twig.com/pull/13) pins it; the PostHog 101 guide integration is still in progress. See [integration and updates](docs/integration.md) before changing either site.
+Twig.com installs a published version of this package. After changing shared components, release a new version and update each site that needs it. See [integration and updates](docs/integration.md) for the steps.
 
 ## Quick example
 

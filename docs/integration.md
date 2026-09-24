@@ -5,7 +5,7 @@
 | Place | Owns |
 | --- | --- |
 | **This repo** | Reusable Twig views and catalog, the five labs’ UI and local state, playground panels, replay recorder/player, CSS, assets, tests, and gallery. |
-| **Twig.com** | Full website pages, Next.js routes, stay images and links, playground placement, navigation, and focus/scroll behavior. [PR #13](https://github.com/PostHog/twig.com/pull/13) pins the published package. |
+| **Twig.com** | Full website pages, Next.js routes, stay images and links, playground placement, navigation, and focus/scroll behavior. It pins a published package version. |
 | **PostHog.com** | PostHog 101 prose, code and event examples, PostHog event inspector, Twig introduction screenshot, and guide navigation. Its read-only Twig preview integration is in progress. |
 
 The catalog stores stay photo paths and credits, while Twig.com serves the finished photo files. A catalog release does not copy those files to another site. The package's read-only stay preview does not render stay photos; move the photos to a shared versioned asset source before a second site needs to display them.

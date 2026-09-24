@@ -325,24 +325,47 @@
   align-items: center;
   gap: 14px;
   padding: 12px 16px;
-  border: 1px solid var(--ph-neutral-ink);
+  border: 1px solid #d0d1c9;
   border-radius: 6px;
-  background: var(--ph-neutral-background);
-  color: var(--ph-neutral-ink);
-  box-shadow: 0 2px 8px var(--ph-neutral-border);
-  font: 14px/1.4 sans-serif;
+  background: #eeefe9;
+  color: #151515;
+  box-shadow: 0 3px 0 #d0d1c9, 0 12px 28px #15151524;
+  font: 600 14px/1.4 PlaygroundRoundHog, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.vac-replay-stop::before {
+  content: "";
+  flex: 0 0 9px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ff5c1c;
+}
+.vac-replay-stop span {
+  color: #4d4f46;
+  font-weight: 400;
 }
 .vac-replay-stop button {
-  background: var(--ph-brand-cobalt);
-  color: var(--ph-neutral-white);
-  border: 0;
-  border-radius: 4px;
+  background: #fff;
+  color: #151515;
+  border: 1.5px solid #b17816;
+  border-radius: 6px;
   padding: 10px 14px;
   white-space: nowrap;
   cursor: pointer;
+  font: inherit;
+  box-shadow: 0 4px 0 #ffa81c;
+}
+.vac-replay-stop button:hover {
+  background: #fff;
+  box-shadow: 0 6px 0 #ffa81c;
+  transform: translateY(-2px);
+}
+.vac-replay-stop button:active {
+  box-shadow: 0 2px 0 #ffa81c;
+  transform: translateY(2px);
 }
 .vac-replay-stop button:focus-visible {
-  outline: 3px solid var(--ph-neutral-ink);
+  outline: 3px solid #151515;
   outline-offset: 3px;
 }
 .vac-session-viewport {
@@ -379,9 +402,13 @@
     bottom: 12px;
     font-size: 12px;
     gap: 8px;
+    flex-wrap: wrap;
   }
   .vac-replay-stop span {
     display: none;
+  }
+  .vac-replay-stop button {
+    flex: 1;
   }
 }
 .vac-session-player input[type="range"] {
