@@ -139,7 +139,7 @@ export function PlaygroundInvitation({
 }) {
   return (
     <aside
-      className={`vac-playground-invite${dismissed ? " vac-invite-compact" : ""}`}
+      className={`vac-playground-invite vac-developer-theme${dismissed ? " vac-invite-compact" : ""}`}
       aria-label="Explore PostHog"
       onKeyDown={(event) => {
         if (event.key === "Escape") onDismiss();
@@ -155,7 +155,15 @@ export function PlaygroundInvitation({
           >
             ×
           </button>
-          <span className="vac-eyebrow">Interactive playground</span>
+          <div className="vac-invite-brand">
+            <img
+              src={new URL("./assets/posthog-logomark.svg", import.meta.url).href}
+              width={38}
+              height={28}
+              alt=""
+            />
+            <strong>PostHog Playground</strong>
+          </div>
           <h2>Want to explore the PostHog instrumentation?</h2>
           <p>Build an event, try it on Twig, and see what happens.</p>
         </>
@@ -167,7 +175,9 @@ export function PlaygroundInvitation({
         aria-expanded={false}
         onClick={onOpen}
       >
-        {dismissed ? "Explore PostHog ↗" : "Open playground ↗"}
+        <span className="vac-os-button-face">
+          {dismissed ? "Explore PostHog ↗" : "Open playground ↗"}
+        </span>
       </button>
     </aside>
   );

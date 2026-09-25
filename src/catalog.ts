@@ -46,8 +46,8 @@ export type Stay = {
 export const characters: readonly CharacterContent[] = [
   {
     id: "woodrow-sparks",
-    revision: "2026-09-21",
-    name: "Woodrow “Woody” Sparks",
+    revision: "2026-09-25",
+    name: "Woody",
     species: "Pileated woodpecker",
     portrait: null,
     biography:

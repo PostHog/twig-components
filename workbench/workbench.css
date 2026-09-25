@@ -25,6 +25,7 @@ button { cursor: pointer; }
 .workbench-twig h3 { margin: 0; }
 .workbench-twig p { margin: 0; }
 .workbench-lab { padding: 24px; border: 1px solid #d2d6d0; border-radius: 7px; background: #fff; }
+.workbench-invite-preview .vac-playground-invite { position: relative; margin: 16px 0; }
 .workbench-fixture { border: 1px dashed #aab5ab; border-radius: 6px; padding: 16px; margin: 0 0 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .workbench-fixture p { margin: 0; flex-basis: 100%; }
 .workbench-fixture small { color: #667068; }

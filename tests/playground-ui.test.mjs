@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { playgroundPage } from "@posthog/twig-components/playground";
-import { stays } from "@posthog/twig-components/catalog";
+import { characters, stays } from "@posthog/twig-components/catalog";
 import { AiLabProvider, AiLab } from "@posthog/twig-components/ai-lab-ui";
 import { BookingLabProvider, BookingLab } from "@posthog/twig-components/booking-lab-ui";
 import { StayLabProvider, StayLab } from "@posthog/twig-components/stay-lab-ui";
@@ -13,10 +13,29 @@ import {
   LabDirectory,
   PlaygroundDock,
   PlaygroundMarker,
+  PlaygroundInvitation,
 } from "@posthog/twig-components/playground-panels";
 
 const render = (node) => renderToStaticMarkup(node);
 const noop = () => {};
+
+test("Woody's shared host profile uses his chosen name", () => {
+  assert.equal(characters.find(({ id }) => id === "woodrow-sparks")?.name, "Woody");
+});
+
+test("the playground invitation matches the dock's PostHog name and branding", () => {
+  const props = { onDismiss: noop, onOpen: noop, toggleRef: { current: null } };
+  const invitation = render(h(PlaygroundInvitation, { ...props, dismissed: false }));
+  assert.match(invitation, /vac-playground-invite vac-developer-theme/);
+  assert.match(invitation, /posthog-logomark\.svg/);
+  assert.match(invitation, /PostHog Playground/);
+  assert.doesNotMatch(invitation, /Interactive playground/);
+  assert.match(invitation, /Open playground/);
+
+  const compact = render(h(PlaygroundInvitation, { ...props, dismissed: true }));
+  assert.match(compact, /Explore PostHog/);
+  assert.doesNotMatch(compact, /Want to explore/);
+});
 
 test("all portable lab entry screens render without a site router", () => {
   const ai = render(h(AiLabProvider, { active: true }, h(AiLab, { stage: 1, onStage: noop, onFocusPlanner: noop })));
