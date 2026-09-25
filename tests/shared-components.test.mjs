@@ -6,6 +6,8 @@ import { StayFilters, staySettings } from "@posthog/twig-components/filters";
 import { BrowseStaysPreview } from "@posthog/twig-components/browse-stays-preview";
 import { BrowseStays } from "@posthog/twig-components/browse-stays";
 import { StayDetails } from "@posthog/twig-components/stay-details";
+import { SavedStay } from "@posthog/twig-components/saved-stay";
+import { HostWorkspace } from "@posthog/twig-components/host-workspace";
 import { stays } from "@posthog/twig-components/catalog";
 import { FilterLabExercise } from "@posthog/twig-components/filter-lab-exercise";
 import {
@@ -64,6 +66,22 @@ test("Stay details renders the same catalog facts as Twig", () => {
   assert.match(html, /Where you’ll sleep/);
   assert.match(html, /What’s here/);
   assert.match(html, /<dt>Guests<\/dt>/);
+});
+
+test("account and host views expose state without owning identity or capture", () => {
+  const account = renderToStaticMarkup(createElement(SavedStay, {
+    stay: stays[0], accountId: "account-42", saved: true,
+    onSignIn: () => {}, onSignOut: () => {}, onToggleSave: () => {},
+  }));
+  assert.match(account, /Signed in as <strong>account-42<\/strong>/);
+  assert.match(account, /aria-pressed="true">Saved to your stays/);
+  const host = renderToStaticMarkup(createElement(HostWorkspace, {
+    stay: stays[0], hostId: "nest-17", personId: "teammate-1",
+    available: false, onAvailabilityChange: () => {},
+  }));
+  assert.match(host, /<dd>nest-17<\/dd>/);
+  assert.match(host, /<dd>teammate-1<\/dd>/);
+  assert.match(host, /aria-pressed="false">Unavailable/);
 });
 
 test("shared lesson preserves the actual click separately from a misconfigured event", () => {
