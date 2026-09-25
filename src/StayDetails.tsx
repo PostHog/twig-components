@@ -1,7 +1,8 @@
+import type { ReactElement } from "react";
 import type { Stay } from "./catalog.js";
 
 /** Stay facts and descriptions shared with focused editorial views. */
-export function StayDetails({ stay }: { stay: Stay }) {
+export function StayDetails({ stay }: { stay: Stay }): ReactElement {
   return (
     <>
       <section className="vac-detail-section">

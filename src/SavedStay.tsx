@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactElement } from "react";
 import { stayLabel, type Stay } from "./catalog.js";
 
 export type SavedStayProps = {
@@ -21,7 +22,7 @@ export function SavedStay({
   signInLabel = "Sign in",
   onSignOut,
   onToggleSave,
-}: SavedStayProps) {
+}: SavedStayProps): ReactElement {
   return (
     <section className="vac-saved-stay" aria-label="Save this stay">
       {accountId ? (
