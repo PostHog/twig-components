@@ -11,13 +11,15 @@ import { StayLab, StayLabProvider, useStayLab } from "../src/StayLab.js";
 import { stays, stayLabel } from "../src/catalog.js";
 import { ReplayLab, type ReplayLabViewState } from "../src/ReplayLab.js";
 import { ReplayProvider, useReplay } from "../src/ReplayRecorder.js";
+import { PlaygroundInvitation } from "../src/PlaygroundPanels.js";
 import "../src/catalog.css";
 import "../src/lab.css";
 import "./workbench.css";
 
-type View = "preview" | "filters" | "ai" | "booking" | "stay" | "replay";
+type View = "preview" | "invite" | "filters" | "ai" | "booking" | "stay" | "replay";
 const views: { id: View; label: string; description: string }[] = [
   { id: "preview", label: "Twig views", description: "Read-only guide preview and interactive filter control" },
+  { id: "invite", label: "PostHog invitation", description: "Open and dismiss the playground invitation" },
   { id: "filters", label: "Filter lab", description: "Click Twig filters and inspect the locally recorded events" },
   { id: "ai", label: "AI lab", description: "Run a local recommendation fixture through the lesson" },
   { id: "booking", label: "Booking lab", description: "Simulate a successful or failed booking" },
@@ -33,6 +35,18 @@ function Preview() {
     <BrowseStaysPreview selected={selected} />
     <div className="twig-browser workbench-twig"><h3>Website filter control</h3><StayFilters value={filter} onChange={setFilter} className="vac-filters" buttonClassName="vac-filter" /><p>Selected: {filter}</p></div>
   </>;
+}
+
+function InvitationPreview() {
+  const [dismissed, setDismissed] = useState(false);
+  const [open, setOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  return <div className="vac-app workbench-invite-preview">
+    <div className="workbench-controls"><button onClick={() => { setDismissed(false); setOpen(false); }}>Reset invitation</button></div>
+    {open
+      ? <div className="vac-developer-theme workbench-lab"><h3>PostHog Playground</h3><p>The host app opens its labs here.</p><button onClick={() => { setOpen(false); setDismissed(true); }}>Hide playground</button></div>
+      : <PlaygroundInvitation dismissed={dismissed} onDismiss={() => setDismissed(true)} onOpen={() => setOpen(true)} toggleRef={toggleRef} />}
+  </div>;
 }
 
 function Filters() {
@@ -96,5 +110,5 @@ function Replay() {
 export default function App() {
   const [view, setView] = useState<View>("preview");
   const current = views.find((item) => item.id === view)!;
-  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "preview" ? <Preview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : <Replay />}</div></main></div>;
+  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "preview" ? <Preview /> : view === "invite" ? <InvitationPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : <Replay />}</div></main></div>;
 }
