@@ -1,6 +1,6 @@
 {
   "name": "@posthog/twig-components",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": false,
   "publishConfig": {
     "access": "public"
@@ -23,6 +23,14 @@
     "**/*.css"
   ],
   "exports": {
+    "./browse-stays": {
+      "types": "./dist/BrowseStays.d.ts",
+      "import": "./dist/BrowseStays.js"
+    },
+    "./stay-details": {
+      "types": "./dist/StayDetails.d.ts",
+      "import": "./dist/StayDetails.js"
+    },
     "./filters": {
       "types": "./dist/StayFilters.d.ts",
       "import": "./dist/StayFilters.js"
@@ -158,6 +166,12 @@
   },
   "typesVersions": {
     "*": {
+      "browse-stays": [
+        "dist/BrowseStays.d.ts"
+      ],
+      "stay-details": [
+        "dist/StayDetails.d.ts"
+      ],
       "filters": [
         "dist/StayFilters.d.ts"
       ],

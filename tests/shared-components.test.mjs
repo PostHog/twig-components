@@ -4,6 +4,9 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { StayFilters, staySettings } from "@posthog/twig-components/filters";
 import { BrowseStaysPreview } from "@posthog/twig-components/browse-stays-preview";
+import { BrowseStays } from "@posthog/twig-components/browse-stays";
+import { StayDetails } from "@posthog/twig-components/stay-details";
+import { stays } from "@posthog/twig-components/catalog";
 import { FilterLabExercise } from "@posthog/twig-components/filter-lab-exercise";
 import {
   filterLabReducer,
@@ -37,6 +40,30 @@ test("read-only Browse stays preview labels the chosen view without buttons", ()
   assert.match(html, /data-twig-stay="Coast">Coast stay/);
   assert.match(html, /role="img"/);
   assert.doesNotMatch(html, /<button/);
+});
+
+test("Browse stays uses the shared catalog and keeps search and filters accessible", () => {
+  const html = renderToStaticMarkup(createElement(BrowseStays, {
+    id: "test-browse",
+    setting: "Coast",
+    search: "",
+    onSettingChange: () => {},
+    onSearchChange: () => {},
+    renderStay: (stay) => createElement("article", { key: stay.id }, stay.id),
+  }));
+  assert.match(html, /<label for="test-browse-search">Search stays<\/label>/);
+  assert.match(html, /aria-pressed="true"[^>]*>Coast<\/button>/);
+  assert.match(html, /role="status">1 stay<\/p>/);
+  assert.match(html, /stay-02/);
+  assert.doesNotMatch(html, /stay-01|stay-03/);
+});
+
+test("Stay details renders the same catalog facts as Twig", () => {
+  const html = renderToStaticMarkup(createElement(StayDetails, { stay: stays[0] }));
+  assert.match(html, /About this stay/);
+  assert.match(html, /Where you’ll sleep/);
+  assert.match(html, /What’s here/);
+  assert.match(html, /<dt>Guests<\/dt>/);
 });
 
 test("shared lesson preserves the actual click separately from a misconfigured event", () => {
