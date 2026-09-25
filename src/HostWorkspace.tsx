@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactElement } from "react";
 import { stayLabel, type Stay } from "./catalog.js";
 
 export type HostWorkspaceProps = {
@@ -17,7 +18,7 @@ export function HostWorkspace({
   stay,
   available,
   onAvailabilityChange,
-}: HostWorkspaceProps) {
+}: HostWorkspaceProps): ReactElement {
   return (
     <section className="vac-host-workspace" aria-label="Host workspace">
       <span className="vac-eyebrow">Host workspace</span>
