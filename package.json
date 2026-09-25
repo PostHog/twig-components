@@ -23,14 +23,6 @@
     "**/*.css"
   ],
   "exports": {
-    "./saved-stay": {
-      "types": "./dist/SavedStay.d.ts",
-      "import": "./dist/SavedStay.js"
-    },
-    "./host-workspace": {
-      "types": "./dist/HostWorkspace.d.ts",
-      "import": "./dist/HostWorkspace.js"
-    },
     "./browse-stays": {
       "types": "./dist/BrowseStays.d.ts",
       "import": "./dist/BrowseStays.js"
@@ -174,12 +166,6 @@
   },
   "typesVersions": {
     "*": {
-      "saved-stay": [
-        "dist/SavedStay.d.ts"
-      ],
-      "host-workspace": [
-        "dist/HostWorkspace.d.ts"
-      ],
       "browse-stays": [
         "dist/BrowseStays.d.ts"
       ],

@@ -2,8 +2,6 @@ import { useReducer, useRef, useState, type ReactNode } from "react";
 import { BrowseStaysPreview } from "../src/BrowseStaysPreview.js";
 import { BrowseStays } from "../src/BrowseStays.js";
 import { StayDetails } from "../src/StayDetails.js";
-import { SavedStay } from "../src/SavedStay.js";
-import { HostWorkspace } from "../src/HostWorkspace.js";
 import { StayCardContent } from "../src/StayCard.js";
 import { StayFilters, type StaySetting } from "../src/StayFilters.js";
 import { FilterLabExercise } from "../src/FilterLabExercise.js";
@@ -34,13 +32,10 @@ function Preview() {
   const [selected, setSelected] = useState<Exclude<StaySetting, "All">>("Coast");
   const [filter, setFilter] = useState<StaySetting>("All");
   const [search, setSearch] = useState("");
-  const [signedIn, setSignedIn] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [available, setAvailable] = useState(true);
   return <>
     <div className="workbench-controls"><label>Selected guide preview <select value={selected} onChange={(event) => setSelected(event.target.value as typeof selected)}><option>Forest</option><option>Coast</option><option>City</option></select></label></div>
     <BrowseStaysPreview selected={selected} />
-    <div className="twig-browser workbench-twig"><main><BrowseStays id="workbench-browse" setting={filter} search={search} onSettingChange={setFilter} onSearchChange={setSearch} renderStay={(stay) => <article className="vac-card" key={stay.id}><StayCardContent stay={stay} image={<div className="vac-image"><span>Photo on Twig.com</span></div>} /></article>} /><StayDetails stay={stays[0]} /><SavedStay stay={stays[0]} accountId={signedIn ? "account-42" : null} saved={saved} onSignIn={() => setSignedIn(true)} onSignOut={() => { setSignedIn(false); setSaved(false); }} onToggleSave={() => setSaved(!saved)} /><HostWorkspace hostId="nest-17" personId="teammate-1" stay={stays[0]} available={available} onAvailabilityChange={setAvailable} /></main></div>
+    <div className="twig-browser workbench-twig"><main><BrowseStays id="workbench-browse" setting={filter} search={search} onSettingChange={setFilter} onSearchChange={setSearch} renderStay={(stay) => <article className="vac-card" key={stay.id}><StayCardContent stay={stay} image={<div className="vac-image"><span>Photo on Twig.com</span></div>} /></article>} /><StayDetails stay={stays[0]} /></main></div>
   </>;
 }
 
