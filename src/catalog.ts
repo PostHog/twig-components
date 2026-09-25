@@ -1,4 +1,4 @@
-/** Fictional stays. Adiron-shack content supplied by Sarah; other entries remain fixtures. */
+/** Fictional stays. Stay and host content is supplied by Sarah. */
 
 export const guestType = "human" as const;
 
@@ -17,13 +17,15 @@ export type Stay = {
   id: string;
   hostId: string;
   title: string | null;
-  setting: "Forest" | "Coast" | "Mountain";
+  setting: "Forest" | "Coast" | "City";
   location: string | null;
   images: readonly {
     src: string;
     alt: string;
     source: string;
+    credit?: string;
     creditUrl?: string;
+    objectPosition?: string;
   }[];
   nightlyRate: number;
   currency: "USD";
@@ -54,16 +56,29 @@ export const characters: readonly CharacterContent[] = [
       "Sarah’s character direction: a laid-back hippie who never left upstate New York after Woodstock, but migrated to a cabin upstate. Keeps chickens; big into sharecropping and saving the environment. Write in first person with warm, deadpan observations about human habits from an animal’s perspective. Be a welcoming host who finds humans mildly baffling. Keep practical facts clear; use occasional understated jokes, not a punchline in every sentence. Sarah requested Bear & Breakfast as a tonal reference; write original wording and retain Woody’s own character.",
     approvedExamples: [],
   },
-  ...[1, 2, 3].map((index) => ({
-    id: `host-${index}`,
-    revision: null,
-    name: null,
-    species: null,
+  {
+    id: "dolores",
+    revision: "2026-09-23",
+    name: "Dolores",
+    species: "Australian galah cockatoo",
     portrait: null,
-    biography: null,
+    biography:
+      "I bought this Gold Coast beachfront condo for the ocean view and decorated it like Miami in 1987 had challenged me personally. The neighbors call it excessive. I call it easy to find from the beach.",
     voiceGuidance: null,
     approvedExamples: [],
-  })),
+  },
+  {
+    id: "colette",
+    revision: "2026-09-23",
+    name: "Colette",
+    species: "Eurasian magpie",
+    portrait: null,
+    biography:
+      "I'm from Paris. I own fewer things than most magpies, but each one has earned its place. The studio is small. The standards are not. Bring the outfit you were saving. The city is the occasion.",
+    voiceGuidance:
+      "Sarah's character direction: Colette is a Eurasian magpie from Paris, impossibly chic and effortlessly cool. Her voice is spare, self-assured, and fashion-forward. Keep practical stay details clear and avoid making her sound impressed with herself.",
+    approvedExamples: [],
+  },
 ];
 
 export const conciergeContent = {
@@ -120,21 +135,92 @@ export const stays: readonly Stay[] = [
     ],
     photoCredit: "Clay Banks / Unsplash",
   },
-  ...[
-    { id: "stay-02", hostId: "host-2", setting: "Coast", nightlyRate: 180 },
-    { id: "stay-03", hostId: "host-3", setting: "Mountain", nightlyRate: 160 },
-    { id: "stay-04", hostId: "host-1", setting: "Forest", nightlyRate: 190 },
-  ].map<Stay>((stay) => ({
-    ...stay,
-    setting: stay.setting as Stay["setting"],
-    title: null,
-    location: null,
-    images: [],
+  {
+    id: "stay-02",
+    hostId: "dolores",
+    setting: "Coast",
+    title: "Flamingo's Envy",
+    location: "Gold Coast, Queensland, Australia",
+    accommodationType: "Beachfront condo",
+    vibe: "So much '80s Miami that even the flamingos are jealous.",
+    description:
+      "Flamingo's Envy doesn't do understated. The pastel exterior makes the introduction, and Dolores has taken the same approach indoors. The Gold Coast beach is just outside, with a balcony and ocean view worth lingering over. Two queen bedrooms, two bathrooms, and a pullout couch make room for five. There's a full kitchen for the hours between beach trips.",
+    nightlyRate: 240,
     currency: "USD",
-    capacity: null,
-    amenities: [],
+    capacity: 5,
+    bedrooms: 2,
+    bathrooms: 2,
+    sleepingArrangements: [
+      "Queen bed",
+      "Queen bed",
+      "Double pullout couch · sleeps one guest",
+    ],
+    amenities: [
+      "Beach access",
+      "Balcony",
+      "Full kitchen",
+      "Air conditioning",
+      "Wi-Fi",
+      "Washer",
+    ],
     cancellationPolicy: null,
-  })),
+    images: [
+      {
+        src: "/twig/stays/gold-coast-condo/pastel-buildings.jpg",
+        alt: "Turquoise and pink buildings framed by palm trees",
+        source: "viktorija-demjanenko-PB6Mr73wTaE-unsplash.jpg",
+        credit: "Viktorija Demjanenko / Unsplash",
+        creditUrl:
+          "https://unsplash.com/photos/colorful-turquoise-and-pink-buildings-with-palm-trees-PB6Mr73wTaE",
+        objectPosition: "center 74%",
+      },
+      {
+        src: "/twig/stays/gold-coast-condo/gold-coast-beach-pastel.jpg",
+        alt: "People walking along a Gold Coast beach with waves and the skyline beyond",
+        source: "cameron-voyce-M9dozzTiNIo-unsplash.jpg",
+        credit: "Cameron Voyce / Unsplash",
+        creditUrl:
+          "https://unsplash.com/photos/a-group-of-people-walking-along-a-beach-next-to-the-ocean-M9dozzTiNIo",
+      },
+    ],
+  },
+  {
+    id: "stay-03",
+    hostId: "colette",
+    setting: "City",
+    title: "Le Nid Chic",
+    location: "Paris, France",
+    accommodationType: "Paris studio",
+    vibe: "The outfit has its own itinerary.",
+    description:
+      "Colette has made every inch of Le Nid Chic count. The Paris studio has a double bed for two, a kitchenette, and a full-length mirror for one last look before going out. Open the balcony doors, take in the city, then head out for art, clothes, and whatever catches your eye. When you come back, there's room to put it all away.",
+    nightlyRate: 220,
+    currency: "USD",
+    capacity: 2,
+    bedrooms: 0,
+    bathrooms: 1,
+    sleepingArrangements: ["1 double bed"],
+    amenities: ["Kitchenette", "Wi-Fi", "Full-length mirror", "Clothes storage"],
+    cancellationPolicy: null,
+    images: [
+      {
+        src: "/twig/stays/paris-studio/paris-facade-editorial.jpg",
+        alt: "Paris apartment buildings with wrought-iron balconies beneath a cloudy sky",
+        source: "alex-boyd-HhFi1gKYosc-unsplash.jpg",
+        credit: "Alex Boyd / Unsplash",
+        creditUrl:
+          "https://unsplash.com/photos/beige-concrete-building-near-green-trees-under-white-clouds-during-daytime-HhFi1gKYosc",
+      },
+      {
+        src: "/twig/stays/paris-studio/studio-editorial.jpg",
+        alt: "Blue bedding and a book beside open balcony doors overlooking Paris",
+        source: "julia-cheperis-GmCI4X9Kz4s-unsplash.jpg",
+        credit: "Julia Cheperis / Unsplash",
+        creditUrl:
+          "https://unsplash.com/photos/a-bed-with-pillows-and-a-book-on-it-GmCI4X9Kz4s",
+      },
+    ],
+  },
 ];
 
 export function stayLabel(stay: Stay) {

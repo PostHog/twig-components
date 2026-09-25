@@ -42,9 +42,11 @@ test("all portable lab entry screens render without a site router", () => {
 
 test("playground directory and dock preserve accessible navigation", () => {
   const page = playgroundPage("/", stays);
+  assert.deepEqual(page.touchpoints.map(({ id }) => id), ["discovery", "catalog", "replay"]);
   const directory = render(h(LabDirectory, { page, choose: noop, showMarker: noop }));
   assert.equal((directory.match(/>Show me where<\/button>/g) ?? []).length, page.touchpoints.length);
   assert.match(directory, /Choose a lab/);
+  assert.match(directory, /AI trip discovery/);
 
   const marker = render(h(PlaygroundMarker, {
     touchpoint: page.touchpoints[0], highlighted: false, onHighlight: noop, onChoose: noop,

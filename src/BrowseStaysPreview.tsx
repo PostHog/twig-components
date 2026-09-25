@@ -27,7 +27,7 @@ export function BrowseStaysPreview({
               data-twig-filter={setting}
               data-selected={setting === selected}
             >
-              {setting === "All" ? "All stays" : setting}
+              {setting === "All" ? "All locations" : setting}
             </span>
           ))}
         </div>

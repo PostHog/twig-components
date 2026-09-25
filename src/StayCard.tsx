@@ -22,8 +22,12 @@ export function StayCardContent({
         {stay.capacity && (
           <p className="vac-muted">
             {stay.capacity} guests
-            {stay.bedrooms ? ` · ${stay.bedrooms} bedrooms` : ""}
-            {stay.bathrooms ? ` · ${stay.bathrooms} baths` : ""}
+            {stay.bedrooms
+              ? ` · ${stay.bedrooms} ${stay.bedrooms === 1 ? "bedroom" : "bedrooms"}`
+              : ""}
+            {stay.bathrooms
+              ? ` · ${stay.bathrooms} ${stay.bathrooms === 1 ? "bath" : "baths"}`
+              : ""}
           </p>
         )}
         <p>

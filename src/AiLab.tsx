@@ -482,7 +482,7 @@ export function AiLab({
               {recommendationEvidence(run).complete && (
                 <p className="vac-muted">
                   You can now compare the request and outcome. This helps
-                  investigate a problem; it doesn’t fix the model’s answer.
+                  investigate a problem. It doesn’t fix the model’s answer.
                 </p>
               )}
             </>

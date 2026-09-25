@@ -96,10 +96,12 @@ test("shared catalog keeps filter results and stay cards consistent", async () =
   const { StayCardContent } = await import(
     "@posthog/twig-components/stay-card"
   );
-  assert.equal(filterStays("All").length, 4);
-  assert.equal(filterStays("Forest").length, 2);
+  assert.equal(filterStays("All").length, 3);
+  assert.equal(filterStays("Forest").length, 1);
   assert.equal(filterStays("Coast").length, 1);
-  assert.equal(filterStays("Mountain").length, 1);
+  assert.equal(filterStays("City").length, 1);
+  assert.equal(filterStays("City")[0].hostId, "colette");
+  assert.equal(filterStays("All", "Paris")[0].id, "stay-03");
   assert.equal(filterStays("All", "Adiron")[0].id, "stay-01");
   assert.equal(filterStays("Coast", "Adiron").length, 0);
   const html = renderToStaticMarkup(
@@ -109,4 +111,9 @@ test("shared catalog keeps filter results and stay cards consistent", async () =
   assert.match(html, /\$355/);
   assert.match(html, /4 guests/);
   assert.doesNotMatch(html, /<a |↗/);
+  const studio = renderToStaticMarkup(
+    createElement(StayCardContent, { stay: filterStays("City")[0], image: null })
+  );
+  assert.match(studio, /2 guests · 1 bath/);
+  assert.doesNotMatch(studio, /0 bedrooms|1 baths/);
 });
