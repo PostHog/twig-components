@@ -149,7 +149,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && node build-assets.mjs",
-    "prepack": "npm run build",
+    "prepare": "npm run build",
     "test": "npm run build && node --test tests/*.test.mjs",
     "gallery": "npm run build && node gallery/generate.mjs",
     "workbench": "vite --config workbench/vite.config.ts --host 127.0.0.1",
