@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactElement } from "react";
 import type { TouchpointId } from "./playground.js";
 
 export function LabNavigationView({
@@ -16,7 +17,7 @@ export function LabNavigationView({
   onAllLabs: () => void;
   onPrevious: () => void;
   onReset: () => void;
-}) {
+}): ReactElement | null {
   if (!selected) return null;
   return (
     <div className="vac-lab-navigation">

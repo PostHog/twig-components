@@ -7,6 +7,8 @@ for (const [source, target] of [
   ["./assets/logo.svg", "assets/logo.svg"],
   ["./assets/cliff.png", "assets/cliff.png"],
   ["./assets/cabin.jpg", "assets/cabin.jpg"],
+  ["./assets/coast.jpg", "assets/coast.jpg"],
+  ["./assets/city.jpg", "assets/city.jpg"],
   ["./assets/RoundHog.woff2", "assets/RoundHog.woff2"],
   ["./assets/RoundHog-Medium.woff2", "assets/RoundHog-Medium.woff2"],
   ["./assets/RoundHog-SemiBold.woff2", "assets/RoundHog-SemiBold.woff2"],

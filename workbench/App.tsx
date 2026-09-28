@@ -1,5 +1,8 @@
 import { useReducer, useRef, useState, type ReactNode } from "react";
 import { BrowseStaysPreview } from "../src/BrowseStaysPreview.js";
+import { BrowseStays } from "../src/BrowseStays.js";
+import { StayDetails } from "../src/StayDetails.js";
+import { StayCardContent } from "../src/StayCard.js";
 import { StayFilters, type StaySetting } from "../src/StayFilters.js";
 import { FilterLabExercise } from "../src/FilterLabExercise.js";
 import { FilterInspector } from "../src/FilterInspector.js";
@@ -30,10 +33,11 @@ const views: { id: View; label: string; description: string }[] = [
 function Preview() {
   const [selected, setSelected] = useState<Exclude<StaySetting, "All">>("Coast");
   const [filter, setFilter] = useState<StaySetting>("All");
+  const [search, setSearch] = useState("");
   return <>
     <div className="workbench-controls"><label>Selected guide preview <select value={selected} onChange={(event) => setSelected(event.target.value as typeof selected)}><option>Forest</option><option>Coast</option><option>City</option></select></label></div>
     <BrowseStaysPreview selected={selected} />
-    <div className="twig-browser workbench-twig"><h3>Website filter control</h3><StayFilters value={filter} onChange={setFilter} className="vac-filters" buttonClassName="vac-filter" /><p>Selected: {filter}</p></div>
+    <div className="twig-browser workbench-twig"><main><BrowseStays id="workbench-browse" setting={filter} search={search} onSettingChange={setFilter} onSearchChange={setSearch} renderStay={(stay) => <article className="vac-card" key={stay.id}><StayCardContent stay={stay} image={<div className="vac-image"><span>Photo on Twig.com</span></div>} /></article>} /><StayDetails stay={stays[0]} /></main></div>
   </>;
 }
 

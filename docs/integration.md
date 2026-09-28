@@ -8,7 +8,7 @@
 | **Twig.com** | Full website pages, Next.js routes, stay images and links, playground placement, navigation, and focus/scroll behavior. It pins a published package version. |
 | **PostHog.com** | PostHog 101 prose, code and event examples, PostHog event inspector, Twig introduction screenshot, and guide navigation. Its read-only Twig preview integration is in progress. |
 
-The catalog stores stay photo paths and credits, while Twig.com serves the finished photo files. A catalog release does not copy those files to another site. The package's read-only stay preview does not render stay photos; move the photos to a shared versioned asset source before a second site needs to display them.
+The catalog stores stay photo paths and credits, while Twig.com serves the finished photo files. The package includes the first image for each current stay under `/assets` so a guide can use the same photography. Twig.com still serves its own full galleries. Keep the package images in sync when catalog photography changes.
 
 ## Authoring scenarios
 

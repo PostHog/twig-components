@@ -1,3 +1,4 @@
+import type { ReactElement } from "react";
 import { staySettings, type StaySetting } from "./settings.js";
 
 export type BrowseStaysPreviewProps = {
@@ -9,7 +10,7 @@ export type BrowseStaysPreviewProps = {
 export function BrowseStaysPreview({
   selected,
   className = "",
-}: BrowseStaysPreviewProps) {
+}: BrowseStaysPreviewProps): ReactElement {
   return (
     <div
       className={`twig-stays-preview ${className}`.trim()}
