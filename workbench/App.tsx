@@ -4,9 +4,9 @@ import { BrowseStays } from "../src/BrowseStays.js";
 import { StayDetails } from "../src/StayDetails.js";
 import { StayCardContent } from "../src/StayCard.js";
 import { StayFilters, type StaySetting } from "../src/StayFilters.js";
-import { FilterLabExercise } from "../src/FilterLabExercise.js";
-import { FilterInspector } from "../src/FilterInspector.js";
-import { filterLabReducer, initialLabState } from "../src/filter-lab.js";
+import { EventsLab, EventsExperienceSwitch } from "../src/EventsLab.js";
+import { eventsReducer, initialEventsState } from "../src/events-lab.js";
+import { filterStays } from "../src/catalog.js";
 import { AiLab, AiLabProvider, useAiLab } from "../src/AiLab.js";
 import { fixtureRequest } from "../src/ai-lab.js";
 import { BookingLab, BookingLabProvider, useBookingLab } from "../src/BookingLab.js";
@@ -23,7 +23,7 @@ type View = "preview" | "invite" | "filters" | "ai" | "booking" | "stay" | "repl
 const views: { id: View; label: string; description: string }[] = [
   { id: "preview", label: "Twig views", description: "Read-only guide preview and interactive filter control" },
   { id: "invite", label: "PostHog invitation", description: "Open and dismiss the playground invitation" },
-  { id: "filters", label: "Filter lab", description: "Click Twig filters and inspect the locally recorded events" },
+  { id: "filters", label: "Events and properties", description: "Click Twig filters and inspect the locally recorded events" },
   { id: "ai", label: "AI lab", description: "Run a local recommendation fixture through the lesson" },
   { id: "booking", label: "Booking lab", description: "Simulate a successful or failed booking" },
   { id: "stay", label: "Stay lab", description: "Open listings and compare view events" },
@@ -54,15 +54,13 @@ function InvitationPreview() {
 }
 
 function Filters() {
-  const [state, dispatch] = useReducer(filterLabReducer, initialLabState);
-  const [stage, setStage] = useState(1);
-  const [selected, setSelected] = useState<StaySetting>("All");
-  const filterRef = useRef<HTMLDivElement>(null);
-  function focusFilters() { filterRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }); }
+  const [state, dispatch] = useReducer(eventsReducer, initialEventsState);
+  const [setting, setSetting] = useState<StaySetting>("All");
+  const [search, setSearch] = useState("");
   return <div className="vac-app">
-    <div className="workbench-controls"><button onClick={() => { dispatch({ type: "reset" }); setStage(1); setSelected("All"); }}>Reset lesson</button><button onClick={() => setStage(1)} aria-pressed={stage === 1}>Exercise</button><button onClick={() => setStage(2)} aria-pressed={stage === 2}>Inspect</button></div>
-    <div className="twig-browser workbench-twig" ref={filterRef} id="workbench-filters"><h3>Browse stays</h3><StayFilters value={selected} onChange={(value) => { setSelected(value); if (value !== "All") dispatch({ type: "filter", setting: value }); }} className="vac-filters" buttonClassName="vac-filter" /><p>{selected === "All" ? "Choose a filter" : `${selected} stay`}</p></div>
-    <div className="vac-developer-theme workbench-lab"><FilterLabExercise state={state} dispatch={dispatch} stage={stage} setStage={setStage} onFocusFilters={focusFilters} onContinue={() => setStage(2)} filterHref="#workbench-filters" /><FilterInspector state={state} onPractice={() => setStage(1)} filterHref="#workbench-filters" /></div>
+    <div className="twig-browser workbench-twig"><BrowseStays setting={setting} search={search} onSearchChange={setSearch} onSettingChange={value => { setSetting(value); dispatch({ type: "click", setting: value, count: filterStays(value, search).length, timestamp: new Date().toISOString() }); }} renderStay={stay => <article className="vac-card" key={stay.id}><StayCardContent stay={stay} image={<div className="vac-image">Twig stay</div>} /></article>} /></div>
+    <div className="workbench-controls"><button onClick={() => dispatch({ type: "reset" })}>Reset lesson</button><button disabled={!state.step} onClick={() => dispatch({ type: "previous" })}>Previous step</button></div>
+    <div className="vac-developer-theme workbench-lab"><EventsExperienceSwitch state={state} dispatch={dispatch} /><EventsLab state={state} dispatch={dispatch} onChoose={() => dispatch({ type: "reset" })} /></div>
   </div>;
 }
 
