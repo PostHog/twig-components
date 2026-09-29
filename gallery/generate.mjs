@@ -2,8 +2,8 @@ import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { BrowseStaysPreview } from "@posthog/twig-components/browse-stays-preview";
-import { EventsLab } from "../dist/EventsLab.js";
-import { initialEventsState } from "../dist/events-lab.js";
+import { EventsLab } from "@posthog/twig-components/events-lab-ui";
+import { initialEventsState } from "@posthog/twig-components/events-lab";
 import { FilterLabExercise } from "@posthog/twig-components/filter-lab-exercise";
 import { filterLabReducer, initialLabState } from "@posthog/twig-components/filter-lab";
 

@@ -38,7 +38,7 @@ When the component is used on Twig.com, check it there too. If PostHog 101 uses 
 
 ## Review the Events and properties lab
 
-Choose **Events and properties**, then **Web app** or **Agent**. Click a destination filter above the lesson. Work through naming the event, adding a destination property, adding number and boolean properties, and comparing selections. Apply each code change before clicking another filter. The destination-property step needs two different destinations.
+Choose **Events and properties**, then **Web app** or **Agent**. Click a destination filter above the lesson. Work through naming the event, adding a destination property, adding number and boolean properties, and comparing selections. Apply each code change before clicking another filter. The destination-property step needs two different destinations. **All locations** clears the filter and does not count as a destination from that step onward.
 
 In the agent path, send the prepared message and wait for the response. Expand the tool row to inspect the simulated request and result summary. Code edits belong to the simulated agent. Event reads use the real PostHog MCP tool names and input shapes, but execute locally without a PostHog connection.
 

@@ -40,6 +40,13 @@ export function canContinue(state: EventsState) {
   if (state.step < 1 || state.step > 4 || needsConfiguration(state) || !events.length || state.inspected !== events.at(-1)?.id) return false;
   return state.step !== 3 || new Set(events.map(event => event.properties.destination_type)).size >= 2;
 }
+/** A previous step needs a fresh reply even when its old turn is still visible. */
+export function hasCurrentAgentReply(state: EventsState, repliedEventIds: readonly (string | undefined)[]) {
+  const latestId = currentEvents(state).at(-1)?.id;
+  return !!latestId
+    && (state.step === 5 ? state.answered : state.inspected === latestId)
+    && repliedEventIds.includes(latestId);
+}
 export function eventsReducer(state: EventsState, action: EventsAction): EventsState {
   switch (action.type) {
     case "path": return { ...state, path: action.path, step: state.step === 0 ? 1 : state.step };
@@ -51,6 +58,7 @@ export function eventsReducer(state: EventsState, action: EventsAction): EventsS
     case "inspect": return currentEvents(state).some(event => event.id === action.id) ? { ...state, inspected: action.id } : state;
     case "click": {
       if (state.step < 1 || state.step > 5 || needsConfiguration(state) || !["All", "Forest", "Coast", "City"].includes(action.setting)) return state;
+      if (state.step >= 3 && action.setting === "All") return state;
       if (!Number.isInteger(action.count) || action.count < 0 || !Number.isFinite(Date.parse(action.timestamp))) return state;
       const properties: TeachingEvent["properties"] = state.step === 1
         ? { $event_type: "click", $pathname: "/" }
@@ -71,7 +79,7 @@ export function destinationCounts(events: readonly TeachingEvent[]) {
   const counts = new Map<string, number>();
   for (const event of events) {
     const value = event.properties.destination_type;
-    if (typeof value === "string") counts.set(value, (counts.get(value) ?? 0) + 1);
+    if (value === "Forest" || value === "Coast" || value === "City") counts.set(value, (counts.get(value) ?? 0) + 1);
   }
   return [...counts].map(([destination, count]) => ({ destination, count }));
 }
@@ -79,8 +87,8 @@ export const captureCode = [
   "",
   "// Twig has the PostHog web SDK installed.\n// Autocapture records button clicks automatically.",
   'posthog.capture("stay_filter_selected");',
-  'posthog.capture("stay_filter_selected", {\n  destination_type: selectedDestinationType,\n});',
-  'posthog.capture("stay_filter_selected", {\n  destination_type: selectedDestinationType,\n  results_count: matchingStays.length,\n  has_results: matchingStays.length > 0,\n});',
+  'function track(type) {\n  if (type === "All") return;\n  posthog.capture(\n    "stay_filter_selected",\n    { destination_type: type }\n  );\n}',
+  'function track(type, matches) {\n  if (type === "All") return;\n  const count = matches.length;\n  posthog.capture(\n    "stay_filter_selected",\n    {\n      destination_type: type,\n      results_count: count,\n      has_results: count > 0,\n    }\n  );\n}',
 ];
 export const handoffSteps = [
   "Confirm my PostHog project and ask which product interaction and time range to investigate. Find the actual event and property names – ask me about ambiguous matches.",

@@ -1,6 +1,6 @@
 "use client";
 import { Children, isValidElement, useEffect, useId, useRef, useState, type Dispatch, type ReactNode } from "react";
-import { canContinue, captureCode, currentEvents, destinationCounts, eventInspectionRequest, eventTrendsRequest, handoffIntro, handoffSteps, handoffScope, needsConfiguration, type EventsAction, type EventsState, type TeachingEvent } from "./events-lab.js";
+import { canContinue, captureCode, currentEvents, destinationCounts, eventInspectionRequest, eventTrendsRequest, handoffTask, hasCurrentAgentReply, needsConfiguration, type EventsAction, type EventsState, type TeachingEvent } from "./events-lab.js";
 function Button({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return <button type="button" className="vac-button" {...props}><span className="vac-os-button-face">{children}</span></button>;
 }
@@ -8,7 +8,7 @@ const lessons = [
   { title: "Events and properties", text: "In this lab, turn your Twig clicks into events, add properties to describe them, and discover which destinations you choose most.", next: "" },
   { title: "What does a click tell us?", text: "An event records something that happened. Let’s see what PostHog captures when you click a destination.", next: "Give the action a name" },
   { title: "Name the action", text: <>Your click was recorded as <code>$autocapture</code>. Now give the action a useful name: <code>stay_filter_selected</code>.</>, next: "Add a property" },
-  { title: "Which destination?", text: <>A property describes an event. Add <code>destination_type</code>, then compare two different filter clicks.</>, next: "Add more context" },
+  { title: "Which destination?", text: <>A property describes an event. Add <code>destination_type</code>, then compare two different destination clicks. All locations clears the filter, so it does not count as a destination.</>, next: "Add more context" },
   { title: "What happened after the click?", text: "Properties can also be numbers or booleans (true or false). Record how many stays matched the filter.", next: "Compare your selections" },
   { title: "Which destination did you choose most?", text: <>Compare your filter selections by <code>destination_type</code>. Keep using Twig’s filters to see the counts change.</>, next: "Finish the lab" },
 ];
@@ -104,7 +104,7 @@ function AgentExperience({ state, dispatch }: ExperienceProps) {
   const transcript = useRef<HTMLDivElement>(null);
   useEffect(() => { if (transcript.current) transcript.current.scrollTop = transcript.current.scrollHeight; }, [turns.length, pending?.phase]);
   const currentTurns = turns.filter(turn => turn.step === state.step);
-  const hasCurrentResponse = latest && currentTurns.some(turn => (turn.event?.id ?? turn.events?.at(-1)?.id) === latest.id);
+  const hasCurrentResponse = hasCurrentAgentReply(state, currentTurns.map(turn => turn.event?.id ?? turn.events?.at(-1)?.id));
   const showComposer = setup || (latest ? !hasCurrentResponse : currentTurns.length === 0);
   const instruction = pending ? null : setup
     ? "Send the prepared message to ask the agent to update Twig’s tracking code."
@@ -173,10 +173,10 @@ function Handoff() {
       <h4><span className="vac-handoff-number">2</span> Explore your data</h4>
       <p>Already connected? Start here. Copy this prompt into your coding agent.</p>
       <div className="vac-command-block vac-prompt-block">
-        <button type="button" className="vac-command-copy" aria-label="Copy prompt" title={copied === "Prompt copied." ? "Copied!" : "Copy prompt"} onClick={() => copy([handoffIntro, ...handoffSteps.map((step, index) => `${index + 1}. ${step}`), handoffScope].join("\n\n"), "Prompt")}>
+        <button type="button" className="vac-command-copy" aria-label="Copy prompt" title={copied === "Prompt copied." ? "Copied!" : "Copy prompt"} onClick={() => copy(handoffTask, "Prompt")}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">{copied === "Prompt copied." ? <path d="m5 12 4 4L19 6" /> : <><rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h4" /></>}</svg>
         </button>
-        <pre aria-label="Agent investigation prompt"><code>{[handoffIntro, ...handoffSteps.map((step, index) => `${index + 1}. ${step}`), handoffScope].join("\n\n")}</code></pre>
+        <pre aria-label="Agent investigation prompt"><code>{handoffTask}</code></pre>
       </div>
 
     </section>
