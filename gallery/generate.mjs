@@ -2,6 +2,16 @@ import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { BrowseStaysPreview } from "@posthog/twig-components/browse-stays-preview";
+import { SavedStay } from "@posthog/twig-components/saved-stay";
+import {
+  AccountLayout,
+  AccountSettingsView,
+  BookedStaysView,
+  LoginView,
+  ProfileMenu,
+  ProfileOverview,
+  SavedStaysView,
+} from "@posthog/twig-components/account";
 import { FilterLabExercise } from "@posthog/twig-components/filter-lab-exercise";
 import { filterLabReducer, initialLabState } from "@posthog/twig-components/filter-lab";
 
@@ -16,6 +26,36 @@ for (const name of ["Halfre.ttf", "logo.svg", "cliff.png", "cabin.jpg", "RoundHo
 const examples = ["Forest", "Coast", "Mountain"]
   .map((selected) => `<section><h2>${selected}</h2>${renderToStaticMarkup(createElement(BrowseStaysPreview, { selected }))}</section>`)
   .join("\n");
+
+const savedStayExamples = [
+  { title: "Signed out", props: { signedIn: false, onSignIn: () => {} } },
+  { title: "Unsaved", props: { signedIn: true, saved: false, onSavedChange: () => {} } },
+  { title: "Saved", props: { signedIn: true, saved: true, onSavedChange: () => {} } },
+  { title: "Saving", props: { signedIn: true, saved: false, loading: true, onSavedChange: () => {} } },
+  { title: "Error", props: { signedIn: true, saved: false, errorMessage: "Twig couldn’t update this stay. Try again.", onSavedChange: () => {} } },
+].map(({ title, props }) => `<div class="saved-example"><h3>${title}</h3>${renderToStaticMarkup(createElement(SavedStay, { stayName: "Adiron-shack", ...props }))}</div>`).join("\n");
+
+const accountProfile = {
+  displayName: "Edgar Hogg",
+  email: "edgar.hogg@fakeemail.com",
+  homeTown: "London",
+  bio: "Hi, I'm Edgar! I love long walks on the beach with my family in 3:4 formation and I have collection of rubber ducks from my many trips across Europe.",
+};
+const accountLinks = [
+  { id: "profile", label: "Profile", href: "/profile" },
+  { id: "saved", label: "Saved stays", href: "/profile/saved" },
+  { id: "bookings", label: "Booked stays", href: "/profile/bookings" },
+  { id: "settings", label: "Account settings", href: "/profile/settings" },
+];
+const stayViewProps = { renderImage: () => createElement("span", { className: "gallery-stay-image" }, "Stay photo"), stayHref: (stay) => `/stays/${stay.id}` };
+const accountExamples = [
+  { title: "Login", view: createElement(LoginView, { email: accountProfile.email, onLogin: () => {} }) },
+  { title: "Profile menu", view: createElement("div", { className: "gallery-menu" }, createElement(ProfileMenu, { profile: accountProfile, links: accountLinks, open: true, onOpenChange: () => {}, onSignOut: () => {} })) },
+  { title: "Profile", view: createElement(AccountLayout, { profile: accountProfile, active: "profile", links: accountLinks }, createElement(ProfileOverview, { profile: accountProfile, onBioChange: () => {} })) },
+  { title: "Saved stays · empty", view: createElement(AccountLayout, { profile: accountProfile, active: "saved", links: accountLinks }, createElement(SavedStaysView, { ...stayViewProps, stays: [] })) },
+  { title: "Booked stays · empty", view: createElement(AccountLayout, { profile: accountProfile, active: "bookings", links: accountLinks }, createElement(BookedStaysView, { ...stayViewProps, bookings: [] })) },
+  { title: "Account settings", view: createElement(AccountLayout, { profile: accountProfile, active: "settings", links: accountLinks }, createElement(AccountSettingsView, { value: { ...accountProfile, tripReminders: true, productUpdates: false }, onChange: () => {}, onSave: () => {} })) },
+].map(({ title, view }) => `<section class="account-example"><h2>${title}</h2>${renderToStaticMarkup(view)}</section>`).join("\n");
 
 let inspectedState = filterLabReducer(initialLabState, { type: "example" });
 inspectedState = filterLabReducer(inspectedState, { type: "filter", setting: "Forest" });
@@ -40,10 +80,16 @@ const html = `<!doctype html>
     p { margin: 0 0 36px; color: #5f5d59; }
     section { margin: 0 0 40px; }
     h2 { margin: 0 0 12px; font-size: 18px; }
+    .saved-examples { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 20px; padding: 24px; border: 1px solid #d7c8b6; border-radius: 4px; background: #f7eddf; }
+    .saved-example h3 { margin: 0 0 10px; color: #2d2b29; font: 16px/1.2 Arial, sans-serif; }
+    .account-gallery { display: grid; gap: 48px; padding: 28px; border: 1px solid #d7c8b6; background: #f7eddf; container-type: inline-size; }
+    .account-example { margin: 0; }
+    .gallery-menu { position: relative; min-height: 360px; display: flex; justify-content: flex-end; }
+    .gallery-stay-image { display: grid; place-items: center; min-height: 180px; background: #efe1ce; }
     .lab-preview { padding: 24px; }
   </style>
 </head>
-<body><main><h1>Twig component gallery</h1><p>Actual package output · Twig views and Filter Lab states</p>${examples}${labExamples}</main></body>
+<body><main><h1>Twig component gallery</h1><p>Actual package output · Twig views and Filter Lab states</p><section><h2>Saved stay states</h2><div class="saved-examples">${savedStayExamples}</div></section><section><h2>Account views</h2><div class="account-gallery">${accountExamples}</div></section>${examples}${labExamples}</main></body>
 </html>`;
 
 await writeFile(new URL("./index.html", output), html);

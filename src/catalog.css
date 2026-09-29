@@ -332,3 +332,803 @@
   border-radius: 4px;
   background: var(--twig-fill);
 }
+
+/* Controlled save control for Twig cards, detail pages, and editorial previews. */
+.twig-saved-stay {
+  --twig-save-paper: var(--vac-paper, #f7eddf);
+  --twig-save-ink: var(--vac-ink, #2d2b29);
+  --twig-save-muted: var(--vac-muted, #6d6258);
+  --twig-save-line: var(--vac-line, #d7c8b6);
+  --twig-save-fill: var(--vac-fill, #efe1ce);
+  display: inline-grid;
+  max-width: 100%;
+  gap: 7px;
+  color: var(--twig-save-ink);
+  font: 15px/1.2 TwigHalfre, sans-serif;
+}
+.twig-saved-stay-button {
+  position: relative;
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--twig-save-paper);
+  font: inherit;
+  cursor: pointer;
+}
+.twig-saved-stay-button::before {
+  position: absolute;
+  inset: 4px;
+  border: 1px solid var(--twig-save-line);
+  border-radius: 4px;
+  background: var(--twig-save-paper);
+  box-shadow: 0 2px 8px #2d2b2926;
+  content: "";
+}
+.twig-saved-stay-button:hover:not(:disabled)::before {
+  border-color: var(--twig-save-ink);
+  background: var(--twig-save-fill);
+}
+.twig-saved-stay-button:focus-visible {
+  outline: 3px solid var(--twig-save-ink);
+  outline-offset: 3px;
+}
+.twig-saved-stay[data-saved="true"] .twig-saved-stay-button {
+  color: var(--twig-save-paper);
+}
+.twig-saved-stay[data-saved="true"] .twig-saved-stay-button::before {
+  border-color: var(--twig-save-ink);
+  background: var(--twig-save-ink);
+}
+.twig-saved-stay[data-saved="true"] .twig-saved-stay-button:hover:not(:disabled)::before {
+  background: var(--twig-save-muted);
+}
+.twig-saved-stay-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.twig-saved-stay-icon {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: 14px;
+  height: 17px;
+  overflow: visible;
+  fill: transparent;
+  color: var(--twig-save-ink);
+  stroke: currentColor;
+  stroke-linejoin: round;
+  stroke-width: 1.6;
+  transition: transform 120ms ease;
+}
+.twig-saved-stay-button:hover:not(:disabled) .twig-saved-stay-icon {
+  transform: scale(1.08);
+}
+.twig-saved-stay-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.twig-saved-stay[data-saved="true"] .twig-saved-stay-icon {
+  fill: currentColor;
+  color: var(--twig-save-paper);
+}
+.twig-saved-stay-error {
+  max-width: 260px;
+  color: #8d2e24;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+/* Reusable Twig account views. Hosts supply identity, state, routes, and storage. */
+.twig-login-view,
+.twig-profile-login-trigger,
+.twig-profile-menu,
+.twig-account-layout {
+  --twig-account-paper: var(--vac-paper, #f7eddf);
+  --twig-account-ink: var(--vac-ink, #2d2b29);
+  --twig-account-muted: var(--vac-muted, #6d6258);
+  --twig-account-line: var(--vac-line, #d7c8b6);
+  --twig-account-fill: var(--vac-fill, #efe1ce);
+  color: var(--twig-account-ink);
+  font-family: TwigHalfre, sans-serif;
+}
+.twig-login-view *,
+.twig-profile-login-trigger,
+.twig-profile-menu *,
+.twig-account-layout * {
+  box-sizing: border-box;
+}
+.twig-account-avatar {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--twig-account-line);
+  border-radius: 50%;
+  background: var(--twig-account-fill);
+  color: var(--twig-account-muted);
+}
+.twig-account-avatar svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+}
+.twig-account-muted {
+  color: var(--twig-account-muted);
+}
+.twig-account-error {
+  color: #8d2e24;
+  font-size: 13px;
+}
+.twig-login-view .vac-button,
+.twig-account-layout .vac-button {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 16px;
+  border: 1px solid var(--twig-account-line);
+  border-radius: 4px;
+  background: var(--twig-account-paper);
+  color: var(--twig-account-ink);
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+.twig-login-view .vac-button:hover:not(:disabled),
+.twig-account-layout .vac-button:hover:not(:disabled) {
+  background: var(--twig-account-fill);
+}
+.twig-login-view .vac-primary,
+.twig-account-layout .vac-primary {
+  border-color: var(--twig-account-ink);
+  background: var(--twig-account-ink);
+  color: var(--twig-account-paper);
+}
+.twig-login-view .vac-primary:hover:not(:disabled),
+.twig-account-layout .vac-primary:hover:not(:disabled) {
+  background: var(--twig-account-muted);
+  border-color: var(--twig-account-muted);
+}
+.twig-login-view .vac-button:disabled,
+.twig-account-layout .vac-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.twig-login-view {
+  display: grid;
+  min-height: min(680px, 75dvh);
+  place-items: center;
+  padding: clamp(24px, 7vw, 72px) 20px;
+  background: var(--twig-account-paper);
+}
+.twig-login-card {
+  width: min(100%, 440px);
+  padding: clamp(24px, 5vw, 42px);
+  border: 1px solid var(--twig-account-line);
+  border-radius: 4px;
+  background: var(--twig-account-paper);
+  box-shadow: 10px 10px 0 var(--twig-account-fill);
+}
+.twig-login-card h1 {
+  margin: 6px 0 8px;
+  color: inherit;
+  font: 500 clamp(31px, 6vw, 42px)/1.12 TwigHalfre, sans-serif;
+  letter-spacing: -0.03em;
+}
+.twig-login-hint {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 26px;
+}
+.twig-login-hint-icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+}
+.twig-login-card label {
+  display: block;
+  margin: 15px 0 6px;
+  font-size: 13px;
+}
+.twig-login-card input,
+.twig-account-settings input:not([type="checkbox"]) {
+  display: block;
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid var(--twig-account-line);
+  border-radius: 4px;
+  background: var(--twig-account-fill);
+  color: var(--twig-account-ink);
+  font: inherit;
+}
+.twig-login-card input {
+  font-size: 13px;
+}
+.twig-login-card input[readonly] {
+  cursor: default;
+}
+.twig-login-submit {
+  width: 100%;
+  margin-top: 22px;
+  font: inherit;
+}
+.twig-profile-menu {
+  position: relative;
+  z-index: 70;
+}
+.twig-profile-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 4px 9px 4px 5px;
+  border: 1px solid var(--twig-account-line);
+  border-radius: 999px;
+  background: var(--twig-account-paper);
+  color: var(--twig-account-ink);
+  font: 15px/1.2 TwigHalfre, sans-serif;
+  text-decoration: none;
+  cursor: pointer;
+}
+.twig-profile-login-trigger {
+  justify-content: center;
+  min-width: 92px;
+  padding: 4px 20px;
+}
+.twig-profile-trigger:hover,
+.twig-profile-trigger[aria-expanded="true"] {
+  border-color: var(--twig-account-ink);
+  background: var(--twig-account-fill);
+}
+.twig-profile-trigger .twig-account-avatar {
+  width: 34px;
+  height: 34px;
+  background: var(--twig-account-paper);
+}
+.twig-profile-trigger-name {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.twig-profile-chevron {
+  width: 12px;
+  height: 8px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+}
+.twig-profile-popover {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: min(300px, calc(100vw - 32px));
+  overflow: hidden;
+  border: 1px solid var(--twig-account-line);
+  border-radius: 4px;
+  background: var(--twig-account-paper);
+  box-shadow: 0 16px 42px #2d2b2926;
+}
+.twig-profile-summary,
+.twig-account-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.twig-profile-summary {
+  padding: 16px;
+  border-bottom: 1px solid var(--twig-account-line);
+}
+.twig-profile-summary > span,
+.twig-account-identity > span {
+  min-width: 0;
+}
+.twig-profile-summary :is(strong, small),
+.twig-account-identity :is(strong, small) {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.twig-profile-summary small,
+.twig-account-identity small {
+  color: var(--twig-account-muted);
+  font-size: 12px;
+}
+.twig-profile-popover nav {
+  display: grid;
+  padding: 8px;
+}
+.twig-profile-popover nav a,
+.twig-profile-signout {
+  display: block;
+  width: 100%;
+  padding: 11px 12px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+}
+.twig-profile-popover nav a:hover,
+.twig-profile-signout:hover {
+  background: var(--twig-account-fill);
+}
+.twig-profile-signout {
+  border-top: 1px solid var(--twig-account-line);
+  border-radius: 0;
+  cursor: pointer;
+}
+.twig-account-layout {
+  display: grid;
+  grid-template-columns: minmax(200px, 250px) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 64px);
+  width: min(100%, 1120px);
+  margin: 0 auto;
+}
+.twig-account-sidebar {
+  align-self: start;
+  position: sticky;
+  top: 24px;
+  padding: 20px;
+  border: 1px solid var(--twig-account-line);
+  border-radius: 4px;
+}
+.twig-account-identity {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--twig-account-line);
+}
+.twig-account-sidebar nav {
+  display: grid;
+  gap: 4px;
+  margin-top: 12px;
+}
+.twig-account-sidebar nav a {
+  padding: 10px 12px;
+  border-radius: 4px;
+  color: inherit;
+  text-decoration: none;
+}
+.twig-account-sidebar nav a:hover {
+  background: var(--twig-account-fill);
+}
+.twig-account-sidebar nav a[aria-current="page"] {
+  background: var(--twig-account-ink);
+  color: var(--twig-account-paper);
+}
+.twig-account-content {
+  min-width: 0;
+}
+.twig-account-page > h1 {
+  margin: 6px 0 8px;
+  color: inherit;
+  font: 500 clamp(34px, 5vw, 48px)/1.12 TwigHalfre, sans-serif;
+  letter-spacing: -0.03em;
+}
+.twig-account-page > .twig-account-muted {
+  margin: 0 0 32px;
+  font-size: 16px;
+}
+.twig-profile-card {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(24px, 4vw, 36px);
+  border: 1px solid var(--twig-account-line);
+  border-radius: 4px;
+  background: var(--twig-account-fill);
+  box-shadow: 9px 9px 0 var(--twig-account-paper), 10px 10px 0 var(--twig-account-line);
+}
+.twig-profile-card-intro {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.twig-profile-avatar-large {
+  width: 96px;
+  height: 96px;
+  border-width: 2px;
+  background: var(--twig-account-paper);
+  color: var(--twig-account-ink);
+}
+.twig-profile-avatar-large svg {
+  width: 50px;
+  height: 50px;
+}
+.twig-profile-card-intro h2 {
+  margin: 3px 0 4px;
+  font-size: clamp(27px, 4vw, 38px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+.twig-profile-bio {
+  margin-top: 30px;
+  padding: 22px 24px;
+  border: 1px solid var(--twig-account-line);
+  border-radius: 4px;
+  background: var(--twig-account-paper);
+}
+.twig-profile-bio-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.twig-profile-bio h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+.twig-profile-bio p {
+  max-width: 630px;
+  margin: 0;
+  color: var(--twig-account-muted);
+}
+.twig-profile-edit {
+  display: inline-grid;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 1px solid var(--twig-account-line);
+  border-radius: 50%;
+  background: var(--twig-account-paper);
+  color: var(--twig-account-ink);
+  cursor: pointer;
+}
+.twig-profile-edit:hover {
+  border-color: var(--twig-account-ink);
+  background: var(--twig-account-fill);
+}
+.twig-profile-edit:focus-visible {
+  outline: 3px solid var(--twig-account-ink);
+  outline-offset: 3px;
+}
+.twig-profile-edit svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.6;
+}
+.twig-profile-bio-form {
+  display: grid;
+  gap: 12px;
+}
+.twig-profile-bio-form textarea {
+  display: block;
+  width: 100%;
+  min-height: 126px;
+  resize: vertical;
+  padding: 12px;
+  border: 1px solid var(--twig-account-line);
+  border-radius: 4px;
+  background: var(--twig-account-paper);
+  color: var(--twig-account-ink);
+  font: inherit;
+  line-height: 1.5;
+}
+.twig-profile-bio-form textarea:focus-visible {
+  outline: 3px solid var(--twig-account-ink);
+  outline-offset: 2px;
+}
+.twig-profile-bio-form > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.twig-profile-facts {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 22px 0 0;
+  border: 1px solid var(--twig-account-line);
+  border-radius: 4px;
+  background: var(--twig-account-paper);
+}
+.twig-profile-facts > div {
+  min-width: 0;
+  padding: 16px 18px;
+}
+.twig-profile-facts dt {
+  color: var(--twig-account-muted);
+  font-size: 12px;
+}
+.twig-profile-facts dd {
+  overflow: hidden;
+  margin: 3px 0 0;
+  font-size: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.twig-account-stay-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+.twig-account-stay-card {
+  position: relative;
+  min-width: 0;
+}
+.twig-account-stay-card > a {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+.twig-account-stay-card > a:hover h3 {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.twig-account-stay-save {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+}
+.twig-account-empty {
+  display: grid;
+  justify-items: center;
+  min-height: 330px;
+  padding: 54px 24px;
+  border: 1px dashed var(--twig-account-line);
+  border-radius: 4px;
+  text-align: center;
+}
+.twig-account-empty-icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border: 1px solid var(--twig-account-line);
+  border-radius: 50%;
+  background: var(--twig-account-fill);
+  color: var(--twig-account-muted);
+  font-size: 28px;
+}
+.twig-account-empty-icon svg {
+  width: 22px;
+  height: 26px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linejoin: round;
+  stroke-width: 1.6;
+}
+.twig-account-empty h2 {
+  margin: 18px 0 4px;
+  font-size: 24px;
+  font-weight: 500;
+}
+.twig-account-empty p {
+  margin: 0 0 24px;
+  color: var(--twig-account-muted);
+}
+.twig-account-empty .vac-button {
+  text-decoration: none;
+}
+.twig-booking-list {
+  display: grid;
+  gap: 18px;
+}
+.twig-booking-card {
+  display: grid;
+  grid-template-columns: minmax(180px, 34%) minmax(0, 1fr);
+  border: 1px solid var(--twig-account-line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.twig-booking-image {
+  display: block;
+  min-height: 210px;
+  background: var(--twig-account-fill);
+}
+.twig-booking-image > * {
+  width: 100%;
+  height: 100%;
+}
+.twig-booking-body {
+  padding: 22px;
+}
+.twig-booking-status {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: var(--twig-account-fill);
+  color: var(--twig-account-muted);
+  font-size: 12px;
+}
+.twig-booking-body h2 {
+  margin: 12px 0 4px;
+  font-size: 24px;
+  font-weight: 500;
+}
+.twig-booking-body h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+.twig-booking-body h2 a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.twig-booking-body > p {
+  margin: 0;
+  color: var(--twig-account-muted);
+}
+.twig-booking-body dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 36px;
+  margin: 22px 0 0;
+}
+.twig-booking-body dt {
+  color: var(--twig-account-muted);
+  font-size: 12px;
+}
+.twig-booking-body dd {
+  margin: 2px 0 0;
+}
+.twig-booking-details {
+  margin-top: 24px;
+  border-color: var(--twig-account-line) !important;
+  background: var(--twig-account-fill) !important;
+  color: var(--twig-account-muted) !important;
+}
+.twig-account-settings {
+  display: grid;
+  gap: 24px;
+}
+.twig-account-settings fieldset {
+  display: grid;
+  gap: 10px;
+  padding: 22px;
+  border: 1px solid var(--twig-account-line);
+  border-radius: 4px;
+}
+.twig-account-settings legend {
+  padding: 0 8px;
+  font-size: 20px;
+  font-weight: 500;
+}
+.twig-account-static-details {
+  display: grid;
+  margin: 0;
+  border: 1px solid var(--twig-account-line);
+  border-radius: 4px;
+  background: var(--twig-account-fill);
+}
+.twig-account-static-details > div {
+  padding: 14px 16px;
+}
+.twig-account-static-details > div + div {
+  border-top: 1px solid var(--twig-account-line);
+}
+.twig-account-static-details dt {
+  color: var(--twig-account-muted);
+  font-size: 12px;
+}
+.twig-account-static-details dd {
+  margin: 3px 0 0;
+  overflow-wrap: anywhere;
+}
+.twig-account-check {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  padding: 12px 0;
+}
+.twig-account-check + .twig-account-check {
+  border-top: 1px solid var(--twig-account-line);
+}
+.twig-account-check input {
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  accent-color: var(--twig-account-ink);
+}
+.twig-account-check :is(strong, small) {
+  display: block;
+}
+.twig-account-check small {
+  margin-top: 3px;
+  color: var(--twig-account-muted);
+}
+.twig-account-settings-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.twig-account-settings-actions p {
+  margin: 0;
+  color: var(--twig-account-muted);
+}
+@container (max-width: 700px) {
+  .twig-account-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .twig-account-sidebar {
+    position: static;
+  }
+  .twig-account-sidebar nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-bottom: 4px;
+  }
+  .twig-account-sidebar nav a {
+    min-width: 0;
+  }
+}
+@container (max-width: 500px) {
+  .twig-account-stay-grid,
+  .twig-booking-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .twig-profile-card-intro {
+    align-items: flex-start;
+  }
+  .twig-profile-avatar-large {
+    width: 76px;
+    height: 76px;
+  }
+  .twig-profile-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .twig-booking-image {
+    min-height: 180px;
+  }
+}
+@media (max-width: 600px) {
+  .twig-profile-trigger-name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+  .twig-account-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .twig-account-sidebar {
+    position: static;
+  }
+  .twig-account-sidebar nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .twig-account-stay-grid,
+  .twig-booking-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .twig-account-settings-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
