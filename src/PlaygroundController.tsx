@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { EventsLabProvider } from "./EventsLabProvider.js";
 import { AiLabProvider } from "./AiLab.js";
 import { BookingLabProvider } from "./BookingLab.js";
 import { useStayLab } from "./StayLab.js";
@@ -92,7 +93,7 @@ export function PlaygroundLabProvider({
         <BookingLabProvider
           active={bookingEnabled && selected === "booking" && stage > 0}
         >
-          {children}
+          <EventsLabProvider active={active && selected === "catalog" && !initialSource}>{children}</EventsLabProvider>
         </BookingLabProvider>
       </AiLabProvider>
     </PlaygroundLabContext.Provider>

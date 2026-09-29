@@ -2,6 +2,8 @@ import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { BrowseStaysPreview } from "@posthog/twig-components/browse-stays-preview";
+import { EventsLab } from "@posthog/twig-components/events-lab-ui";
+import { initialEventsState } from "@posthog/twig-components/events-lab";
 import { FilterLabExercise } from "@posthog/twig-components/filter-lab-exercise";
 import { filterLabReducer, initialLabState } from "@posthog/twig-components/filter-lab";
 
@@ -25,6 +27,7 @@ const labExamples = [
   { title: "Filter Lab · events", state: inspectedState, stage: 2 },
 ].map(({ title, state, stage }) => `<section class="vac-app"><div class="vac-developer-theme lab-preview"><h2>${title}</h2>${renderToStaticMarkup(createElement(FilterLabExercise, { state, stage, dispatch: () => {}, setStage: () => {}, onFocusFilters: () => {}, onContinue: () => {}, filterHref: "#gallery-filter-controls" }))}</div></section>`).join("\n");
 
+const eventsExamples = ["web", "mcp"].map(path => `<section class="vac-app"><div class="vac-developer-theme lab-preview">${renderToStaticMarkup(createElement(EventsLab, { state: { ...initialEventsState, path, step: path === "web" ? 5 : 1, configured: [2, 3, 4], answered: path === "web", events: path === "web" ? [{ id: "0-4-1", event: "stay_filter_selected", timestamp: "2026-09-28T12:00:00Z", properties: { destination_type: "Forest", results_count: 1, has_results: true } }] : [] }, dispatch: () => {}, onChoose: () => {} }))}</div></section>`).join("\n");
 const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -43,7 +46,8 @@ const html = `<!doctype html>
     .lab-preview { padding: 24px; }
   </style>
 </head>
-<body><main><h1>Twig component gallery</h1><p>Actual package output · Twig views and Filter Lab states</p>${examples}${labExamples}</main></body>
+<body><main><h1>Twig component gallery</h1><p>Actual package output · Twig views and Filter Lab states</p>${examples}${labExamples}
+${eventsExamples}</main></body>
 </html>`;
 
 await writeFile(new URL("./index.html", output), html);

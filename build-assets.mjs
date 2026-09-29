@@ -13,6 +13,8 @@ for (const [source, target] of [
   ["./assets/RoundHog-Medium.woff2", "assets/RoundHog-Medium.woff2"],
   ["./assets/RoundHog-SemiBold.woff2", "assets/RoundHog-SemiBold.woff2"],
   ["./src/assets/posthog-logomark.svg", "assets/posthog-logomark.svg"],
+  ["./assets/hoggie-chart.png", "assets/hoggie-chart.png"],
+  ["./assets/hoggie-robot.png", "assets/hoggie-robot.png"],
 ]) {
   await copyFile(
     new URL(source, import.meta.url),
