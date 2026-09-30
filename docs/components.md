@@ -8,6 +8,8 @@ Import only the pieces you need from `@posthog/twig-components/<path>`. React is
 
 | Import path | Export | What it does | Used in Twig / what the host supplies |
 | --- | --- | --- | --- |
+| `/account` | `LoginView`, `ProfileMenu`, `AccountLayout`, `ProfileOverview`, `SavedStaysView`, `BookedStaysView`, `AccountSettingsView`, types | Reusable Twig account visuals, accessible profile-menu behavior, traveler profile, empty/populated stay views, and settings form. | Host supplies profile content, fixed login email, state, callbacks, routes, images, bookings, persistence, and analytics. |
+| `/saved-stay` | `SavedStay`, `SavedStayProps` | Controlled save control with signed-out, unsaved, saved, loading, disabled, and error states. Its signed-out label says “Log in to save.” | Host supplies `stayName`, auth state, save state, callbacks, persistence, and analytics. Signed-out hosts pass `onSignIn`; signed-in hosts pass `saved` and `onSavedChange`. |
 | `/filters` | `StayFilters`, `staySettings`, `StaySetting` | Controlled Forest/Coast/City filter buttons; calls `onChange` on a click. | `Discover`; pass `value`, `onChange`, and optional CSS classes. The host filters the listings. |
 | `/browse-stays` | `BrowseStays` | Real Browse stays controls and matching results from the shared catalog. | `Discover`; pass filter/search state, callbacks, a card renderer, and an optional marker. The host owns tracking and navigation. |
 | `/stay-card` | `StayCardContent` | Listing text, location, capacity, and nightly price. | `StayCard`; pass a `stay` and `image`. The host supplies the link or card wrapper; `linked` shows an arrow. |
@@ -37,6 +39,76 @@ function Browse() {
   </>;
 }
 ```
+
+`SavedStay` deliberately does not sign users in, store saved stays, navigate, or
+send events. The host starts those actions from its callbacks and reflects the
+result back through controlled props. Routes and any `posthog.identify`,
+`posthog.reset`, or `posthog.capture` calls also stay in the consuming site:
+
+```tsx
+import { SavedStay } from "@posthog/twig-components/saved-stay";
+import "@posthog/twig-components/catalog.css";
+
+<SavedStay
+  stayName="Adiron-shack"
+  signedIn
+  saved={saved}
+  loading={saving}
+  errorMessage={saveError}
+  onSavedChange={setSaved}
+/>;
+```
+
+## Account views
+
+Account components own Twig's visual presentation and interface behavior. They
+do not own the session, profile fixture, local storage, booking mutations, or
+site routes. A host can use the same views interactively in Twig.com or with
+read-only fixtures in an editorial embed.
+
+`LoginView` receives a fixed email and a display-only password mask. Its
+`onLogin` callback has no arguments, so a password value is never passed through
+the component or emitted as an event.
+
+```tsx
+import {
+  LoginView,
+  ProfileMenu,
+  type AccountLink,
+} from "@posthog/twig-components/account";
+import "@posthog/twig-components/catalog.css";
+
+const links: AccountLink[] = [
+  { id: "profile", label: "Profile", href: "/profile" },
+  { id: "saved", label: "Saved stays", href: "/profile/saved" },
+  { id: "bookings", label: "Booked stays", href: "/profile/bookings" },
+  { id: "settings", label: "Account settings", href: "/profile/settings" },
+];
+
+<LoginView email="edgar.hogg@fakeemail.com" onLogin={logInLocally} />;
+
+<ProfileMenu
+  profile={profile}
+  links={links}
+  open={profileMenuOpen}
+  onOpenChange={setProfileMenuOpen}
+  onNavigate={navigate}
+  onSignOut={logOutLocally}
+/>;
+```
+
+The default saved and booked views are empty until their controlled collections
+contain data. `SavedStaysView` receives catalog stays after a signed-in visitor
+saves them. `BookedStaysView` receives booking summaries after a signed-in
+visitor completes a booking.
+
+The profile overview presents traveler details without
+repeating the account navigation. Saved-stay cards do not repeat a save control.
+Personal details in settings are fixed display values; only message preferences
+can change. Populated booking cards include a disabled `Stay details` button as
+a placeholder for a future booking-details view. Hosts can pass `onBioChange` to
+show the About edit control; the host decides whether that draft is temporary or
+persisted.
 
 ## Labs and playground
 
