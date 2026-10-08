@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { generationCaptureExample } from "./trip-planner-capture-example.js";
 import { LabCompletionView } from "./LabCompletionView.js";
 import { TripPlannerMilestone } from "./TripPlannerMilestone.js";
@@ -26,12 +26,13 @@ export function TripPlannerWalkthrough({ stays, onAllLabs, renderStayCard }: { s
   const { lesson, dispatchLesson: dispatch } = lab;
   const [first, second] = lesson.evidence;
   const input = lesson.field === "input";
-  const next = () => dispatch({ type: "next" });
+  const next = () => {
+    dispatch({ type: "next" });
+    // Move focus only for explicit lesson navigation, never an incoming reply.
+    requestAnimationFrame(() => view.current?.focus({ preventScroll: true }));
+  };
   const firstInspected = ["first:input", "first:output"].every(field => lesson.inspected.includes(field));
   const showConversation = !!second && lesson.conversationVisible;
-  useEffect(() => {
-    if (showConversation) view.current?.focus({ preventScroll: true });
-  }, [showConversation, lesson.step]);
   const inspectOutput = () => {
     dispatch({ type: "field", value: "output" });
     requestAnimationFrame(() => view.current?.querySelector<HTMLButtonElement>('[role="tab"][data-field="output"]')?.focus());

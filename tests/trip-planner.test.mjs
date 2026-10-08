@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { TripPlannerStayPreview } from "../dist/TripPlannerStayPreview.js";
 import { TripPlanner } from "@posthog/twig-components/trip-planner";
 import { stays } from "@posthog/twig-components/catalog";
 import {
@@ -107,4 +108,12 @@ test("planner can render outside Next.js and discloses its simulated behavior", 
   assert.match(html, /maxlength="240"/i);
   assert.match(html, /Find me a forest getaway for four/);
   assert.doesNotMatch(html, /API key|<iframe|<script/);
+});
+
+test("listing preview keeps host links and save controls inert", () => {
+  const html = renderToStaticMarkup(createElement(TripPlannerStayPreview, {
+    stay: stays[2],
+    renderStayCard: () => createElement("a", { href: "/stays/stay-03" }, "View stay"),
+  }));
+  assert.match(html, /<div inert="(?:inert)?" aria-hidden="true"><a/);
 });

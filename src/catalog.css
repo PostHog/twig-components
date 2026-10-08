@@ -80,6 +80,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
+  scrollbar-color: var(--vac-line) transparent;
 }
 .twig-trip-planner-bottom { flex-shrink: 0; padding: 12px 16px 8px; }
 .twig-trip-planner-launcher {
