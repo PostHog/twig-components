@@ -103,8 +103,8 @@ test("planner can render outside Next.js and discloses its simulated behavior", 
   assert.match(html, /Simulated AI responses/);
   assert.doesNotMatch(html, /role="log"|Suggested questions|Try a short conversation/);
   assert.match(html, /<textarea[^>]*>Find me a forest getaway for four\.<\/textarea>/);
-  assert.match(html, /<textarea[^>]*readOnly=""/);
-  assert.match(html, /maxLength="240"/);
+  assert.match(html, /<textarea[^>]*readonly=""/i);
+  assert.match(html, /maxlength="240"/i);
   assert.match(html, /Find me a forest getaway for four/);
   assert.doesNotMatch(html, /API key|<iframe|<script/);
 });
