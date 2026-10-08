@@ -90,7 +90,8 @@
   font-size: 18px;
   line-height: 1.35;
 }
-.vac-app .vac-developer-theme p {
+.vac-app .vac-developer-theme p,
+.vac-app .vac-developer-theme .vac-trace-preview > figcaption {
   font-size: 13px;
   line-height: 1.6;
 }
@@ -856,3 +857,98 @@
     animation: none;
   }
 }
+
+/* AI request evidence uses the same lab surface in Twig and the workbench. */
+
+/* Request tabs browse two views of the same event, rather than quiz choices. */
+.vac-app .vac-developer-theme .vac-request-tabs { display: flex; border-bottom: 1px solid var(--vac-line); margin-top: 20px; }
+.vac-app .vac-developer-theme .vac-request-tabs [role="tab"] { flex: 1; min-width: 0; min-height: 44px; padding: 10px 8px; border: 0; border-bottom: 3px solid transparent; background: transparent; color: var(--vac-muted); font-weight: 600; }
+.vac-app .vac-developer-theme .vac-request-tabs [aria-selected="true"] { border-bottom-color: var(--ph-brand-cobalt); background: var(--ph-neutral-white); }
+.vac-app .vac-developer-theme .vac-request-tabs [role="tab"]:focus-visible { outline: 2px solid var(--ph-brand-cobalt); outline-offset: -4px; }
+.vac-app .vac-developer-theme .vac-request-panel { padding: 16px; background: var(--ph-neutral-white); overflow-wrap: anywhere; }
+.vac-app .vac-developer-theme .vac-request-panel h4 { margin-top: 0; }
+.vac-app .vac-developer-theme .vac-request-panel p:last-child { margin-bottom: 0; }
+
+/* Connect the capture property directly to the recorded message. */
+.vac-app .vac-developer-theme .vac-capture-context { margin: 8px 0 12px; font-size: 13px; }
+.vac-app .vac-developer-theme .vac-recorded-message { margin: 20px 0 0; }
+.vac-app .vac-developer-theme .vac-recorded-message figcaption { margin-bottom: 8px; font-size: 12px; }
+.vac-app .vac-developer-theme .vac-recorded-message figcaption code { background: var(--ph-brand-yellow); color: var(--ph-neutral-ink); padding: 1px 3px; }
+.vac-app .vac-developer-theme .vac-recorded-message blockquote { margin: 0; padding: 12px; border-left: 3px solid var(--ph-brand-yellow); background: var(--ph-neutral-background); font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.vac-app .vac-developer-theme .vac-trip-walkthrough { margin: 0; }
+.vac-app .vac-developer-theme .vac-trip-walkthrough > :first-child { margin-top: 0; }
+.vac-app .vac-developer-theme .vac-request-next { padding: 20px 0 0; }
+.vac-app .vac-developer-theme .vac-request-next .vac-button { width: 100%; margin: 0; white-space: normal; }
+
+.vac-app .vac-developer-theme .vac-capacity-result { margin-top: 16px; padding: 12px; background: var(--ph-neutral-white); border-left: 3px solid var(--ph-brand-cobalt); font-size: 13px; }
+.vac-app .vac-developer-theme .vac-capacity-result p { margin: 6px 0 0; }
+
+.vac-app .vac-developer-theme .vac-request-switch { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+
+.vac-app .vac-developer-theme .vac-request-switch .vac-event-choice { flex: 1; min-height: 44px; }
+
+/* Match the host breakpoint that exposes the chat’s Playground action. */
+.vac-app .vac-developer-theme .vac-trip-mobile-hint { display: none; }
+@media (max-width: 800px) {
+  .vac-app .vac-developer-theme .vac-trip-mobile-hint { display: block; }
+}
+
+/* A compact trace outline separates the recorded result from capture code. */
+.vac-app .vac-developer-theme .vac-trace-preview { margin: 20px 0 0; }
+.vac-app .vac-developer-theme .vac-trace-preview > figcaption { margin-bottom: 12px; }
+.vac-app .vac-developer-theme .vac-trace-preview-surface { background: var(--ph-neutral-background); padding: 12px; }
+.vac-app .vac-developer-theme .vac-trace-preview-name { font-size: 13px; font-weight: 600; }
+.vac-app .vac-developer-theme .vac-trace-preview-call { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; padding: 8px 0 12px; font-size: 13px; }
+.vac-app .vac-developer-theme .vac-trace-preview-call code { color: var(--vac-muted); font-size: inherit; }
+.vac-app .vac-developer-theme .vac-trace-preview-data { border-top: 1px solid var(--vac-line); padding-top: 10px; }
+.vac-app .vac-developer-theme .vac-trace-preview-source { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 12px; font-size: 13px; }
+.vac-app .vac-developer-theme .vac-trace-preview-source code { background: var(--ph-brand-yellow); color: var(--ph-neutral-ink); padding: 1px 3px; }
+.vac-app .vac-developer-theme .vac-trace-preview-message { padding-top: 12px; }
+.vac-app .vac-developer-theme .vac-trace-preview-role { font: 600 13px ui-monospace, monospace; text-transform: uppercase; color: var(--vac-muted); }
+.vac-app .vac-developer-theme .vac-trace-preview-message p { margin: 4px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* A session header groups simple trace rows, as in PostHog's session view. */
+.vac-app .vac-developer-theme .vac-conversation-traces { margin: 20px 0; background: var(--ph-neutral-white); border: 1px solid var(--vac-line); font-size: 13px; }
+.vac-app .vac-developer-theme .vac-conversation-session { display: grid; gap: 6px; padding: 12px 16px; }
+.vac-app .vac-developer-theme .vac-conversation-session > code:first-child { font-weight: 600; }
+.vac-app .vac-developer-theme .vac-conversation-traces ol { list-style: none; padding: 0 0 0 16px; margin: 0 16px 16px 24px; border-left: 1px solid var(--vac-line); }
+.vac-app .vac-developer-theme .vac-conversation-traces li { position: relative; padding: 12px 0; }
+.vac-app .vac-developer-theme .vac-conversation-traces li::before { content: ""; position: absolute; top: 22px; left: -16px; width: 10px; border-top: 1px solid var(--vac-line); }
+.vac-app .vac-developer-theme .vac-conversation-traces dl { margin: 8px 0 0; }
+.vac-app .vac-developer-theme .vac-conversation-traces li > dl:first-child { margin-top: 0; }
+.vac-app .vac-developer-theme .vac-conversation-traces dt { color: var(--vac-muted); }
+.vac-app .vac-developer-theme .vac-conversation-traces dd { margin: 4px 0 0; }
+.vac-app .vac-developer-theme .vac-conversation-traces code { font-size: inherit; overflow-wrap: anywhere; }
+
+.vac-app .vac-developer-theme .vac-trip-definitions { margin: 16px 0; padding-left: 20px; list-style: disc; }
+.vac-app .vac-developer-theme .vac-trip-definitions li { display: list-item; font-size: 13px; }
+.vac-app .vac-developer-theme .vac-trip-definitions li + li { margin-top: 6px; }
+
+/* Keep the two-part overview as a simple numbered reading list. */
+.vac-app .vac-developer-theme .vac-trip-overview { margin: 0; padding-left: 20px; list-style: decimal; }
+.vac-app .vac-developer-theme .vac-trip-overview li { display: list-item; font-size: 13px; }
+.vac-app .vac-developer-theme .vac-trip-overview li + li { margin-top: 12px; }
+.vac-app .vac-developer-theme .vac-trip-milestone li { font-size: 13px; }
+
+/* Keep the embedded homepage card in Twig's theme inside the PostHog lab. */
+.vac-app .vac-developer-theme .twig-trip-listing-preview {
+  --vac-paper: #f7eddf;
+  --vac-ink: #2d2b29;
+  --vac-muted: #6d6258;
+  --vac-line: #d7c8b6;
+  --vac-fill: #efe1ce;
+  margin: 0 0 16px;
+  padding: 16px;
+  border: 0;
+  border-radius: 0;
+  font: 15px/1.6 var(--font-twig, TwigHalfre), sans-serif;
+}
+.vac-app .vac-developer-theme .twig-trip-listing-preview .vac-card { position: relative; }
+.vac-app .vac-developer-theme .twig-trip-listing-preview .vac-card-save { position: absolute; top: 10px; right: 10px; z-index: 2; }
+.vac-app .vac-developer-theme .twig-trip-listing-preview .vac-card-body { padding: 14px 0; }
+.vac-app .vac-developer-theme .twig-trip-listing-preview h3,
+.vac-app .vac-developer-theme #guide-panel .twig-trip-listing-preview h3 { margin: 0; font: 500 19px/1.6 var(--font-twig, TwigHalfre), sans-serif; color: var(--vac-ink); }
+.vac-app .vac-developer-theme .twig-trip-listing-preview p { margin: 8px 0; font: 15px/1.6 var(--font-twig, TwigHalfre), sans-serif; color: var(--vac-ink); }
+.vac-app .vac-developer-theme .twig-trip-listing-preview .vac-muted { color: var(--vac-muted); font-size: 13px; }
+.vac-app .vac-developer-theme .twig-trip-listing-preview a { color: inherit; text-decoration: none; }
+.vac-app .vac-developer-theme .twig-trip-listing-photo { background: url("./assets/city.jpg") center / cover; }

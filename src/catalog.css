@@ -1,10 +1,222 @@
 .vac-app,
-.twig-browser {
+.twig-browser,
+.twig-trip-planner-window {
   --vac-paper: #f7eddf;
   --vac-ink: #2d2b29;
   --vac-muted: #6d6258;
   --vac-line: #d7c8b6;
   --vac-fill: #efe1ce;
+}
+
+/* The homepage composer opens a separate, non-modal conversation window. */
+.twig-trip-planner {
+  min-width: 0;
+  color: var(--vac-ink);
+  font: inherit;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.twig-trip-planner * { box-sizing: border-box; }
+.twig-trip-planner button,
+.twig-trip-planner textarea { font: inherit; }
+.twig-trip-planner button { cursor: pointer; }
+.twig-trip-planner button:disabled { opacity: .45; cursor: default; }
+.twig-trip-planner :is(button, a, [tabindex]):focus-visible {
+  outline: 2px solid var(--vac-ink);
+  outline-offset: 3px;
+}
+.twig-trip-planner-window {
+  position: fixed;
+  z-index: 10000;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 420px;
+  height: min(580px, calc(100dvh - 40px));
+  max-width: calc(100vw - 40px);
+  border: 1px solid var(--vac-line);
+  border-radius: 10px;
+  background: var(--vac-paper);
+  box-shadow: 0 12px 48px #2d2b2929;
+  overflow: hidden;
+  font-family: TwigHalfre, sans-serif;
+}
+.twig-trip-planner-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  padding: 8px 12px 8px 20px;
+  border-bottom: 1px solid var(--vac-line);
+}
+.twig-trip-planner-header h2 { margin: 0; font-size: 18px; font-weight: 600; outline: none; }
+.twig-trip-planner-window-action {
+  margin-left: auto;
+  min-height: 44px;
+  padding: 8px;
+  border: 0;
+  background: transparent;
+  color: var(--vac-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.twig-trip-planner-close {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  color: var(--vac-ink);
+  background: transparent;
+}
+.twig-trip-planner-close:hover { background: var(--vac-fill); }
+.twig-trip-planner-history {
+  flex: 1;
+  min-height: 0;
+  padding: 20px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.twig-trip-planner-bottom { flex-shrink: 0; padding: 12px 16px 8px; }
+.twig-trip-planner-launcher {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 74px;
+  padding: 12px;
+  border: 1px solid var(--vac-line);
+  border-radius: 4px;
+  background: var(--vac-paper);
+  color: var(--vac-ink);
+  text-align: left;
+}
+.twig-trip-planner-launcher:hover { background: var(--vac-fill); }
+.twig-trip-planner-launcher span { padding: 10px; }
+@media (max-width: 600px) {
+  .twig-trip-planner-window {
+    inset: 8px;
+    width: auto;
+    max-width: none;
+    height: calc(100dvh - 16px);
+  }
+  .twig-trip-planner-history { padding: 16px; }
+  .twig-trip-planner-bottom { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+}
+.twig-trip-planner-log {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0 4px 0 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--vac-line) transparent;
+}
+.twig-trip-planner-message {
+  width: fit-content;
+  max-width: 95%;
+  padding: 8px 0;
+  margin: 0 0 8px;
+  overflow-wrap: anywhere;
+}
+.twig-trip-planner-message[data-speaker="visitor"] {
+  margin-left: auto;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background: var(--vac-fill);
+}
+.twig-trip-planner .twig-trip-planner-message p { margin: 0; font: inherit; }
+.twig-trip-planner-status { color: var(--vac-muted); font-size: 13px; }
+.twig-trip-planner-status:not(:empty) { margin: 0 0 8px; }
+.twig-trip-planner-stay { margin: 0 0 8px; }
+.twig-trip-planner-stay a,
+.twig-trip-planner-stay button {
+  display: inline-block;
+  padding: 10px 0;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--vac-ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.twig-trip-planner form { margin: 0; }
+.twig-trip-planner-compose {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--vac-line);
+  border-radius: 4px;
+  background: var(--vac-paper);
+}
+.twig-trip-planner-compose:focus-within {
+  border-color: var(--vac-ink);
+  outline: 1px solid var(--vac-ink);
+}
+.twig-trip-planner-compose textarea {
+  caret-color: transparent;
+  display: block;
+  min-height: 48px;
+  max-height: 120px;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  outline: none;
+  resize: none;
+  background: transparent;
+  color: var(--vac-ink);
+  font-size: 16px;
+  line-height: 24px;
+}
+/* The composer owns the text field's focus ring, including on host pages. */
+.twig-trip-planner .twig-trip-planner-compose textarea:focus-visible {
+  outline: none;
+}
+.twig-trip-planner-compose textarea::placeholder { color: var(--vac-muted); opacity: 1; }
+.twig-trip-planner-compose button {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--vac-ink);
+  border-radius: 4px;
+  background: var(--vac-ink);
+  color: var(--vac-paper);
+}
+.twig-trip-planner-compose button:hover:not(:disabled) { opacity: .85; }
+.twig-trip-planner-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+.twig-trip-planner .twig-trip-planner-footer p {
+  flex: 1;
+  margin: 0;
+  color: var(--vac-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.twig-trip-planner .twig-trip-planner-reset {
+  min-height: 44px;
+  padding: 8px 0;
+  border: 0;
+  background: transparent;
+  color: var(--vac-muted);
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .vac-filters {
   display: flex;
@@ -1132,3 +1344,5 @@
     flex-direction: column;
   }
 }
+
+.twig-trip-planner-lock { margin: 8px 0 0; font-size: 13px; color: var(--vac-muted); }

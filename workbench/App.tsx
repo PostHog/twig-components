@@ -1,4 +1,6 @@
-import { useReducer, useRef, useState, type ReactNode } from "react";
+import { useEffect, useReducer, useRef, useState, type ReactNode } from "react";
+import { TripPlanner } from "../src/TripPlanner.js";
+import { TripPlannerWalkthrough, TripPlannerLabProvider, useTripPlannerLab, canSendTripLessonMessage } from "../src/TripPlannerLab.js";
 import { BrowseStaysPreview } from "../src/BrowseStaysPreview.js";
 import { BrowseStays } from "../src/BrowseStays.js";
 import { StayDetails } from "../src/StayDetails.js";
@@ -33,8 +35,9 @@ import "../src/catalog.css";
 import "../src/lab.css";
 import "./workbench.css";
 
-type View = "preview" | "saved" | "account" | "invite" | "filters" | "ai" | "booking" | "stay" | "replay";
+type View = "planner" | "preview" | "saved" | "account" | "invite" | "filters" | "ai" | "booking" | "stay" | "replay";
 const views: { id: View; label: string; description: string }[] = [
+  { id: "planner", label: "Trip planner", description: "Follow a successful conversation, encounter a wrong recommendation, and investigate the recorded evidence. No inference or network requests." },
   { id: "preview", label: "Twig views", description: "Read-only guide preview and interactive filter control" },
   { id: "saved", label: "Saved stay", description: "Exercise host-controlled auth, save, loading, disabled, and error states" },
   { id: "account", label: "Account", description: "Walk through login, profile navigation, empty collections, and settings" },
@@ -45,6 +48,48 @@ const views: { id: View; label: string; description: string }[] = [
   { id: "stay", label: "Stay lab", description: "Open listings and compare view events" },
   { id: "replay", label: "Replay lab", description: "Review the replay lesson with local fixture controls" },
 ];
+
+function TripPlannerPreview() {
+  return <TripPlannerLabProvider><TripPlannerPreviewContent /></TripPlannerLabProvider>;
+}
+
+function TripPlannerPreviewContent() {
+  const [opened, setOpened] = useState<string | null>(null);
+  const lab = useTripPlannerLab();
+  const inspector = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (lab.lesson.step === 4 || lab.lesson.step === 1) {
+      inspector.current?.scrollIntoView({ block: "start" });
+      inspector.current?.focus({ preventScroll: true });
+    }
+  }, [lab.lesson.step, lab.lesson.captureVisible, lab.lesson.investigation, lab.lesson.capacityFixed]);
+  function inspect() {
+    inspector.current?.scrollIntoView({ block: "start" });
+    inspector.current?.focus({ preventScroll: true });
+  }
+  return <>
+    <div className="twig-browser workbench-twig">
+      <TripPlanner
+        key={lab.revision}
+        scenario={lab.lesson.capacityFixed ? "capacity-fixed" : undefined}
+        stays={stays}
+        windowAction={{ label: "View request", onSelect: inspect }}
+        onRequestComplete={lab.record}
+        canSendMessage={message => canSendTripLessonMessage(lab.lesson, message)}
+        onReset={lab.reset}
+        renderStayLink={(stay) => <button type="button" onClick={() => setOpened(stay.id)}>View {stayLabel(stay)} →</button>}
+      />
+    </div>
+    {opened && <div className="workbench-fixture" role="status">Host navigation requested: {opened}</div>}
+    <div className="vac-app" ref={inspector} tabIndex={-1}>
+      <div className="vac-developer-theme workbench-lab">
+        <button className="vac-text-button" onClick={lab.reset}>Reset lab</button>
+        {lab.lesson.step > 0 && <button className="vac-text-button" onClick={() => lab.dispatchLesson({ type: "previous" })}>Previous step</button>}
+        <TripPlannerWalkthrough stays={stays} onAllLabs={() => lab.reset()} />
+      </div>
+    </div>
+  </>;
+}
 
 function Preview() {
   const [selected, setSelected] = useState<Exclude<StaySetting, "All">>("Coast");
@@ -291,7 +336,7 @@ function Replay() {
 }
 
 export default function App() {
-  const [view, setView] = useState<View>("preview");
+  const [view, setView] = useState<View>(() => new URLSearchParams(window.location.search).get("view") === "planner" ? "planner" : "preview");
   const current = views.find((item) => item.id === view)!;
-  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "preview" ? <Preview /> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : <Replay />}</div></main></div>;
+  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "planner" ? <TripPlannerPreview /> : view === "preview" ? <Preview /> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : <Replay />}</div></main></div>;
 }

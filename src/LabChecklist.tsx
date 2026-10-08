@@ -20,14 +20,14 @@ export function LabChecklist({
           }
           aria-current={index === current ? "step" : undefined}
         >
-          <span
+          {(items.length > 1 || item.done) && <span
             className="vac-check-status"
             aria-label={
               item.done ? "Complete" : index === current ? "Next" : "Upcoming"
             }
           >
             {item.done ? "✓" : index + 1}
-          </span>
+          </span>}
           <span>{item.label}</span>
         </li>
       ))}
