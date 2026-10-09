@@ -133,7 +133,7 @@ These are **local teaching simulations**. They do not send events to PostHog, ma
 | `/session-player` | `SessionPlayer` | Plays an rrweb recording; pass recorded `events`. | ReplayLab |
 | `/lab-navigation` | `LabNavigationView` | All labs, previous step, and reset controls; host supplies actions. | FilterLab adapter |
 | `/lab-completion-view` | `LabCompletionView` | Recap for one completed lab; host supplies choose/review actions and heading ref. | LabCompletion |
-| `/lab-checklist` | `LabChecklist` | Step list with done/current/upcoming states; pass `label` and `items`. | Lab UI |
+| `/lab-checklist` | `LabChecklist` | Shared directions for learner interactions, with done/current/upcoming states; pass `label` and `items`. | Lab UI |
 | `/lab-choices` | `LabChoices` | Accessible radio choice group; pass `label`, `value`, `options`, and `onChange`. | Lab UI |
 | `/finish-lab-button` | `FinishLabButton` | Standard finish action; pass `onClick`. | Lab UI |
 

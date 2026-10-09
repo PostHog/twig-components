@@ -17,6 +17,12 @@ Keep these surfaces distinct. Reuse an existing component and its state styles b
 - Reserve bold for actual headings and titles, controls people use, and the action or target in an instruction. Do not bold ordinary terms inside explanatory prose. Keep code and property names in monospace instead of using bold for emphasis.
 - Keep the same text treatment on successive steps. Changing the lesson stage should not change the weight or size of equivalent prose.
 
+## Lab and playground page structure
+
+- Give the lab or playground a title on its first page, on deliberate progress or recap pages, and on its ending page. Intermediate teaching pages have no page title or heading-like opening sentence. Start with regular prose, evidence, and directions as needed.
+- Put directions that ask the learner to click, send, choose, or otherwise interact with Twig or another surface in the shared `LabChecklist` component. Use its current, done, and upcoming states when the directions have multiple steps. Keep explanatory prose outside it. Do not substitute a bold paragraph, heading, or custom instruction card for `LabChecklist`.
+- Keep lesson navigation as its existing button or link. A control's label is not a substitute for directions when the learner needs to interact with another surface.
+
 ## Surfaces and controls
 
 - Group related evidence in one restrained surface: white or neutral fill, a thin existing border, and the radius already used by neighboring cards. Use spacing to show hierarchy. Avoid an extra standalone card or accent when the surrounding surface already groups the content.
@@ -33,7 +39,7 @@ Keep these surfaces distinct. Reuse an existing component and its state styles b
 ## Review checklist for UI contributions
 
 1. Compare the changed view with its neighboring Twig views or labs and reuse their typography, spacing, surfaces, controls, and states.
-2. Review the entire affected flow at desktop and mobile widths, including later lesson steps and selected/instruction states.
+2. Review the entire affected flow at desktop and mobile widths. Confirm titles appear only on the first, progress/recap, and ending pages, and interaction directions use `LabChecklist`.
 3. Check keyboard focus, disabled and error states where relevant, and reduced motion for animation.
 4. Run `npm test`, `npm run workbench:build`, and `npm run gallery`; inspect the actual Twig.com integration before calling it finished.
 5. If a PR includes screenshots, update them when a visual change makes them stale. Show the actual site for host layout and the workbench for portable component states.
