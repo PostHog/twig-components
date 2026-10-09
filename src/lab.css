@@ -861,11 +861,12 @@
 /* AI request evidence uses the same lab surface in Twig and the workbench. */
 
 /* Request tabs browse two views of the same event, rather than quiz choices. */
-.vac-app .vac-developer-theme .vac-request-tabs { display: flex; border-bottom: 1px solid var(--vac-line); margin-top: 20px; }
-.vac-app .vac-developer-theme .vac-request-tabs [role="tab"] { flex: 1; min-width: 0; min-height: 44px; padding: 10px 8px; border: 0; border-bottom: 3px solid transparent; background: transparent; color: var(--vac-muted); font-weight: 600; }
-.vac-app .vac-developer-theme .vac-request-tabs [aria-selected="true"] { border-bottom-color: var(--ph-brand-cobalt); background: var(--ph-neutral-white); }
+.vac-app .vac-developer-theme .vac-request-tabs { display: flex; margin-top: 16px; border: 1px solid var(--vac-line); border-radius: 6px 6px 0 0; overflow: hidden; }
+.vac-app .vac-developer-theme .vac-request-tabs [role="tab"] { flex: 1; min-width: 0; min-height: 44px; padding: 10px 8px; border: 0; background: var(--ph-neutral-background); color: var(--vac-muted); font-weight: 600; }
+.vac-app .vac-developer-theme .vac-request-tabs [role="tab"] + [role="tab"] { border-left: 1px solid var(--vac-line); }
+.vac-app .vac-developer-theme .vac-request-tabs [aria-selected="true"] { background: var(--ph-neutral-white); color: var(--vac-ink); }
 .vac-app .vac-developer-theme .vac-request-tabs [role="tab"]:focus-visible { outline: 2px solid var(--ph-brand-cobalt); outline-offset: -4px; }
-.vac-app .vac-developer-theme .vac-request-panel { padding: 16px; background: var(--ph-neutral-white); overflow-wrap: anywhere; }
+.vac-app .vac-developer-theme .vac-request-panel { padding: 16px; background: var(--ph-neutral-white); border: 1px solid var(--vac-line); border-top: 0; border-radius: 0 0 6px 6px; overflow-wrap: anywhere; }
 .vac-app .vac-developer-theme .vac-request-panel h4 { margin-top: 0; }
 .vac-app .vac-developer-theme .vac-request-panel p:last-child { margin-bottom: 0; }
 
@@ -877,7 +878,8 @@
 .vac-app .vac-developer-theme .vac-recorded-message blockquote { margin: 0; padding: 12px; border-left: 3px solid var(--ph-brand-yellow); background: var(--ph-neutral-background); font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
 .vac-app .vac-developer-theme .vac-trip-walkthrough { margin: 0; }
 .vac-app .vac-developer-theme .vac-trip-walkthrough > :first-child { margin-top: 0; }
-.vac-app .vac-developer-theme .vac-request-next { padding: 20px 0 0; }
+.vac-app .vac-developer-theme .vac-trip-walkthrough > p { font-size: 13px; font-weight: 400; }
+.vac-app .vac-developer-theme .vac-request-next { padding: 16px 0 0; }
 .vac-app .vac-developer-theme .vac-request-next .vac-button { width: 100%; margin: 0; white-space: normal; }
 
 .vac-app .vac-developer-theme .vac-capacity-result { margin-top: 16px; padding: 12px; background: var(--ph-neutral-white); border-left: 3px solid var(--ph-brand-cobalt); font-size: 13px; }
@@ -896,7 +898,7 @@
 /* A compact trace outline separates the recorded result from capture code. */
 .vac-app .vac-developer-theme .vac-trace-preview { margin: 20px 0 0; }
 .vac-app .vac-developer-theme .vac-trace-preview > figcaption { margin-bottom: 12px; }
-.vac-app .vac-developer-theme .vac-trace-preview-surface { background: var(--ph-neutral-background); padding: 12px; }
+.vac-app .vac-developer-theme .vac-trace-preview-surface { background: var(--ph-neutral-background); border: 1px solid var(--vac-line); border-radius: 6px; padding: 12px; }
 .vac-app .vac-developer-theme .vac-trace-preview-name { font-size: 13px; font-weight: 600; }
 .vac-app .vac-developer-theme .vac-trace-preview-call { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; padding: 8px 0 12px; font-size: 13px; }
 .vac-app .vac-developer-theme .vac-trace-preview-call code { color: var(--vac-muted); font-size: inherit; }
@@ -908,8 +910,8 @@
 .vac-app .vac-developer-theme .vac-trace-preview-message p { margin: 4px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 
 /* A session header groups simple trace rows, as in PostHog's session view. */
-.vac-app .vac-developer-theme .vac-conversation-traces { margin: 20px 0; background: var(--ph-neutral-white); border: 1px solid var(--vac-line); font-size: 13px; }
-.vac-app .vac-developer-theme .vac-conversation-session { display: grid; gap: 6px; padding: 12px 16px; }
+.vac-app .vac-developer-theme .vac-conversation-traces { margin: 16px 0; background: var(--ph-neutral-white); border: 1px solid var(--vac-line); border-radius: 8px; overflow: hidden; font-size: 13px; }
+.vac-app .vac-developer-theme .vac-conversation-session { display: grid; gap: 6px; padding: 12px 16px; border-bottom: 1px solid var(--vac-line); background: var(--ph-neutral-background); }
 .vac-app .vac-developer-theme .vac-conversation-session > code:first-child { font-weight: 600; }
 .vac-app .vac-developer-theme .vac-conversation-traces ol { list-style: none; padding: 0 0 0 16px; margin: 0 16px 16px 24px; border-left: 1px solid var(--vac-line); }
 .vac-app .vac-developer-theme .vac-conversation-traces li { position: relative; padding: 12px 0; }
@@ -924,11 +926,20 @@
 .vac-app .vac-developer-theme .vac-trip-definitions li { display: list-item; font-size: 13px; }
 .vac-app .vac-developer-theme .vac-trip-definitions li + li { margin-top: 6px; }
 
+.vac-app .vac-developer-theme .vac-trip-overview-card { display: block; text-align: left; padding: 16px; }
+.vac-app .vac-developer-theme .vac-trip-overview-card p { width: 100%; margin: 0 0 12px; font-size: 13px; }
+
 /* Keep the two-part overview as a simple numbered reading list. */
 .vac-app .vac-developer-theme .vac-trip-overview { margin: 0; padding-left: 20px; list-style: decimal; }
 .vac-app .vac-developer-theme .vac-trip-overview li { display: list-item; font-size: 13px; }
 .vac-app .vac-developer-theme .vac-trip-overview li + li { margin-top: 12px; }
 .vac-app .vac-developer-theme .vac-trip-milestone li { font-size: 13px; }
+@media (max-width: 520px) {
+  .vac-app .vac-developer-theme .vac-trip-overview-card { padding: 14px; }
+  .vac-app .vac-developer-theme .vac-request-panel { padding: 12px; }
+  .vac-app .vac-developer-theme .vac-conversation-session { padding: 10px 12px; }
+  .vac-app .vac-developer-theme .vac-conversation-traces ol { margin: 0 12px 12px 20px; }
+}
 
 /* Keep the embedded homepage card in Twig's theme inside the PostHog lab. */
 .vac-app .vac-developer-theme .twig-trip-listing-preview {

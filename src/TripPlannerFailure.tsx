@@ -41,7 +41,7 @@ export function TripPlannerFailure({ stays, renderStayCard }: { stays: readonly 
     {lesson.step === 4 && before && lookup && <>
       {lesson.investigation === "overview" ? <>
         <p>For the city request, Twig’s code searches its listings, then passes the results to the model for a recommendation.</p>
-        <p>Twig captures the search as an <code>$ai_span</code> event. A <strong>span</strong> records one operation within the request.</p>
+        <p>Twig captures the search as an <code>$ai_span</code> event. A span records one operation within the request.</p>
         <div className="vac-conversation-traces" role="group" aria-label="City request trace and its two operations">
           <div className="vac-conversation-session"><code>$ai_trace_id</code><code>example-9c4a7b2e1d06</code></div>
           <ol aria-label="Operations in the city request">
@@ -70,7 +70,7 @@ export function TripPlannerFailure({ stays, renderStayCard }: { stays: readonly 
         <p>Twig’s search will exclude listings that sleep fewer than four before passing results to the model.</p>
         {action("Apply fix and retry →", () => dispatch({ type: "apply-capacity-fix" }))}
       </> : lesson.investigation === "evaluation" && after ? <>
-        <p><code>$ai_is_error</code> reports model-call errors. An <strong>evaluation</strong> checks the model’s answer against a rule.</p>
+        <p><code>$ai_is_error</code> reports model-call errors. An evaluation checks the model’s answer against a rule.</p>
         <p>The lab runs <code>evaluateCapacity</code> with this rule: any recommended stay must sleep at least four.</p>
         <pre><code>{'evaluateCapacity(recommendation, 4).result;'}</code></pre>
         <div className="vac-conversation-traces" role="group" aria-label="Capacity evaluation before and after the fix">

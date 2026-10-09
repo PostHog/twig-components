@@ -1,9 +1,10 @@
 # Working in twig-components
 
-This package supplies reusable Twig views and local PostHog teaching labs. It does not own Twig.com pages or PostHog.com pocket guide content. Before changing it, read [the component reference](docs/components.md), [integration boundaries](docs/integration.md), and [workbench guide](docs/workbench.md). Inspect the closest existing component and its CSS before adding a new one.
+This package supplies reusable Twig views and local PostHog teaching labs. It does not own Twig.com pages or PostHog.com pocket guide content. Before changing it, read [the visual system](docs/design-system.md), [the component reference](docs/components.md), [integration boundaries](docs/integration.md), and [workbench guide](docs/workbench.md). Inspect the closest existing component and its CSS before adding a new one.
 
 ## Preserve the design
 
+- Follow [the Twig visual system](docs/design-system.md) for every UI contribution. Keep lesson prose regular, use bold only for headings, controls, and instruction targets, and keep evidence tabs connected without blue selection accents. Check the entire flow so a style change does not affect later instruction steps.
 - Extend an existing component or pattern when it fits. Reuse the spacing, typography, colors, controls, and states already in `src/catalog.css` and `src/lab.css`. Do not add a second styling system, global CSS reset, or new visual language for one component.
 - Keep Twig website UI in the Twig style (`catalog.css`, including its Halfre font). Keep PostHog teaching UI in the lab style (`lab.css`, including RoundHog and its existing PostHog tokens). Verify any new PostHog brand value against `brand.posthog.com` rather than guessing.
 - Lab styling expects a `.vac-developer-theme` **inside** a `.vac-app` ancestor. Putting both classes on one element leaves parts of the component unstyled. Keep Twig typography out of lab UI and PostHog typography out of Twig views.
