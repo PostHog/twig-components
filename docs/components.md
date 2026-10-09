@@ -8,6 +8,10 @@ Import only the pieces you need from `@posthog/twig-components/<path>`. React is
 
 | Import path | Export | What it does | Used in Twig / what the host supplies |
 | --- | --- | --- | --- |
+| `/trip-planner` | `TripPlanner`, `TripPlannerProps` | Scripted forest → beach → kitchen → city-failure chat, with read-only prefilled prompts, a floating chat window, a compact composer, a short typing state, and reset. | Host supplies `stays`, `renderStayLink`, optional lab-only `scenario`, `accessory`, `inputId`, `hidden`, `windowClassName`, `windowAction`, `launcherLabel`, `canSendMessage`, `onReset`, and `onRequestComplete`. No model calls, persistence, or event capture. See [conversation contract](trip-planner.md). |
+| `/trip-planner-lab` | `TripPlannerWalkthrough`, `TripPlannerLabProvider`, `useTripPlannerLab` | Three-stage walkthrough: successful conversation and capture data, a wrong recommendation, then investigation and fix. | Host connects chat completion to `record`, keys chat by `revision`, supplies stays, an optional `renderStayCard` for the actual homepage card, and an `onAllLabs` callback for lesson navigation. Instructions point learners to the actual Twig controls. Load `lab.css` in the lab theme. |
+| `/trip-planner-state` | `replyToTripPlanner`, `initialTripPlannerState`, `tripPlannerSuggestions`, prompts, limits, and types | Pure, bounded conversation rules and catalog-backed responses. | Shared by the planner and regression tests. |
+| `/trip-planner-records` | `createTripPlannerRequest`, `tripPlannerModel`, request, message, identity, and record types | Builds a catalog-backed answer and a matching PostHog generation with conversation history, token usage, cost, and duration. | Local teaching data only. Caller supplies IDs and start time. No provider call or event upload. |
 | `/account` | `LoginView`, `ProfileMenu`, `AccountLayout`, `ProfileOverview`, `SavedStaysView`, `BookedStaysView`, `AccountSettingsView`, types | Reusable Twig account visuals, accessible profile-menu behavior, traveler profile, empty/populated stay views, and settings form. | Host supplies profile content, fixed login email, state, callbacks, routes, images, bookings, persistence, and analytics. |
 | `/saved-stay` | `SavedStay`, `SavedStayProps` | Controlled save control with signed-out, unsaved, saved, loading, disabled, and error states. Its signed-out label says “Log in to save.” | Host supplies `stayName`, auth state, save state, callbacks, persistence, and analytics. Signed-out hosts pass `onSignIn`; signed-in hosts pass `saved` and `onSavedChange`. |
 | `/filters` | `StayFilters`, `staySettings`, `StaySetting` | Controlled Forest/Coast/City filter buttons; calls `onChange` on a click. | `Discover`; pass `value`, `onChange`, and optional CSS classes. The host filters the listings. |
@@ -129,7 +133,7 @@ These are **local teaching simulations**. They do not send events to PostHog, ma
 | `/session-player` | `SessionPlayer` | Plays an rrweb recording; pass recorded `events`. | ReplayLab |
 | `/lab-navigation` | `LabNavigationView` | All labs, previous step, and reset controls; host supplies actions. | FilterLab adapter |
 | `/lab-completion-view` | `LabCompletionView` | Recap for one completed lab; host supplies choose/review actions and heading ref. | LabCompletion |
-| `/lab-checklist` | `LabChecklist` | Step list with done/current/upcoming states; pass `label` and `items`. | Lab UI |
+| `/lab-checklist` | `LabChecklist` | Shared directions for learner interactions, with done/current/upcoming states; pass `label` and `items`. | Lab UI |
 | `/lab-choices` | `LabChoices` | Accessible radio choice group; pass `label`, `value`, `options`, and `onChange`. | Lab UI |
 | `/finish-lab-button` | `FinishLabButton` | Standard finish action; pass `onClick`. | Lab UI |
 
@@ -152,3 +156,7 @@ The state modules below contain reducers, types, fixtures, and formatting helper
 | `/assets/*` | Package font and image files referenced by the styles or explicitly imported by a host. |
 
 Do not apply Twig typography to the PostHog event inspector in the pocket guide. That inspector, the guide prose, and “Explore Twig” links belong to PostHog.com.
+
+The AI walkthrough reuses `LabCompletionView` for its final recap. The view accepts optional `title` and `recap` overrides while retaining the shared completion layout. Hosts own the confetti animation and respect reduced-motion preferences.
+
+`LabCompletionView` only renders its review link and results reminder when `onReview` is provided. The AI lab ends with the recap and Choose another lab button.
