@@ -57,6 +57,18 @@ test('switching experiences keeps clicks, configuration, and current task; reset
   assert.deepEqual(reset.configured, []);
   assert.equal(reset.revision, 1);
 });
+test('switching from Web app to Agent at comparison requires an agent reply', () => {
+  const comparisonEvent = { id: '0-4-1', timestamp: '2026-09-28T12:00:00Z', event: 'stay_filter_selected', properties: { destination_type: 'Forest', results_count: 1, has_results: true } };
+  const webState = { ...initialEventsState, path: 'web', step: 5, events: [comparisonEvent], answered: true };
+  assert.equal(canContinue(webState), true);
+  const agentState = reduce(webState, { type: 'path', path: 'mcp' });
+  assert.equal(agentState.answered, false);
+  assert.equal(canContinue(agentState), false);
+  assert.equal(hasCurrentAgentReply(agentState, [comparisonEvent.id]), false);
+  const answeredAgentState = reduce(agentState, { type: 'answer', correct: true });
+  assert.equal(canContinue(answeredAgentState), true);
+  assert.equal(reduce(answeredAgentState, { type: 'path', path: 'mcp' }), answeredAgentState, 'selecting the active experience keeps its answer');
+});
 test('invalid clicks cannot invent evidence', () => {
   const state = reduce(initialEventsState, { type: 'path', path: 'web' });
   for (const action of [click('Unknown'), click('Forest', -1), { ...click(), timestamp: 'invalid' }]) assert.equal(reduce(state, action), state);

@@ -23,6 +23,14 @@
     "**/*.css"
   ],
   "exports": {
+    "./account": {
+      "types": "./dist/Account.d.ts",
+      "import": "./dist/Account.js"
+    },
+    "./saved-stay": {
+      "types": "./dist/SavedStay.d.ts",
+      "import": "./dist/SavedStay.js"
+    },
     "./browse-stays": {
       "types": "./dist/BrowseStays.d.ts",
       "import": "./dist/BrowseStays.js"
@@ -178,6 +186,12 @@
   },
   "typesVersions": {
     "*": {
+      "account": [
+        "dist/Account.d.ts"
+      ],
+      "saved-stay": [
+        "dist/SavedStay.d.ts"
+      ],
       "browse-stays": [
         "dist/BrowseStays.d.ts"
       ],

@@ -49,7 +49,9 @@ export function hasCurrentAgentReply(state: EventsState, repliedEventIds: readon
 }
 export function eventsReducer(state: EventsState, action: EventsAction): EventsState {
   switch (action.type) {
-    case "path": return { ...state, path: action.path, step: state.step === 0 ? 1 : state.step };
+    case "path": return action.path === state.path && state.step !== 0
+      ? state
+      : { ...state, path: action.path, step: state.step === 0 ? 1 : state.step, answered: state.step === 5 && action.path === "mcp" ? false : state.answered };
     case "configure": return needsConfiguration(state) ? { ...state, configured: [...state.configured, state.step] } : state;
     case "reset": return { ...initialEventsState, revision: state.revision + 1 };
     case "previous": return { ...state, step: Math.max(0, state.step - 1), inspected: null, answered: false };
