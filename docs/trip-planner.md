@@ -1,7 +1,7 @@
 # Simulated trip planner
 
 This conversation is a local teaching example. It never calls a model or sends
-messages to a server. The visible disclosure is “Simulated AI responses.” The guided AI Observability lab uses records from this conversation.
+messages to a server. The visible disclosure is “Simulated AI responses.” The guided AIO lab uses records from this conversation.
 
 ## Conversation contract
 

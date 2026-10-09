@@ -18,6 +18,7 @@ import { BrowseStays } from "@posthog/twig-components/browse-stays";
 import { StayDetails } from "@posthog/twig-components/stay-details";
 import { stays } from "@posthog/twig-components/catalog";
 import { FilterLabExercise } from "@posthog/twig-components/filter-lab-exercise";
+import { ReplayLab } from "@posthog/twig-components/replay-lab-ui";
 import {
   filterLabReducer,
   initialLabState,
@@ -328,7 +329,8 @@ test("portable filter exercise renders both the code step and event comparison",
       stage: 1,
     })
   );
-  assert.match(starting, /From a filter click to an event/);
+  assert.doesNotMatch(starting, /<h3/);
+  assert.match(starting, /aria-label="Next filter actions"/);
   assert.match(starting, /posthog\.capture/);
 
   let state = filterLabReducer(initialLabState, { type: "example" });
@@ -341,6 +343,33 @@ test("portable filter exercise renders both the code step and event comparison",
   assert.match(inspecting, /Mismatch: the event describes a different filter/);
   assert.match(inspecting, /aria-controls="[^"]+"/);
   assert.doesNotMatch(inspecting, /posthog\.com/);
+});
+
+test("replay setup renders the return link when opened from a stay page", () => {
+  const html = renderToStaticMarkup(createElement(ReplayLab, {
+    stage: 1,
+    onStage: () => {},
+    pathname: "/stays/stay-01",
+    returnHome: createElement("a", { href: "/" }, "Return to Find a stay"),
+    sessionPlayer: null,
+    replay: {
+      exercise: "ghost",
+      recording: [],
+      starting: false,
+      frames: [],
+      mode: null,
+      masked: true,
+      setMasked: () => {},
+      capturedMasked: true,
+      message: "",
+      start: () => {},
+      stop: () => {},
+      clear: () => {},
+      setExercise: () => {},
+    },
+  }));
+  assert.match(html, /Return to Find a stay/);
+  assert.match(html, /aria-label="Next replay action"/);
 });
 
 test("shared catalog keeps filter results and stay cards consistent", async () => {

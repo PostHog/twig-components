@@ -4,10 +4,12 @@ import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { playgroundPage } from "@posthog/twig-components/playground";
 import { characters, stays } from "@posthog/twig-components/catalog";
-import { AiLabProvider, AiLab } from "@posthog/twig-components/ai-lab-ui";
+import { AiLabProvider, AiLab, AiIntroduction } from "@posthog/twig-components/ai-lab-ui";
 import { BookingLabProvider, BookingLab } from "@posthog/twig-components/booking-lab-ui";
 import { StayLabProvider, StayLab } from "@posthog/twig-components/stay-lab-ui";
 import { ReplayLab } from "@posthog/twig-components/replay-lab-ui";
+import { FilterLabIntroduction } from "@posthog/twig-components/filter-lab-exercise";
+import { TripPlannerLabProvider, TripPlannerWalkthrough } from "@posthog/twig-components/trip-planner-lab";
 import { ReplayProvider } from "@posthog/twig-components/replay-recorder";
 import {
   LabDirectory,
@@ -53,10 +55,34 @@ test("all portable lab entry screens render without a site router", () => {
     returnHome: null,
     sessionPlayer: null,
   })));
-  assert.match(ai, /From Twig to an event/);
+  assert.doesNotMatch(ai, /<h3/);
+  assert.match(ai, /aria-label="Next AI action"/);
   assert.match(booking, /booking/i);
-  assert.match(stay, /Which stay did they view/);
-  assert.match(replay, /What happened between the clicks/);
+  assert.match(stay, /Product Analytics lab/);
+  assert.match(replay, /Session Replay lab/);
+});
+
+test("every lab opening page names its product and explains the simulation", () => {
+  const openings = [
+    [render(h(FilterLabIntroduction, { onContinue: noop })), "Product Analytics lab"],
+    [render(h(BookingLabProvider, { active: true }, h(BookingLab, { stage: 0, onStage: noop, onFocusBooking: noop }))), "Product Analytics lab"],
+    [render(h(StayLabProvider, null, h(StayLab, { stage: 0, onStage: noop, pathname: "/stays/stay-01", renderStayLink: () => null }))), "Product Analytics lab"],
+    [render(h(ReplayProvider, { open: false, pathname: "/" }, h(ReplayLab, {
+      stage: 0, onStage: noop, pathname: "/",
+      replay: {
+        exercise: "ghost", recording: [], starting: false, frames: [], mode: null,
+        masked: true, capturedMasked: true, message: "", setMasked: noop,
+        start: noop, stop: noop, clear: noop, setExercise: noop,
+      },
+      returnHome: null, sessionPlayer: null,
+    }))), "Session Replay lab"],
+    [render(h(TripPlannerLabProvider, null, h(TripPlannerWalkthrough, { stays, onAllLabs: noop }))), "AIO lab"],
+    [render(h(AiIntroduction, { onContinue: noop })), "AIO lab"],
+  ];
+  for (const [html, title] of openings) {
+    assert.match(html, new RegExp(`<h3>${title}<\\/h3>`));
+    assert.match(html, /<summary>How this simulation works<\/summary>/);
+  }
 });
 
 test("playground directory and dock preserve accessible navigation", () => {

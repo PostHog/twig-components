@@ -4,12 +4,11 @@ import { LabChoices } from "./LabChoices.js";
 import { LabChecklist } from "./LabChecklist.js";
 import { FilterInspector } from "./FilterInspector.js";
 import { filterLabCode, labPassed, type LabAction, type LabState } from "./filter-lab.js";
-import { useId } from "react";
 
 export function FilterLabIntroduction({ onContinue }: { onContinue: () => void }) {
   return (
     <div className="vac-guide-intro">
-      <h3>Why does every click look like Forest?</h3>
+      <h3>Product Analytics lab</h3>
       <p>Visitors choose different filters, but your events keep recording Forest.</p>
       <div className="vac-guide-example vac-guide-lesson">
         <p>Follow a click into its event, find the fixed value, then connect the filter’s actual value.</p>
@@ -62,7 +61,6 @@ export function FilterLabExercise({
   onContinue: (source: "fixed" | "clicked") => void;
   filterHref: string;
 }) {
-  const titleId = useId();
   const latest = state.events.at(-1);
   const passed = labPassed(state);
   const example = {
@@ -73,22 +71,8 @@ export function FilterLabExercise({
   const triedBoth = ["Forest", "Coast"].every((setting) =>
     state.events.some((event) => event.clicked === setting)
   );
-  const nextFilter = state.events.some((event) => event.clicked === "Forest")
-    ? "Coast"
-    : "Forest";
   return (
-    <section className="vac-lab vac-builder" aria-labelledby={titleId}>
-      <h3 id={titleId}>
-        {stage === 2
-          ? "Compare the click with the event"
-          : state.step === 0
-          ? "From a filter click to an event"
-          : state.step === 2
-          ? "Connect the clicked value"
-          : triedBoth
-          ? "Now compare the evidence"
-          : `Try ${nextFilter} on Twig`}
-      </h3>
+    <section className="vac-lab vac-builder" aria-label="Filter lab exercise">
       {stage === 1 && (
         <>
           {state.step === 0 && (
@@ -102,17 +86,24 @@ export function FilterLabExercise({
                 config={{ ...example, source: embedSource ?? example.source }}
               />
               {embedSource === "clicked" ? (
-                <p>
-                  The property now reads <code>selectedDestinationType</code>{" "}
-                  from each click. Apply the code, then test{" "}
-                  <strong>Forest</strong> and <strong>Coast</strong>.
-                </p>
+                <>
+                  <p>
+                    The property now reads <code>selectedDestinationType</code>{" "}
+                    from each click.
+                  </p>
+                  <LabChecklist label="Next filter actions" items={[{
+                    label: <>Apply the code, then test <strong>Forest</strong> and <strong>Coast</strong>.</>,
+                    done: false,
+                  }]} />
+                </>
               ) : (
-                <p>
-                  <code>{'"Forest"'}</code> is a fixed value. First, click{" "}
-                  <strong>Forest</strong> to see how it becomes an event. Then
-                  try <strong>Coast</strong>.
-                </p>
+                <>
+                  <p><code>{'"Forest"'}</code> is a fixed value.</p>
+                  <LabChecklist label="Next filter actions" items={[{
+                    label: <>Apply the code, then click <strong>Forest</strong> to see how it becomes an event. Then try <strong>Coast</strong>.</>,
+                    done: false,
+                  }]} />
+                </>
               )}
               <button
                 className="vac-button"
@@ -133,9 +124,12 @@ export function FilterLabExercise({
             <>
               <p>
                 Twig stores the clicked filter in{" "}
-                <code>selectedDestinationType</code>. Use that value instead of
-                the text <code>{'"Forest"'}</code>.
+                <code>selectedDestinationType</code>.
               </p>
+              <LabChecklist label="Next filter action" items={[{
+                label: <>Use that value instead of the text <code>{'"Forest"'}</code>.</>,
+                done: state.config.source === "clicked",
+              }]} />
               <LabChoices<"fixed" | "clicked">
                 label={
                   <>
@@ -185,14 +179,9 @@ export function FilterLabExercise({
           {state.step === 3 && (
             <>
               <p>
-                {triedBoth ? (
-                  "You’ve clicked both filters. Inspect how those clicks were recorded."
-                ) : (
-                  <>
-                    Click <strong>{nextFilter}</strong> in Twig’s stay filters.
-                    Watch the event below update.
-                  </>
-                )}
+                {triedBoth
+                  ? "You’ve clicked both filters. Inspect how those clicks were recorded."
+                  : "Watch the event below update."}
               </p>
               <LabChecklist
                 label="Filter exercise progress"
@@ -221,7 +210,7 @@ export function FilterLabExercise({
               />
               {latest && (
                 <p role="status">
-                  Last click: <strong>{latest.clicked}</strong>. Recorded{" "}
+                  Last click: {latest.clicked}. Recorded{" "}
                   <code>destination_type</code>:{" "}
                   <code>{latest.properties.destination_type}</code>.
                 </p>
@@ -280,7 +269,10 @@ export function FilterLabExercise({
         </button>
       )}
       {stage === 1 && state.events.length >= 20 && (
-        <p>20-event limit reached. Clear the run to continue.</p>
+        <LabChecklist label="Next filter action" items={[{
+          label: "20-event limit reached. Clear the run to continue.",
+          done: false,
+        }]} />
       )}
       {stage === 1 && (
         <details className="vac-lab-step">

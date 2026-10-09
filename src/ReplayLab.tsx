@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type ReactNode } from "react";
 import { FinishLabButton } from "./FinishLabButton.js";
+import { LabChecklist } from "./LabChecklist.js";
 import type { ReplayFrame } from "./replay-lab.js";
 
 export type ReplayLabViewState = {
@@ -105,11 +106,10 @@ export function ReplayLab({
   if (stage === 2 && replay.mode)
     return (
       <section className="vac-lab vac-builder">
-        <h3>Finish the visit first</h3>
-        <p>
-          Explore Twig however you like, then end the recording to watch your
-          visit.
-        </p>
+        <LabChecklist label="Next replay action" items={[{
+          label: "Explore Twig however you like, then end the recording to watch your visit.",
+          done: false,
+        }]} />
         {replay.mode === "manual" && (
           <button className="vac-button" onClick={replay.stop}>
             <span className="vac-os-button-face">
@@ -122,7 +122,7 @@ export function ReplayLab({
   if (stage === 0)
     return (
       <div className="vac-guide-intro">
-        <h3>What happened between the clicks?</h3>
+        <h3>Session Replay lab</h3>
         <p>
           Events tell you a visitor selected Coast. Replay adds the sequence:
           where they moved, what they typed, and which stay they opened.
@@ -136,35 +136,26 @@ export function ReplayLab({
         <button className="vac-button" onClick={() => onStage(1)}>
           <span className="vac-os-button-face">Set up the ghost visit →</span>
         </button>
+        <details className="vac-lab-step">
+          <summary>How this simulation works</summary>
+          <p>The ghost visit is scripted. Your own visit is recorded locally for playback in this lab. No replay is sent to PostHog.</p>
+        </details>
       </div>
     );
   return (
     <section className="vac-lab vac-builder">
       {stage === 1 ? (
         <>
-          <h3>
-            {replay.mode === "manual"
-              ? "Record your visit on Twig"
-              : hasVisit
-              ? "Your recording is ready"
-              : source === "ghost"
-              ? "Set up the ghost visit"
-              : "Set up your own recording"}
-          </h3>
           {replay.mode || hasVisit ? (
             <>
-              <p>
-                {replay.mode === "manual" ? (
-                  <>
-                    Explore Twig however you like. Click around, browse stays,
-                    or try a search. When you’re ready, click{" "}
-                    <strong>End recording and review</strong> to watch your
-                    visit.
-                  </>
-                ) : (
-                  "Your recording is ready. Play it back to see the interactions you captured."
-                )}
-              </p>
+              {replay.mode === "manual" ? (
+                <LabChecklist label="Next replay action" items={[{
+                  label: <>Explore Twig however you like. Click around, browse stays, or try a search. When you’re ready, click <strong>End recording and review</strong> to watch your visit.</>,
+                  done: false,
+                }]} />
+              ) : (
+                <p>Your recording is ready. Play it back to see the interactions you captured.</p>
+              )}
               {replay.mode === "manual" && (
                 <button className="vac-button" onClick={replay.stop}>
                   <span className="vac-os-button-face">
@@ -182,11 +173,14 @@ export function ReplayLab({
             </>
           ) : (
             <>
-              <p>
-                {source === "ghost"
-                  ? "First, capture a ghost visitor filtering stays, searching, and opening Adiron-shack."
-                  : "Start recording, then explore Twig however you like. When you’re ready, end the recording to watch it back. Starting replaces the ghost recording."}
-              </p>
+              <LabChecklist label="Next replay action" items={[{
+                label: source === "ghost"
+                  ? pathname === "/"
+                    ? "First, capture a ghost visitor filtering stays, searching, and opening Adiron-shack."
+                    : "First, return to Find a stay. Then capture a ghost visitor filtering stays, searching, and opening Adiron-shack."
+                  : "Start recording, then explore Twig however you like. When you’re ready, end the recording to watch it back. Starting replaces the ghost recording.",
+                done: false,
+              }]} />
               <label className="vac-replay-mask">
                 <input
                   type="checkbox"
@@ -201,7 +195,7 @@ export function ReplayLab({
                 the recording. Your recording stays in this browser tab.
               </p>
               {source === "ghost" && pathname !== "/" ? (
-                {returnHome}
+                returnHome
               ) : (
                 <button
                   className="vac-button"
@@ -223,7 +217,6 @@ export function ReplayLab({
         </>
       ) : (
         <>
-          <h3>Watch your actual visit</h3>
           {replay.recording.length < 2 ? (
             <>
               <p>Record a new visit to capture the page for playback.</p>

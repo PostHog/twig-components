@@ -20,6 +20,8 @@ Keep these surfaces distinct. Reuse an existing component and its state styles b
 ## Lab and playground page structure
 
 - Give the lab or playground a title on its first page, on deliberate progress or recap pages, and on its ending page. Intermediate teaching pages have no page title or heading-like opening sentence. Start with regular prose, evidence, and directions as needed.
+- Name opening and ending pages with only the product and `lab`: `Product Analytics lab`, `Session Replay lab`, or `AIO lab`. Keep the title concrete and avoid question-style or lesson-specific titles. The opening description can explain the specific exercise.
+- Put a `How this simulation works` disclosure on every lab's first page, after the start button. Explain what is scripted or recorded locally, whether anything is sent to PostHog, and any real-world action the lab does not perform. Use the existing `vac-lab-step` details pattern.
 - Put directions that ask the learner to click, send, choose, or otherwise interact with Twig or another surface in the shared `LabChecklist` component. Use its current, done, and upcoming states when the directions have multiple steps. Keep explanatory prose outside it. Do not substitute a bold paragraph, heading, or custom instruction card for `LabChecklist`.
 - Keep lesson navigation as its existing button or link. A control's label is not a substitute for directions when the learner needs to interact with another surface.
 
