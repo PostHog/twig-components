@@ -40,7 +40,7 @@ export function TripPlannerWalkthrough({ stays, onAllLabs, renderStayCard }: { s
 
   if (lesson.step === 3 || lesson.step === 4) return <TripPlannerFailure stays={stays} renderStayCard={renderStayCard} />;
   if (lesson.step === 0) return <div className="vac-guide-intro">
-    <h3>AI Observability lab</h3>
+    <h3>AIO lab</h3>
     <p>Follow a chat in Twig's trip planner into PostHog. Learn how it's instrumented, how to interpret the data it collects, and fix things when they go wrong.</p>
     <div className="vac-guide-example vac-guide-lesson vac-trip-overview-card">
       <p><strong>This lab has two parts:</strong></p>
@@ -50,6 +50,10 @@ export function TripPlannerWalkthrough({ stays, onAllLabs, renderStayCard }: { s
       </ol>
     </div>
     <Action onClick={next}>Start the lab →</Action>
+    <details className="vac-lab-step">
+      <summary>How this simulation works</summary>
+      <p>Twig’s chat uses preset replies, and this lab builds its PostHog examples locally from the conversation. No model runs and nothing is sent to PostHog.</p>
+    </details>
   </div>;
 
   return <section ref={view} tabIndex={-1} className="vac-lab vac-builder vac-trip-walkthrough">
@@ -93,7 +97,7 @@ export function TripPlannerWalkthrough({ stays, onAllLabs, renderStayCard }: { s
     {lesson.step === 5 && <>
       <LabCompletionView
         lab="discovery"
-        title="You’ve completed the lab"
+        title="AIO lab complete"
         headingRef={completionHeading}
         recap={{
           title: "You followed a conversation into PostHog, found a missing guest filter, and verified the fix.",
