@@ -12,6 +12,7 @@ export type BrowseStaysProps = {
   onSearchBlur?: () => void;
   renderStay: (stay: Stay) => ReactNode;
   filterAccessory?: ReactNode;
+  afterFilters?: ReactNode;
   filtersClassName?: string;
   filtersId?: string;
   id?: string;
@@ -26,6 +27,7 @@ export function BrowseStays({
   onSearchBlur,
   renderStay,
   filterAccessory,
+  afterFilters,
   filtersClassName = "",
   filtersId,
   id = "browse",
@@ -60,6 +62,7 @@ export function BrowseStays({
       >
         {filterAccessory}
       </StayFilters>
+      {afterFilters}
       <p className="vac-muted" role="status">
         {visible.length} {visible.length === 1 ? "stay" : "stays"}
       </p>

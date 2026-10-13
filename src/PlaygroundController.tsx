@@ -8,6 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { EventsLabProvider } from "./EventsLabProvider.js";
 import { AiLabProvider } from "./AiLab.js";
 import { BookingLabProvider } from "./BookingLab.js";
 import { ErrorTrackingLabProvider } from "./ErrorTrackingLab.js";
@@ -97,6 +98,7 @@ export function PlaygroundLabProvider({
     dispatch({ type: "cancel" });
     onPendingSelectionConsumed?.();
   }, [pendingSelection, onPendingSelectionConsumed]);
+  const [eventsSession, setEventsSession] = useState(0);
   function choose(id: TouchpointId | null) {
     if (initialSource) return;
     if (id !== "stay") stayLab.dispatch({ type: "pause" });
@@ -104,6 +106,7 @@ export function PlaygroundLabProvider({
     setSelected(id);
     setLocalStage(0);
     dispatch({ type: "cancel" });
+    setEventsSession(session => session + 1);
   }
   return (
     <PlaygroundLabContext.Provider
@@ -123,7 +126,7 @@ export function PlaygroundLabProvider({
       <ErrorTrackingLabProvider active={errorTrackingEnabled && selected === "errors" && stage > 0} state={errorTrackingSession?.state} onAction={onErrorTrackingAction}>
         <AiLabProvider active={active && selected === "discovery" && stage > 0}>
           <BookingLabProvider active={bookingEnabled && selected === "booking" && stage > 0}>
-            {children}
+            <EventsLabProvider resetKey={eventsSession} active={active && selected === "catalog" && !initialSource}>{children}</EventsLabProvider>
           </BookingLabProvider>
         </AiLabProvider>
       </ErrorTrackingLabProvider>

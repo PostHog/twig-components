@@ -17,6 +17,8 @@ for (const [source, target] of [
   ["./src/assets/posthog-ai-observability.svg", "assets/posthog-ai-observability.svg"],
   ["./src/assets/posthog-error-tracking.svg", "assets/posthog-error-tracking.svg"],
   ["./src/assets/posthog-session-replay.svg", "assets/posthog-session-replay.svg"],
+  ["./assets/hoggie-chart.png", "assets/hoggie-chart.png"],
+  ["./assets/hoggie-robot.png", "assets/hoggie-robot.png"],
 ]) {
   await copyFile(
     new URL(source, import.meta.url),
