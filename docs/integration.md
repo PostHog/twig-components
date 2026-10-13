@@ -65,18 +65,29 @@ On Twig.com, the playground's **Reset lab** action confirms a full local reset, 
 
 This package repo uses Dependabot for its own dependencies. Consumer adoption requires a separate version and lockfile update in each site. Do not describe local workspace changes as a published package release.
 
+## Grouping changes into a release
+
+Release Please starts from the published `0.2.0` version and keeps one release pull request open for this package. Older commits are excluded.
+
+1. Merge changes into `main` with a [Conventional Commit](https://www.conventionalcommits.org/en/v1.0.0/) title. Use `feat: ...` for a feature, `fix: ...` for a bug fix, or `feat!: ...` / `fix!: ...` for a breaking change.
+2. Leave the release PR open while more changes join the group. Release Please updates its version, `package.json`, `package-lock.json`, and `CHANGELOG.md`.
+3. Review and merge the release PR when the group is ready. Release Please creates the version tag and GitHub release, then starts the npm publish job from that tag. The `npm-publish` environment still requires Team Wizard & Docs approval before the package is published.
+4. Update each consumer only when it needs the new npm version. If publishing fails after the GitHub release is created, run **Release and publish to npm** manually on `main` with the existing version tag to retry.
+
+The release workflow uses GitHub's built-in token by default. For CI to run automatically on its release PRs, add a `RELEASE_PLEASE_TOKEN` GitHub Actions secret using a fine-grained personal access token with repository contents, pull requests, and issues write access. Without it, GitHub may require manual approval before CI runs on bot-created release PRs. Publishing uses npm trusted publishing and needs no npm token.
+
 ## Publishing and consumer adoption
 
 Version `0.1.0` was published manually by an authorized `@posthog` npm maintainer. Its npm metadata includes an integrity hash but no provenance attestation. Do not store an npm token in GitHub.
 
-For future releases, verify npm trusted publishing is configured for **PostHog/twig-components**, workflow **`publish.yml`**, environment **`npm-publish`**, and direct publishing. Protect that GitHub environment so only `main` may deploy and a reviewer must approve each run. Merge a reviewed version change to `main`, then manually run **Publish to npm** on `main`. The workflow tests and previews the package before publishing with a short-lived identity token. Never run it from a feature branch.
+For future releases, verify npm trusted publishing is configured for **PostHog/twig-components**, workflow **`publish.yml`**, environment **`npm-publish`**, and direct publishing. Protect that GitHub environment so only `main` may deploy and a reviewer must approve each run. Merge a reviewed Release Please PR to `main`. The `publish.yml` workflow then tests and previews the package and publishes the tagged version with a short-lived identity token after environment approval. The publish job cannot run from a feature branch.
 
 After the first workflow release succeeds, set the package's npm **Publishing access** to **Require two-factor authentication and disallow tokens**. Verify the version and provenance on npm, then update only the consuming sites that need it. See [npm's trusted publishing guide](https://docs.npmjs.com/trusted-publishers/) for the npm settings.
 
-## Events and properties release order
+## Events and properties consumer adoption (`0.2.0`)
 
-1. Review and merge the components PR, including the `0.2.0` version change.
-2. Run **Publish to npm** from `main`. The `npm-publish` environment requires approval from Team Wizard & Docs. Verify the published version and provenance before updating a consumer.
+1. Confirm the components PR and package version `0.2.0` are published.
+2. Verify the published version and provenance before updating a consumer. Later versions use the Release Please flow above and still require Team Wizard & Docs approval in the `npm-publish` environment.
 3. In the Twig.com PR, run `npm install --save-exact @posthog/twig-components@0.2.0` after publication and commit both package files.
 4. Run a clean `npm ci`, tests, type checking, lint, and production build in Twig.com. Review the page on desktop and mobile, then merge the host PR.
 
