@@ -1,6 +1,7 @@
 "use client";
 
 import { LabChoices } from "./LabChoices.js";
+import { LabChecklist } from "./LabChecklist.js";
 
 import { FinishLabButton } from "./FinishLabButton.js";
 
@@ -91,7 +92,7 @@ export function BookingLab({
   if (stage === 0)
     return (
       <div className="vac-guide-intro">
-        <h3>Follow a booking from click to confirmation</h3>
+        <h3>Product Analytics lab</h3>
         <p>
           First, complete a successful booking and inspect its events. Then
           repeat the exercise with a failed request.
@@ -108,6 +109,10 @@ export function BookingLab({
             ? "Practice a successful booking →"
             : "Continue the failure exercise →"}
         </Action>
+        <details className="vac-lab-step">
+          <summary>How this simulation works</summary>
+          <p>Bookings and their event records are simulated locally. No reservation or payment is created, and these records are not sent to PostHog.</p>
+        </details>
       </div>
     );
   if (stage === 1 && state.applied) {
@@ -121,7 +126,7 @@ export function BookingLab({
     const finished = !!state.latest;
     const tasks = [
       {
-        label: "Choose check-in and check-out dates",
+        label: <>Use the <strong>Your stay</strong> form on Twig to choose check-in and check-out dates</>,
         done: datesReady || finished,
       },
       { label: "Choose your guests", done: guestsReady || finished },
@@ -134,51 +139,16 @@ export function BookingLab({
         done: finished,
       },
     ];
-    const current = tasks.findIndex((task) => !task.done);
     return (
       <section className="vac-lab vac-builder">
-        <h3>
-          {finished
-            ? success
-              ? "Your booking is confirmed"
-              : "Your booking request failed"
-            : "Make your booking on Twig"}
-        </h3>
         <p role="status">
           {finished ? (
             "Your attempt is recorded. Next, review the events it produced."
           ) : (
-            <>
-              Code applied. Use the <strong>Your stay</strong> form on Twig to
-              complete these steps.
-            </>
+            "Code applied."
           )}
         </p>
-        <ol className="vac-booking-checklist" aria-label="Booking progress">
-          {tasks.map((task, index) => (
-            <li
-              key={index}
-              data-state={
-                task.done ? "done" : index === current ? "current" : "upcoming"
-              }
-              aria-current={index === current ? "step" : undefined}
-            >
-              <span
-                className="vac-check-status"
-                aria-label={
-                  task.done
-                    ? "Complete"
-                    : index === current
-                    ? "Next"
-                    : "Upcoming"
-                }
-              >
-                {task.done ? "✓" : index + 1}
-              </span>
-              <span>{task.label}</span>
-            </li>
-          ))}
-        </ol>
+        <LabChecklist label="Booking progress" items={tasks} />
         {finished ? (
           <Action onClick={() => onStage(2)}>
             {success ? "Inspect the success →" : "Inspect the failure →"}
@@ -196,27 +166,20 @@ export function BookingLab({
   if (stage === 1)
     return (
       <section className="vac-lab vac-builder">
-        <h3>
-          {state.latest
-            ? success
-              ? "Your booking is confirmed"
-              : "Your booking request failed"
-            : success
-            ? "Make a successful booking"
-            : "Try a failed booking"}
-        </h3>
         <p>
           {success ? (
             <>
               This code records events from Twig’s <strong>Book stay</strong>{" "}
-              button. Apply it, then make a simulated booking to see{" "}
-              <code>booking_started</code> on click and{" "}
-              <code>booking_completed</code> after confirmation.
+              button.
             </>
           ) : (
             "This request will fail. Keep the same code: it should record the attempt without recording a completed booking."
           )}
         </p>
+        {success && <LabChecklist label="Next booking action" items={[{
+          label: <>Apply it, then make a simulated booking to see <code>booking_started</code> on click and <code>booking_completed</code> after confirmation.</>,
+          done: false,
+        }]} />}
         <pre className="vac-booking-code" aria-label="Booking capture code">
           {bookingCode("confirmation")}
         </pre>
@@ -226,12 +189,10 @@ export function BookingLab({
   if (!run)
     return (
       <div className="vac-lab">
-        <h3>
-          {success
-            ? "Complete the successful booking first"
-            : "Try the failed booking first"}
-        </h3>
-        <p>Try this scenario on Twig, then inspect its events here.</p>
+        <LabChecklist label="Next booking action" items={[{
+          label: "Try this scenario on Twig, then inspect its events here.",
+          done: false,
+        }]} />
         <Action onClick={() => onStage(1)}>Continue the exercise →</Action>
       </div>
     );
@@ -244,11 +205,6 @@ export function BookingLab({
   );
   return (
     <section className="vac-lab vac-builder">
-      <h3>
-        {success
-          ? "What the successful booking recorded"
-          : "What the failed booking recorded"}
-      </h3>
       {attempts.length > 1 && (
         <LabChoices
           label="Booking attempt"

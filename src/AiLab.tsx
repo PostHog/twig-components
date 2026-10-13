@@ -84,7 +84,7 @@ export function useResetAiLab() {
 export function AiIntroduction({ onContinue }: { onContinue: () => void }) {
   return (
     <div className="vac-guide-intro">
-      <h3>Can you investigate a bad recommendation?</h3>
+      <h3>AIO lab</h3>
       <p>
         A visitor says Twig suggested the wrong stay. What would you need to see
         to investigate?
@@ -171,7 +171,6 @@ export function AiLab({
         <>
           {lesson === "example" ? (
             <>
-              <h3>From Twig to an event</h3>
               <div className="vac-ai-compare">
                 <h4>Twig’s request</h4>
                 <p>{fixtureRequest}</p>
@@ -181,7 +180,10 @@ export function AiLab({
                 code puts it in PostHog’s <code>$ai_input</code> field.
               </p>
               <CaptureMapping config={initialAiState.config} />
-              <p>Run it once to see those values in the recorded event.</p>
+              <LabChecklist label="Next AI action" items={[{
+                label: "Run it once to see those values in the recorded event.",
+                done: false,
+              }]} />
               <button
                 className="vac-button"
                 onClick={() => {
@@ -197,29 +199,28 @@ export function AiLab({
             </>
           ) : !state.applied ? (
             <>
-              <h3>
-                {lesson === "repair"
-                  ? "Connect the response"
-                  : lesson === "timeout"
-                  ? "Record a failed model request"
-                  : "Explore captured fields"}
-              </h3>
-              <p>
-                {lesson === "repair" ? (
-                  <>
-                    Twig holds the recommendation in <code>response</code>.
-                    Connect it to <code>$ai_output_choices</code> to record it
-                    too.
-                  </>
-                ) : lesson === "timeout" ? (
-                  <>
-                    The next request will time out. Enable{" "}
-                    <strong>Error details</strong> to capture why it failed.
-                  </>
-                ) : (
-                  "Choose the fields that help answer your question. These fields are optional."
-                )}
-              </p>
+              {lesson === "repair" ? (
+                <>
+                  <p>Twig holds the recommendation in <code>response</code>.</p>
+                  <LabChecklist label="Next AI action" items={[{
+                    label: <>Connect it to <code>$ai_output_choices</code> to record it too.</>,
+                    done: state.config.output,
+                  }]} />
+                </>
+              ) : lesson === "timeout" ? (
+                <>
+                  <p>The next request will time out.</p>
+                  <LabChecklist label="Next AI action" items={[{
+                    label: <>Enable <strong>Error details</strong> to capture why it failed.</>,
+                    done: state.config.errors,
+                  }]} />
+                </>
+              ) : (
+                <LabChecklist label="Next AI action" items={[{
+                  label: "Choose the fields that help answer your question. These fields are optional.",
+                  done: false,
+                }]} />
+              )}
               <fieldset className="vac-ai-fields">
                 <legend>
                   {lesson === "repair"
@@ -298,19 +299,9 @@ export function AiLab({
             </>
           ) : (
             <>
-              <h3>
-                {state.awaitingRun
-                  ? scenario === "timeout"
-                    ? "Try the failed request on Twig"
-                    : "Run the request on Twig"
-                  : "Your request is ready to review"}
-              </h3>
               <p>
                 {state.awaitingRun ? (
-                  <>
-                    Code applied. Click <strong>Run simulation</strong> in
-                    Twig’s trip planner.
-                  </>
+                  "Code applied."
                 ) : (
                   "The request has finished. Review what your capture code recorded."
                 )}
@@ -353,16 +344,12 @@ export function AiLab({
         </>
       ) : (
         <>
-          <h3>
-            {run?.scenario === "timeout"
-              ? "Review the failed request"
-              : lesson === "observe"
-              ? "Find the missing response"
-              : "Compare the request and response"}
-          </h3>
           {!run ? (
             <>
-              <p>Run the worked example in the exercise first.</p>
+              <LabChecklist label="Next AI action" items={[{
+                label: "Run the worked example in the exercise first.",
+                done: false,
+              }]} />
               <button className="vac-button" onClick={() => onStage(1)}>
                 <span className="vac-os-button-face">
                   Continue the exercise →
@@ -429,10 +416,10 @@ export function AiLab({
               </div>
               <div className="vac-lab-output" role="status">
                 {lesson === "observe" && (
-                  <strong>
+                  <p>
                     Twig displayed a recommendation, but this code never
                     recorded it.
-                  </strong>
+                  </p>
                 )}
                 <p>{recommendationEvidence(run).explanation}</p>
               </div>

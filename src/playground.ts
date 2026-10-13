@@ -14,11 +14,11 @@ export const touchpointDefinitions = {
   discovery: {
     title: "AI trip discovery",
     ...product("AI Observability"),
-    lesson: "Inspect a trip-planning request and its model response.",
+    lesson: "Follow a conversation through its PostHog events.",
     lab: "ai-discovery",
     description:
-      "Configure AI Observability fields, then test a simulated recommendation or timeout.",
-    evidence: "Local generation events only. No model or PostHog connection.",
+      "Inspect model input and output, connect requests in a conversation, and investigate a wrong recommendation.",
+    evidence: "Compare requests using their session, trace, and generation IDs.",
   },
   catalog: {
     title: "Events and properties",

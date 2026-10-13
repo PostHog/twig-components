@@ -75,7 +75,7 @@ export function StayLab({
   if (stage === 0)
     return (
       <div className="vac-guide-intro">
-        <h3>Which stay did they view?</h3>
+        <h3>Product Analytics lab</h3>
         <p>
           A view event tells you someone opened a listing. To compare listings,
           it also needs to say which stay they viewed.
@@ -85,12 +85,15 @@ export function StayLab({
           <p>You’ll visit two stays, then connect their IDs to the event.</p>
         </div>
         <Action onClick={() => onStage(1)}>Follow a stay view →</Action>
+        <details className="vac-lab-step">
+          <summary>How this simulation works</summary>
+          <p>Opening a stay while this exercise is running creates a local view event. These events are not sent to PostHog.</p>
+        </details>
       </div>
     );
   if (stage === 1 && (!state.applied || !state.running))
     return (
       <section className="vac-lab vac-builder">
-        <h3>{repair ? "Connect the stay ID" : "Record when a stay opens"}</h3>
         <p>
           {repair ? (
             <>
@@ -129,16 +132,13 @@ export function StayLab({
   if (stage === 1)
     return (
       <section className="vac-lab vac-builder">
-        <h3>
-          {complete ? "Your stay views are ready" : "Visit two stays on Twig"}
-        </h3>
         <p>
           {complete ? (
             "Both pages opened and produced view events. Review what each event can tell you."
           ) : (
             <>
-              Code applied. Open another stay below. The event fires when its
-              page opens, not when you hover over its link.
+              Code applied. The event fires when its page opens, not when you
+              hover over its link.
             </>
           )}
         </p>
@@ -169,17 +169,15 @@ export function StayLab({
   if (!event)
     return (
       <div className="vac-lab">
-        <h3>Open a stay first</h3>
+        <LabChecklist label="Next stay action" items={[{
+          label: "Open a stay first",
+          done: false,
+        }]} />
         <Action onClick={() => onStage(1)}>Continue the exercise →</Action>
       </div>
     );
   return (
     <section className="vac-lab vac-builder">
-      <h3>
-        {repair
-          ? "See which listing each event describes"
-          : "Two views, no listing IDs"}
-      </h3>
       <LabChoices
         label="Recorded visit"
         value={state.events.indexOf(event)}
