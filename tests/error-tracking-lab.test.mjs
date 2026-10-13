@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { errorTrackingReducer, initialErrorTrackingState } from "@posthog/twig-components/error-tracking-lab";
+import { errorTrackingReducer, initialErrorTrackingState, isErrorTrackingLabComplete } from "@posthog/twig-components/error-tracking-lab";
 import { ErrorTrackingLabProvider, ErrorTrackingLab } from "@posthog/twig-components/error-tracking-lab-ui";
 import { BookedStaysView, TripDetailsView } from "@posthog/twig-components/account";
 import { playgroundPage } from "@posthog/twig-components/playground";
@@ -22,15 +22,7 @@ test("repeated trip errors form one issue and a successful retry adds no excepti
   const retry = errorTrackingReducer(fixed, { type: "retry-success" });
   assert.equal(retry.successfulRetry, true);
   assert.equal(retry.occurrences.length, 2);
-  const reviewHtml = renderToStaticMarkup(h(ErrorTrackingLabProvider, { active: true, state: retry, onAction: () => {} }, h(ErrorTrackingLab, {
-    stage: 7, onStage: () => {}, location: "bookings", onFocusBooking: () => {}, onFocusDetails: () => {},
-  })));
-  assert.match(reviewHtml, /Before the change/);
-  assert.match(reviewHtml, /this retry added no new error/);
-  assert.match(reviewHtml, /does not prove a fix has been shipped/);
-  assert.match(reviewHtml, /Finish lab/);
-  assert.doesNotMatch(reviewHtml, /Mark resolved|Resolve this example/);
-  assert.equal(errorTrackingReducer(retry, { type: "resolve" }).resolved, true);
+  assert.equal(errorTrackingReducer(retry, { type: "resolve" }).resolved, false);
   assert.equal(errorTrackingReducer(retry, { type: "reset" }).occurrences.length, 0);
   assert.equal(errorTrackingReducer(retry, { type: "reset" }).booking, null);
 });
@@ -54,7 +46,7 @@ test("the lab starts on a stay, remains available on booked stays, and discloses
   assert.match(html, /not sent to PostHog/);
 });
 
-test("the trip error has its own brief lesson screen", () => {
+test("the trip error explanation has no extra inspection screen", () => {
   const booked = errorTrackingReducer(initialErrorTrackingState, {
     type: "book", booking: { id: "trip-1", stayId: stays[0].id, stayTitle: stays[0].title },
   });
@@ -64,23 +56,103 @@ test("the trip error has its own brief lesson screen", () => {
   const html = renderToStaticMarkup(h(ErrorTrackingLabProvider, { active: true, state: failed, onAction: () => {} }, h(ErrorTrackingLab, {
     stage: 2, onStage: () => {}, location: "bookings", onFocusBooking: () => {}, onFocusDetails: () => {},
   })));
-  assert.match(html, /Twig showed an error when you opened the details\./);
-  assert.match(html, /Inspect the error/);
-  assert.doesNotMatch(html, /Your .* booking is saved|Twig couldn’t show|Open your trip/);
+  assert.match(html, /aria-label="Open your trip"[\s\S]*?Click <strong>Trip details<\/strong>/);
+  assert.doesNotMatch(html, /Inspect the error|Twig showed an error when you opened the details/);
   const inspection = renderToStaticMarkup(h(ErrorTrackingLabProvider, { active: true, state: failed, onAction: () => {} }, h(ErrorTrackingLab, {
     stage: 3, onStage: () => {}, location: "bookings", onFocusBooking: () => {}, onFocusDetails: () => {},
   })));
-  assert.match(inspection, /In PostHog Error Tracking, an <strong>exception<\/strong> is an event for one software failure/);
-  assert.match(inspection, /Exception type/);
-  assert.match(inspection, /Error message/);
-  assert.match(inspection, /stay ID that identifies your booking/);
+  assert.match(inspection, /PostHog Error Tracking helps pinpoint why: it records the failure as an <strong>exception<\/strong>/);
+  assert.doesNotMatch(inspection, /Inspect the error|Twig showed an error when you opened the details/);
+  assert.match(inspection, /Example PostHog exception properties/);
+  assert.match(inspection, /Example PostHog stack trace/);
+  assert.doesNotMatch(inspection, /Error Tracking \/ Issue/);
+  assert.match(inspection, /Selected exception/);
+  assert.match(inspection, /TypeError/);
+  assert.match(inspection, /Cannot read properties of <mark>undefined<\/mark>/);
+  assert.match(inspection, /The stay ID links the event to your booking/);
+  assert.match(inspection, /<strong>issue<\/strong>, a group of similar errors/);
   assert.match(inspection, /<strong>stack trace<\/strong> lists the functions Twig was running/);
+  assert.match(inspection, /aria-label="Example PostHog stack trace"[\s\S]*?aria-label="Selected exception"[\s\S]*?TypeError[\s\S]*?Stack Trace[\s\S]*?aria-label="Stack frames"/);
+  const propertiesVisual = inspection.match(/aria-label="Example PostHog exception properties"([\s\S]*?)<\/section>/)?.[1] ?? "";
+  assert.doesNotMatch(propertiesVisual, /<mark>/);
+  const stackVisual = inspection.match(/aria-label="Example PostHog stack trace"([\s\S]*?)<\/section>/)?.[1] ?? "";
+  assert.equal((stackVisual.match(/<strong>TypeError<\/strong>/g) ?? []).length, 1);
+  assert.match(stackVisual, /<mark>undefined<\/mark>/);
+  assert.match(stackVisual, /<pre aria-label="Stack frames">at <mark>readTripHost<\/mark> \(trip-details\.ts\)/);
+  assert.match(inspection, /Selected exception properties/);
+  assert.match(inspection, /stay_id/);
   assert.match(inspection, /<mark>undefined<\/mark>/);
-  assert.match(inspection, /<mark>name<\/mark>/);
-  assert.match(inspection, /at <mark>readTripHost<\/mark>/);
-  assert.match(inspection, /The highlighted clues tell the story/);
-  assert.match(inspection, /See how errors are grouped/);
+  assert.match(inspection, /To read a stack trace, start at the top|See how errors are grouped/);
+  assert.doesNotMatch(inspection, /aria-pressed=|role="group" aria-label="Exception details"/);
   assert.doesNotMatch(inspection, /Which part of the trip details failed\?|type="radio"|Woody’s name/);
+  const grouping = renderToStaticMarkup(h(ErrorTrackingLabProvider, { active: true, state: failed, onAction: () => {} }, h(ErrorTrackingLab, {
+    stage: 4, onStage: () => {}, location: "bookings", onFocusBooking: () => {}, onFocusDetails: () => {},
+  })));
+  assert.match(grouping, /Rage click <strong>Try again<\/strong> in Twig&#x27;s trip details, and watch the count climb/);
+});
+
+test("the error lab distinguishes the fallback from repairing missing host data", () => {
+  const booking = { id: "trip-1", stayId: stays[0].id, stayTitle: stays[0].title };
+  let state = errorTrackingReducer(initialErrorTrackingState, { type: "book", booking });
+  for (let i = 0; i < 2; i++) state = errorTrackingReducer(state, {
+    type: "capture", message: "Cannot read properties of undefined (reading 'name')", stayId: booking.stayId,
+  });
+  state = errorTrackingReducer(errorTrackingReducer(state, { type: "fix" }), { type: "retry-success" });
+  const renderStage = (stage) => renderToStaticMarkup(h(ErrorTrackingLabProvider, { active: true, state, onAction: () => {} }, h(ErrorTrackingLab, {
+    stage, onStage: () => {}, location: "bookings", onFocusBooking: () => {}, onFocusDetails: () => {},
+  })));
+  const beforeFallback = renderStage(5);
+  assert.match(beforeFallback, /Twig keeps a host record for each stay, saving details about the host/);
+  assert.doesNotMatch(beforeFallback, /Woody.s name and bio/);
+  assert.match(beforeFallback, /generic error message seen on Twig:<\/p><pre/);
+  assert.match(beforeFallback, /<pre[^>]*>return host\.name;<\/pre>/);
+  assert.match(beforeFallback, /<pre[^>]*>return host\?\.name \?\?/);
+  assert.match(beforeFallback, /Apply the Twig code fix/);
+  assert.doesNotMatch(beforeFallback, /\/\/ Before|\/\/ After/);
+  const retry = renderStage(6);
+  assert.doesNotMatch(retry, /<pre|return host\.name;|host\?\.name/);
+  assert.match(retry, /fallback stopped the crash, but the host/);
+  assert.match(retry, /This retry added no new exception/);
+  assert.doesNotMatch(retry, /Trip details opened with the fallback host name|Check the fix/);
+
+  const issueView = renderStage(7);
+  assert.match(issueView, /Example PostHog stack trace/);
+  assert.match(issueView, /Example PostHog exception properties/);
+  assert.doesNotMatch(issueView, /Error Tracking \/ Issue/);
+  assert.match(issueView, /Selected exception/);
+  assert.match(issueView, /Stack Trace/);
+  assert.match(issueView, /Properties/);
+  const propertiesVisual = issueView.match(/aria-label="Example PostHog exception properties"([\s\S]*?)<\/section>/)?.[1] ?? "";
+  assert.match(propertiesVisual, /<code><mark>stay-01<\/mark><\/code>/);
+  assert.doesNotMatch(propertiesVisual, /<mark>undefined<\/mark>/);
+  assert.match(issueView, /The stay ID in PostHog points to this booking in Twig/);
+  assert.match(issueView, /Apply the Twig repair/);
+  assert.match(issueView, /readTripHost/);
+  assert.match(issueView, /woodrow-sparks|Repair the host lookup/);
+  assert.doesNotMatch(issueView, /Host record returned by trip details|aria-pressed=/);
+  state = errorTrackingReducer(state, { type: "repair-host-lookup" });
+  assert.equal(state.hostLookupRepaired, true);
+  assert.equal(isErrorTrackingLabComplete(8, state), false);
+  assert.equal(isErrorTrackingLabComplete(10, state), false);
+  assert.match(renderStage(8), /repair is applied to Twig&#x27;s trip-details lookup/);
+  assert.match(renderStage(8), /aria-label="Check the host repair"[\s\S]*?Click <strong>Trip details<\/strong> in Twig to reload this booking/);
+  assert.equal(errorTrackingReducer(state, { type: "review-issue" }).issueReviewed, false);
+  assert.equal(errorTrackingReducer(state, { type: "resolve" }).resolved, false);
+  state = errorTrackingReducer(state, { type: "verify-host" });
+  assert.match(renderStage(8), /After reloading trip details, Twig now shows <strong>Woody<\/strong>/);
+  assert.match(renderStage(8), /Occurrences<\/dt><dd>2<\/dd>/);
+  assert.match(renderStage(8), /Resolve the issue/);
+  assert.doesNotMatch(renderStage(8), /Check another trip load|Inspect the issue|Click <strong>Trip details<\/strong>/);
+  assert.equal(isErrorTrackingLabComplete(10, state), false);
+  state = errorTrackingReducer(state, { type: "resolve" });
+  assert.equal(state.resolved, true);
+  assert.equal(isErrorTrackingLabComplete(9, state), false);
+  assert.equal(isErrorTrackingLabComplete(10, state), true);
+  assert.equal(state.occurrences.length, 2);
+  assert.match(renderStage(9), /Resolved/);
+  assert.match(renderStage(9), /Finish lab/);
+  assert.doesNotMatch(renderStage(9), /Click <strong>Trip details<\/strong>/);
+  assert.match(renderStage(10), /The exception, stack trace, and stay ID pointed to the broken host lookup/);
 });
 
 test("booked stays expose usable trip details and a recoverable fallback", () => {
@@ -99,6 +171,12 @@ test("booked stays expose usable trip details and a recoverable fallback", () =>
   assert.match(html, /Cancel stay/);
   assert.ok(html.indexOf('class="twig-booking-actions"') < html.indexOf('class="twig-trip-error"'));
   assert.doesNotMatch(html.slice(html.indexOf('class="twig-trip-error"')), /Cancel stay|Your trip|class="twig-trip-facts"|This trip is saved/);
+  const fallback = renderToStaticMarkup(h(BookedStaysView, {
+    bookings: [booking], renderImage: () => null, stayHref: () => "/stays/stay-01",
+    selectedBookingId: booking.id, highlightedTripDetailsBookingId: booking.id,
+    onViewDetails: () => {}, renderDetails: () => h(TripDetailsView, { booking, hostName: "Host information unavailable" }),
+  }));
+  assert.match(fallback, /class="twig-trip-details vac-lab-target"[^>]*>[^]*?Host information unavailable/);
   const loaded = renderToStaticMarkup(h(TripDetailsView, { booking, hostName: "Woody" }));
   assert.match(loaded, /Your trip/);
   assert.match(loaded, /Woody/);
@@ -118,7 +196,8 @@ test("the lab asks for a new booking without offering an existing trip", () => {
     stage: 1, onStage: () => {}, location: "bookings",
     onFocusBooking: () => {}, onFocusDetails: () => {}, onBookNew: () => {},
   })));
-  assert.match(html, /Book a stay on Twig/);
+  assert.match(html, /First, save a booking on Twig/);
+  assert.match(html, /aria-label="Book a stay"[\s\S]*?aria-label="Next">1[\s\S]*?aria-label="Upcoming">2/);
   assert.match(html, /Find a stay/);
   assert.doesNotMatch(html, /Use an existing booking|Use this booking|<select/);
   const stayHtml = renderToStaticMarkup(h(ErrorTrackingLabProvider, { active: true }, h(ErrorTrackingLab, {
@@ -127,4 +206,33 @@ test("the lab asks for a new booking without offering an existing trip", () => {
   })));
   assert.match(stayHtml, /Book stay/);
   assert.doesNotMatch(stayHtml, /Log in to book|Log in with/);
+});
+
+test("every Twig action in the error lab uses single or numbered directions", () => {
+  const booking = { id: "trip-1", stayId: stays[0].id, stayTitle: stays[0].title };
+  const booked = errorTrackingReducer(initialErrorTrackingState, { type: "book", booking });
+  const failed = errorTrackingReducer(booked, { type: "capture", message: "host is undefined", stayId: booking.stayId });
+  const failedTwice = errorTrackingReducer(failed, { type: "capture", message: "host is undefined", stayId: booking.stayId });
+  const fixed = errorTrackingReducer(failedTwice, { type: "fix" });
+  const retried = errorTrackingReducer(fixed, { type: "retry-success" });
+  const repaired = errorTrackingReducer(retried, { type: "repair-host-lookup" });
+  const verified = errorTrackingReducer(repaired, { type: "verify-host" });
+  const render = (stage, state, location) => renderToStaticMarkup(h(ErrorTrackingLabProvider, { active: true, state, onAction: () => {} }, h(ErrorTrackingLab, {
+    stage, location, onStage: () => {}, onFocusBooking: () => {}, onFocusDetails: () => {}, onBookNew: () => {},
+  })));
+  for (const [stage, state, location, label, steps] of [
+    [1, initialErrorTrackingState, "stay", "Book a stay", 1],
+    [1, initialErrorTrackingState, "other", "Book a stay", 2],
+    [2, booked, "bookings", "Open your trip", 1],
+    [2, booked, "stay", "Open your trip", 2],
+    [4, failed, "bookings", "Retry trip details", 1],
+    [6, fixed, "bookings", "Check the fallback", 1],
+    [8, repaired, "bookings", "Check the host repair", 1],
+  ]) {
+    const html = render(stage, state, location);
+    const checklist = html.match(new RegExp(`<ol class="vac-booking-checklist" aria-label="${label}">([\\s\\S]*?)<\\/ol>`))?.[1] ?? "";
+    assert.equal((checklist.match(/<li /g) ?? []).length, steps, `${label} at stage ${stage}`);
+    assert.equal((checklist.match(/class="vac-check-status"/g) ?? []).length, steps === 1 ? 0 : steps);
+  }
+  assert.doesNotMatch(render(9, verified, "bookings"), /vac-booking-checklist/);
 });

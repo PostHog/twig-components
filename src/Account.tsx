@@ -388,6 +388,7 @@ export type BookedStaysViewProps = StayViewProps & {
   headingAccessory?: ReactNode;
   selectedBookingId?: string | null;
   highlightedDetailsBookingId?: string | null;
+  highlightedTripDetailsBookingId?: string | null;
   onViewDetails?: (booking: BookedStaySummary) => void;
   onCancelBooking?: (booking: BookedStaySummary) => void;
   renderDetails?: (booking: BookedStaySummary) => ReactNode;
@@ -402,6 +403,7 @@ export function BookedStaysView({
   headingAccessory,
   selectedBookingId,
   highlightedDetailsBookingId,
+  highlightedTripDetailsBookingId,
   onViewDetails,
   onCancelBooking,
   renderDetails,
@@ -442,7 +444,7 @@ export function BookedStaysView({
                   </div>
                 </div>
                 {selectedBookingId === booking.id && renderDetails && (
-                  <div id={`twig-trip-details-${booking.id}`} className="twig-trip-details" role="region" aria-label={`Trip details for ${booking.stay.title ?? booking.stay.setting}`}>
+                  <div id={`twig-trip-details-${booking.id}`} className={`twig-trip-details${highlightedTripDetailsBookingId === booking.id ? " vac-lab-target" : ""}`} role="region" aria-label={`Trip details for ${booking.stay.title ?? booking.stay.setting}`}>
                     {renderDetails(booking)}
                   </div>
                 )}

@@ -3,6 +3,14 @@
 import { useState, type ReactNode, type RefObject } from "react";
 import { labsOnOtherPages, type LabStartPage, type PlaygroundPage, type TouchpointId } from "./playground.js";
 
+// Exact SVGs from @posthog/icons 0.36.6, as used by posthog.com.
+const productIcons = {
+  "Product Analytics": new URL("./assets/posthog-product-analytics.svg", import.meta.url).href,
+  "AI Observability": new URL("./assets/posthog-ai-observability.svg", import.meta.url).href,
+  "Error Tracking": new URL("./assets/posthog-error-tracking.svg", import.meta.url).href,
+  "Session Replay": new URL("./assets/posthog-session-replay.svg", import.meta.url).href,
+} as const;
+
 export function LabDirectory({ page, choose, showMarker, onVisitLab }: {
   page: PlaygroundPage;
   choose: (id: TouchpointId) => void;
@@ -89,7 +97,7 @@ export function LabDirectory({ page, choose, showMarker, onVisitLab }: {
         </summary>
         <nav className="vac-lab-other-pages-menu" aria-label="Labs on other Twig pages">
           {otherProducts.map((group) => <div className="vac-lab-menu-group" key={group.tool} data-product={group.tool.toLowerCase().replaceAll(" ", "-")}>
-            <h4>{group.tool}</h4>
+            <h4><img src={productIcons[group.tool]} className="vac-lab-product-icon" width={16} height={16} alt="" />{group.tool}</h4>
             <ul>
               {group.labs.map((item) => <li key={item.id}>
                 <button type="button" onClick={() => onVisitLab?.(item.id, item.page)} aria-label={`Go to ${item.title} lab`}>

@@ -113,10 +113,14 @@ passes `onViewDetails`; the host supplies the details region with `renderDetails
 Without that callback, the button stays disabled. Hosts can pass `onBioChange`
 to show the About edit control; the host decides whether that draft is temporary
 or persisted.
+Pass `highlightedTripDetailsBookingId` to outline the selected trip details
+region with the same Twig target pulse used for other lab actions.
 
 ## Labs and playground
 
 These are **local teaching simulations**. They do not send lab events to PostHog or run an AI model. Twig.com supplies routes, page content, booking state, focus/scroll actions, and navigation callbacks.
+
+For directions that ask the learner to act on Twig, use `LabChecklist` in every lab: one item renders the existing blue-left callout, while two or more sequential items render numbered steps. Keep explanatory prose outside the checklist and avoid repeating the action there. This applies to initial actions, retries, and checks after a simulated fix.
 
 | Import path | Main exports | What it does / host input | Used in Twig |
 | --- | --- | --- | --- |

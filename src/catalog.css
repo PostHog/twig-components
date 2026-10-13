@@ -1090,6 +1090,20 @@
   border-top: 1px solid var(--twig-account-line);
   background: var(--twig-account-fill);
 }
+.vac-lab-target {
+  outline: 2px dashed var(--vac-muted);
+  outline-offset: 6px;
+  border-radius: 4px;
+  scroll-margin-block: 32px;
+  animation: vac-target-pulse 850ms ease-in-out 2;
+}
+.twig-trip-details.vac-lab-target { outline-offset: -8px; }
+@keyframes vac-target-pulse {
+  50% { outline-color: var(--vac-highlight, #ff5c1c); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vac-lab-target { animation: none; }
+}
 .twig-trip-details h3 { margin: 0 0 16px; font-size: 22px; font-weight: 500; }
 .twig-trip-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 0; }
 .twig-trip-facts dt { color: var(--twig-account-muted); font-size: 12px; }

@@ -97,3 +97,25 @@ test("playground directory and dock preserve accessible navigation", () => {
   assert.match(dock, /PostHog Playground/);
   assert.match(dock, /aria-label="Instrumentation touchpoints and details"/);
 });
+
+test("the other-products menu shows the matching PostHog icon on every Twig page", () => {
+  const icons = {
+    "Product Analytics": "posthog-product-analytics.svg",
+    "AI Observability": "posthog-ai-observability.svg",
+    "Error Tracking": "posthog-error-tracking.svg",
+    "Session Replay": "posthog-session-replay.svg",
+  };
+  for (const pathname of ["/", "/about", "/stays/stay-01", "/profile/bookings"]) {
+    const page = playgroundPage(pathname, stays);
+    const directory = render(h(LabDirectory, { page, choose: noop, showMarker: noop, onVisitLab: noop }));
+    const products = new Set(labsOnOtherPages(page).map(({ tool }) => tool));
+    for (const [product, icon] of Object.entries(icons)) {
+      if (products.has(product)) {
+        const slug = product.toLowerCase().replaceAll(" ", "-");
+        assert.match(directory, new RegExp(`data-product="${slug}"><h4><img src="[^"]*${icon}"[^>]*alt=""\\/>${product}<\\/h4>`));
+      } else {
+        assert.doesNotMatch(directory, new RegExp(icon));
+      }
+    }
+  }
+});
