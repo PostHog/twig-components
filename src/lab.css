@@ -6,6 +6,7 @@
   --ph-os-button-border: #b17816;
   --ph-brand-yellow: #ffa81c;
   --ph-brand-tangerine: #ff5c1c;
+  --ph-brand-purple: #a737d2;
   --ph-neutral-ink: #151515;
   --ph-neutral-background: #eeefe9;
   --ph-neutral-accent: #e5e7e0;
@@ -171,12 +172,105 @@
 .vac-app .vac-developer-theme .vac-eyebrow {
   font-size: 10px;
   letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 .vac-app .vac-developer-theme :is(code, pre) {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 .vac-app .vac-developer-theme .vac-lab-directory-list > li {
   border-radius: 6px;
+}
+.vac-app .vac-developer-theme .vac-lab-other-pages {
+  margin-top: 12px;
+}
+.vac-app .vac-developer-theme .vac-lab-other-pages > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--vac-line);
+  border-radius: 6px;
+  background: var(--vac-paper);
+  list-style: none;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.vac-app .vac-developer-theme .vac-lab-other-pages > summary::-webkit-details-marker {
+  display: none;
+}
+.vac-app .vac-developer-theme .vac-lab-other-pages[open] > summary {
+  border-radius: 6px 6px 0 0;
+}
+.vac-app .vac-developer-theme .vac-lab-menu-end {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  gap: 10px;
+}
+.vac-app .vac-developer-theme .vac-lab-menu-chevron {
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+}
+.vac-app .vac-developer-theme .vac-lab-other-pages[open] .vac-lab-menu-chevron {
+  transform: translateY(2px) rotate(225deg);
+}
+.vac-app .vac-developer-theme .vac-lab-other-pages-menu {
+  overflow: hidden;
+  border: 1px solid var(--vac-line);
+  border-top: 0;
+  border-radius: 0 0 6px 6px;
+  background: var(--vac-paper);
+}
+.vac-app .vac-developer-theme .vac-lab-menu-group h4 {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 10px 14px;
+  background: var(--ph-neutral-background);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ph-brand-cobalt);
+}
+.vac-app .vac-developer-theme [data-product="error-tracking"] h4 { color: var(--ph-brand-yellow); }
+.vac-app .vac-developer-theme [data-product="session-replay"] h4 { color: var(--ph-brand-tangerine); }
+.vac-app .vac-developer-theme [data-product="ai-observability"] h4 { color: var(--ph-brand-purple); }
+.vac-app .vac-developer-theme .vac-lab-menu-group ul {
+  margin: 0;
+  padding: 6px 14px 12px;
+  list-style: none;
+}
+.vac-app .vac-developer-theme .vac-lab-menu-group li button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 6px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--vac-ink);
+  text-align: left;
+  font-size: 12px;
+  line-height: 1.35;
+}
+.vac-app .vac-developer-theme .vac-lab-menu-group li button:hover,
+.vac-app .vac-developer-theme .vac-lab-menu-group li button:focus-visible {
+  background: var(--ph-neutral-background);
+}
+.vac-app .vac-developer-theme .vac-lab-menu-group li button strong,
+.vac-app .vac-developer-theme .vac-lab-menu-group li button small {
+  display: block;
+}
+.vac-app .vac-developer-theme .vac-lab-menu-group li button small {
+  margin-top: 2px;
+  color: var(--vac-muted);
+  font-size: 11px;
 }
 .vac-app .vac-developer-theme .vac-event-picker {
   gap: 0;
@@ -229,6 +323,21 @@
 .vac-app .vac-developer-theme .vac-event-comparison [data-mismatch="true"] {
   background: var(--ph-neutral-accent);
 }
+.vac-app .vac-developer-theme .vac-error-issue h4 { margin: 0 0 12px; }
+.vac-app .vac-developer-theme .vac-error-issue .vac-event-comparison {
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--vac-line);
+  border-radius: 0;
+}
+.vac-app .vac-developer-theme .vac-error-issue .vac-event-comparison > div {
+  padding: 10px 0;
+}
+.vac-app .vac-developer-theme .vac-error-details { margin: 16px 0; }
+.vac-app .vac-developer-theme .vac-error-details > div + div { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--vac-line); }
+.vac-app .vac-developer-theme .vac-error-details dt { color: var(--vac-muted); font-size: 12px; }
+.vac-app .vac-developer-theme .vac-error-details dd { margin: 4px 0 0; overflow-wrap: anywhere; font-size: 13px; line-height: 1.5; }
+.vac-app .vac-developer-theme .vac-error-details code { font-size: inherit; }
 
 .vac-ai-fields {
   border: 0;
@@ -247,7 +356,7 @@
   width: 18px;
   height: 18px;
   flex: 0 0 auto;
-  accent-color: var(--ph-brand-cobalt);
+  accent-color: var(--ph-brand-purple);
 }
 .vac-ai-fields code {
   display: block;
@@ -291,8 +400,8 @@
 }
 
 .vac-app .vac-developer-theme .vac-ai-code-highlight {
-  background: var(--ph-highlight);
-  color: var(--ph-light-12);
+  background: var(--ph-brand-purple);
+  color: var(--ph-neutral-white);
   border-radius: 2px;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
@@ -308,8 +417,8 @@
 }
 
 .vac-app .vac-developer-theme pre .vac-ai-code-highlight {
-  background: var(--ph-highlight);
-  color: var(--ph-light-12);
+  background: var(--ph-brand-purple);
+  color: var(--ph-neutral-white);
 }
 .vac-app .vac-developer-theme .vac-ai-code-context {
   background: transparent;
@@ -495,9 +604,38 @@
   padding: 4px 0;
   text-align: left;
 }
+.vac-reset-confirm {
+  flex-basis: 100%;
+  padding: 16px;
+  border: 1px solid var(--vac-line);
+  background: white;
+}
+.vac-reset-confirm h3,
+.vac-reset-confirm p {
+  margin: 0 0 10px;
+}
+.vac-reset-confirm h3 { font-size: 18px; }
+.vac-reset-confirm-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+.vac-app .vac-developer-theme .vac-reset-confirm-actions .vac-button {
+  width: 100%;
+  margin-top: 12px;
+  white-space: normal;
+}
+.vac-reset-confirm-actions .vac-text-button {
+  align-self: flex-start;
+}
 
 .vac-app .vac-developer-theme :focus-visible {
   outline-color: var(--ph-brand-cobalt);
+}
+/* The lesson region is focused for screen readers after step changes, but it is not an interactive control. */
+.vac-app .vac-developer-theme #guide-panel:focus {
+  outline: none;
 }
 .vac-app .vac-developer-theme input {
   accent-color: var(--ph-brand-cobalt);
@@ -636,11 +774,44 @@
   margin: 0;
 }
 
-.vac-app .vac-developer-theme pre.vac-booking-code {
-  white-space: pre;
-  overflow-wrap: normal;
-  overflow-x: auto;
+.vac-app .vac-developer-theme .vac-error-intro-steps {
+  margin: 0;
+  padding-left: 20px;
+  list-style: decimal;
+  font-size: 14px;
+  line-height: 1.55;
 }
+.vac-app .vac-developer-theme .vac-error-intro-steps li + li {
+  margin-top: 8px;
+}
+.vac-app .vac-developer-theme .vac-error-stack {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  max-width: 100%;
+  margin: 12px 0;
+  padding: 12px;
+  border-radius: 4px;
+  background: var(--vac-ink);
+  color: var(--vac-paper);
+  font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.vac-app .vac-developer-theme .vac-error-stack code {
+  display: block;
+  min-width: 0;
+  color: inherit;
+  font: inherit;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.vac-app .vac-developer-theme .vac-error-stack mark {
+  padding: 0 2px;
+  border-radius: 2px;
+  background: var(--ph-brand-yellow);
+  color: var(--ph-neutral-ink);
+}
+.vac-app .vac-developer-theme .vac-error-stack-frame { padding-left: 16px; }
+.vac-app .vac-developer-theme .vac-error-stack-frame code + code { opacity: .75; }
 
 .vac-app .vac-developer-theme .vac-selected-lab {
   display: flex;

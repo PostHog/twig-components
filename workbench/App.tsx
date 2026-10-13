@@ -8,6 +8,7 @@ import {
   AccountLayout,
   AccountSettingsView,
   BookedStaysView,
+  TripDetailsView,
   LoginView,
   ProfileMenu,
   ProfileOverview,
@@ -18,12 +19,15 @@ import {
   type BookedStaySummary,
 } from "../src/Account.js";
 import { StayFilters, type StaySetting } from "../src/StayFilters.js";
+import { DatePicker, addDateDays } from "../src/DatePicker.js";
+import { GuestPicker } from "../src/GuestPicker.js";
 import { FilterLabExercise } from "../src/FilterLabExercise.js";
 import { FilterInspector } from "../src/FilterInspector.js";
 import { filterLabReducer, initialLabState } from "../src/filter-lab.js";
 import { AiLab, AiLabProvider, useAiLab } from "../src/AiLab.js";
 import { fixtureRequest } from "../src/ai-lab.js";
 import { BookingLab, BookingLabProvider, useBookingLab } from "../src/BookingLab.js";
+import { ErrorTrackingLab, ErrorTrackingLabProvider, useErrorTrackingLab } from "../src/ErrorTrackingLab.js";
 import { StayLab, StayLabProvider, useStayLab } from "../src/StayLab.js";
 import { stays, stayLabel } from "../src/catalog.js";
 import { ReplayLab, type ReplayLabViewState } from "../src/ReplayLab.js";
@@ -33,17 +37,19 @@ import "../src/catalog.css";
 import "../src/lab.css";
 import "./workbench.css";
 
-type View = "preview" | "saved" | "account" | "invite" | "filters" | "ai" | "booking" | "stay" | "replay";
+type View = "preview" | "saved" | "account" | "invite" | "dates" | "filters" | "ai" | "booking" | "stay" | "replay" | "errors";
 const views: { id: View; label: string; description: string }[] = [
   { id: "preview", label: "Twig views", description: "Read-only guide preview and interactive filter control" },
   { id: "saved", label: "Saved stay", description: "Exercise host-controlled auth, save, loading, disabled, and error states" },
   { id: "account", label: "Account", description: "Walk through login, profile navigation, empty collections, and settings" },
   { id: "invite", label: "PostHog invitation", description: "Open and dismiss the playground invitation" },
+  { id: "dates", label: "Booking details", description: "Choose dates and guests with Twig’s booking controls" },
   { id: "filters", label: "Filter lab", description: "Click Twig filters and inspect the locally recorded events" },
   { id: "ai", label: "AI lab", description: "Run a local recommendation fixture through the lesson" },
   { id: "booking", label: "Booking lab", description: "Simulate a successful or failed booking" },
   { id: "stay", label: "Stay lab", description: "Open listings and compare view events" },
   { id: "replay", label: "Replay lab", description: "Review the replay lesson with local fixture controls" },
+  { id: "errors", label: "Error Tracking lab", description: "Book a local trip, navigate to Booked stays, and investigate its exception" },
 ];
 
 function Preview() {
@@ -55,6 +61,24 @@ function Preview() {
     <BrowseStaysPreview selected={selected} />
     <div className="twig-browser workbench-twig"><main><BrowseStays id="workbench-browse" setting={filter} search={search} onSettingChange={setFilter} onSearchChange={setSearch} renderStay={(stay) => <article className="vac-card" key={stay.id}><StayCardContent stay={stay} image={<div className="vac-image"><span>Photo on Twig.com</span></div>} /></article>} /><StayDetails stay={stays[0]} /></main></div>
   </>;
+}
+
+function DatePickerPreview() {
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
+  const [guests, setGuests] = useState("");
+  const [disabled, setDisabled] = useState(false);
+  const today = "2026-10-16";
+  return <div className="twig-browser workbench-twig" style={{ maxWidth: 460, padding: 24 }}>
+    <div className="workbench-controls"><button onClick={() => { setCheckIn(""); setCheckOut(""); setGuests(""); }}>Clear details</button><button onClick={() => setDisabled(!disabled)}>{disabled ? "Enable" : "Disable"} booking controls</button></div>
+    <label htmlFor="preview-check-in">Check in</label>
+    <DatePicker id="preview-check-in" label="Check in" value={checkIn} minDate={today} disabled={disabled} onChange={(date) => { setCheckIn(date); if (checkOut && checkOut <= date) setCheckOut(""); }} />
+    <label htmlFor="preview-check-out">Check out</label>
+    <DatePicker id="preview-check-out" label="Check out" value={checkOut} minDate={checkIn ? addDateDays(checkIn, 1) : today} disabled={disabled} onChange={setCheckOut} />
+    <label htmlFor="preview-guests">Guests</label>
+    <GuestPicker id="preview-guests" value={guests} capacity={4} disabled={disabled} onChange={setGuests} />
+    <p>{checkIn && checkOut ? `${checkIn} – ${checkOut}` : "Choose your dates."} {guests ? `· ${guests} ${guests === "1" ? "guest" : "guests"}` : ""}</p>
+  </div>;
 }
 
 function SavedStayPreview() {
@@ -290,8 +314,37 @@ function Replay() {
   return <ReplayProvider open pathname="/"><LabPreview><div className="workbench-controls"><button onClick={() => setStage(0)} aria-pressed={stage === 0}>Intro</button><button onClick={() => setStage(1)} aria-pressed={stage === 1}>Exercise</button><button onClick={() => setStage(2)} aria-pressed={stage === 2}>Review</button><button onClick={() => setRecording([{}, {}])}>Add fixture visit</button></div><ReplayRecordingPreview /><ReplayLab stage={stage} onStage={setStage} replay={replay} pathname="/discover" returnHome={<span>Return to Twig</span>} sessionPlayer={<div className="workbench-fixture">Fixture visit preview</div>} /></LabPreview></ReplayProvider>;
 }
 
+function ErrorTrackingPreviewContent() {
+  const [stage, setStage] = useState(0);
+  const [location, setLocation] = useState<"stay" | "bookings">("stay");
+  const [selected, setSelected] = useState<string | null>(null);
+  const [error, setError] = useState(false);
+  const [canceled, setCanceled] = useState(false);
+  const { state, dispatch } = useErrorTrackingLab();
+  const booking: BookedStaySummary = { id: "workbench-trip", stay: stays[0], dateLabel: "Oct 20 – 23", guestsLabel: "2 guests", status: canceled ? "canceled" : "confirmed" };
+  function bookStay() {
+    dispatch({ type: "book", booking: { id: booking.id, stayId: booking.stay.id, stayTitle: booking.stay.title ?? "stay" } });
+    setStage(2);
+  }
+  function openDetails() {
+    setSelected(booking.id);
+    if (canceled) { setError(false); return; }
+    setError(!state.fixed);
+    if (state.fixed) dispatch({ type: "retry-success" });
+    else dispatch({ type: "capture", message: "Cannot read properties of undefined (reading 'name')", stayId: booking.stay.id });
+  }
+  return <>
+    <div className="workbench-controls"><button onClick={() => setLocation("stay")}>Stay page</button><button onClick={() => setLocation("bookings")}>Booked stays</button></div>
+    <div className="twig-browser workbench-twig" id="error-trip-fixture">{location === "stay"
+      ? <section className="workbench-fixture"><h3>{booking.stay.title}</h3><p>Complete a booking on Twig to reach the details view.</p><button className="vac-button" onClick={bookStay} disabled={Boolean(state.booking)}>Book stay</button></section>
+      : <BookedStaysView bookings={state.booking ? [booking] : []} renderImage={() => <div className="vac-image"><span>Stay photo</span></div>} stayHref={() => "#error-trip-fixture"} selectedBookingId={selected} onViewDetails={openDetails} onCancelBooking={() => setCanceled(true)} renderDetails={() => <TripDetailsView booking={booking} hostName={state.fixed ? "Host information unavailable" : undefined} errorMessage={error ? "Try to load details again." : undefined} onRetry={openDetails} />} />}</div>
+    <LabPreview><ErrorTrackingLab stage={stage} onStage={setStage} location={location} onFocusBooking={() => document.querySelector(".workbench-fixture button")?.scrollIntoView({ behavior: "smooth" })} onFocusDetails={() => document.querySelector(".twig-booking-details")?.scrollIntoView({ behavior: "smooth" })} /></LabPreview>
+  </>;
+}
+function ErrorTrackingPreview() { return <ErrorTrackingLabProvider active><ErrorTrackingPreviewContent /></ErrorTrackingLabProvider>; }
+
 export default function App() {
   const [view, setView] = useState<View>("preview");
   const current = views.find((item) => item.id === view)!;
-  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "preview" ? <Preview /> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : <Replay />}</div></main></div>;
+  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "preview" ? <Preview /> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "dates" ? <DatePickerPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : view === "errors" ? <ErrorTrackingPreview /> : <Replay />}</div></main></div>;
 }

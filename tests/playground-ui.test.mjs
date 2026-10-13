@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { playgroundPage } from "@posthog/twig-components/playground";
+import { labsOnOtherPages, playgroundPage } from "@posthog/twig-components/playground";
 import { characters, stays } from "@posthog/twig-components/catalog";
 import { AiLabProvider, AiLab } from "@posthog/twig-components/ai-lab-ui";
 import { BookingLabProvider, BookingLab } from "@posthog/twig-components/booking-lab-ui";
@@ -62,10 +62,26 @@ test("all portable lab entry screens render without a site router", () => {
 test("playground directory and dock preserve accessible navigation", () => {
   const page = playgroundPage("/", stays);
   assert.deepEqual(page.touchpoints.map(({ id }) => id), ["discovery", "catalog", "replay"]);
-  const directory = render(h(LabDirectory, { page, choose: noop, showMarker: noop }));
+  assert.equal(page.touchpoints[0].color, "purple");
+  assert.equal(labsOnOtherPages(page).find(({ id }) => id === "booking")?.color, "blue");
+  assert.equal(labsOnOtherPages(page).find(({ id }) => id === "errors")?.color, "yellow");
+  assert.deepEqual(labsOnOtherPages(page).map(({ id, page }) => [id, page]), [
+    ["stay", "stay"], ["booking", "stay"], ["errors", "stay"],
+  ]);
+  const directory = render(h(LabDirectory, { page, choose: noop, showMarker: noop, onVisitLab: noop }));
   assert.equal((directory.match(/>Show me where<\/button>/g) ?? []).length, page.touchpoints.length);
+  assert.equal((directory.match(/aria-label="Go to [^"]+ lab"/g) ?? []).length, 3);
+  assert.match(directory, /Explore other PostHog products on Twig/);
+  assert.match(directory, /<details class="vac-lab-other-pages">/);
+  assert.match(directory, /<nav class="vac-lab-other-pages-menu"/);
+  assert.match(directory, /data-product="product-analytics"/);
+  assert.match(directory, /data-product="error-tracking"/);
+  assert.equal((directory.match(/>On this page</g) ?? []).length, 0);
+  assert.ok(directory.indexOf("Labs on this page") < directory.indexOf("Explore other PostHog products on Twig"));
+  assert.match(directory, /A stay page, then Booked stays/);
   assert.match(directory, /Choose a lab/);
   assert.match(directory, /AI trip discovery/);
+  assert.doesNotMatch(directory, /Continue lab/);
 
   const marker = render(h(PlaygroundMarker, {
     touchpoint: page.touchpoints[0], highlighted: false, onHighlight: noop, onChoose: noop,

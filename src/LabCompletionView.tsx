@@ -39,6 +39,14 @@ const recaps: Record<TouchpointId, { title: string; points: string[] }> = {
       "Recorded your own visit and opened its replay with your masking setting.",
     ],
   },
+  errors: {
+    title: "You booked a stay, traced its trip-details error, and checked the fix.",
+    points: [
+      "Inspected one exception and its stack trace.",
+      "Saw repeated exceptions group into one issue and checked a successful retry.",
+      "Learned why a local retry alone is not enough to resolve a real issue.",
+    ],
+  },
 };
 
 export function LabCompletionView({
