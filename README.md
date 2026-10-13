@@ -23,7 +23,7 @@ flowchart LR
     package -. "planned read-only Twig views" .-> guide
 ```
 
-Twig.com installs a published version of this package. After changing shared components, release a new version and update each site that needs it. See [integration and updates](docs/integration.md) for the steps.
+Twig.com installs a published version of this package. After changing shared components, group changes in a Release Please pull request, publish the reviewed version to npm, and update each site that needs it. See [integration and updates](docs/integration.md#grouping-changes-into-a-release) for the steps.
 
 ## Quick example
 
