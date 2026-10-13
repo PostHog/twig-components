@@ -22,7 +22,7 @@ The catalog stores stay photo paths and credits, while Twig.com serves the finis
 
 Real event calls tied to a Twig page belong in Twig.com. They need a package change only when shared lab UI or behavior changes. If a guide needs a view that exists **only** inside Twig.com, extract that view into this package first. The guide should use focused views, not embed the full interactive lab.
 
-Version `0.1.0` is published. Each site pins a version when it adopts the package; publishing does not update a site automatically.
+The Events and properties lab is prepared for version `0.2.0`. Each site pins a published version when it adopts the package. Publishing does not update a site automatically.
 
 ## How a host uses the package
 
@@ -49,12 +49,21 @@ The playground provider order is:
 2. Release a reviewed version, then update the pinned version in each site that needs the change. A published package does **not** update sites on its own.
 3. Build each changed site and inspect the affected page at narrow and wide widths, in light and dark themes, and with reduced motion. Check that Twig styling stays inside Twig UI and the PostHog inspector keeps PostHog styling.
 
-Dependabot proposes dependency updates each week after a seven-day cooldown for routine releases. Security updates are not delayed by that cooldown. Do not describe local workspace changes as a published package release.
+This package repo uses Dependabot for its own dependencies. Consumer adoption requires a separate version and lockfile update in each site. Do not describe local workspace changes as a published package release.
 
-## First npm release and later updates
+## Publishing and consumer adoption
 
 Version `0.1.0` was published manually by an authorized `@posthog` npm maintainer. Its npm metadata includes an integrity hash but no provenance attestation. Do not store an npm token in GitHub.
 
 For future releases, verify npm trusted publishing is configured for **PostHog/twig-components**, workflow **`publish.yml`**, environment **`npm-publish`**, and direct publishing. Protect that GitHub environment so only `main` may deploy and a reviewer must approve each run. Merge a reviewed version change to `main`, then manually run **Publish to npm** on `main`. The workflow tests and previews the package before publishing with a short-lived identity token. Never run it from a feature branch.
 
 After the first workflow release succeeds, set the package's npm **Publishing access** to **Require two-factor authentication and disallow tokens**. Verify the version and provenance on npm, then update only the consuming sites that need it. See [npm's trusted publishing guide](https://docs.npmjs.com/trusted-publishers/) for the npm settings.
+
+## Events and properties release order
+
+1. Review and merge the components PR, including the `0.2.0` version change.
+2. Run **Publish to npm** from `main`. The `npm-publish` environment requires approval from Team Wizard & Docs. Verify the published version and provenance before updating a consumer.
+3. In the Twig.com PR, run `npm install --save-exact @posthog/twig-components@0.2.0` after publication and commit both package files.
+4. Run a clean `npm ci`, tests, type checking, lint, and production build in Twig.com. Review the page on desktop and mobile, then merge the host PR.
+
+Keep the host PR in draft until the published dependency is installed and verified. A locally packed preview is only for review. It does not prove that a clean consumer install works. PostHog.com needs no update for this Twig-only lesson.

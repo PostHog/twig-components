@@ -1,6 +1,6 @@
 {
   "name": "@posthog/twig-components",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "private": false,
   "publishConfig": {
     "access": "public"
@@ -145,7 +145,19 @@
     },
     "./catalog.css": "./dist/catalog.css",
     "./lab.css": "./dist/lab.css",
-    "./assets/*": "./dist/assets/*"
+    "./assets/*": "./dist/assets/*",
+    "./events-lab": {
+      "types": "./dist/events-lab.d.ts",
+      "import": "./dist/events-lab.js"
+    },
+    "./events-lab-ui": {
+      "types": "./dist/EventsLab.d.ts",
+      "import": "./dist/EventsLab.js"
+    },
+    "./events-lab-provider": {
+      "types": "./dist/EventsLabProvider.d.ts",
+      "import": "./dist/EventsLabProvider.js"
+    }
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && node build-assets.mjs",
@@ -263,6 +275,15 @@
       ],
       "browse-stays-preview": [
         "dist/BrowseStaysPreview.d.ts"
+      ],
+      "events-lab": [
+        "dist/events-lab.d.ts"
+      ],
+      "events-lab-ui": [
+        "dist/EventsLab.d.ts"
+      ],
+      "events-lab-provider": [
+        "dist/EventsLabProvider.d.ts"
       ]
     }
   }

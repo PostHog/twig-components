@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { EventsLabProvider } from "./EventsLabProvider.js";
 import { AiLabProvider } from "./AiLab.js";
 import { BookingLabProvider } from "./BookingLab.js";
 import { useStayLab } from "./StayLab.js";
@@ -65,6 +66,7 @@ export function PlaygroundLabProvider({
       : null
   );
   const [highlighted, highlight] = useState<TouchpointId | null>(null);
+  const [eventsSession, setEventsSession] = useState(0);
   function choose(id: TouchpointId | null) {
     if (initialSource) return;
     if (id !== "stay") stayLab.dispatch({ type: "pause" });
@@ -72,6 +74,7 @@ export function PlaygroundLabProvider({
     setSelected(id);
     setStage(0);
     dispatch({ type: "cancel" });
+    setEventsSession(session => session + 1);
   }
   return (
     <PlaygroundLabContext.Provider
@@ -92,7 +95,7 @@ export function PlaygroundLabProvider({
         <BookingLabProvider
           active={bookingEnabled && selected === "booking" && stage > 0}
         >
-          {children}
+          <EventsLabProvider resetKey={eventsSession} active={active && selected === "catalog" && !initialSource}>{children}</EventsLabProvider>
         </BookingLabProvider>
       </AiLabProvider>
     </PlaygroundLabContext.Provider>

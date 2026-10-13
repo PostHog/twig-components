@@ -11,14 +11,14 @@ export const touchpointDefinitions = {
     evidence: "Local generation events only. No model or PostHog connection.",
   },
   catalog: {
-    title: "Stay filters",
+    title: "Events and properties",
     color: "blue",
     tool: "Product analytics",
-    lesson: "Capture filter clicks and attach the selected setting.",
+    lesson: "Turn a filter click into an event, add properties, and compare selections.",
     lab: "filter-events",
     description:
       "Setting filters narrow the catalog. Select a stay to see its details and nightly rate.",
-    evidence: "No analytics capture connected.",
+    evidence: "Guided web app and MCP paths. Local demo events only.",
   },
   replay: {
     title: "Follow a visitor",
