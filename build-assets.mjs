@@ -13,6 +13,10 @@ for (const [source, target] of [
   ["./assets/RoundHog-Medium.woff2", "assets/RoundHog-Medium.woff2"],
   ["./assets/RoundHog-SemiBold.woff2", "assets/RoundHog-SemiBold.woff2"],
   ["./src/assets/posthog-logomark.svg", "assets/posthog-logomark.svg"],
+  ["./src/assets/posthog-product-analytics.svg", "assets/posthog-product-analytics.svg"],
+  ["./src/assets/posthog-ai-observability.svg", "assets/posthog-ai-observability.svg"],
+  ["./src/assets/posthog-error-tracking.svg", "assets/posthog-error-tracking.svg"],
+  ["./src/assets/posthog-session-replay.svg", "assets/posthog-session-replay.svg"],
   ["./assets/hoggie-chart.png", "assets/hoggie-chart.png"],
   ["./assets/hoggie-robot.png", "assets/hoggie-robot.png"],
 ]) {

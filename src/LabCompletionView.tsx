@@ -39,6 +39,14 @@ const recaps: Record<TouchpointId, { title: string; points: string[] }> = {
       "Recorded your own visit and opened its replay with your masking setting.",
     ],
   },
+  errors: {
+    title: "You traced the trip-details error, repaired Twig's host lookup, and resolved the example issue.",
+    points: [
+      "Used the exception and stack trace to find where Twig failed.",
+      "Used the stay ID to inspect the broken host lookup.",
+      "Saw the host name return without adding a new exception.",
+    ],
+  },
 };
 
 const completionTitles: Record<TouchpointId, string> = {
@@ -47,6 +55,7 @@ const completionTitles: Record<TouchpointId, string> = {
   booking: "Product Analytics lab complete",
   stay: "Product Analytics lab complete",
   replay: "Session Replay lab complete",
+  errors: "Error Tracking lab complete",
 };
 
 export function LabCompletionView({

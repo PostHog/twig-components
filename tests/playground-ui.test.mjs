@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { playgroundPage } from "@posthog/twig-components/playground";
+import { labsOnOtherPages, playgroundPage } from "@posthog/twig-components/playground";
 import { characters, stays } from "@posthog/twig-components/catalog";
 import { AiLabProvider, AiLab, AiIntroduction } from "@posthog/twig-components/ai-lab-ui";
 import { BookingLabProvider, BookingLab } from "@posthog/twig-components/booking-lab-ui";
@@ -11,6 +11,7 @@ import { ReplayLab } from "@posthog/twig-components/replay-lab-ui";
 import { FilterLabIntroduction } from "@posthog/twig-components/filter-lab-exercise";
 import { TripPlannerLabProvider, TripPlannerWalkthrough } from "@posthog/twig-components/trip-planner-lab";
 import { ReplayProvider } from "@posthog/twig-components/replay-recorder";
+import { LabNavigationView } from "@posthog/twig-components/lab-navigation";
 import {
   LabDirectory,
   PlaygroundDock,
@@ -37,6 +38,31 @@ test("the playground invitation matches the dock's PostHog name and branding", (
   const compact = render(h(PlaygroundInvitation, { ...props, dismissed: true }));
   assert.match(compact, /Explore PostHog/);
   assert.doesNotMatch(compact, /Want to explore/);
+
+  const resume = render(h(PlaygroundInvitation, { ...props, dismissed: true, resumeLab: "Trip details" }));
+  assert.match(resume, /Resume Trip details lab →/);
+  assert.doesNotMatch(resume, /Explore PostHog/);
+});
+
+test("lab navigation keeps actions visible and identifies the reset icon", () => {
+  const props = { selected: "errors", stage: 2, embedded: false, resetScope: "twig", onAllLabs: noop, onPrevious: noop, onReset: noop };
+  const away = render(h(LabNavigationView, { ...props, returnTo: { label: "Booked stays", onClick: noop } }));
+  assert.match(away, /aria-label="Return to lab on Booked stays"[^>]*>Return to lab<\/button>/);
+  assert.doesNotMatch(away, /<summary>More<\/summary>/);
+  assert.match(away, /All labs/);
+  assert.match(away, /aria-label="Reset lab" title="Reset lab"/);
+  assert.match(away, /<svg[^>]*aria-hidden="true"/);
+  assert.match(away, /class="vac-lab-navigation-links"[^>]*>[^]*?All labs[^]*?Previous step[^]*?<\/div>/);
+  assert.match(away, /class="vac-lab-navigation-actions"[^>]*>[^]*?Return to lab[^]*?aria-label="Reset lab"/);
+  assert.ok(away.indexOf("All labs") < away.indexOf("Previous step"));
+  assert.ok(away.indexOf("Previous step") < away.indexOf("Return to lab"));
+  assert.doesNotMatch(away, /Continue the Trip details lab/);
+
+  const atLab = render(h(LabNavigationView, props));
+  assert.doesNotMatch(atLab, /Return to lab/);
+  assert.match(atLab, /All labs/);
+  assert.match(atLab, /Previous step/);
+  assert.match(atLab, /aria-label="Reset lab" title="Reset lab"/);
 });
 
 test("all portable lab entry screens render without a site router", () => {
@@ -88,10 +114,26 @@ test("every lab opening page names its product and explains the simulation", () 
 test("playground directory and dock preserve accessible navigation", () => {
   const page = playgroundPage("/", stays);
   assert.deepEqual(page.touchpoints.map(({ id }) => id), ["discovery", "catalog", "replay"]);
-  const directory = render(h(LabDirectory, { page, choose: noop, showMarker: noop }));
+  assert.equal(page.touchpoints[0].color, "purple");
+  assert.equal(labsOnOtherPages(page).find(({ id }) => id === "booking")?.color, "blue");
+  assert.equal(labsOnOtherPages(page).find(({ id }) => id === "errors")?.color, "yellow");
+  assert.deepEqual(labsOnOtherPages(page).map(({ id, page }) => [id, page]), [
+    ["stay", "stay"], ["booking", "stay"], ["errors", "stay"],
+  ]);
+  const directory = render(h(LabDirectory, { page, choose: noop, showMarker: noop, onVisitLab: noop }));
   assert.equal((directory.match(/>Show me where<\/button>/g) ?? []).length, page.touchpoints.length);
+  assert.equal((directory.match(/aria-label="Go to [^"]+ lab"/g) ?? []).length, 3);
+  assert.match(directory, /Explore other PostHog products on Twig/);
+  assert.match(directory, /<details class="vac-lab-other-pages">/);
+  assert.match(directory, /<nav class="vac-lab-other-pages-menu"/);
+  assert.match(directory, /data-product="product-analytics"/);
+  assert.match(directory, /data-product="error-tracking"/);
+  assert.equal((directory.match(/>On this page</g) ?? []).length, 0);
+  assert.ok(directory.indexOf("Labs on this page") < directory.indexOf("Explore other PostHog products on Twig"));
+  assert.match(directory, /A stay page, then Booked stays/);
   assert.match(directory, /Choose a lab/);
   assert.match(directory, /AI trip discovery/);
+  assert.doesNotMatch(directory, /Continue lab/);
 
   const marker = render(h(PlaygroundMarker, {
     touchpoint: page.touchpoints[0], highlighted: false, onHighlight: noop, onChoose: noop,
@@ -106,4 +148,26 @@ test("playground directory and dock preserve accessible navigation", () => {
   assert.match(dock, /aria-label="Twig playground"/);
   assert.match(dock, /PostHog Playground/);
   assert.match(dock, /aria-label="Instrumentation touchpoints and details"/);
+});
+
+test("the other-products menu shows the matching PostHog icon on every Twig page", () => {
+  const icons = {
+    "Product Analytics": "posthog-product-analytics.svg",
+    "AI Observability": "posthog-ai-observability.svg",
+    "Error Tracking": "posthog-error-tracking.svg",
+    "Session Replay": "posthog-session-replay.svg",
+  };
+  for (const pathname of ["/", "/about", "/stays/stay-01", "/profile/bookings"]) {
+    const page = playgroundPage(pathname, stays);
+    const directory = render(h(LabDirectory, { page, choose: noop, showMarker: noop, onVisitLab: noop }));
+    const products = new Set(labsOnOtherPages(page).map(({ tool }) => tool));
+    for (const [product, icon] of Object.entries(icons)) {
+      if (products.has(product)) {
+        const slug = product.toLowerCase().replaceAll(" ", "-");
+        assert.match(directory, new RegExp(`data-product="${slug}"><h4><img src="[^"]*${icon}"[^>]*alt=""\\/>${product}<\\/h4>`));
+      } else {
+        assert.doesNotMatch(directory, new RegExp(icon));
+      }
+    }
+  }
 });

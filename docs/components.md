@@ -13,6 +13,7 @@ Import only the pieces you need from `@posthog/twig-components/<path>`. React is
 | `/trip-planner-state` | `replyToTripPlanner`, `initialTripPlannerState`, `tripPlannerSuggestions`, prompts, limits, and types | Pure, bounded conversation rules and catalog-backed responses. | Shared by the planner and regression tests. |
 | `/trip-planner-records` | `createTripPlannerRequest`, `tripPlannerModel`, request, message, identity, and record types | Builds a catalog-backed answer and a matching PostHog generation with conversation history, token usage, cost, and duration. | Local teaching data only. Caller supplies IDs and start time. No provider call or event upload. |
 | `/account` | `LoginView`, `ProfileMenu`, `AccountLayout`, `ProfileOverview`, `SavedStaysView`, `BookedStaysView`, `AccountSettingsView`, types | Reusable Twig account visuals, accessible profile-menu behavior, traveler profile, empty/populated stay views, and settings form. | Host supplies profile content, fixed login email, state, callbacks, routes, images, bookings, persistence, and analytics. |
+| `/account` | `TripDetailsView` | Displays trip details when they load, or only the recoverable error when they fail. Its Contact support button stays disabled until support is available. `BookedStaysView` places Cancel stay beside Trip details on the booking card. | Host supplies selected booking, host name, error state, retry, and cancellation callbacks. |
 | `/saved-stay` | `SavedStay`, `SavedStayProps` | Controlled save control with signed-out, unsaved, saved, loading, disabled, and error states. Its signed-out label says “Log in to save.” | Host supplies `stayName`, auth state, save state, callbacks, persistence, and analytics. Signed-out hosts pass `onSignIn`; signed-in hosts pass `saved` and `onSavedChange`. |
 | `/filters` | `StayFilters`, `staySettings`, `StaySetting` | Controlled Forest/Coast/City filter buttons; calls `onChange` on a click. | `Discover`; pass `value`, `onChange`, and optional CSS classes. The host filters the listings. |
 | `/browse-stays` | `BrowseStays` | Real Browse stays controls and matching results from the shared catalog. | `Discover`; pass filter/search state, callbacks, a card renderer, and an optional marker. The host owns tracking and navigation. |
@@ -21,6 +22,8 @@ Import only the pieces you need from `@posthog/twig-components/<path>`. React is
 | `/browse-stays-preview` | `BrowseStaysPreview` | Read-only Browse stays excerpt with one selected filter and stay. | Gallery only; intended for PostHog 101. Pass `selected="Forest"`, `"Coast"`, or `"City"`. No click handler or analytics. |
 | `/catalog` | `stays`, `characters`, `conciergeContent`, `discoveryCopy`, `filterStays`, `stayLabel`, `nightlyPrice`, types | Fictional catalog content and pure display/filter helpers. | Discover, stay pages, and lab fixtures; the host supplies page layout and navigation. |
 | `/trip-dates` | `todayAtStay`, `validateTrip`, types | Date and guest validation for the booking exercise. | Booking flow; pass the visitor’s trip selection. |
+| `/date-picker` | `DatePicker`, `addDateDays` | Twig-styled, keyboard-accessible calendar for a controlled ISO date. | Booking form supplies the selected date, earliest allowed date, and change callback. |
+| `/guest-picker` | `GuestPicker` | Twig-styled, keyboard-accessible guest menu. | Booking form supplies the selected guest count, stay capacity, and change callback. |
 
 Stay images include their source and credit. `objectPosition` optionally sets the gallery crop's focal point, such as `"center 74%"`; hosts should apply it with `object-fit: cover` so the photo is cropped without distortion. Twig.com currently serves the finished stay images at the catalog's `/twig/stays/...` paths.
 
@@ -109,29 +112,36 @@ visitor completes a booking.
 The profile overview presents traveler details without
 repeating the account navigation. Saved-stay cards do not repeat a save control.
 Personal details in settings are fixed display values; only message preferences
-can change. Populated booking cards include a disabled `Stay details` button as
-a placeholder for a future booking-details view. Hosts can pass `onBioChange` to
-show the About edit control; the host decides whether that draft is temporary or
-persisted.
+can change. Populated booking cards offer a `Trip details` button when the host
+passes `onViewDetails`; the host supplies the details region with `renderDetails`.
+Without that callback, the button stays disabled. Hosts can pass `onBioChange`
+to show the About edit control; the host decides whether that draft is temporary
+or persisted.
+Pass `highlightedTripDetailsBookingId` when `renderDetails` uses `TripDetailsView`
+to outline only the selected trip's Host label and value with the same Twig
+target pulse used for other lab actions.
 
 ## Labs and playground
 
-These are **local teaching simulations**. They do not send events to PostHog, make bookings, or run an AI model. Twig.com supplies routes, page content, focus/scroll actions, and navigation callbacks.
+These are **local teaching simulations**. They do not send lab events to PostHog or run an AI model. Twig.com supplies routes, page content, booking state, focus/scroll actions, and navigation callbacks.
+
+For directions that ask the learner to act on Twig, use `LabChecklist` in every lab: one item renders the existing blue-left callout, while two or more sequential items render numbered steps. Keep explanatory prose outside the checklist and avoid repeating the action there. This applies to initial actions, retries, and checks after a simulated fix.
 
 | Import path | Main exports | What it does / host input | Used in Twig |
 | --- | --- | --- | --- |
-| `/playground` | `playgroundPage`, `selectedTouchpoint`, `touchpointDefinitions`, types | Maps a Twig path and catalog to available lab markers; host passes the current path. | Playground and site adapters |
-| `/playground-controller` | `PlaygroundLabProvider`, `usePlaygroundLab`, `useFilterLab` | Owns selected lab, stage, and filter state; wrap the playground and pass `active` and `bookingEnabled`. Requires `ReplayProvider` and `StayLabProvider` above it. | Playground / FilterLab |
-| `/playground-panels` | `LabDirectory`, `SelectedLabHeader`, `PlaygroundMarker`, `PlaygroundInvitation`, `PlaygroundDock` | Lab list, page markers, PostHog-branded invitation, and dock layout; host supplies callbacks, dock logo, navigation, guide content, and focus ref. | Playground / FilterLab |
+| `/playground` | `playgroundPage`, `labsOnOtherPages`, `selectedTouchpoint`, `touchpointDefinitions`, types | Maps a Twig path to its numbered markers and lists labs that start on other pages. | Playground and site adapters |
+| `/playground-controller` | `PlaygroundLabProvider`, `usePlaygroundLab`, `useFilterLab` | Owns selected lab, stage, and filter state; pass `pageKey` and the active lab flags. For cross-page launch, pass `pendingSelection` and clear it with `onPendingSelectionConsumed`. Requires `ReplayProvider` and `StayLabProvider` above it. | Playground / FilterLab |
+| `/playground-panels` | `LabDirectory`, `SelectedLabHeader`, `PlaygroundMarker`, `PlaygroundInvitation`, `PlaygroundDock` | Lab directory shows labs on the current page first. A closed menu groups labs elsewhere by PostHog product. Host supplies `onVisitLab` to navigate to a lab's start page, plus dock navigation, guide content, and focus ref. | Playground / FilterLab |
 | `/filter-lab-exercise` | `FilterLabIntroduction`, `FilterLabExercise` | Teaches fixed versus clicked filter values; host passes filter state, stage, filter URL, focus, and continuation callbacks. | FilterLab |
 | `/filter-inspector` | `FilterInspector` | Compares filter clicks with locally recorded event values; needs state, a filter URL, and practice callback. | FilterLab exercise |
-| `/ai-lab-ui` | `AiLabProvider`, `useAiLab`, `useResetAiLab`, `AiIntroduction`, `AiLab` | AI observability lesson with preset request, response, and timeout; provider holds local state. Host passes stage and planner focus callback. | AiLab |
+| `/ai-lab-ui` | `AiLabProvider`, `useAiLab`, `useResetAiLab`, `AiIntroduction`, `AiLab` | AI Observability lesson with preset request, response, and timeout; provider holds local state. Host passes stage and planner focus callback. | AiLab |
 | `/booking-lab-ui` | `BookingLabProvider`, `useBookingLab`, `BookingLab` | Booking attempt versus confirmed completion lesson; provider holds trip and event state. Host passes stage and booking focus callback. | BookingLab |
+| `/error-tracking-lab-ui` | `ErrorTrackingLabProvider`, `useErrorTrackingLab`, `ErrorTrackingLab` | Standalone local booking-to-trip exception, issue grouping, fix, and retry lesson. Host passes stage, page location, and focus callbacks. The provider keeps the new lab booking across Twig page navigation. | ErrorTrackingLab |
 | `/stay-lab-ui` | `StayLabProvider`, `useStayLab`, `StayLab` | Connects stay view events to listing IDs; host passes path and renders stay links. | StayLab |
 | `/replay-recorder` | `ReplayProvider`, `useReplay` | Records the current tab locally or runs a ghost visit with rrweb; pass `open` and `pathname`. | ReplayLab / Playground |
 | `/replay-lab-ui` | `ReplayLab`, `ReplayRecordingBar`, `ReplayLabViewState` | Replay lesson and recording status; host passes stage, replay state, return link, and player. | ReplayLab |
 | `/session-player` | `SessionPlayer` | Plays an rrweb recording; pass recorded `events`. | ReplayLab |
-| `/lab-navigation` | `LabNavigationView` | All labs, previous step, and reset controls; host supplies actions. | FilterLab adapter |
+| `/lab-navigation` | `LabNavigationView` | Keeps All labs, Previous step, and the optional `returnTo` action visible as text navigation. The labeled reset icon opens the existing confirmation in Twig.com. | FilterLab adapter |
 | `/lab-completion-view` | `LabCompletionView` | Recap for one completed lab; host supplies choose/review actions and heading ref. | LabCompletion |
 | `/lab-checklist` | `LabChecklist` | Shared directions for learner interactions, with done/current/upcoming states; pass `label` and `items`. | Lab UI |
 | `/lab-choices` | `LabChoices` | Accessible radio choice group; pass `label`, `value`, `options`, and `onChange`. | Lab UI |
@@ -144,6 +154,7 @@ The state modules below contain reducers, types, fixtures, and formatting helper
 | `/filter-lab` | Filter event state, validation, feedback, and example code | FilterLab and filter inspector |
 | `/ai-lab` | AI request/response fixtures, event state, checks, and example code | AiLab |
 | `/booking-lab` | Booking attempt/completion state and example code | BookingLab |
+| `/error-tracking-lab` | Local exception occurrences, issue fingerprint, and fix state | ErrorTrackingLab |
 | `/stay-lab` | Stay view event state and example code | StayLab |
 | `/replay-lab` | Replay frame types and display helpers | ReplayLab |
 

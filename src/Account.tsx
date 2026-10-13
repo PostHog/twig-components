@@ -35,7 +35,8 @@ export type BookedStaySummary = {
   stay: Stay;
   dateLabel: string;
   guestsLabel: string;
-  statusLabel: string;
+  statusLabel?: string;
+  status?: "confirmed" | "canceled";
 };
 
 export type AccountSettingsValue = TravelerProfile & {
@@ -384,6 +385,13 @@ export function SavedStaysView({
 export type BookedStaysViewProps = StayViewProps & {
   bookings: readonly BookedStaySummary[];
   browseHref?: string;
+  headingAccessory?: ReactNode;
+  selectedBookingId?: string | null;
+  highlightedDetailsBookingId?: string | null;
+  highlightedTripDetailsBookingId?: string | null;
+  onViewDetails?: (booking: BookedStaySummary) => void;
+  onCancelBooking?: (booking: BookedStaySummary) => void;
+  renderDetails?: (booking: BookedStaySummary) => ReactNode;
 };
 
 export function BookedStaysView({
@@ -392,12 +400,19 @@ export function BookedStaysView({
   stayHref,
   browseHref = "/",
   onNavigate,
+  headingAccessory,
+  selectedBookingId,
+  highlightedDetailsBookingId,
+  highlightedTripDetailsBookingId,
+  onViewDetails,
+  onCancelBooking,
+  renderDetails,
 }: BookedStaysViewProps): ReactElement {
   return (
     <section className="twig-account-page" aria-labelledby="twig-bookings-title">
       <span className="vac-eyebrow">Your account</span>
-      <h1 id="twig-bookings-title">Booked stays</h1>
-      <p className="twig-account-muted">Your upcoming and previous Twig trips.</p>
+      <div className="twig-bookings-heading"><h1 id="twig-bookings-title">Booked stays</h1>{headingAccessory}</div>
+      <p className="twig-account-muted">Your twig trips. All of them. Yes, including the ones you canceled.</p>
       {bookings.length ? (
         <div className="twig-booking-list">
           {bookings.map((booking) => {
@@ -408,19 +423,31 @@ export function BookedStaysView({
                   {renderImage(booking.stay)}
                 </a>
                 <div className="twig-booking-body">
-                  <span className="twig-booking-status">{booking.statusLabel}</span>
+                  {booking.statusLabel && <span className="twig-booking-status">{booking.statusLabel}</span>}
                   <h2><a href={href} onClick={(event) => followLink(event, href, onNavigate)}>{booking.stay.title ?? `${booking.stay.setting} stay`}</a></h2>
                   <p>{booking.stay.location ?? booking.stay.setting}</p>
                   <dl><div><dt>Dates</dt><dd>{booking.dateLabel}</dd></div><div><dt>Guests</dt><dd>{booking.guestsLabel}</dd></div></dl>
-                  <button
-                    className="vac-button twig-booking-details"
-                    type="button"
-                    disabled
-                    aria-label={`Stay details for ${booking.stay.title ?? booking.stay.setting} (coming later)`}
-                  >
-                    Stay details
-                  </button>
+                  <div className="twig-booking-actions">
+                    <button
+                      className={`vac-button twig-booking-details${highlightedDetailsBookingId === booking.id ? " vac-lab-target" : ""}`}
+                      data-booking-id={booking.id}
+                      type="button"
+                      disabled={!onViewDetails}
+                      aria-expanded={selectedBookingId === booking.id}
+                      aria-controls={`twig-trip-details-${booking.id}`}
+                      onClick={() => onViewDetails?.(booking)}
+                      aria-label={`Trip details for ${booking.stay.title ?? booking.stay.setting}`}
+                    >
+                      Trip details
+                    </button>
+                    {onCancelBooking && booking.status !== "canceled" && <BookingCancelControl booking={booking} onCancel={onCancelBooking} />}
+                  </div>
                 </div>
+                {selectedBookingId === booking.id && renderDetails && (
+                  <div id={`twig-trip-details-${booking.id}`} className="twig-trip-details" data-highlight-host={highlightedTripDetailsBookingId === booking.id ? "true" : undefined} role="region" aria-label={`Trip details for ${booking.stay.title ?? booking.stay.setting}`}>
+                    {renderDetails(booking)}
+                  </div>
+                )}
               </article>
             );
           })}
@@ -434,6 +461,62 @@ export function BookedStaysView({
         </div>
       )}
     </section>
+  );
+}
+
+function BookingCancelControl({ booking, onCancel }: { booking: BookedStaySummary; onCancel: (booking: BookedStaySummary) => void }): ReactElement {
+  const [confirming, setConfirming] = useState(false);
+  return confirming ? <div className="twig-booking-cancel-confirm" role="group" aria-label={`Cancel ${booking.stay.title ?? booking.stay.setting}`}>
+    <p>Cancel this stay? It will remain in your booking history. You can book these dates again.</p>
+    <div className="twig-booking-cancel-actions">
+      <button type="button" className="vac-button" onClick={() => { onCancel(booking); setConfirming(false); }}>Confirm cancellation</button>
+      <button type="button" className="vac-text-button" onClick={() => setConfirming(false)}>Keep stay</button>
+    </div>
+  </div> : <button type="button" className="vac-text-button" onClick={() => setConfirming(true)}>Cancel stay</button>;
+}
+
+export function TripDetailsView({
+  booking,
+  hostName,
+  errorMessage,
+  onRetry,
+  highlightRetry = false,
+}: {
+  booking: BookedStaySummary;
+  hostName?: string;
+  errorMessage?: string;
+  onRetry?: () => void;
+  highlightRetry?: boolean;
+}): ReactElement {
+  if (booking.status === "canceled") return <div><h3>Stay canceled</h3><p>This stay is in your booking history. You can book these dates again.</p></div>;
+  if (errorMessage) return <div className="twig-trip-error">
+    <div role="alert">
+      <h3>Ooopsie :( something went wrong</h3>
+      <p>{errorMessage}</p>
+    </div>
+    <div className="twig-trip-error-actions">
+      {onRetry && <button type="button" className={`vac-button${highlightRetry ? " vac-lab-target" : ""}`} onClick={onRetry}>Try again</button>}
+      <button type="button" className="vac-button twig-trip-support" disabled aria-label="Contact support, coming soon">Contact support</button>
+    </div>
+  </div>;
+  return (
+    <div>
+      <h3>Your trip</h3>
+      <dl className="twig-trip-facts">
+        <div><dt>Stay</dt><dd>{booking.stay.title ?? `${booking.stay.setting} stay`}</dd></div>
+        <div><dt>Dates</dt><dd>{booking.dateLabel}</dd></div>
+        <div><dt>Guests</dt><dd>{booking.guestsLabel}</dd></div>
+        <div className="twig-trip-host"><dt>Host</dt><dd>{hostName ?? "Host information unavailable"}</dd></div>
+      </dl>
+      <p className="twig-trip-note">
+        <svg className="twig-trip-note-icon" viewBox="0 0 20 20" aria-hidden="true">
+          <circle cx="10" cy="10" r="8" />
+          <path d="M10 9v5" />
+          <circle cx="10" cy="6" r="0.7" fill="currentColor" stroke="none" />
+        </svg>
+        <span>This trip is saved in this browser. No real reservation or payment was made.</span>
+      </p>
+    </div>
   );
 }
 

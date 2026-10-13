@@ -1,6 +1,6 @@
 {
   "name": "@posthog/twig-components",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": false,
   "publishConfig": {
     "access": "public"
@@ -23,6 +23,14 @@
     "**/*.css"
   ],
   "exports": {
+    "./date-picker": {
+      "types": "./dist/DatePicker.d.ts",
+      "import": "./dist/DatePicker.js"
+    },
+    "./guest-picker": {
+      "types": "./dist/GuestPicker.d.ts",
+      "import": "./dist/GuestPicker.js"
+    },
     "./account": {
       "types": "./dist/Account.d.ts",
       "import": "./dist/Account.js"
@@ -62,6 +70,14 @@
     "./booking-lab-ui": {
       "types": "./dist/BookingLab.d.ts",
       "import": "./dist/BookingLab.js"
+    },
+    "./error-tracking-lab": {
+      "types": "./dist/error-tracking-lab.d.ts",
+      "import": "./dist/error-tracking-lab.js"
+    },
+    "./error-tracking-lab-ui": {
+      "types": "./dist/ErrorTrackingLab.d.ts",
+      "import": "./dist/ErrorTrackingLab.js"
     },
     "./stay-lab": {
       "types": "./dist/stay-lab.d.ts",
@@ -203,6 +219,12 @@
   },
   "typesVersions": {
     "*": {
+      "date-picker": [
+        "dist/DatePicker.d.ts"
+      ],
+      "guest-picker": [
+        "dist/GuestPicker.d.ts"
+      ],
       "account": [
         "dist/Account.d.ts"
       ],
@@ -232,6 +254,12 @@
       ],
       "booking-lab-ui": [
         "dist/BookingLab.d.ts"
+      ],
+      "error-tracking-lab": [
+        "dist/error-tracking-lab.d.ts"
+      ],
+      "error-tracking-lab-ui": [
+        "dist/ErrorTrackingLab.d.ts"
       ],
       "stay-lab": [
         "dist/stay-lab.d.ts"

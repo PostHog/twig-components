@@ -2,6 +2,7 @@
 
 import {
   createContext,
+  useEffect,
   useContext,
   useReducer,
   useState,
@@ -10,6 +11,8 @@ import {
 import { EventsLabProvider } from "./EventsLabProvider.js";
 import { AiLabProvider } from "./AiLab.js";
 import { BookingLabProvider } from "./BookingLab.js";
+import { ErrorTrackingLabProvider } from "./ErrorTrackingLab.js";
+import type { ErrorTrackingAction, ErrorTrackingState } from "./error-tracking-lab.js";
 import { useStayLab } from "./StayLab.js";
 import { useReplay } from "./ReplayRecorder.js";
 import { filterLabReducer, initialLabState, type LabAction, type LabState } from "./filter-lab.js";
@@ -42,18 +45,34 @@ export function PlaygroundLabProvider({
   children,
   active,
   bookingEnabled,
+  errorTrackingEnabled = false,
+  errorTrackingSession,
+  onErrorTrackingAction,
+  onErrorTrackingStageChange,
+  pendingSelection,
+  onPendingSelectionConsumed,
   initialSource,
 }: {
   children: ReactNode;
   active: boolean;
   bookingEnabled: boolean;
+  errorTrackingEnabled?: boolean;
+  errorTrackingSession?: { state: ErrorTrackingState; stage: number };
+  onErrorTrackingAction?: (action: ErrorTrackingAction) => void;
+  onErrorTrackingStageChange?: (stage: number) => void;
+  /** @deprecated Fresh starts and resets are owned by the host. */
+  onRestartErrorLab?: () => void;
+  /** @deprecated Route changes no longer reset lab progress. */
+  pageKey?: string;
+  pendingSelection?: TouchpointId | null;
+  onPendingSelectionConsumed?: () => void;
   initialSource?: "fixed" | "clicked";
 }) {
   const replay = useReplay();
   const stayLab = useStayLab();
   const resumeStay = bookingEnabled && stayLab.state.running;
   const [state, dispatch] = useReducer(filterLabReducer, initialLabState);
-  const [stage, setStage] = useState(
+  const [localStage, setLocalStage] = useState(
     initialSource || replay.mode || resumeStay ? 1 : 0
   );
   const [selected, setSelected] = useState<TouchpointId | null>(
@@ -66,13 +85,26 @@ export function PlaygroundLabProvider({
       : null
   );
   const [highlighted, highlight] = useState<TouchpointId | null>(null);
+  const stage = selected === "errors" && errorTrackingSession ? errorTrackingSession.stage : localStage;
+  function setStage(nextStage: number) {
+    if (selected === "errors" && onErrorTrackingStageChange) onErrorTrackingStageChange(nextStage);
+    else setLocalStage(nextStage);
+  }
+  useEffect(() => {
+    if (!pendingSelection) return;
+    setSelected(pendingSelection);
+    if (pendingSelection !== "errors") setLocalStage(0);
+    highlight(null);
+    dispatch({ type: "cancel" });
+    onPendingSelectionConsumed?.();
+  }, [pendingSelection, onPendingSelectionConsumed]);
   const [eventsSession, setEventsSession] = useState(0);
   function choose(id: TouchpointId | null) {
     if (initialSource) return;
     if (id !== "stay") stayLab.dispatch({ type: "pause" });
     if (id !== "replay") replay.stop();
     setSelected(id);
-    setStage(0);
+    setLocalStage(0);
     dispatch({ type: "cancel" });
     setEventsSession(session => session + 1);
   }
@@ -91,13 +123,13 @@ export function PlaygroundLabProvider({
         highlight,
       }}
     >
-      <AiLabProvider active={active && selected === "discovery" && stage > 0}>
-        <BookingLabProvider
-          active={bookingEnabled && selected === "booking" && stage > 0}
-        >
-          <EventsLabProvider resetKey={eventsSession} active={active && selected === "catalog" && !initialSource}>{children}</EventsLabProvider>
-        </BookingLabProvider>
-      </AiLabProvider>
+      <ErrorTrackingLabProvider active={errorTrackingEnabled && selected === "errors" && stage > 0} state={errorTrackingSession?.state} onAction={onErrorTrackingAction}>
+        <AiLabProvider active={active && selected === "discovery" && stage > 0}>
+          <BookingLabProvider active={bookingEnabled && selected === "booking" && stage > 0}>
+            <EventsLabProvider resetKey={eventsSession} active={active && selected === "catalog" && !initialSource}>{children}</EventsLabProvider>
+          </BookingLabProvider>
+        </AiLabProvider>
+      </ErrorTrackingLabProvider>
     </PlaygroundLabContext.Provider>
   );
 }

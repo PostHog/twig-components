@@ -238,8 +238,8 @@ test("account pages render saved, booked, profile, and fixed settings data", () 
   assert.match(booked, /Upcoming/);
   assert.match(booked, /Oct 10–12/);
   assert.match(booked, /2 guests/);
-  assert.match(booked, /disabled=""[^>]*aria-label="Stay details for Adiron-shack \(coming later\)"/);
-  assert.match(booked, />Stay details<\/button>/);
+  assert.match(booked, /disabled=""[^>]*aria-label="Trip details for Adiron-shack"/);
+  assert.match(booked, />Trip details<\/button>/);
 
   const overview = renderToStaticMarkup(createElement(ProfileOverview, {
     profile: accountProfile,

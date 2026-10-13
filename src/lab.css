@@ -6,6 +6,7 @@
   --ph-os-button-border: #b17816;
   --ph-brand-yellow: #ffa81c;
   --ph-brand-tangerine: #ff5c1c;
+  --ph-brand-purple: #a737d2;
   --ph-neutral-ink: #151515;
   --ph-neutral-background: #eeefe9;
   --ph-neutral-accent: #e5e7e0;
@@ -172,12 +173,124 @@
 .vac-app .vac-developer-theme .vac-eyebrow {
   font-size: 10px;
   letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 .vac-app .vac-developer-theme :is(code, pre) {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
+.vac-app .vac-developer-theme .vac-lab :is(p, li) > code {
+  padding: 1px 4px;
+  border: 1px solid rgb(245 78 0 / 50%);
+  border-radius: 2px;
+  background: rgb(245 78 0 / 10%);
+  color: #c03300;
+  font-size: 0.93em;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
 .vac-app .vac-developer-theme .vac-lab-directory-list > li {
   border-radius: 6px;
+}
+.vac-app .vac-developer-theme .vac-lab-other-pages {
+  margin-top: 12px;
+}
+.vac-app .vac-developer-theme .vac-lab-other-pages > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--vac-line);
+  border-radius: 6px;
+  background: var(--vac-paper);
+  list-style: none;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.vac-app .vac-developer-theme .vac-lab-other-pages > summary::-webkit-details-marker {
+  display: none;
+}
+.vac-app .vac-developer-theme .vac-lab-other-pages[open] > summary {
+  border-radius: 6px 6px 0 0;
+}
+.vac-app .vac-developer-theme .vac-lab-menu-end {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  gap: 10px;
+}
+.vac-app .vac-developer-theme .vac-lab-menu-chevron {
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+}
+.vac-app .vac-developer-theme .vac-lab-other-pages[open] .vac-lab-menu-chevron {
+  transform: translateY(2px) rotate(225deg);
+}
+.vac-app .vac-developer-theme .vac-lab-other-pages-menu {
+  overflow: hidden;
+  border: 1px solid var(--vac-line);
+  border-top: 0;
+  border-radius: 0 0 6px 6px;
+  background: var(--vac-paper);
+}
+.vac-app .vac-developer-theme .vac-lab-menu-group h4 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  padding: 10px 14px;
+  background: var(--ph-neutral-background);
+  font-size: 12px;
+  font-weight: 600;
+  color: #2f80fa;
+}
+.vac-app .vac-developer-theme .vac-lab-product-icon {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+.vac-app .vac-developer-theme [data-product="error-tracking"] h4 { color: #eb9d2a; }
+.vac-app .vac-developer-theme [data-product="session-replay"] h4 { color: #f7a501; }
+.vac-app .vac-developer-theme [data-product="ai-observability"] h4 { color: #b62ad9; }
+.vac-app .vac-developer-theme .vac-lab-menu-group ul {
+  margin: 0;
+  padding: 6px 14px 12px;
+  list-style: none;
+}
+.vac-app .vac-developer-theme .vac-lab-menu-group li button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 6px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--vac-ink);
+  text-align: left;
+  font-size: 12px;
+  line-height: 1.35;
+}
+.vac-app .vac-developer-theme .vac-lab-menu-group li button:hover,
+.vac-app .vac-developer-theme .vac-lab-menu-group li button:focus-visible {
+  background: var(--ph-neutral-background);
+}
+.vac-app .vac-developer-theme .vac-lab-menu-group li button strong,
+.vac-app .vac-developer-theme .vac-lab-menu-group li button small {
+  display: block;
+}
+.vac-app .vac-developer-theme .vac-lab-menu-group li button small {
+  margin-top: 2px;
+  color: var(--vac-muted);
+  font-size: 11px;
 }
 .vac-app .vac-developer-theme .vac-event-picker {
   gap: 0;
@@ -230,6 +343,33 @@
 .vac-app .vac-developer-theme .vac-event-comparison [data-mismatch="true"] {
   background: var(--ph-neutral-accent);
 }
+.vac-app .vac-developer-theme .vac-error-issue h4 { margin: 0 0 12px; }
+.vac-app .vac-developer-theme .vac-error-issue .vac-event-comparison {
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--vac-line);
+  border-radius: 0;
+}
+.vac-app .vac-developer-theme .vac-error-issue .vac-event-comparison > div {
+  padding: 10px 0;
+}
+.vac-app .vac-developer-theme .vac-error-posthog-preview { margin: 16px 0; padding: 0; overflow: hidden; }
+.vac-app .vac-developer-theme .vac-error-posthog-list-heading { padding: 8px 12px; font-size: 12px; font-weight: 600; }
+.vac-app .vac-developer-theme .vac-error-posthog-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 12px; }
+.vac-app .vac-developer-theme .vac-error-posthog-table th,
+.vac-app .vac-developer-theme .vac-error-posthog-table td { width: 50%; padding: 9px 12px; text-align: left; border-top: 1px solid var(--vac-line); overflow-wrap: anywhere; }
+.vac-app .vac-developer-theme .vac-error-posthog-table th { background: var(--ph-neutral-background); font-size: 11px; font-weight: 600; }
+.vac-app .vac-developer-theme .vac-error-posthog-table td code { font-size: inherit; }
+.vac-app .vac-developer-theme .vac-error-posthog-properties-table th:first-child,
+.vac-app .vac-developer-theme .vac-error-posthog-properties-table td:first-child { width: 40%; }
+.vac-app .vac-developer-theme .vac-error-posthog-properties-table th:last-child,
+.vac-app .vac-developer-theme .vac-error-posthog-properties-table td:last-child { width: 60%; }
+.vac-app .vac-developer-theme .vac-error-posthog-selected { display: grid; gap: 2px; padding: 9px 12px; border-top: 1px solid var(--vac-line); border-bottom: 1px solid var(--vac-line); background: var(--ph-neutral-accent); font-size: 12px; }
+.vac-app .vac-developer-theme .vac-error-posthog-selected code { min-width: 0; overflow-wrap: anywhere; }
+.vac-app .vac-developer-theme .vac-error-posthog-selected mark,
+.vac-app .vac-developer-theme .vac-error-posthog-properties-table mark { background: var(--ph-brand-yellow); color: var(--ph-neutral-ink); }
+.vac-app .vac-developer-theme .vac-error-posthog-stack { padding: 0 12px 12px; }
+.vac-app .vac-developer-theme .vac-error-posthog-stack pre { margin: 0; }
 
 .vac-ai-fields {
   border: 0;
@@ -248,7 +388,7 @@
   width: 18px;
   height: 18px;
   flex: 0 0 auto;
-  accent-color: var(--ph-brand-cobalt);
+  accent-color: var(--ph-brand-purple);
 }
 .vac-ai-fields code {
   display: block;
@@ -292,8 +432,8 @@
 }
 
 .vac-app .vac-developer-theme .vac-ai-code-highlight {
-  background: var(--ph-highlight);
-  color: var(--ph-light-12);
+  background: var(--ph-brand-purple);
+  color: var(--ph-neutral-white);
   border-radius: 2px;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
@@ -309,8 +449,8 @@
 }
 
 .vac-app .vac-developer-theme pre .vac-ai-code-highlight {
-  background: var(--ph-highlight);
-  color: var(--ph-light-12);
+  background: var(--ph-brand-purple);
+  color: var(--ph-neutral-white);
 }
 .vac-app .vac-developer-theme .vac-ai-code-context {
   background: transparent;
@@ -486,19 +626,85 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 4px 16px;
+  gap: 8px;
   margin-top: 4px;
 }
-.vac-lab-navigation .vac-lab-reset {
+.vac-lab-navigation-links,
+.vac-lab-navigation-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.vac-lab-navigation-links {
+  flex-wrap: wrap;
+}
+.vac-lab-navigation-actions {
   margin-inline-start: auto;
 }
 .vac-lab-navigation .vac-text-button {
   padding: 4px 0;
   text-align: left;
 }
+.vac-lab-navigation .vac-lab-reset-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--vac-line);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ph-neutral-ink);
+  cursor: pointer;
+}
+.vac-lab-navigation .vac-lab-reset-icon:hover {
+  background: color-mix(in srgb, var(--ph-neutral-ink) 8%, transparent);
+}
+.vac-lab-previous-short {
+  display: none;
+}
+@media (max-width: 360px) {
+  .vac-lab-previous-full { display: none; }
+  .vac-lab-previous-short { display: inline; }
+}
+.vac-reset-confirm {
+  flex-basis: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--ph-os-button-border);
+  border-radius: 6px;
+  background: var(--ph-brand-yellow);
+  background: color-mix(in srgb, var(--ph-brand-yellow) 22%, var(--ph-neutral-white));
+}
+.vac-reset-confirm h3,
+.vac-reset-confirm p {
+  margin: 0;
+}
+.vac-app .vac-developer-theme .vac-reset-confirm h3 {
+  font-size: 14px;
+  line-height: 1.3;
+  margin-bottom: 3px;
+}
+.vac-reset-confirm p { line-height: 1.45; }
+.vac-reset-confirm-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 10px;
+}
+.vac-app .vac-developer-theme .vac-reset-confirm-actions .vac-button {
+  width: auto;
+  margin: 0;
+  white-space: normal;
+}
 
 .vac-app .vac-developer-theme :focus-visible {
   outline-color: var(--ph-brand-cobalt);
+}
+/* The lesson region is focused for screen readers after step changes, but it is not an interactive control. */
+.vac-app .vac-developer-theme #guide-panel:focus {
+  outline: none;
 }
 .vac-app .vac-developer-theme input {
   accent-color: var(--ph-brand-cobalt);
@@ -637,10 +843,15 @@
   margin: 0;
 }
 
-.vac-app .vac-developer-theme pre.vac-booking-code {
-  white-space: pre;
-  overflow-wrap: normal;
-  overflow-x: auto;
+.vac-app .vac-developer-theme .vac-error-intro-steps {
+  margin: 0;
+  padding-left: 20px;
+  list-style: decimal;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.vac-app .vac-developer-theme .vac-error-intro-steps li + li {
+  margin-top: 8px;
 }
 
 .vac-app .vac-developer-theme .vac-selected-lab {

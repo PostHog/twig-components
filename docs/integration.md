@@ -4,7 +4,7 @@
 
 | Place | Owns |
 | --- | --- |
-| **This repo** | Reusable Twig views and catalog, the five labs’ UI and local state, playground panels, replay recorder/player, CSS, assets, tests, and gallery. |
+| **This repo** | Reusable Twig views and catalog, the labs’ UI and local state, playground panels, replay recorder/player, CSS, assets, tests, and gallery. |
 | **Twig.com** | Full website pages, Next.js routes, stay images and links, playground placement, navigation, and focus/scroll behavior. It pins a published package version. |
 | **PostHog.com** | PostHog 101 prose, code and event examples, PostHog event inspector, Twig introduction screenshot, and guide navigation. Its read-only Twig preview integration is in progress. |
 
@@ -29,6 +29,7 @@ The Events and properties lab is prepared for version `0.2.0`. Each site pins a 
 1. Pick an export in the [component reference](components.md). A website control such as `StayFilters` needs state and callbacks from the host; a read-only view such as `BrowseStaysPreview` needs only its display props.
 2. Load `catalog.css` for Twig views. Load `lab.css` for a full playground and wrap its UI in `.vac-app .vac-developer-theme`. Keep the guide’s PostHog UI outside that scope.
 3. For the playground, put `ReplayProvider` and `StayLabProvider` above `PlaygroundLabProvider`. Pass the current path, navigation callbacks, and focus actions from the host. Twig.com’s adapters in `src/components/vacation/` show the current setup.
+   Pass `onVisitLab` to `LabDirectory` so the rows in its closed “Explore other PostHog products on Twig” menu navigate to a lab's starting page. Keep the dock open during navigation, then pass that lab ID as `pendingSelection` to the controller on the destination page.
 4. For a PostHog guide embed, use only the focused Twig view inside a Shadow DOM wrapper so host CSS does not change it. Keep click animation, if present, with that Twig view; place the PostHog event inspector and guide CTA outside the shadow root. The guide integration is still in progress.
 
 The playground provider order is:
@@ -36,12 +37,25 @@ The playground provider order is:
 ```tsx
 <ReplayProvider open={open} pathname={pathname}>
   <StayLabProvider>
-    <PlaygroundLabProvider active={open && isDiscoverPage} bookingEnabled={open && isStayPage}>
+    <PlaygroundLabProvider
+      active={open && isDiscoverPage}
+      bookingEnabled={open && isStayPage}
+      errorTrackingEnabled={open}
+      errorTrackingSession={account.errorTracking}
+      onErrorTrackingAction={account.dispatchErrorTracking}
+      onErrorTrackingStageChange={account.setErrorTrackingStage}
+    >
       <TwigPageAndPlayground />
     </PlaygroundLabProvider>
   </StayLabProvider>
 </ReplayProvider>
 ```
+
+The Twig host saves Error Tracking state and stage with its bookings, and cancels bookings in the account store. The lab starts on a stay listing and carries its lesson into Booked stays; that account page has no lab entry point. Explicitly starting any lab clears Twig's demo account activity and previous lab progress. Route changes and dock hide/show keep the selected lab's step and local results; the shared controller keeps its labs mounted until a fresh start or reset. A booking receives the guided error only when the learner makes it during an active Error Tracking lab.
+
+When a lesson asks the learner to click a specific Twig control, put `vac-lab-target` on that control or its small control group. Show it only for the current unfinished step, then move it to the next target. Keep the lesson's “Show…” action focused on the same target. Free exploration has no single target to outline. The site stylesheet handles the animation and reduced-motion preference.
+
+On Twig.com, the playground's **Reset lab** action confirms a full local reset, clears Twig-owned browser storage, and returns the selected lab to its opening step without reloading the site. An embedded exercise can keep its own narrower reset by omitting `resetScope="twig"` from `LabNavigationView`.
 
 ## How changes reach the sites
 
