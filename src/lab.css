@@ -625,40 +625,77 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 4px 16px;
+  gap: 8px;
   margin-top: 4px;
 }
-.vac-lab-navigation .vac-lab-reset {
+.vac-lab-navigation-links,
+.vac-lab-navigation-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.vac-lab-navigation-links {
+  flex-wrap: wrap;
+}
+.vac-lab-navigation-actions {
   margin-inline-start: auto;
 }
 .vac-lab-navigation .vac-text-button {
   padding: 4px 0;
   text-align: left;
 }
+.vac-lab-navigation .vac-lab-reset-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--vac-line);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ph-neutral-ink);
+  cursor: pointer;
+}
+.vac-lab-navigation .vac-lab-reset-icon:hover {
+  background: color-mix(in srgb, var(--ph-neutral-ink) 8%, transparent);
+}
+.vac-lab-previous-short {
+  display: none;
+}
+@media (max-width: 360px) {
+  .vac-lab-previous-full { display: none; }
+  .vac-lab-previous-short { display: inline; }
+}
 .vac-reset-confirm {
   flex-basis: 100%;
-  padding: 16px;
-  border: 1px solid var(--vac-line);
-  background: white;
+  padding: 10px 12px;
+  border: 1px solid var(--ph-os-button-border);
+  border-radius: 6px;
+  background: var(--ph-brand-yellow);
+  background: color-mix(in srgb, var(--ph-brand-yellow) 22%, var(--ph-neutral-white));
 }
 .vac-reset-confirm h3,
 .vac-reset-confirm p {
-  margin: 0 0 10px;
+  margin: 0;
 }
-.vac-reset-confirm h3 { font-size: 18px; }
+.vac-app .vac-developer-theme .vac-reset-confirm h3 {
+  font-size: 14px;
+  line-height: 1.3;
+  margin-bottom: 3px;
+}
+.vac-reset-confirm p { line-height: 1.45; }
 .vac-reset-confirm-actions {
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 10px;
 }
 .vac-app .vac-developer-theme .vac-reset-confirm-actions .vac-button {
-  width: 100%;
-  margin-top: 12px;
+  width: auto;
+  margin: 0;
   white-space: normal;
-}
-.vac-reset-confirm-actions .vac-text-button {
-  align-self: flex-start;
 }
 
 .vac-app .vac-developer-theme :focus-visible {

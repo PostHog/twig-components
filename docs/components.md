@@ -113,8 +113,9 @@ passes `onViewDetails`; the host supplies the details region with `renderDetails
 Without that callback, the button stays disabled. Hosts can pass `onBioChange`
 to show the About edit control; the host decides whether that draft is temporary
 or persisted.
-Pass `highlightedTripDetailsBookingId` to outline the selected trip details
-region with the same Twig target pulse used for other lab actions.
+Pass `highlightedTripDetailsBookingId` when `renderDetails` uses `TripDetailsView`
+to outline only the selected trip's Host label and value with the same Twig
+target pulse used for other lab actions.
 
 ## Labs and playground
 
@@ -136,7 +137,7 @@ For directions that ask the learner to act on Twig, use `LabChecklist` in every 
 | `/replay-recorder` | `ReplayProvider`, `useReplay` | Records the current tab locally or runs a ghost visit with rrweb; pass `open` and `pathname`. | ReplayLab / Playground |
 | `/replay-lab-ui` | `ReplayLab`, `ReplayRecordingBar`, `ReplayLabViewState` | Replay lesson and recording status; host passes stage, replay state, return link, and player. | ReplayLab |
 | `/session-player` | `SessionPlayer` | Plays an rrweb recording; pass recorded `events`. | ReplayLab |
-| `/lab-navigation` | `LabNavigationView` | All labs, previous step, and reset controls; host supplies actions. | FilterLab adapter |
+| `/lab-navigation` | `LabNavigationView` | Keeps All labs, Previous step, and the optional `returnTo` action visible as text navigation. The labeled reset icon opens the existing confirmation in Twig.com. | FilterLab adapter |
 | `/lab-completion-view` | `LabCompletionView` | Recap for one completed lab; host supplies choose/review actions and heading ref. | LabCompletion |
 | `/lab-checklist` | `LabChecklist` | Step list with done/current/upcoming states; pass `label` and `items`. | Lab UI |
 | `/lab-choices` | `LabChoices` | Accessible radio choice group; pass `label`, `value`, `options`, and `onChange`. | Lab UI |

@@ -5,7 +5,6 @@ import {
   useEffect,
   useContext,
   useReducer,
-  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -49,8 +48,6 @@ export function PlaygroundLabProvider({
   errorTrackingSession,
   onErrorTrackingAction,
   onErrorTrackingStageChange,
-  onRestartErrorLab,
-  pageKey,
   pendingSelection,
   onPendingSelectionConsumed,
   initialSource,
@@ -62,7 +59,9 @@ export function PlaygroundLabProvider({
   errorTrackingSession?: { state: ErrorTrackingState; stage: number };
   onErrorTrackingAction?: (action: ErrorTrackingAction) => void;
   onErrorTrackingStageChange?: (stage: number) => void;
+  /** @deprecated Fresh starts and resets are owned by the host. */
   onRestartErrorLab?: () => void;
+  /** @deprecated Route changes no longer reset lab progress. */
   pageKey?: string;
   pendingSelection?: TouchpointId | null;
   onPendingSelectionConsumed?: () => void;
@@ -90,32 +89,16 @@ export function PlaygroundLabProvider({
     if (selected === "errors" && onErrorTrackingStageChange) onErrorTrackingStageChange(nextStage);
     else setLocalStage(nextStage);
   }
-  const previousPageKey = useRef(pageKey);
   useEffect(() => {
-    if (pendingSelection) {
-      previousPageKey.current = pageKey;
-      setSelected(pendingSelection);
-      if (pendingSelection !== "errors") setLocalStage(0);
-      highlight(null);
-      dispatch({ type: "cancel" });
-      onPendingSelectionConsumed?.();
-      return;
-    }
-    if (previousPageKey.current === pageKey) return;
-    previousPageKey.current = pageKey;
-    if (selected === "errors") return;
-    const nextSelection = replay.mode ? "replay" : bookingEnabled && stayLab.state.running ? "stay" : null;
-    setSelected(nextSelection);
-    setLocalStage(nextSelection ? 1 : 0);
+    if (!pendingSelection) return;
+    setSelected(pendingSelection);
+    if (pendingSelection !== "errors") setLocalStage(0);
     highlight(null);
     dispatch({ type: "cancel" });
-  }, [pageKey, pendingSelection, onPendingSelectionConsumed, selected, replay.mode, bookingEnabled, stayLab.state.running]);
+    onPendingSelectionConsumed?.();
+  }, [pendingSelection, onPendingSelectionConsumed]);
   function choose(id: TouchpointId | null) {
     if (initialSource) return;
-    if (id === "errors" && errorTrackingSession && errorTrackingSession.stage > 0 && onRestartErrorLab) {
-      onRestartErrorLab();
-      return;
-    }
     if (id !== "stay") stayLab.dispatch({ type: "pause" });
     if (id !== "replay") replay.stop();
     setSelected(id);
@@ -138,8 +121,8 @@ export function PlaygroundLabProvider({
       }}
     >
       <ErrorTrackingLabProvider active={errorTrackingEnabled && selected === "errors" && stage > 0} state={errorTrackingSession?.state} onAction={onErrorTrackingAction}>
-        <AiLabProvider key={pageKey} active={active && selected === "discovery" && stage > 0}>
-          <BookingLabProvider key={pageKey} active={bookingEnabled && selected === "booking" && stage > 0}>
+        <AiLabProvider active={active && selected === "discovery" && stage > 0}>
+          <BookingLabProvider active={bookingEnabled && selected === "booking" && stage > 0}>
             {children}
           </BookingLabProvider>
         </AiLabProvider>

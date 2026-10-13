@@ -5,7 +5,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { errorTrackingReducer, initialErrorTrackingState, isErrorTrackingLabComplete } from "@posthog/twig-components/error-tracking-lab";
 import { ErrorTrackingLabProvider, ErrorTrackingLab } from "@posthog/twig-components/error-tracking-lab-ui";
 import { BookedStaysView, TripDetailsView } from "@posthog/twig-components/account";
-import { playgroundPage } from "@posthog/twig-components/playground";
+import { labsOnOtherPages, playgroundPage } from "@posthog/twig-components/playground";
 import { stays } from "@posthog/twig-components/catalog";
 
 test("repeated trip errors form one issue and a successful retry adds no exception", () => {
@@ -37,9 +37,11 @@ test("several rapid retries keep adding occurrences to the same issue", () => {
   assert.equal(new Set(state.occurrences.map((occurrence) => occurrence.fingerprint)).size, 1);
 });
 
-test("the lab starts on a stay, remains available on booked stays, and discloses its simulation", () => {
-  assert.ok(playgroundPage("/stays/stay-01", stays).touchpoints.some((point) => point.id === "errors"));
-  assert.deepEqual(playgroundPage("/profile/bookings", stays).touchpoints.map((point) => point.id), ["errors"]);
+test("the lab starts on stay listings and has no entry on booked stays", () => {
+  for (const stay of stays) assert.ok(playgroundPage(`/stays/${stay.id}`, stays).touchpoints.some((point) => point.id === "errors"));
+  const bookingsPage = playgroundPage("/profile/bookings", stays);
+  assert.deepEqual(bookingsPage.touchpoints, []);
+  assert.ok(!labsOnOtherPages(bookingsPage).some((item) => item.id === "errors"));
   const html = renderToStaticMarkup(h(ErrorTrackingLabProvider, { active: true }, h(ErrorTrackingLab, { stage: 0, onStage: () => {}, location: "stay", onFocusBooking: () => {}, onFocusDetails: () => {} })));
   assert.match(html, /Error Tracking lab/);
   assert.match(html, /How this simulation works/);
@@ -53,7 +55,7 @@ test("the trip error explanation has no extra inspection screen", () => {
   const failed = errorTrackingReducer(booked, {
     type: "capture", message: "Cannot read properties of undefined (reading 'name')", stayId: stays[0].id,
   });
-  const html = renderToStaticMarkup(h(ErrorTrackingLabProvider, { active: true, state: failed, onAction: () => {} }, h(ErrorTrackingLab, {
+  const html = renderToStaticMarkup(h(ErrorTrackingLabProvider, { active: true, state: booked, onAction: () => {} }, h(ErrorTrackingLab, {
     stage: 2, onStage: () => {}, location: "bookings", onFocusBooking: () => {}, onFocusDetails: () => {},
   })));
   assert.match(html, /aria-label="Open your trip"[\s\S]*?Click <strong>Trip details<\/strong>/);
@@ -89,6 +91,29 @@ test("the trip error explanation has no extra inspection screen", () => {
     stage: 4, onStage: () => {}, location: "bookings", onFocusBooking: () => {}, onFocusDetails: () => {},
   })));
   assert.match(grouping, /Rage click <strong>Try again<\/strong> in Twig&#x27;s trip details, and watch the count climb/);
+  const retried = errorTrackingReducer(failed, {
+    type: "capture", message: "Cannot read properties of undefined (reading 'name')", stayId: stays[0].id,
+  });
+  const afterRetry = renderToStaticMarkup(h(ErrorTrackingLabProvider, { active: true, state: retried, onAction: () => {} }, h(ErrorTrackingLab, {
+    stage: 4, onStage: () => {}, location: "bookings", onFocusBooking: () => {}, onFocusDetails: () => {},
+  })));
+  assert.doesNotMatch(afterRetry, /Rage click <strong>Try again<\/strong>/);
+  assert.match(afterRetry, /Find the fix/);
+});
+
+test("returning to the trip step after applying the fallback can reopen the exception", () => {
+  const booking = { id: "trip-1", stayId: stays[0].id, stayTitle: stays[0].title };
+  let state = errorTrackingReducer(initialErrorTrackingState, { type: "book", booking });
+  for (let i = 0; i < 2; i++) state = errorTrackingReducer(state, {
+    type: "capture", message: "Cannot read properties of undefined (reading 'name')", stayId: booking.stayId,
+  });
+  state = errorTrackingReducer(errorTrackingReducer(state, { type: "fix" }), { type: "retry-success" });
+  const html = renderToStaticMarkup(h(ErrorTrackingLabProvider, { active: true, state, onAction: () => {} }, h(ErrorTrackingLab, {
+    stage: 2, onStage: () => {}, location: "bookings", onFocusBooking: () => {}, onFocusDetails: () => {},
+  })));
+  assert.match(html, /Trip details already produced an exception/);
+  assert.match(html, /Review the exception/);
+  assert.doesNotMatch(html, /Click <strong>Trip details<\/strong>/);
 });
 
 test("the error lab distinguishes the fallback from repairing missing host data", () => {
@@ -176,7 +201,8 @@ test("booked stays expose usable trip details and a recoverable fallback", () =>
     selectedBookingId: booking.id, highlightedTripDetailsBookingId: booking.id,
     onViewDetails: () => {}, renderDetails: () => h(TripDetailsView, { booking, hostName: "Host information unavailable" }),
   }));
-  assert.match(fallback, /class="twig-trip-details vac-lab-target"[^>]*>[^]*?Host information unavailable/);
+  assert.match(fallback, /class="twig-trip-details" data-highlight-host="true"[^>]*>[^]*?class="twig-trip-host"><dt>Host<\/dt><dd>Host information unavailable<\/dd>/);
+  assert.doesNotMatch(fallback, /class="twig-trip-details vac-lab-target"/);
   const loaded = renderToStaticMarkup(h(TripDetailsView, { booking, hostName: "Woody" }));
   assert.match(loaded, /Your trip/);
   assert.match(loaded, /Woody/);

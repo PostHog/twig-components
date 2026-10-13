@@ -44,8 +44,6 @@ The playground provider order is:
       errorTrackingSession={account.errorTracking}
       onErrorTrackingAction={account.dispatchErrorTracking}
       onErrorTrackingStageChange={account.setErrorTrackingStage}
-      onRestartErrorLab={resetTwigAndRestartErrorLab}
-      pageKey={pathname}
     >
       <TwigPageAndPlayground />
     </PlaygroundLabProvider>
@@ -53,7 +51,7 @@ The playground provider order is:
 </ReplayProvider>
 ```
 
-The Twig host saves Error Tracking state and stage with its bookings, and cancels bookings in the account store. Starting an unfinished Error Tracking lab again clears Twig's local activity and opens its introduction. The shared controller keeps its other labs local. A booking receives the guided error only when the learner makes it during an active Error Tracking lab.
+The Twig host saves Error Tracking state and stage with its bookings, and cancels bookings in the account store. The lab starts on a stay listing and carries its lesson into Booked stays; that account page has no lab entry point. Explicitly starting any lab clears Twig's demo account activity and previous lab progress. Route changes and dock hide/show keep the selected lab's step and local results; the shared controller keeps its labs mounted until a fresh start or reset. A booking receives the guided error only when the learner makes it during an active Error Tracking lab.
 
 When a lesson asks the learner to click a specific Twig control, put `vac-lab-target` on that control or its small control group. Show it only for the current unfinished step, then move it to the next target. Keep the lesson's “Show…” action focused on the same target. Free exploration has no single target to outline. The site stylesheet handles the animation and reduced-motion preference.
 

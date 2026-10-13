@@ -444,7 +444,7 @@ export function BookedStaysView({
                   </div>
                 </div>
                 {selectedBookingId === booking.id && renderDetails && (
-                  <div id={`twig-trip-details-${booking.id}`} className={`twig-trip-details${highlightedTripDetailsBookingId === booking.id ? " vac-lab-target" : ""}`} role="region" aria-label={`Trip details for ${booking.stay.title ?? booking.stay.setting}`}>
+                  <div id={`twig-trip-details-${booking.id}`} className="twig-trip-details" data-highlight-host={highlightedTripDetailsBookingId === booking.id ? "true" : undefined} role="region" aria-label={`Trip details for ${booking.stay.title ?? booking.stay.setting}`}>
                     {renderDetails(booking)}
                   </div>
                 )}
@@ -506,7 +506,7 @@ export function TripDetailsView({
         <div><dt>Stay</dt><dd>{booking.stay.title ?? `${booking.stay.setting} stay`}</dd></div>
         <div><dt>Dates</dt><dd>{booking.dateLabel}</dd></div>
         <div><dt>Guests</dt><dd>{booking.guestsLabel}</dd></div>
-        <div><dt>Host</dt><dd>{hostName ?? "Host information unavailable"}</dd></div>
+        <div className="twig-trip-host"><dt>Host</dt><dd>{hostName ?? "Host information unavailable"}</dd></div>
       </dl>
       <p className="twig-trip-note">
         <svg className="twig-trip-note-icon" viewBox="0 0 20 20" aria-hidden="true">

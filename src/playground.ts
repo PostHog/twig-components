@@ -85,7 +85,7 @@ const pageTouchpoints: Record<PageKind, readonly TouchpointId[]> = {
   discover: ["discovery", "catalog", "replay"],
   about: [],
   stay: ["stay", "booking", "errors", "replay"],
-  bookings: ["errors"],
+  bookings: [],
 };
 
 export function playgroundPage(
@@ -133,11 +133,11 @@ export function playgroundPage(
 export type PlaygroundPage = ReturnType<typeof playgroundPage>;
 export type PlaygroundSelection = { pageKey: string; id: TouchpointId };
 
-/** Show each lab once, at its starting page, when it is absent from this page. */
+/** Show labs on other pages, except Error Tracking on Booked stays, which only continues an active lab. */
 export function labsOnOtherPages(page: PlaygroundPage) {
   const localIds = new Set(page.touchpoints.map(({ id }) => id));
   return (Object.keys(touchpointDefinitions) as TouchpointId[])
-    .filter((id) => !localIds.has(id))
+    .filter((id) => !localIds.has(id) && !(page.kind === "bookings" && id === "errors"))
     .map((id) => ({ id, ...touchpointDefinitions[id], ...labStartPages[id] }));
 }
 

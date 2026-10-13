@@ -33,18 +33,20 @@ import { stays, stayLabel } from "../src/catalog.js";
 import { ReplayLab, type ReplayLabViewState } from "../src/ReplayLab.js";
 import { ReplayProvider, useReplay } from "../src/ReplayRecorder.js";
 import { LabDirectory, PlaygroundInvitation } from "../src/PlaygroundPanels.js";
+import { LabNavigationView } from "../src/LabNavigation.js";
 import { playgroundPage } from "../src/playground.js";
 import "../src/catalog.css";
 import "../src/lab.css";
 import "./workbench.css";
 
-type View = "preview" | "saved" | "account" | "invite" | "products" | "dates" | "filters" | "ai" | "booking" | "stay" | "replay" | "errors";
+type View = "preview" | "saved" | "account" | "invite" | "products" | "reset" | "dates" | "filters" | "ai" | "booking" | "stay" | "replay" | "errors";
 const views: { id: View; label: string; description: string }[] = [
   { id: "preview", label: "Twig views", description: "Read-only guide preview and interactive filter control" },
   { id: "saved", label: "Saved stay", description: "Exercise host-controlled auth, save, loading, disabled, and error states" },
   { id: "account", label: "Account", description: "Walk through login, profile navigation, empty collections, and settings" },
   { id: "invite", label: "PostHog invitation", description: "Open and dismiss the playground invitation" },
   { id: "products", label: "Product menu", description: "Open the other-products menu on every Twig page" },
+  { id: "reset", label: "Playground reset", description: "Preview the confirmation shown before clearing Twig activity" },
   { id: "dates", label: "Booking details", description: "Choose dates and guests with Twig’s booking controls" },
   { id: "filters", label: "Filter lab", description: "Click Twig filters and inspect the locally recorded events" },
   { id: "ai", label: "AI lab", description: "Run a local recommendation fixture through the lesson" },
@@ -279,6 +281,16 @@ function ProductMenuPreview() {
   </LabPreview>;
 }
 
+function ResetPreview() {
+  const [resetCount, setResetCount] = useState(0);
+  const [notice, setNotice] = useState("");
+  const [away, setAway] = useState(false);
+  return <div className="vac-app"><div className="workbench-controls"><button type="button" onClick={() => setAway((value) => !value)}>{away ? "Show lab page" : "Show away state"}</button></div><div className="vac-developer-theme workbench-lab workbench-reset-preview">
+    <LabNavigationView key={resetCount} selected="errors" stage={2} embedded={false} resetScope="twig" returnTo={away ? { label: "Booked stays", onClick: () => { setAway(false); setNotice("Returned to the lab page."); } } : undefined} onAllLabs={() => setNotice("All labs selected in this preview.")} onPrevious={() => setNotice("Previous step selected in this preview.")} onReset={() => { setResetCount((count) => count + 1); setAway(false); setNotice("Twig activity reset in this preview."); }} />
+    {notice && <p role="status">{notice}</p>}
+  </div></div>;
+}
+
 function Filters() {
   const [state, dispatch] = useReducer(filterLabReducer, initialLabState);
   const [stage, setStage] = useState(1);
@@ -363,7 +375,7 @@ function ErrorTrackingPreviewContent() {
     }
   }
   return <>
-    <div className="workbench-controls"><button onClick={() => setLocation("stay")}>Stay page</button><button onClick={() => setLocation("bookings")}>Booked stays</button></div>
+    <div className="workbench-controls"><button onClick={() => setLocation("stay")}>Stay page</button><button onClick={() => setLocation("bookings")}>Booked stays</button><button onClick={() => setStage((current) => Math.max(0, current - 1))} disabled={stage === 0}>Previous step</button></div>
     <div className="twig-browser workbench-twig" id="error-trip-fixture">{location === "stay"
       ? <section className="workbench-fixture"><h3>{booking.stay.title}</h3><p>Complete a booking on Twig to reach the details view.</p><button className="vac-button" onClick={bookStay} disabled={Boolean(state.booking)}>Book stay</button></section>
       : <BookedStaysView bookings={state.booking ? [booking] : []} renderImage={() => <div className="vac-image"><span>Stay photo</span></div>} stayHref={() => "#error-trip-fixture"} selectedBookingId={selected} highlightedTripDetailsBookingId={stage === 6 && state.successfulRetry && displayedHost === "Host information unavailable" ? booking.id : undefined} onViewDetails={openDetails} onCancelBooking={() => setCanceled(true)} renderDetails={() => <TripDetailsView booking={booking} hostName={displayedHost} errorMessage={error ? "Try to load details again." : undefined} onRetry={openDetails} />} />}</div>
@@ -375,5 +387,5 @@ function ErrorTrackingPreview() { return <ErrorTrackingLabProvider active><Error
 export default function App() {
   const [view, setView] = useState<View>("preview");
   const current = views.find((item) => item.id === view)!;
-  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "preview" ? <Preview /> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "products" ? <ProductMenuPreview /> : view === "dates" ? <DatePickerPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : view === "errors" ? <ErrorTrackingPreview /> : <Replay />}</div></main></div>;
+  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "preview" ? <Preview /> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "products" ? <ProductMenuPreview /> : view === "reset" ? <ResetPreview /> : view === "dates" ? <DatePickerPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : view === "errors" ? <ErrorTrackingPreview /> : <Replay />}</div></main></div>;
 }

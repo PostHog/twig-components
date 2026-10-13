@@ -9,6 +9,7 @@ import { BookingLabProvider, BookingLab } from "@posthog/twig-components/booking
 import { StayLabProvider, StayLab } from "@posthog/twig-components/stay-lab-ui";
 import { ReplayLab } from "@posthog/twig-components/replay-lab-ui";
 import { ReplayProvider } from "@posthog/twig-components/replay-recorder";
+import { LabNavigationView } from "@posthog/twig-components/lab-navigation";
 import {
   LabDirectory,
   PlaygroundDock,
@@ -35,6 +36,31 @@ test("the playground invitation matches the dock's PostHog name and branding", (
   const compact = render(h(PlaygroundInvitation, { ...props, dismissed: true }));
   assert.match(compact, /Explore PostHog/);
   assert.doesNotMatch(compact, /Want to explore/);
+
+  const resume = render(h(PlaygroundInvitation, { ...props, dismissed: true, resumeLab: "Trip details" }));
+  assert.match(resume, /Resume Trip details lab →/);
+  assert.doesNotMatch(resume, /Explore PostHog/);
+});
+
+test("lab navigation keeps actions visible and identifies the reset icon", () => {
+  const props = { selected: "errors", stage: 2, embedded: false, resetScope: "twig", onAllLabs: noop, onPrevious: noop, onReset: noop };
+  const away = render(h(LabNavigationView, { ...props, returnTo: { label: "Booked stays", onClick: noop } }));
+  assert.match(away, /aria-label="Return to lab on Booked stays"[^>]*>Return to lab<\/button>/);
+  assert.doesNotMatch(away, /<summary>More<\/summary>/);
+  assert.match(away, /All labs/);
+  assert.match(away, /aria-label="Reset lab" title="Reset lab"/);
+  assert.match(away, /<svg[^>]*aria-hidden="true"/);
+  assert.match(away, /class="vac-lab-navigation-links"[^>]*>[^]*?All labs[^]*?Previous step[^]*?<\/div>/);
+  assert.match(away, /class="vac-lab-navigation-actions"[^>]*>[^]*?Return to lab[^]*?aria-label="Reset lab"/);
+  assert.ok(away.indexOf("All labs") < away.indexOf("Previous step"));
+  assert.ok(away.indexOf("Previous step") < away.indexOf("Return to lab"));
+  assert.doesNotMatch(away, /Continue the Trip details lab/);
+
+  const atLab = render(h(LabNavigationView, props));
+  assert.doesNotMatch(atLab, /Return to lab/);
+  assert.match(atLab, /All labs/);
+  assert.match(atLab, /Previous step/);
+  assert.match(atLab, /aria-label="Reset lab" title="Reset lab"/);
 });
 
 test("all portable lab entry screens render without a site router", () => {

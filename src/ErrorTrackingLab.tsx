@@ -176,14 +176,19 @@ export function ErrorTrackingLab({
 
   if (stage === 2) return <section className="vac-lab vac-builder">
     <p>Your {state.booking?.stayTitle} booking is saved.</p>
-    <LabChecklist label="Open your trip" items={location === "bookings"
-      ? [{ label: <>Click <strong>Trip details</strong> on the booking you made.</>, done: false }]
-      : [
-          { label: <>Open your account menu on Twig.</>, done: false },
-          { label: <>Select <strong>Booked stays</strong>.</>, done: false },
-        ]
-    } />
-    {location === "bookings" && <Continue onClick={onFocusDetails}>Show your booking →</Continue>}
+    {count > 0 ? <>
+      <p>Trip details already produced an exception for this booking.</p>
+      <Continue onClick={() => onStage(3)}>Review the exception →</Continue>
+    </> : <>
+      <LabChecklist label="Open your trip" items={location === "bookings"
+        ? [{ label: <>Click <strong>Trip details</strong> on the booking you made.</>, done: false }]
+        : [
+            { label: <>Open your account menu on Twig.</>, done: false },
+            { label: <>Select <strong>Booked stays</strong>.</>, done: false },
+          ]
+      } />
+      {location === "bookings" && <Continue onClick={onFocusDetails}>Show your booking →</Continue>}
+    </>}
   </section>;
 
   if (stage === 3) return <PostHogExceptionExplanation onStage={onStage} />;

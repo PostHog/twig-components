@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode, type RefObject } from "react";
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { labsOnOtherPages, type LabStartPage, type PlaygroundPage, type TouchpointId } from "./playground.js";
 
 // Exact SVGs from @posthog/icons 0.36.6, as used by posthog.com.
@@ -158,16 +158,18 @@ export function PlaygroundInvitation({
   onDismiss,
   onOpen,
   toggleRef,
+  resumeLab,
 }: {
   dismissed: boolean;
   onDismiss: () => void;
   onOpen: () => void;
   toggleRef: RefObject<HTMLButtonElement | null>;
+  resumeLab?: string;
 }) {
   return (
     <aside
       className={`vac-playground-invite vac-developer-theme${dismissed ? " vac-invite-compact" : ""}`}
-      aria-label="Explore PostHog"
+      aria-label={resumeLab ? `Resume ${resumeLab} lab` : "Explore PostHog"}
       onKeyDown={(event) => {
         if (event.key === "Escape") onDismiss();
       }}
@@ -203,7 +205,7 @@ export function PlaygroundInvitation({
         onClick={onOpen}
       >
         <span className="vac-os-button-face">
-          {dismissed ? "Explore PostHog ↗" : "Open playground ↗"}
+          {resumeLab ? `Resume ${resumeLab} lab →` : dismissed ? "Explore PostHog ↗" : "Open playground ↗"}
         </span>
       </button>
     </aside>
@@ -229,6 +231,12 @@ export function PlaygroundDock({
   pageKey: string;
   guide: ReactNode;
 }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const previousPage = useRef(pageKey);
+  useEffect(() => {
+    if (previousPage.current !== pageKey) scrollRef.current?.scrollTo({ top: 0 });
+    previousPage.current = pageKey;
+  }, [pageKey]);
   return (
     <aside
       id="twig-playground"
@@ -254,7 +262,7 @@ export function PlaygroundDock({
         {recordingBar}
       </div>
       <div
-        key={pageKey}
+        ref={scrollRef}
         className="vac-dock-scroll"
         role="region"
         aria-label="Instrumentation touchpoints and details"
