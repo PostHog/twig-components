@@ -41,12 +41,20 @@ const recaps: Record<TouchpointId, { title: string; points: string[] }> = {
   },
 };
 
+const completionTitles: Record<TouchpointId, string> = {
+  catalog: "Product Analytics lab complete",
+  discovery: "AIO lab complete",
+  booking: "Product Analytics lab complete",
+  stay: "Product Analytics lab complete",
+  replay: "Session Replay lab complete",
+};
+
 export function LabCompletionView({
   lab,
   onChoose,
   onReview,
   headingRef,
-  title = "Lab complete!",
+  title,
   recap: customRecap,
 }: {
   title?: string;
@@ -63,7 +71,7 @@ export function LabCompletionView({
         <span className="vac-completion-check" aria-hidden="true">
           ✓
         </span>
-        <span>{title}</span>
+        <span>{title ?? completionTitles[lab]}</span>
       </h3>
       <p>{recap.title}</p>
       <div className="vac-guide-example">

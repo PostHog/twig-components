@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
+import { LabChecklist } from "./LabChecklist.js";
 import {
   summarizeFilterEvents,
   type LabState,
@@ -29,10 +30,10 @@ export function FilterInspector({
   if (!applied)
     return (
       <div className="vac-lab-output">
-        <p>
-          Apply your event in the exercise first. Then click Forest and Coast to
-          compare their events here.
-        </p>
+        <LabChecklist label="Next filter actions" items={[{
+          label: "Apply your event in the exercise first. Then click Forest and Coast to compare their events here.",
+          done: false,
+        }]} />
         <button className="vac-button" onClick={onPractice}>
           <span className="vac-os-button-face">Continue the exercise →</span>
         </button>
@@ -42,7 +43,10 @@ export function FilterInspector({
     return (
       <div className="vac-lab-output">
         <h4>No events yet</h4>
-        <p>Click Forest, then Coast to compare their events.</p>
+        <LabChecklist label="Next filter actions" items={[{
+          label: "Click Forest, then Coast to compare their events.",
+          done: false,
+        }]} />
         <a className="vac-browse-link" href={filterHref}>
           Go to the filters ↗
         </a>
