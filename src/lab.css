@@ -1109,15 +1109,15 @@
 /* A compact trace outline separates the recorded result from capture code. */
 .vac-app .vac-developer-theme .vac-trace-preview { margin: 20px 0 0; }
 .vac-app .vac-developer-theme .vac-trace-preview > figcaption { margin-bottom: 12px; }
-.vac-app .vac-developer-theme .vac-trace-preview-surface { background: var(--ph-neutral-background); border: 1px solid var(--vac-line); border-radius: 6px; padding: 12px; }
-.vac-app .vac-developer-theme .vac-trace-preview-name { font-size: 13px; font-weight: 600; }
-.vac-app .vac-developer-theme .vac-trace-preview-call { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; padding: 8px 0 12px; font-size: 13px; }
-.vac-app .vac-developer-theme .vac-trace-preview-call code { color: var(--vac-muted); font-size: inherit; }
-.vac-app .vac-developer-theme .vac-trace-preview-data { border-top: 1px solid var(--vac-line); padding-top: 10px; }
-.vac-app .vac-developer-theme .vac-trace-preview-source { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 12px; font-size: 13px; }
-.vac-app .vac-developer-theme .vac-trace-preview-source code { background: var(--ph-brand-yellow); color: var(--ph-neutral-ink); padding: 1px 3px; }
-.vac-app .vac-developer-theme .vac-trace-preview-message { padding-top: 12px; }
-.vac-app .vac-developer-theme .vac-trace-preview-role { font: 600 13px ui-monospace, monospace; text-transform: uppercase; color: var(--vac-muted); }
+.vac-app .vac-developer-theme .vac-trace-preview-surface { background: var(--ph-neutral-white); border: 1px solid var(--vac-line); border-radius: 8px; overflow: hidden; }
+.vac-app .vac-developer-theme .vac-trace-preview-name { padding: 12px 16px; background: var(--ph-neutral-background); border-bottom: 1px solid var(--vac-line); font-size: 13px; }
+.vac-app .vac-developer-theme .vac-trace-preview-call { display: grid; gap: 4px; padding: 12px 16px; border-bottom: 1px solid var(--vac-line); font-size: 13px; }
+.vac-app .vac-developer-theme .vac-trace-preview-data { padding: 12px 16px; }
+.vac-app .vac-developer-theme .vac-trace-preview-source { display: grid; gap: 4px; font-size: 13px; }
+.vac-app .vac-developer-theme :is(.vac-trace-preview-call, .vac-trace-preview-source) code { background: none; border: 0; padding: 0; color: var(--vac-muted); font-size: 12px; overflow-wrap: anywhere; }
+.vac-app .vac-developer-theme .vac-trace-preview-message { margin-top: 12px; }
+.vac-app .vac-developer-theme .vac-trace-preview-message + .vac-trace-preview-message { border-top: 1px solid var(--vac-line); padding-top: 12px; }
+.vac-app .vac-developer-theme .vac-trace-preview-role { font-size: 12px; color: var(--vac-muted); }
 .vac-app .vac-developer-theme .vac-trace-preview-message p { margin: 4px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 
 /* A session header groups simple trace rows, as in PostHog's session view. */
@@ -1132,6 +1132,8 @@
 .vac-app .vac-developer-theme .vac-conversation-traces dt { color: var(--vac-muted); }
 .vac-app .vac-developer-theme .vac-conversation-traces dd { margin: 4px 0 0; }
 .vac-app .vac-developer-theme .vac-conversation-traces code { font-size: inherit; overflow-wrap: anywhere; }
+
+.vac-app .vac-developer-theme .vac-conversation-hierarchy li > ol { margin: 8px 0 0; }
 
 .vac-app .vac-developer-theme .vac-trip-definitions { margin: 16px 0; padding-left: 20px; list-style: disc; }
 .vac-app .vac-developer-theme .vac-trip-definitions li { display: list-item; font-size: 13px; }
