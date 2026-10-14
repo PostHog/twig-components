@@ -19,7 +19,7 @@ export function TripPlannerLabProvider({ children }: { children: ReactNode }) {
   const dispatchLesson = useCallback((action: TripLessonAction) => {
     reduceLesson(action);
     if (action.type === "reset" ||
-      (action.type === "apply-capacity-fix" && !lesson.capacityFixed && lesson.step === 4 && lesson.investigation === "fix" && !!lesson.failureEvidence[0])) {
+      (action.type === "apply-capacity-fix" && !lesson.capacityFixed && lesson.step === 4 && lesson.investigation === "fix" && !!lesson.beforeEvaluation && !!lesson.failureEvidence[0])) {
       setRevision(previous => previous + 1);
     }
   }, [lesson]);
