@@ -43,3 +43,7 @@ Choose **Events and properties**, then **Web app** or **Agent**. Click a destina
 In the agent path, send the prepared message and wait for the response. Expand the tool row to inspect the simulated request and result summary. Code edits belong to the simulated agent. Event reads use the real PostHog MCP tool names and input shapes, but execute locally without a PostHog connection.
 
 Check both paths, the experience toggle, Previous, Reset, and both copy icons on the completion page. Check desktop and mobile layouts. With the operating system's reduced-motion setting enabled, responses should appear immediately.
+
+## Review the AIO trip planner
+
+Choose **Trip planner** and start the lab. Follow the chat through the city request. Run the capacity evaluation before inspecting the trace, apply the guest filter, retry the request, then run the same evaluation again. The first check fails and the second passes. Check Previous and Reset at both evaluation stages, and verify chat prompts stay locked until their lesson step.
