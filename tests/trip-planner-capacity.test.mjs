@@ -75,6 +75,11 @@ test('website failure is recorded before the lab and investigated after instrume
   lesson = reduce(lesson, {type:'next'});
   assert.equal(lesson.step, 4);
   assert.equal(reduce(lesson, {type:'apply-capacity-fix'}), lesson);
+  assert.equal(lesson.investigation, 'evaluate-before');
+  assert.equal(reduce(lesson, {type:'next'}), lesson);
+  lesson = reduce(lesson, {type:'run-evaluation'});
+  assert.equal(lesson.beforeEvaluation.result, 'fail');
+  lesson = reduce(lesson, {type:'next'});
   assert.equal(lesson.investigation, 'overview');
   lesson = reduce(lesson, {type:'next'});
   assert.equal(lesson.investigation, 'lookup');
@@ -91,6 +96,9 @@ test('website failure is recorded before the lab and investigated after instrume
   lesson = reduce(lesson, {type:'next'});
   assert.equal(lesson.step, 4);
   assert.equal(lesson.investigation, 'evaluation');
+  assert.equal(reduce(lesson, {type:'next'}), lesson);
+  lesson = reduce(lesson, {type:'run-evaluation'});
+  assert.equal(lesson.afterEvaluation.result, 'pass');
   assert.equal(reduce(lesson, {type:'next'}).step, 5);
   assert.equal(reduce(lesson, {type:'reset'}), initialTripLesson);
 });

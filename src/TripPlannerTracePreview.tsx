@@ -11,10 +11,10 @@ export function TripPlannerTracePreview({ record, field }: { record: TripPlanner
   return <figure className="vac-trace-preview" aria-label={`Simplified PostHog trace: ${title}`}>
     <figcaption>PostHog displays the captured input and output inside the request’s trace:</figcaption>
     <div className="vac-trace-preview-surface">
-      <div className="vac-trace-preview-name">Trace · {title}</div>
-      <div className="vac-trace-preview-call"><span aria-hidden="true">└</span> Model call <code>$ai_generation</code></div>
+      <div className="vac-trace-preview-name"><strong>Trace · {title}</strong></div>
+      <div className="vac-trace-preview-call"><strong>Generation</strong><code>$ai_generation</code></div>
       <div className="vac-trace-preview-data">
-        <div className="vac-trace-preview-source"><span>{input ? "Input · user messages" : "Output"}</span><span>From <code>{input ? "$ai_input" : "$ai_output_choices"}</code></span></div>
+        <div className="vac-trace-preview-source"><strong>{input ? "Input" : "Output"}</strong><code>{input ? "$ai_input" : "$ai_output_choices"}</code></div>
         {messages.map((message, index) => <div className="vac-trace-preview-message" key={index}>
           <span className="vac-trace-preview-role">{message.role === "user" ? "User" : "Assistant"}</span>
           <p>{message.content}</p>

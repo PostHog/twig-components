@@ -140,6 +140,15 @@ test("investigation pages preserve evidence and only unlock chat on the retry pa
   const after = createCapacityRequest(stays, { ...identity, traceId: "city-after", generationId: "gen-after" }, "capacity-fixed").record;
   let state = { ...initialTripLesson, step: 3, failureEvidence: [before] };
   state = reduce(state, { type: "next" });
+  assert.equal(state.investigation, "evaluate-before");
+  assert.equal(reduce(state, { type: "next" }), state);
+  assert.equal(reduce(state, { type: "apply-capacity-fix" }), state);
+  assert.equal(reduce(state, { type: "investigation", value: "fix" }), state);
+  assert.equal(canSend(state, capacityPrompt), false);
+  state = reduce(state, { type: "run-evaluation" });
+  assert.equal(state.beforeEvaluation.result, "fail");
+  assert.match(state.beforeEvaluation.reason, /sleeps 2/);
+  state = reduce(state, { type: "next" });
   for (const screen of ["overview", "lookup", "fix"]) {
     assert.equal(state.step, 4);
     assert.equal(state.investigation, screen);
@@ -153,7 +162,7 @@ test("investigation pages preserve evidence and only unlock chat on the retry pa
   state = reduce(state, { type: "apply-capacity-fix" });
   assert.equal(state.investigation, "retry");
   assert.equal(canSend(state, capacityPrompt), true);
-  for (const screen of ["fix", "lookup", "overview"]) {
+  for (const screen of ["fix", "lookup", "overview", "evaluate-before"]) {
     state = reduce(state, { type: "previous" });
     assert.equal(state.investigation, screen);
     assert.equal(state.capacityFixed, true);
@@ -162,7 +171,7 @@ test("investigation pages preserve evidence and only unlock chat on the retry pa
   }
   state = reduce(state, { type: "previous" });
   assert.equal(state.step, 3);
-  state = reduce(reduce(reduce(state, { type: "next" }), { type: "next" }), { type: "next" });
+  for (let i = 0; i < 4; i++) state = reduce(state, { type: "next" });
   state = reduce(state, { type: "apply-capacity-fix" });
   state = reduce(state, { type: "record", record: after });
   assert.equal(canSend(state, capacityPrompt), false);
@@ -176,7 +185,13 @@ test("investigation pages preserve evidence and only unlock chat on the retry pa
   state = reduce(state, { type: "previous" });
   assert.equal(state.investigation, "retry");
   assert.deepEqual(state.failureEvidence, [before, after]);
-  state = reduce(reduce(state, { type: "next" }), { type: "next" });
+  state = reduce(state, { type: "next" });
+  assert.equal(reduce(state, { type: "next" }), state);
+  state = reduce(state, { type: "run-evaluation" });
+  assert.equal(state.afterEvaluation.result, "pass");
+  assert.match(state.afterEvaluation.reason, /does not mean a matching stay was found/);
+  assert.equal(state.beforeEvaluation.result, "fail");
+  state = reduce(state, { type: "next" });
   assert.equal(state.step, 5);
   state = reduce(state, { type: "previous" });
   assert.equal(state.investigation, "evaluation");
@@ -227,4 +242,27 @@ test("the capture overview preserves the recorded messages and request grouping"
       $ai_trace_id: p.$ai_trace_id, $ai_session_id: p.$ai_session_id,
     },
   });
+});
+
+test("evaluation actions cannot run outside their stage or before evidence exists", () => {
+  for (const investigation of ["evaluate-before", "overview", "lookup", "fix", "retry", "evaluation"]) {
+    const state = { ...initialTripLesson, step: 4, investigation };
+    assert.equal(reduce(state, { type: "run-evaluation" }), state);
+  }
+  assert.equal(reduce(initialTripLesson, { type: "run-evaluation" }), initialTripLesson);
+});
+
+
+test("running an evaluation reveals the result recorded for that generation", async () => {
+  const { createCapacityRequest } = await import("../dist/trip-planner-capacity.js");
+  const record = createCapacityRequest(stays, {
+    sessionId: "recorded", traceId: "city", generationId: "city-generation", startedAt: 1000,
+  }, "capacity-broken").record;
+  const evaluation = record.capacityEvidence.evaluation;
+  evaluation.reason += " Recorded for this generation.";
+  const state = reduce({ ...initialTripLesson, step: 4, failureEvidence: [record] }, { type: "run-evaluation" });
+  assert.deepEqual(state.beforeEvaluation, {
+    name: evaluation.name, result: evaluation.result, reason: evaluation.reason,
+  });
+  assert.equal(state.afterEvaluation, undefined);
 });
