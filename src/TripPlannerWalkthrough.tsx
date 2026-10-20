@@ -19,7 +19,7 @@ function Action({ children, onClick }: { children: ReactNode; onClick: () => voi
   return <div className="vac-request-next"><button type="button" className="vac-button" onClick={onClick}><span className="vac-os-button-face">{children}</span></button></div>;
 }
 
-export function TripPlannerWalkthrough({ stays, onAllLabs, renderStayCard }: { stays: readonly Stay[]; onAllLabs: () => void; renderStayCard?: (stay: Stay) => ReactNode }) {
+export function TripPlannerWalkthrough({ stays, onAllLabs, renderStayCard, onEvaluate }: { stays: readonly Stay[]; onAllLabs: () => void; renderStayCard?: (stay: Stay) => ReactNode; onEvaluate?: (phase: "before" | "after") => void }) {
   const lab = useTripPlannerLab();
   const view = useRef<HTMLElement>(null);
   const completionHeading = useRef<HTMLHeadingElement>(null);
@@ -38,7 +38,7 @@ export function TripPlannerWalkthrough({ stays, onAllLabs, renderStayCard }: { s
   };
   const resetConversation = first && lab.records.at(-1)?.properties.$ai_session_id !== first.properties.$ai_session_id;
 
-  if (lesson.step === 3 || lesson.step === 4) return <TripPlannerFailure stays={stays} renderStayCard={renderStayCard} />;
+  if (lesson.step === 3 || lesson.step === 4) return <TripPlannerFailure stays={stays} renderStayCard={renderStayCard} onEvaluate={onEvaluate} />;
   if (lesson.step === 0) return <div className="vac-guide-intro">
     <h3>AIO lab</h3>
     <p>Follow a chat in Twig's trip planner into PostHog. Learn how it's instrumented, how to interpret the data it collects, and fix things when they go wrong.</p>
@@ -59,17 +59,26 @@ export function TripPlannerWalkthrough({ stays, onAllLabs, renderStayCard }: { s
   return <section ref={view} tabIndex={-1} className="vac-lab vac-builder vac-trip-walkthrough">
     {lesson.step === 1 && <>
       {lesson.captureVisible ? <>
-        <p>When you interact with Twig's AI trip planner, Twig’s PostHog capture code captures the model’s input and output and connects the request to its conversation:</p>
-        <pre><code>{generationCaptureExample}</code></pre>
-        <div className="vac-conversation-traces" role="group" aria-label="Generation event properties">
-          <div className="vac-conversation-session"><code>$ai_generation</code></div>
-          <ol aria-label="What the event records">
-            <li><dl><dt>Input and output</dt><dd>What the model received and returned.</dd></dl></li>
-            <li><dl><dt><code>$ai_trace_id</code></dt><dd>Which request this model call belongs to.</dd></dl></li>
-            <li><dl><dt><code>$ai_session_id</code></dt><dd>Which conversation the request belongs to.</dd></dl></li>
+        <p>PostHog groups Twig’s chat data into:</p>
+        <ul className="vac-trip-definitions">
+          <li><strong>Session:</strong> one conversation, containing its request traces.</li>
+          <li><strong>Trace:</strong> one request, containing model calls and other operations.</li>
+          <li><strong>Generation:</strong> one model call, with its input and output.</li>
+        </ul>
+        <p>Here’s the hierarchy: sessions contain traces, and traces contain generations.</p>
+        <div className="vac-conversation-traces vac-conversation-hierarchy" role="group" aria-label="Session contains traces, each trace contains generations">
+          <div className="vac-conversation-session">Session</div>
+          <ol aria-label="Traces in the session">
+            <li>Trace
+              <ol aria-label="Generations in the trace">
+                <li>Generation</li>
+              </ol>
+            </li>
           </ol>
         </div>
-        <p>Now let’s follow a chat to break down each of these properties.</p>
+        <p>After the model responds, Twig captures a <code>$ai_generation</code> event. The IDs connect it to its trace and session:</p>
+        <pre><code>{generationCaptureExample}</code></pre>
+        <p>Let’s follow a chat to break down this capture call.</p>
         <Action onClick={next}>Follow the chat →</Action>
       </> : !first ? <>
         <LabChecklist label="Next chat action" items={[{ done: false, label: <>Click <strong>↑ Send</strong> in Twig’s highlighted chat bar to ask for a <strong>forest getaway for four</strong>.</> }]} />
@@ -79,7 +88,7 @@ export function TripPlannerWalkthrough({ stays, onAllLabs, renderStayCard }: { s
         <TripPlannerConversation />
         <Action onClick={next}>Review what you’ve learned →</Action>
       </> : <>
-        <p>PostHog records Twig's AI chats as Traces. The following example shows how the conversation is captured, and how PostHog records it:</p>
+        <p>Twig captures this model call as a generation. In PostHog, you can inspect its input and output within the request’s trace:</p>
         <EvidenceTabs label="Request data" value={lesson.field} onChange={(value) => dispatch({ type: "field", value })} options={[
           { value: "input", label: "Input" }, { value: "output", label: "Output" },
         ]}>
@@ -105,7 +114,7 @@ export function TripPlannerWalkthrough({ stays, onAllLabs, renderStayCard }: { s
             "Capture a model’s input and output, then inspect them in a trace.",
             "Group requests into one conversation with an AI session.",
             "Inspect a search span to find the missing guest filter.",
-            "Retry the request and check the result with a capacity evaluation.",
+            "Run a capacity evaluation before and after the fix.",
           ],
         }}
         onChoose={onAllLabs}

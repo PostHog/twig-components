@@ -67,7 +67,7 @@ This package repo uses Dependabot for its own dependencies. Consumer adoption re
 
 ## Grouping changes into a release
 
-Release Please starts from the published `0.2.0` version and keeps one release pull request open for this package. Older commits are excluded.
+Release Please starts from the published `0.2.1` version (`2a24830`) and keeps one release pull request open for this package. Older commits are excluded. Version `0.2.1` was already published before Release Please was configured, so the manifest and bootstrap commit must include it to avoid proposing that existing npm version again.
 
 1. Merge changes into `main` with a [Conventional Commit](https://www.conventionalcommits.org/en/v1.0.0/) title. Use `feat: ...` for a feature, `fix: ...` for a bug fix, or `feat!: ...` / `fix!: ...` for a breaking change.
 2. Leave the release PR open while more changes join the group. Release Please updates its version, `package.json`, `package-lock.json`, and `CHANGELOG.md`.

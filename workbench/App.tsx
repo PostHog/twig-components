@@ -83,7 +83,7 @@ function TripPlannerPreviewContent() {
         key={lab.revision}
         scenario={lab.lesson.capacityFixed ? "capacity-fixed" : undefined}
         stays={stays}
-        windowAction={{ label: "View request", onSelect: inspect }}
+        windowAction={{ label: "Playground", onSelect: inspect }}
         onRequestComplete={lab.record}
         canSendMessage={message => canSendTripLessonMessage(lab.lesson, message)}
         onReset={lab.reset}

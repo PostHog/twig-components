@@ -1,15 +1,23 @@
 "use client";
 
 import { useTripPlannerLab } from "./TripPlannerLab.js";
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import type { Stay } from "./catalog.js";
 import { TripPlannerStayPreview } from "./TripPlannerStayPreview.js";
 import { TripPlannerFailureTrace } from "./TripPlannerFailureTrace.js";
 import { LabChecklist } from "./LabChecklist.js";
 
-export function TripPlannerFailure({ stays, renderStayCard }: { stays: readonly Stay[]; renderStayCard?: (stay: Stay) => ReactNode }) {
+export function TripPlannerFailure({ stays, renderStayCard, onEvaluate }: { stays: readonly Stay[]; renderStayCard?: (stay: Stay) => ReactNode; onEvaluate?: (phase: "before" | "after") => void }) {
   const { lesson, records, dispatchLesson: dispatch } = useTripPlannerLab();
   const [before, after] = lesson.failureEvidence;
+  const evaluationResult = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    evaluationResult.current?.focus({ preventScroll: true });
+  }, [lesson.beforeEvaluation, lesson.afterEvaluation]);
+  function runEvaluation(phase: "before" | "after") {
+    dispatch({ type: "run-evaluation" });
+    onEvaluate?.(phase);
+  }
   const kitchenComplete = records.some(record => record.properties.scenario === "kitchen"
     && record.properties.$ai_session_id === records.at(-1)?.properties.$ai_session_id);
   const lookup = before?.capacityEvidence?.lookup.properties;
@@ -34,12 +42,23 @@ export function TripPlannerFailure({ stays, renderStayCard }: { stays: readonly 
         </>}
         <p>The model returned an answer without an error, so Twig’s capture call records <code>$ai_is_error: false</code>. This tracks whether the call failed, not whether the recommendation is correct:</p>
         <pre><code>{'posthog.capture("$ai_generation", {\n'}<mark>{'  $ai_is_error: false,\n'}</mark>{'  // Other fields omitted\n});'}</code></pre>
-        <p>The model’s recommendation looks helpful, but the stay only sleeps two. Inspect the request’s trace in PostHog to find out why.</p>
-        {action("Investigate this request →", () => dispatch({ type: "next" }))}
+        <p>The model’s recommendation looks helpful, but the stay only sleeps two. First, add a check that catches this mistake.</p>
+        {action("Define a capacity check →", () => dispatch({ type: "next" }))}
       </>}
     </>}
     {lesson.step === 4 && before && lookup && <>
-      {lesson.investigation === "overview" ? <>
+      {lesson.investigation === "evaluate-before" ? <>
+        <p>An evaluation checks an answer against a rule. For this request: any recommended stay must sleep at least four.</p>
+        <p>The lab’s <code>evaluateCapacity</code> function checks the recommended listing’s capacity. If the model recommends no stay, the check passes.</p>
+        <pre><code>{'evaluateCapacity(recommendation, 4).result;'}</code></pre>
+        {lesson.beforeEvaluation ? <>
+          <div className="vac-guide-example" ref={evaluationResult} tabIndex={-1} role="status">
+            <p><code>{lesson.beforeEvaluation.result}</code> · {lesson.beforeEvaluation.reason}</p>
+          </div>
+          <p>The check catches the bad recommendation. Now inspect the trace in PostHog to find the cause.</p>
+          {action("Investigate this request →", () => dispatch({ type: "next" }))}
+        </> : action("Run evaluation →", () => runEvaluation("before"))}
+      </> : lesson.investigation === "overview" ? <>
         <p>For the city request, Twig’s code searches its listings, then passes the results to the model for a recommendation.</p>
         <p>Twig captures the search as an <code>$ai_span</code> event. A span records one operation within the request.</p>
         <div className="vac-conversation-traces" role="group" aria-label="City request trace and its two operations">
@@ -70,18 +89,19 @@ export function TripPlannerFailure({ stays, renderStayCard }: { stays: readonly 
         <p>Twig’s search will exclude listings that sleep fewer than four before passing results to the model.</p>
         {action("Apply fix and retry →", () => dispatch({ type: "apply-capacity-fix" }))}
       </> : lesson.investigation === "evaluation" && after ? <>
-        <p><code>$ai_is_error</code> reports model-call errors. An evaluation checks the model’s answer against a rule.</p>
-        <p>The lab runs <code>evaluateCapacity</code> with this rule: any recommended stay must sleep at least four.</p>
+        <p>Run the same capacity check on the new answer. The rule is unchanged: any recommended stay must sleep at least four.</p>
         <pre><code>{'evaluateCapacity(recommendation, 4).result;'}</code></pre>
-        <div className="vac-conversation-traces" role="group" aria-label="Capacity evaluation before and after the fix">
-          <div className="vac-conversation-session">Capacity check</div>
-          <ol aria-label="Evaluation results">
-            <li><dl><dt>Before the fix</dt><dd><code>{before.capacityEvidence?.evaluation.result}</code> · Le Nid Chic sleeps two.</dd></dl></li>
-            <li><dl><dt>After the fix</dt><dd><code>{after.capacityEvidence?.evaluation.result}</code> · The model recommended no stay.</dd></dl></li>
-          </ol>
-        </div>
-        <p>The corrected answer passes this rule because it recommends no undersized stay. Twig still found no matching listings.</p>
-        {action("Finish the lab →", () => dispatch({ type: "next" }))}
+        {lesson.afterEvaluation ? <>
+          <div className="vac-conversation-traces" ref={evaluationResult} tabIndex={-1} role="status" aria-label="Capacity evaluation before and after the fix">
+            <div className="vac-conversation-session">Capacity check</div>
+            <ol aria-label="Evaluation results">
+              <li><dl><dt>Before the fix</dt><dd><code>{lesson.beforeEvaluation?.result}</code> · Le Nid Chic sleeps two.</dd></dl></li>
+              <li><dl><dt>After the fix</dt><dd><code>{lesson.afterEvaluation.result}</code> · The model recommended no stay.</dd></dl></li>
+            </ol>
+          </div>
+          <p>No undersized stay was recommended, so this check passes. Twig still found no matching listings.</p>
+          {action("Finish the lab →", () => dispatch({ type: "next" }))}
+        </> : action("Run evaluation again →", () => runEvaluation("after"))}
       </> : !after ? <>
         <p>Twig’s search now includes the guest filter. Send the city request again, then inspect the events Twig captures.</p>
         <LabChecklist label="Next chat action" items={[{ done: false, label: <>Click <strong>↑ Send</strong> in the highlighted chat bar to send <strong>“Find me a city stay for four.”</strong></> }]} />
