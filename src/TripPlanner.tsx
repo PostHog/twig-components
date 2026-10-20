@@ -36,6 +36,11 @@ export type TripPlannerProps = {
   onRequestComplete?: (record: TripPlannerRecord) => void;
 };
 
+/** Decorative AI affordance; the containing control supplies its accessible name. */
+export function AiSearchIcon() {
+  return <svg className="twig-ai-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="m10 3 2.2 6.8L19 12l-6.8 2.2L10 21l-2.2-6.8L1 12l6.8-2.2L10 3Zm10-2 .9 2.1L23 4l-2.1.9L20 7l-.9-2.1L17 4l2.1-.9L20 1Z" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" /></svg>;
+}
+
 function SendIcon() {
   return <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M12 19V5m-6 6 6-6 6 6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>;
 }
@@ -215,3 +220,6 @@ export function TripPlanner({ scenario, stays, renderStayLink, accessory, inputI
     </>
   );
 }
+
+export { GetawaySearch, SearchWorkspace } from './GetawaySearch.js';
+export type { GetawayPreferences, GetawayReply } from './GetawaySearch.js';

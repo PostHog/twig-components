@@ -1,14 +1,14 @@
 # Component reference
 
-Import only the pieces you need from `@posthog/twig-components/<path>`. React is a peer dependency: the host supplies React 18 or 19. Import `catalog.css` for Twig views and `lab.css` for the playground. See [integration](integration.md) for styling and update boundaries.
+Import only the pieces you need from `@posthog/twig-components/<path>`. React is a peer dependency: the host supplies React 18 or 19. Import `catalog.css` for Twig views and `lab.css` for the playground. See [integration](integration.md) for styling and update boundaries. All existing and new UI must follow the approved [visual system](design-system.md); this reference does not authorize alternate styling or host overrides.
 
-“Used in Twig” describes the Twig.com integration. Twig.com pins a published package version, while the PostHog 101 guide integration is still in progress.
+“Used in Twig” describes the Twig.com integration. Twig.com pins an exact package build (currently its checked-in local brand archive; see the host README), while the PostHog 101 guide integration is still in progress.
 
 ## Website views and data
 
 | Import path | Export | What it does | Used in Twig / what the host supplies |
 | --- | --- | --- | --- |
-| `/trip-planner` | `TripPlanner`, `TripPlannerProps` | Scripted forest → beach → kitchen → city-failure chat, with read-only prefilled prompts, a floating chat window, a compact composer, a short typing state, and reset. | Host supplies `stays`, `renderStayLink`, optional lab-only `scenario`, `accessory`, `inputId`, `hidden`, `windowClassName`, `windowAction`, `launcherLabel`, `canSendMessage`, `onReset`, and `onRequestComplete`. No model calls, persistence, or event capture. See [conversation contract](trip-planner.md). |
+| `/trip-planner` | `TripPlanner`, `TripPlannerProps`, `AiSearchIcon` | Scripted forest → beach → kitchen → city-failure chat, with read-only prefilled prompts, a floating chat window, a compact composer, a short typing state, and reset. | Host supplies `stays`, `renderStayLink`, optional lab-only `scenario`, `accessory`, `inputId`, `hidden`, `windowClassName`, `windowAction`, `launcherLabel`, `canSendMessage`, `onReset`, and `onRequestComplete`. No model calls, persistence, or event capture. See [conversation contract](trip-planner.md). |
 | `/trip-planner-lab` | `TripPlannerWalkthrough`, `TripPlannerLabProvider`, `useTripPlannerLab` | Walkthrough: session/trace/generation hierarchy, captured chat, a wrong recommendation, a failing capacity evaluation, investigation, fix, and the same evaluation passing. | Host connects chat completion to `record`, keys chat by `revision`, supplies stays, an optional `renderStayCard` for the actual homepage card, an `onAllLabs` callback for lesson navigation, and optional `onEvaluate(phase)` for a learner running the before/after check. Instructions point learners to the actual Twig controls. Load `lab.css` in the lab theme. |
 | `/trip-planner-state` | `replyToTripPlanner`, `initialTripPlannerState`, `tripPlannerSuggestions`, prompts, limits, and types | Pure, bounded conversation rules and catalog-backed responses. | Shared by the planner and regression tests. |
 | `/trip-planner-records` | `createTripPlannerRequest`, `tripPlannerModel`, request, message, identity, and record types | Builds a catalog-backed answer and a matching PostHog generation with conversation history, token usage, cost, and duration. | Local teaching data only. Caller supplies IDs and start time. No provider call or event upload. |
@@ -16,7 +16,7 @@ Import only the pieces you need from `@posthog/twig-components/<path>`. React is
 | `/account` | `TripDetailsView` | Displays trip details when they load, or only the recoverable error when they fail. Its Contact support button stays disabled until support is available. `BookedStaysView` places Cancel stay beside Trip details on the booking card. | Host supplies selected booking, host name, error state, retry, and cancellation callbacks. |
 | `/saved-stay` | `SavedStay`, `SavedStayProps` | Controlled save control with signed-out, unsaved, saved, loading, disabled, and error states. Its signed-out label says “Log in to save.” | Host supplies `stayName`, auth state, save state, callbacks, persistence, and analytics. Signed-out hosts pass `onSignIn`; signed-in hosts pass `saved` and `onSavedChange`. |
 | `/filters` | `StayFilters`, `staySettings`, `StaySetting` | Controlled Forest/Coast/City filter buttons; calls `onChange` on a click. | `Discover`; pass `value`, `onChange`, and optional CSS classes. The host filters the listings. |
-| `/browse-stays` | `BrowseStays` | Real Browse stays controls and matching results from the shared catalog. | `Discover`; pass filter/search state, callbacks, a card renderer, and an optional marker. The host owns tracking and navigation. |
+| `/browse-stays` | `BrowseStays`, `TripSearch`, `TripSearchValue` | Real Browse stays controls and matching results from the shared catalog, with optional controlled search/filter disclosure (`controlsExpanded`, `onControlsExpandedChange`). Existing consumers keep expanded controls by default. | `Discover`; pass filter/search state, callbacks, a card renderer, and an optional marker. The host owns tracking and navigation. |
 | `/stay-card` | `StayCardContent` | Listing text, location, capacity, and nightly price. | `StayCard`; pass a `stay` and `image`. The host supplies the link or card wrapper; `linked` shows an arrow. |
 | `/stay-details` | `StayDetails` | About, stay facts, sleeping arrangements, and amenities. | Stay detail page; pass the selected catalog `stay`. Host/booking sections stay in Twig.com. |
 | `/browse-stays-preview` | `BrowseStaysPreview` | Read-only Browse stays excerpt with one selected filter and stay. | Gallery only; intended for PostHog 101. Pass `selected="Forest"`, `"Coast"`, or `"City"`. No click handler or analytics. |
@@ -162,7 +162,7 @@ The state modules below contain reducers, types, fixtures, and formatting helper
 
 | Import path | Use |
 | --- | --- |
-| `/catalog.css` | Twig website views and the read-only preview; includes Twig’s Halfre font. |
+| `/catalog.css` | Twig website views and the read-only preview; uses Twig’s self-hosted DM Sans and Fraunces. Bricolage remains bundled for compatibility, not rendered as part of the approved identity. |
 | `/lab.css` | Playground and lab UI; scope it under `.vac-app .vac-developer-theme`. Its PostHog-styled UI uses RoundHog. |
 | `/assets/*` | Package font and image files referenced by the styles or explicitly imported by a host. |
 
@@ -175,3 +175,29 @@ The AI walkthrough reuses `LabCompletionView` for its final recap. The view acce
 ## Events and properties
 
 `/events-lab` exports the local lesson reducer, configuration gates, counts, and handoff task. `/events-lab-provider` exports `EventsLabProvider` and `useEventsLab`; the playground controller includes it and resets its state when a learner chooses a lab. A custom host can change the provider's `resetKey` to start a fresh lesson without remounting its children. `/events-lab-ui` exports `EventsLab`, `EventsExperienceSwitch`, and `EventRecordedNotice`. Render the experience switch with host navigation, outside lesson content. One entry offers two complete experiences: an Activity/Trends interface or a simulated coding agent with MCP reads. The toggle preserves recorded events and tracking configuration. The agent shows thinking, tool execution, and a streamed answer, with immediate responses when reduced motion is enabled. The final comparison explains insights and dashboards without adding a duplicate save screen. Hosts send actual destination filter clicks, result counts, and timestamps, and supply navigation callbacks. The lesson never creates clicks on behalf of the learner. Code changes and MCP results are local simulations; no model or network calls occur.
+
+
+`TripSearch` is a controlled destination/date/guest form using the shared date and guest pickers. Pass `value`, `minDate`, `capacity`, `errors`, `onChange`, and `onSubmit`. Mobile dates/guests expand from a compact summary. The host validates, filters, carries the selection into booking, and records analytics. `BrowseStays.primarySearch` replaces its old inline text search; `results` accepts the host-filtered catalog. Both are optional and preserve existing consumers. `StayCardContent` groups nightly price beside its title and attributes the stay to the existing catalog host by name and species.
+
+
+Integrated search: pass a render function to `BrowseStays.primarySearch` to receive the existing setting-filter disclosure, then render it in `TripSearch.filters`. `additionalFilters` adds amenity controls and `activeFilterCount` supplies the count. Existing React-node consumers keep their old arrangement. `TripSearch.destinations` provides catalog-location suggestions; `onDestinationSelect` reports a chosen location to the host. Suggestions support arrows, Enter, Escape, and pointer selection. `/filters` also exports `AmenityFilters`, `amenityOptions`, `StayAmenity`, and `matchesStayAmenities`. Multiple selected amenities use AND semantics. Existing setting callbacks, replay labels, and simulated event schemas remain intact.
+
+Replay opens the integrated filter disclosure before its ghost clicks and submits the destination form before opening a stay. It recognizes both `#trip-search-destination` and legacy `#stay-search`, applying the same optional search-text masking to either.
+
+
+Stay-card host identities show a small circular portrait from the existing character `portrait` field, followed by the existing host name and a separate italic Fraunces species line. Missing portraits leave the circle empty, without requesting an invalid image URL. Character names, species, and artwork remain supplied by the host catalog owner.
+
+
+The interactive browse section shows only “Browse stays” above its photos. It omits the Explore eyebrow and keeps the changing result count screen-reader-only so filtering remains announced without another visible row.
+
+`AiSearchIcon` is the decorative sparkle beside “AI trip planner”. Keep the text label and the appropriate pressed/expanded state on its control.
+
+## Integrated getaway search
+
+`SearchWorkspace` and `GetawaySearch` are exported from `/trip-planner`. They share the existing sage search surface, Twig type, cobalt controls, and 3px corners. “Search stays” is selected first; the second tab reads “AI trip planner”. AI uses catalog-backed local rules with concise fit explanations, relevant factual limitations, and “Simulated AI responses”. Unknown requirements are not verified. Hosts supply trip preferences, navigation, booking transfer and content-free outcome analytics. The original `TripPlanner` remains unchanged for guided labs. The workbench includes a Getaway search view.
+
+Guests type into the AI search field. Sending opens a non-modal chat window on the left using the existing Twig chat styling. Conversation content stays in that window; collapsing keeps a compact launcher and preserves messages and draft. Switching search modes does not close the chat. The only note reads “Simulated AI responses”. Guided Playground chat retains its existing flow.
+
+Twig views share two typefaces (DM Sans interface, Fraunces display), quiet charcoal facts, sage search surfaces, and the existing cobalt primary actions. SearchWorkspace coordinates 48px desktop controls and compact mobile disclosure; GetawaySearch retains its editable composer, separate collapsible window, and callbacks. See the Getaway search and Twig views workbench examples. The optional `GetawaySearch.windowClassName` lets the host place the portaled window beside its lab dock; interaction flow is unchanged.
+
+Account components use the same approved charcoal text, sage selections, neutral borders/shadows, and DM Sans/Fraunces hierarchy as the rest of Twig. Saved stay cards reuse `StayCardContent` and share browsing-card rules. Account navigation rows retain 44px targets and consistent height at 320px, including selected labels. See the visual system’s account and full-site verification requirements before changing these components.

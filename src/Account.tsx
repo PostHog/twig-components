@@ -274,7 +274,6 @@ export function ProfileOverview({ profile, onBioChange }: ProfileOverviewProps):
 
   return (
     <section className="twig-account-page twig-profile-page" aria-labelledby="twig-profile-title">
-      <span className="vac-eyebrow">Traveler profile</span>
       <h1 id="twig-profile-title">{profile.displayName}</h1>
       <p className="twig-account-muted">View or edit your Twig profile. This profile is shared with your host when you book a stay.</p>
       <div className="twig-profile-card">
@@ -342,7 +341,6 @@ export function SavedStaysView({
 }: SavedStaysViewProps): ReactElement {
   return (
     <section className="twig-account-page" aria-labelledby="twig-saved-title">
-      <span className="vac-eyebrow">Your account</span>
       <h1 id="twig-saved-title">Saved stays</h1>
       <p className="twig-account-muted">Keep the places you want to come back to.</p>
       {stays.length ? (
@@ -410,7 +408,6 @@ export function BookedStaysView({
 }: BookedStaysViewProps): ReactElement {
   return (
     <section className="twig-account-page" aria-labelledby="twig-bookings-title">
-      <span className="vac-eyebrow">Your account</span>
       <div className="twig-bookings-heading"><h1 id="twig-bookings-title">Booked stays</h1>{headingAccessory}</div>
       <p className="twig-account-muted">Your twig trips. All of them. Yes, including the ones you canceled.</p>
       {bookings.length ? (
@@ -541,7 +538,6 @@ export function AccountSettingsView({
   }
   return (
     <section className="twig-account-page" aria-labelledby="twig-settings-title">
-      <span className="vac-eyebrow">Your account</span>
       <h1 id="twig-settings-title">Account settings</h1>
       <p className="twig-account-muted">Review your profile and choose which messages you receive.</p>
       <form className="twig-account-settings" onSubmit={submit}>

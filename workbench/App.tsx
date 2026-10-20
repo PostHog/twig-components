@@ -1,8 +1,9 @@
+import { GetawaySearch, SearchWorkspace, type GetawayPreferences } from "../src/GetawaySearch.js";
 import { useEffect, useReducer, useRef, useState, type ReactNode } from "react";
-import { TripPlanner } from "../src/TripPlanner.js";
+import { AiSearchIcon, TripPlanner } from "../src/TripPlanner.js";
 import { TripPlannerWalkthrough, TripPlannerLabProvider, useTripPlannerLab, canSendTripLessonMessage } from "../src/TripPlannerLab.js";
 import { BrowseStaysPreview } from "../src/BrowseStaysPreview.js";
-import { BrowseStays } from "../src/BrowseStays.js";
+import { BrowseStays, TripSearch } from "../src/BrowseStays.js";
 import { StayDetails } from "../src/StayDetails.js";
 import { StayCardContent } from "../src/StayCard.js";
 import { SavedStay } from "../src/SavedStay.js";
@@ -20,7 +21,7 @@ import {
   type AccountSettingsValue,
   type BookedStaySummary,
 } from "../src/Account.js";
-import type { StaySetting } from "../src/StayFilters.js";
+import { AmenityFilters, matchesStayAmenities, type StayAmenity, type StaySetting } from "../src/StayFilters.js";
 import { DatePicker, addDateDays } from "../src/DatePicker.js";
 import { GuestPicker } from "../src/GuestPicker.js";
 import { EventsLab, EventsExperienceSwitch } from "../src/EventsLab.js";
@@ -41,8 +42,9 @@ import "../src/catalog.css";
 import "../src/lab.css";
 import "./workbench.css";
 
-type View = "planner" | "preview" | "saved" | "account" | "invite" | "products" | "reset" | "dates" | "filters" | "ai" | "booking" | "stay" | "replay" | "errors";
+type View = "getaway" | "planner" | "preview" | "saved" | "account" | "invite" | "products" | "reset" | "dates" | "filters" | "ai" | "booking" | "stay" | "replay" | "errors";
 const views: { id: View; label: string; description: string }[] = [
+  { id: "getaway", label: "Getaway search", description: "Integrated local destination and AI search" },
   { id: "planner", label: "Trip planner", description: "Follow a successful conversation, encounter a wrong recommendation, and investigate the recorded evidence. No inference or network requests." },
   { id: "preview", label: "Twig views", description: "Read-only guide preview and interactive filter control" },
   { id: "saved", label: "Saved stay", description: "Exercise host-controlled auth, save, loading, disabled, and error states" },
@@ -58,6 +60,16 @@ const views: { id: View; label: string; description: string }[] = [
   { id: "replay", label: "Replay lab", description: "Review the replay lesson with local fixture controls" },
   { id: "errors", label: "Error Tracking lab", description: "Book a local trip, navigate to Booked stays, and investigate its exception" },
 ];
+
+function GetawayPreview() {
+ const previewPhotos = { Forest: new URL("../assets/cabin.jpg", import.meta.url).href, Coast: new URL("../assets/coast.jpg", import.meta.url).href, City: new URL("../assets/city.jpg", import.meta.url).href };
+ const previewStays = stays.map(stay => ({ ...stay, images: stay.images.map((image,index) => index === 0 ? { ...image, src: previewPhotos[stay.setting] } : image) }));
+ const [mode,setMode]=useState<"destination"|"ai">("destination");
+ const [preferences,setPreferences]=useState<GetawayPreferences>({destination:"",guests:"1",checkIn:"",checkOut:""});
+ return <div className="vac-app twig-browser workbench-twig"><SearchWorkspace mode={mode} onModeChange={setMode}
+   destination={<TripSearch value={preferences} onChange={setPreferences} onSubmit={()=>{}} capacity={5} minDate={new Date().toISOString().slice(0,10)} destinations={stays.map(stay=>stay.location??"")} />}
+   assistant={<GetawaySearch stays={previewStays} preferences={preferences} onPreferencesChange={setPreferences} renderStayLink={stay=><a href={`#${stay.id}`}>View stay</a>}/>}/></div>;
+}
 
 function TripPlannerPreview() {
   return <TripPlannerLabProvider><TripPlannerPreviewContent /></TripPlannerLabProvider>;
@@ -79,6 +91,7 @@ function TripPlannerPreviewContent() {
   }
   return <>
     <div className="twig-browser workbench-twig">
+      <p style={{ display: "flex", alignItems: "center", gap: 8 }}><AiSearchIcon /> AI search</p>
       <TripPlanner
         key={lab.revision}
         scenario={lab.lesson.capacityFixed ? "capacity-fixed" : undefined}
@@ -104,11 +117,16 @@ function TripPlannerPreviewContent() {
 function Preview() {
   const [selected, setSelected] = useState<Exclude<StaySetting, "All">>("Coast");
   const [filter, setFilter] = useState<StaySetting>("All");
+  const [controlsExpanded, setControlsExpanded] = useState(false);
   const [search, setSearch] = useState("");
+  const [tripSearch, setTripSearch] = useState({ destination: "", checkIn: "", checkOut: "", guests: "1" });
+  const [submitted, setSubmitted] = useState(tripSearch);
+  const [amenities, setAmenities] = useState<StayAmenity[]>([]);
   return <>
     <div className="workbench-controls"><label>Selected guide preview <select value={selected} onChange={(event) => setSelected(event.target.value as typeof selected)}><option>Forest</option><option>Coast</option><option>City</option></select></label></div>
     <BrowseStaysPreview selected={selected} />
-    <div className="twig-browser workbench-twig"><main><BrowseStays id="workbench-browse" setting={filter} search={search} onSettingChange={setFilter} onSearchChange={setSearch} renderStay={(stay) => <article className="vac-card" key={stay.id}><StayCardContent stay={stay} image={<div className="vac-image"><span>Photo on Twig.com</span></div>} /></article>} /><StayDetails stay={stays[0]} /></main></div>
+    <p>Interactive browse: cobalt actions, sage search, and bird-host identities with small avatars and italic species.</p>
+    <div className="twig-browser workbench-twig"><main><BrowseStays activeFilterCount={Number(filter !== "All") + amenities.length} additionalFilters={<AmenityFilters value={amenities} onChange={(value, selected) => setAmenities(previous => selected ? [...previous, value] : previous.filter(item => item !== value))} />} primarySearch={filters => <TripSearch filters={filters} destinations={stays.flatMap(stay => stay.location ? [stay.location] : [])} value={tripSearch} minDate="2026-10-20" capacity={5} onChange={setTripSearch} onSubmit={() => setSubmitted(tripSearch)} />} results={filterStays(filter, submitted.destination).filter(stay => (stay.capacity ?? 0) >= Number(submitted.guests) && matchesStayAmenities(stay.amenities, amenities))} controlsExpanded={controlsExpanded} onControlsExpandedChange={setControlsExpanded} id="workbench-browse" setting={filter} search={search} onSettingChange={setFilter} onSearchChange={setSearch} renderStay={(stay) => <article className="vac-card" key={stay.id}><StayCardContent stay={stay} image={<div className="vac-image"><span>Photo on Twig.com</span></div>} /></article>} /><StayDetails stay={stays[0]} /></main></div>
   </>;
 }
 
@@ -430,5 +448,5 @@ function ErrorTrackingPreview() { return <ErrorTrackingLabProvider active><Error
 export default function App() {
   const [view, setView] = useState<View>(() => new URLSearchParams(window.location.search).get("view") === "planner" ? "planner" : "preview");
   const current = views.find((item) => item.id === view)!;
-  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "planner" ? <TripPlannerPreview /> : view === "preview" ? <Preview /> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "products" ? <ProductMenuPreview /> : view === "reset" ? <ResetPreview /> : view === "dates" ? <DatePickerPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : view === "errors" ? <ErrorTrackingPreview /> : <Replay />}</div></main></div>;
+  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "getaway" ? <GetawayPreview /> : view === "planner" ? <TripPlannerPreview /> : view === "preview" ? <Preview /> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "products" ? <ProductMenuPreview /> : view === "reset" ? <ResetPreview /> : view === "dates" ? <DatePickerPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : view === "errors" ? <ErrorTrackingPreview /> : <Replay />}</div></main></div>;
 }

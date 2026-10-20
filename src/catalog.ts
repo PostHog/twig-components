@@ -246,8 +246,8 @@ export function filterStays(setting: "All" | Stay["setting"], search = "") {
 }
 
 export const discoveryCopy = {
-  title: "Vacation rentals.",
-  subtitle: "Run by birds.",
+  title: "Make yourself at home.",
+  subtitle: "",
   introduction:
-    "Birds know how to build a home. Now they’re designing your next getaway.",
+    "Birds know how to make a cozy nest. Now they're hosting your next getaway.",
 };

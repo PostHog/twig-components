@@ -1156,23 +1156,23 @@
 
 /* Keep the embedded homepage card in Twig's theme inside the PostHog lab. */
 .vac-app .vac-developer-theme .twig-trip-listing-preview {
-  --vac-paper: #f7eddf;
-  --vac-ink: #2d2b29;
-  --vac-muted: #6d6258;
-  --vac-line: #d7c8b6;
-  --vac-fill: #efe1ce;
+  --vac-paper: #fffdf6;
+  --vac-ink: #2846a4;
+  --vac-muted: #656b75;
+  --vac-line: #e5e2d8;
+  --vac-fill: #f4f3ed;
   margin: 0 0 16px;
   padding: 16px;
   border: 0;
   border-radius: 0;
-  font: 15px/1.6 var(--font-twig, TwigHalfre), sans-serif;
+  font: 15px/1.6 TwigDMSans, Arial, sans-serif;
 }
 .vac-app .vac-developer-theme .twig-trip-listing-preview .vac-card { position: relative; }
 .vac-app .vac-developer-theme .twig-trip-listing-preview .vac-card-save { position: absolute; top: 10px; right: 10px; z-index: 2; }
 .vac-app .vac-developer-theme .twig-trip-listing-preview .vac-card-body { padding: 14px 0; }
 .vac-app .vac-developer-theme .twig-trip-listing-preview h3,
-.vac-app .vac-developer-theme #guide-panel .twig-trip-listing-preview h3 { margin: 0; font: 500 19px/1.6 var(--font-twig, TwigHalfre), sans-serif; color: var(--vac-ink); }
-.vac-app .vac-developer-theme .twig-trip-listing-preview p { margin: 8px 0; font: 15px/1.6 var(--font-twig, TwigHalfre), sans-serif; color: var(--vac-ink); }
+.vac-app .vac-developer-theme #guide-panel .twig-trip-listing-preview h3 { margin: 0; font: 500 19px/1.6 TwigDMSans, Arial, sans-serif; color: var(--vac-ink); }
+.vac-app .vac-developer-theme .twig-trip-listing-preview p { margin: 8px 0; font: 15px/1.6 TwigDMSans, Arial, sans-serif; color: var(--vac-ink); }
 .vac-app .vac-developer-theme .twig-trip-listing-preview .vac-muted { color: var(--vac-muted); font-size: 13px; }
 .vac-app .vac-developer-theme .twig-trip-listing-preview a { color: inherit; text-decoration: none; }
 .vac-app .vac-developer-theme .twig-trip-listing-photo { background: url("./assets/city.jpg") center / cover; }

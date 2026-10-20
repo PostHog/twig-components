@@ -245,7 +245,7 @@ test("account pages render saved, booked, profile, and fixed settings data", () 
     profile: accountProfile,
     onBioChange: () => {},
   }));
-  assert.match(overview, /Traveler profile/);
+  assert.doesNotMatch(overview, /<span class="vac-eyebrow">Traveler profile<\/span>/);
   assert.match(overview, /Edgar Hogg/);
   assert.match(overview, /London/);
   assert.match(overview, /View or edit your Twig profile/);
@@ -393,10 +393,42 @@ test("shared catalog keeps filter results and stay cards consistent", async () =
   assert.match(html, /Adiron-shack/);
   assert.match(html, /\$355/);
   assert.match(html, /4 guests/);
+  assert.match(html, /Hosted by Woody/);
+  assert.match(html, /class="vac-card-host-species">Pileated woodpecker/);
+  assert.doesNotMatch(html, /<img[^>]+src="(?:null|undefined)"/);
   assert.doesNotMatch(html, /<a |↗/);
   const studio = renderToStaticMarkup(
     createElement(StayCardContent, { stay: filterStays("City")[0], image: null })
   );
   assert.match(studio, /2 guests · 1 bath/);
   assert.doesNotMatch(studio, /0 bedrooms|1 baths/);
+});
+
+
+test("collapsed browse controls preserve filtered results and advertise active state", () => {
+  const html = renderToStaticMarkup(createElement(BrowseStays, {
+    id: "compact",
+    setting: "Coast",
+    search: "",
+    controlsExpanded: false,
+    onControlsExpandedChange: () => {},
+    onSettingChange: () => {},
+    onSearchChange: () => {},
+    renderStay: (stay) => createElement("article", { key: stay.id }, stay.id),
+  }));
+  assert.match(html, /aria-expanded="false" aria-controls="compact-controls"/);
+  assert.match(html, /Search &amp; filters \(1\)/);
+  assert.match(html, /id="compact-controls" hidden=""/);
+  assert.match(html, /role="status">1 stay/);
+  assert.match(html, /<article>stay-02<\/article>/);
+});
+
+
+test("amenity filters match catalog facts and combine with AND semantics", async () => {
+  const { matchesStayAmenities } = await import("@posthog/twig-components/filters");
+  const { stays } = await import("@posthog/twig-components/catalog");
+  assert.equal(matchesStayAmenities(stays[0].amenities, ["fire-pit", "lake-access"]), true);
+  assert.equal(matchesStayAmenities(stays[0].amenities, ["beach-access"]), false);
+  assert.equal(matchesStayAmenities(stays[1].amenities, ["beach-access"]), true);
+  assert.equal(matchesStayAmenities(stays[2].amenities, []), true);
 });

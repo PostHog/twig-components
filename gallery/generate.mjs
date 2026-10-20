@@ -21,7 +21,7 @@ const output = new URL("./output/", import.meta.url);
 await mkdir(new URL("./assets/", output), { recursive: true });
 await copyFile(new URL("../dist/catalog.css", import.meta.url), new URL("./catalog.css", output));
 await copyFile(new URL("../dist/lab.css", import.meta.url), new URL("./lab.css", output));
-for (const name of ["Halfre.ttf", "logo.svg", "cliff.png", "cabin.jpg", "RoundHog.woff2", "RoundHog-Medium.woff2", "RoundHog-SemiBold.woff2"]) {
+for (const name of ["DMSans.ttf", "Fraunces.ttf", "Fraunces-Italic.ttf", "BricolageGrotesque.ttf", "cabin.jpg", "RoundHog.woff2", "RoundHog-Medium.woff2", "RoundHog-SemiBold.woff2"]) {
   await copyFile(new URL(`../dist/assets/${name}`, import.meta.url), new URL(`./assets/${name}`, output));
 }
 

@@ -2,6 +2,12 @@
 
 The workbench is a local browser preview for package components. It uses local examples, so you can build and click through a component without starting Twig.com or signing in to PostHog.
 
+## Preserve the approved design
+
+Every existing and new example must use the [approved visual system](design-system.md), shared components, CSS classes, and tokens. Workbench-specific layout is for presenting fixtures, not an alternative product design. A new feature does not authorize a new visual pattern. Any explicitly approved system change must update the shared implementation, examples, and both design guides together.
+
+Review the real Twig pages too, including login, all account sections, stay details, empty/populated states, and fallbacks. For broad styling changes, use Twig.com’s full route/state inventory at desktop, 390px, and 320px; a correct workbench preview alone is insufficient.
+
 ## Start it
 
 From this repo:
