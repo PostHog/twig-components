@@ -1,6 +1,6 @@
 {
   "name": "@posthog/twig-components",
-  "version": "0.1.0",
+  "version": "0.2.2",
   "private": false,
   "publishConfig": {
     "access": "public"
@@ -23,6 +23,30 @@
     "**/*.css"
   ],
   "exports": {
+    "./date-picker": {
+      "types": "./dist/DatePicker.d.ts",
+      "import": "./dist/DatePicker.js"
+    },
+    "./guest-picker": {
+      "types": "./dist/GuestPicker.d.ts",
+      "import": "./dist/GuestPicker.js"
+    },
+    "./account": {
+      "types": "./dist/Account.d.ts",
+      "import": "./dist/Account.js"
+    },
+    "./saved-stay": {
+      "types": "./dist/SavedStay.d.ts",
+      "import": "./dist/SavedStay.js"
+    },
+    "./browse-stays": {
+      "types": "./dist/BrowseStays.d.ts",
+      "import": "./dist/BrowseStays.js"
+    },
+    "./stay-details": {
+      "types": "./dist/StayDetails.d.ts",
+      "import": "./dist/StayDetails.js"
+    },
     "./filters": {
       "types": "./dist/StayFilters.d.ts",
       "import": "./dist/StayFilters.js"
@@ -46,6 +70,14 @@
     "./booking-lab-ui": {
       "types": "./dist/BookingLab.d.ts",
       "import": "./dist/BookingLab.js"
+    },
+    "./error-tracking-lab": {
+      "types": "./dist/error-tracking-lab.d.ts",
+      "import": "./dist/error-tracking-lab.js"
+    },
+    "./error-tracking-lab-ui": {
+      "types": "./dist/ErrorTrackingLab.d.ts",
+      "import": "./dist/ErrorTrackingLab.js"
     },
     "./stay-lab": {
       "types": "./dist/stay-lab.d.ts",
@@ -129,18 +161,47 @@
     },
     "./catalog.css": "./dist/catalog.css",
     "./lab.css": "./dist/lab.css",
-    "./assets/*": "./dist/assets/*"
+    "./assets/*": "./dist/assets/*",
+    "./trip-planner": {
+      "types": "./dist/TripPlanner.d.ts",
+      "import": "./dist/TripPlanner.js"
+    },
+    "./trip-planner-state": {
+      "types": "./dist/trip-planner.d.ts",
+      "import": "./dist/trip-planner.js"
+    },
+    "./trip-planner-records": {
+      "types": "./dist/trip-planner-records.d.ts",
+      "import": "./dist/trip-planner-records.js"
+    },
+    "./trip-planner-lab": {
+      "types": "./dist/TripPlannerLab.d.ts",
+      "import": "./dist/TripPlannerLab.js"
+    },
+    "./events-lab": {
+      "types": "./dist/events-lab.d.ts",
+      "import": "./dist/events-lab.js"
+    },
+    "./events-lab-ui": {
+      "types": "./dist/EventsLab.d.ts",
+      "import": "./dist/EventsLab.js"
+    },
+    "./events-lab-provider": {
+      "types": "./dist/EventsLabProvider.d.ts",
+      "import": "./dist/EventsLabProvider.js"
+    }
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && node build-assets.mjs",
-    "prepack": "npm run build",
+    "prepare": "npm run build",
     "test": "npm run build && node --test tests/*.test.mjs",
     "gallery": "npm run build && node gallery/generate.mjs",
     "workbench": "vite --config workbench/vite.config.ts --host 127.0.0.1",
     "workbench:build": "tsc -p workbench/tsconfig.json && vite build --config workbench/vite.config.ts"
   },
   "peerDependencies": {
-    "react": "^18.3.0 || ^19.0.0"
+    "react": "^18.3.0 || ^19.0.0",
+    "react-dom": "^18.3.0 || ^19.0.0"
   },
   "dependencies": {
     "@rrweb/record": "^2.1.6",
@@ -151,6 +212,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^6.1.1",
+    "jsdom": "^30.1.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "typescript": "^7.0.2",
@@ -158,6 +220,24 @@
   },
   "typesVersions": {
     "*": {
+      "date-picker": [
+        "dist/DatePicker.d.ts"
+      ],
+      "guest-picker": [
+        "dist/GuestPicker.d.ts"
+      ],
+      "account": [
+        "dist/Account.d.ts"
+      ],
+      "saved-stay": [
+        "dist/SavedStay.d.ts"
+      ],
+      "browse-stays": [
+        "dist/BrowseStays.d.ts"
+      ],
+      "stay-details": [
+        "dist/StayDetails.d.ts"
+      ],
       "filters": [
         "dist/StayFilters.d.ts"
       ],
@@ -175,6 +255,12 @@
       ],
       "booking-lab-ui": [
         "dist/BookingLab.d.ts"
+      ],
+      "error-tracking-lab": [
+        "dist/error-tracking-lab.d.ts"
+      ],
+      "error-tracking-lab-ui": [
+        "dist/ErrorTrackingLab.d.ts"
       ],
       "stay-lab": [
         "dist/stay-lab.d.ts"
@@ -235,6 +321,27 @@
       ],
       "browse-stays-preview": [
         "dist/BrowseStaysPreview.d.ts"
+      ],
+      "trip-planner": [
+        "dist/TripPlanner.d.ts"
+      ],
+      "trip-planner-state": [
+        "dist/trip-planner.d.ts"
+      ],
+      "trip-planner-records": [
+        "dist/trip-planner-records.d.ts"
+      ],
+      "trip-planner-lab": [
+        "dist/TripPlannerLab.d.ts"
+      ],
+      "events-lab": [
+        "dist/events-lab.d.ts"
+      ],
+      "events-lab-ui": [
+        "dist/EventsLab.d.ts"
+      ],
+      "events-lab-provider": [
+        "dist/EventsLabProvider.d.ts"
       ]
     }
   }

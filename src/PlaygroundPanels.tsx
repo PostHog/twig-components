@@ -1,28 +1,43 @@
 "use client";
 
-import { useState, type ReactNode, type RefObject } from "react";
-import type { PlaygroundPage, TouchpointId } from "./playground.js";
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
+import { labsOnOtherPages, type LabStartPage, type PlaygroundPage, type TouchpointId } from "./playground.js";
 
-export function LabDirectory({ page, choose, showMarker }: {
+// Exact SVGs from @posthog/icons 0.36.6, as used by posthog.com.
+const productIcons = {
+  "Product Analytics": new URL("./assets/posthog-product-analytics.svg", import.meta.url).href,
+  "AI Observability": new URL("./assets/posthog-ai-observability.svg", import.meta.url).href,
+  "Error Tracking": new URL("./assets/posthog-error-tracking.svg", import.meta.url).href,
+  "Session Replay": new URL("./assets/posthog-session-replay.svg", import.meta.url).href,
+} as const;
+
+export function LabDirectory({ page, choose, showMarker, onVisitLab }: {
   page: PlaygroundPage;
   choose: (id: TouchpointId) => void;
   showMarker: (id: TouchpointId) => void;
+  onVisitLab?: (id: TouchpointId, startPage: LabStartPage) => void;
 }) {
   const [query, setQuery] = useState("");
-  const visible = page.touchpoints.filter((item) =>
+  const localLabs = page.touchpoints.filter((item) =>
     `${item.title} ${item.tool}`.toLowerCase().includes(query.toLowerCase())
   );
+  const elsewhere = onVisitLab ? labsOnOtherPages(page) : [];
+  const otherLabs = elsewhere.filter((item) =>
+    `${item.title} ${item.tool} ${item.location}`.toLowerCase().includes(query.toLowerCase())
+  );
+  const otherProducts = Array.from(new Set(otherLabs.map((item) => item.tool))).map((tool) => ({
+    tool,
+    labs: otherLabs.filter((item) => item.tool === tool),
+  }));
+  const allLabCount = page.touchpoints.length + elsewhere.length;
   return (
       <section
         id="twig-playground-detail"
         className="vac-lab vac-lab-directory"
       >
         <h3>Choose a lab</h3>
-        <p>
-          Different interactions on this page use different PostHog tools.
-          Choose an interaction below to learn how to instrument it.
-        </p>
-        {page.touchpoints.length > 4 && (
+        <p>Explore PostHog tools through interactions on this page.</p>
+        {allLabCount > 7 && (
           <label className="vac-lab-search">
             Find a lab or PostHog tool
             <input
@@ -32,8 +47,9 @@ export function LabDirectory({ page, choose, showMarker }: {
             />
           </label>
         )}
-        <ol className="vac-lab-directory-list">
-          {visible.map((item) => (
+        {localLabs.length > 0 && <>
+        <ol className="vac-lab-directory-list" aria-label="Labs on this page">
+          {localLabs.map((item) => (
             <li key={item.id} data-lab-color={item.color}>
               <div className="vac-lab-card-heading">
                 <span className="vac-marker">{item.number}</span>
@@ -71,13 +87,28 @@ export function LabDirectory({ page, choose, showMarker }: {
             </li>
           ))}
         </ol>
-        {!visible.length && (
-          <p>
-            {page.touchpoints.length
-              ? "No labs match your search."
-              : "No instrumentation points are defined for this page yet."}
-          </p>
-        )}
+        </>}
+        {otherLabs.length > 0 && <details className="vac-lab-other-pages">
+        <summary>
+          <span>Explore other PostHog products on Twig</span>
+          <span className="vac-lab-menu-end" aria-hidden="true">
+            <span className="vac-lab-menu-chevron" />
+          </span>
+        </summary>
+        <nav className="vac-lab-other-pages-menu" aria-label="Labs on other Twig pages">
+          {otherProducts.map((group) => <div className="vac-lab-menu-group" key={group.tool} data-product={group.tool.toLowerCase().replaceAll(" ", "-")}>
+            <h4><img src={productIcons[group.tool]} className="vac-lab-product-icon" width={16} height={16} alt="" />{group.tool}</h4>
+            <ul>
+              {group.labs.map((item) => <li key={item.id}>
+                <button type="button" onClick={() => onVisitLab?.(item.id, item.page)} aria-label={`Go to ${item.title} lab`}>
+                  <span><strong>{item.title}</strong><small>{item.location}</small></span>
+                </button>
+              </li>)}
+            </ul>
+          </div>)}
+        </nav>
+        </details>}
+        {!localLabs.length && !otherLabs.length && <p>{allLabCount ? "No labs match your search." : "No labs are available yet."}</p>}
       </section>
     );
 }
@@ -85,11 +116,7 @@ export function LabDirectory({ page, choose, showMarker }: {
 export function SelectedLabHeader({ current }: { current: PlaygroundPage["touchpoints"][number] }) {
   return (
       <div className="vac-selected-lab">
-        <span className="vac-eyebrow">
-          {current.tool === "Product analytics"
-            ? "Product Analytics"
-            : current.tool}
-        </span>
+        <span className="vac-eyebrow">{current.tool}</span>
         <span className="vac-lab-context">{current.title} Lab</span>
       </div>
   );
@@ -131,16 +158,18 @@ export function PlaygroundInvitation({
   onDismiss,
   onOpen,
   toggleRef,
+  resumeLab,
 }: {
   dismissed: boolean;
   onDismiss: () => void;
   onOpen: () => void;
   toggleRef: RefObject<HTMLButtonElement | null>;
+  resumeLab?: string;
 }) {
   return (
     <aside
-      className={`vac-playground-invite${dismissed ? " vac-invite-compact" : ""}`}
-      aria-label="Explore PostHog"
+      className={`vac-playground-invite vac-developer-theme${dismissed ? " vac-invite-compact" : ""}`}
+      aria-label={resumeLab ? `Resume ${resumeLab} lab` : "Explore PostHog"}
       onKeyDown={(event) => {
         if (event.key === "Escape") onDismiss();
       }}
@@ -155,9 +184,17 @@ export function PlaygroundInvitation({
           >
             ×
           </button>
-          <span className="vac-eyebrow">Interactive playground</span>
-          <h2>Want to explore the PostHog instrumentation?</h2>
-          <p>Build an event, try it on Twig, and see what happens.</p>
+          <div className="vac-invite-brand">
+            <img
+              src={new URL("./assets/posthog-logomark.svg", import.meta.url).href}
+              width={38}
+              height={28}
+              alt=""
+            />
+            <strong>PostHog Playground</strong>
+          </div>
+          <h2>Want to explore how PostHog works on this site?</h2>
+          <p>Tinker with Twig&apos;s features and learn how to interpret product data.</p>
         </>
       )}
       <button
@@ -167,7 +204,9 @@ export function PlaygroundInvitation({
         aria-expanded={false}
         onClick={onOpen}
       >
-        {dismissed ? "Explore PostHog ↗" : "Open playground ↗"}
+        <span className="vac-os-button-face">
+          {resumeLab ? `Resume ${resumeLab} lab →` : dismissed ? "Explore PostHog ↗" : "Open playground ↗"}
+        </span>
       </button>
     </aside>
   );
@@ -192,6 +231,12 @@ export function PlaygroundDock({
   pageKey: string;
   guide: ReactNode;
 }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const previousPage = useRef(pageKey);
+  useEffect(() => {
+    if (previousPage.current !== pageKey) scrollRef.current?.scrollTo({ top: 0 });
+    previousPage.current = pageKey;
+  }, [pageKey]);
   return (
     <aside
       id="twig-playground"
@@ -217,7 +262,7 @@ export function PlaygroundDock({
         {recordingBar}
       </div>
       <div
-        key={pageKey}
+        ref={scrollRef}
         className="vac-dock-scroll"
         role="region"
         aria-label="Instrumentation touchpoints and details"

@@ -1,11 +1,19 @@
 # Working in twig-components
 
-This package supplies reusable Twig views and local PostHog teaching labs. It does not own Twig.com pages or PostHog.com pocket guide content. Before changing it, read [the component reference](docs/components.md), [integration boundaries](docs/integration.md), and [workbench guide](docs/workbench.md). Inspect the closest existing component and its CSS before adding a new one.
+This package supplies reusable Twig views and local PostHog teaching labs. It does not own Twig.com pages or PostHog.com pocket guide content. Before changing it, read [the visual system](docs/design-system.md), [the component reference](docs/components.md), [integration boundaries](docs/integration.md), and [workbench guide](docs/workbench.md). Inspect the closest existing component and its CSS before adding a new one.
 
 ## Preserve the design
 
+- Follow [the Twig visual system](docs/design-system.md) for every UI contribution. Keep lesson prose regular, use bold only for headings, controls, and instruction targets, and keep evidence tabs connected without blue selection accents. Check the entire flow so a style change does not affect later instruction steps.
+- For every lab and playground, title only the first, progress/recap, and ending pages. Use only the product and `lab` for opening and ending titles: `Product Analytics lab`, `Session Replay lab`, or `AIO lab`. Intermediate teaching pages start with regular prose and have no page title. Put directions to click, send, choose, or interact with Twig in the shared `LabChecklist`; keep lesson navigation as buttons or links.
+- Put `How this simulation works` on every lab's first page, after its start button. State what is simulated or stored locally and whether anything is sent to PostHog.
 - Extend an existing component or pattern when it fits. Reuse the spacing, typography, colors, controls, and states already in `src/catalog.css` and `src/lab.css`. Do not add a second styling system, global CSS reset, or new visual language for one component.
 - Keep Twig website UI in the Twig style (`catalog.css`, including its Halfre font). Keep PostHog teaching UI in the lab style (`lab.css`, including RoundHog and its existing PostHog tokens). Verify any new PostHog brand value against `brand.posthog.com` rather than guessing.
+- Keep product accents consistent in every lab card and marker: Product Analytics blue, AI Observability purple, Error Tracking yellow, and Session Replay orange. Use the product color mapping in `src/playground.ts` instead of choosing a color per lab. Write product names in Title Case in source and dropdowns. Render the small product labels on lab cards in the established all-caps eyebrow style.
+- In playground menus, use the same `--ph-neutral-background` for every product bar and row hover/focus state. Reserve `--ph-neutral-accent` for selected states. Do not change the bar background by product. Product bars span the menu's full inner width; indent the lab rows beneath them instead of padding the whole menu.
+- On a lab's opening page, give a brief setup and put the short “what you'll do” preview in the existing white `.vac-guide-example` box. Save detailed directions for the steps where the learner acts.
+- When a lab asks the learner to click or change something in Twig, put that direction in `LabChecklist`. Use one item for one action or closely related action group (the blue-left callout), and separate items for two or more sequential steps (the numbered list). Keep the reason and result in prose; do not repeat the click directions there or create another direction style. Apply this to every lab step, including retries and verification.
+- Do not stack a small product or lab label above a heading that already names the lab. Use headings at the opening, meaningful progress points, and the ending; leave intermediate directions unlabeled when their context is clear.
 - Lab styling expects a `.vac-developer-theme` **inside** a `.vac-app` ancestor. Putting both classes on one element leaves parts of the component unstyled. Keep Twig typography out of lab UI and PostHog typography out of Twig views.
 - Make new visual states feel like the existing ones. If no pattern fits, explain the gap and the proposed pattern in the handoff so it can receive design review.
 - Treat existing component appearance and interactions as a contract. If a change intentionally alters them, show the before and after in the workbench and call it out in the handoff.
@@ -17,6 +25,7 @@ This package supplies reusable Twig views and local PostHog teaching labs. It do
 - Preserve existing props, public import paths, and React 18/19 compatibility. Avoid adding a dependency when a small component or existing helper will do.
 - Teaching events and AI/booking examples are local simulations. Do not send them to PostHog or another service. Do not use real visitor data, secrets, or production credentials in fixtures or previews.
 - Reuse the established catalog and assets in `src/catalog.ts` and `assets/`. Do not invent Twig characters, stays, or character voice while implementing UI; leave new editorial content for review.
+- Use periods or en dashes (–) for pauses in Twig-facing copy. Never use em dashes or semicolons there. Keep semicolons where code syntax requires them.
 
 ## Finish a component change
 

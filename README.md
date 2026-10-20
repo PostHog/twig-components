@@ -23,7 +23,7 @@ flowchart LR
     package -. "planned read-only Twig views" .-> guide
 ```
 
-**Current status:** Twig.com imports a local workspace copy of this package. The standalone package is not published to npm. PostHog 101 does not yet import it. See [integration and updates](docs/integration.md) before changing either site.
+Twig.com installs a published version of this package. After changing shared components, group changes in a Release Please pull request, publish the reviewed version to npm, and update each site that needs it. See [integration and updates](docs/integration.md#grouping-changes-into-a-release) for the steps.
 
 ## Quick example
 

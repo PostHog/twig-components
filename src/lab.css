@@ -6,6 +6,7 @@
   --ph-os-button-border: #b17816;
   --ph-brand-yellow: #ffa81c;
   --ph-brand-tangerine: #ff5c1c;
+  --ph-brand-purple: #a737d2;
   --ph-neutral-ink: #151515;
   --ph-neutral-background: #eeefe9;
   --ph-neutral-accent: #e5e7e0;
@@ -90,7 +91,8 @@
   font-size: 18px;
   line-height: 1.35;
 }
-.vac-app .vac-developer-theme p {
+.vac-app .vac-developer-theme p,
+.vac-app .vac-developer-theme .vac-trace-preview > figcaption {
   font-size: 13px;
   line-height: 1.6;
 }
@@ -105,6 +107,63 @@
 .vac-app .vac-developer-theme .vac-dock-header button {
   font-size: 12px;
 }
+
+/* The invitation shares the playground's PostHog theme; hosts choose its placement. */
+.vac-app .vac-playground-invite.vac-developer-theme {
+  width: 320px;
+  padding: 24px;
+  border: 1px solid var(--ph-neutral-border);
+  background: var(--ph-neutral-background);
+  color: var(--ph-neutral-ink);
+  box-shadow: 0 8px 32px #15151526;
+}
+.vac-app .vac-playground-invite.vac-developer-theme .vac-invite-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 18px;
+  line-height: 1.2;
+}
+.vac-app .vac-playground-invite.vac-developer-theme .vac-invite-brand img {
+  flex-shrink: 0;
+  object-fit: contain;
+}
+.vac-app .vac-playground-invite.vac-developer-theme h2 {
+  margin: 12px 0;
+  font-size: 22px;
+}
+.vac-app .vac-playground-invite.vac-developer-theme p {
+  margin: 0 0 18px;
+}
+.vac-app .vac-playground-invite.vac-developer-theme .vac-button {
+  width: 100%;
+}
+.vac-app .vac-playground-invite.vac-developer-theme .vac-invite-dismiss {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  background: transparent;
+  color: var(--ph-neutral-ink);
+}
+.vac-app .vac-playground-invite.vac-developer-theme :focus-visible {
+  outline-color: var(--ph-brand-cobalt);
+}
+.vac-app .vac-playground-invite.vac-developer-theme.vac-invite-compact {
+  width: fit-content;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+@media (max-width: 800px) {
+  .vac-app .vac-playground-invite.vac-developer-theme:not(.vac-invite-compact) {
+    width: auto;
+  }
+}
 .vac-app .vac-developer-theme .vac-lab-badge {
   background: var(--ph-neutral-background);
   border-color: var(--vac-line);
@@ -114,12 +173,124 @@
 .vac-app .vac-developer-theme .vac-eyebrow {
   font-size: 10px;
   letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 .vac-app .vac-developer-theme :is(code, pre) {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
+.vac-app .vac-developer-theme .vac-lab :is(p, li) > code {
+  padding: 1px 4px;
+  border: 1px solid rgb(245 78 0 / 50%);
+  border-radius: 2px;
+  background: rgb(245 78 0 / 10%);
+  color: #c03300;
+  font-size: 0.93em;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
 .vac-app .vac-developer-theme .vac-lab-directory-list > li {
   border-radius: 6px;
+}
+.vac-app .vac-developer-theme .vac-lab-other-pages {
+  margin-top: 12px;
+}
+.vac-app .vac-developer-theme .vac-lab-other-pages > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--vac-line);
+  border-radius: 6px;
+  background: var(--vac-paper);
+  list-style: none;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.vac-app .vac-developer-theme .vac-lab-other-pages > summary::-webkit-details-marker {
+  display: none;
+}
+.vac-app .vac-developer-theme .vac-lab-other-pages[open] > summary {
+  border-radius: 6px 6px 0 0;
+}
+.vac-app .vac-developer-theme .vac-lab-menu-end {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  gap: 10px;
+}
+.vac-app .vac-developer-theme .vac-lab-menu-chevron {
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+}
+.vac-app .vac-developer-theme .vac-lab-other-pages[open] .vac-lab-menu-chevron {
+  transform: translateY(2px) rotate(225deg);
+}
+.vac-app .vac-developer-theme .vac-lab-other-pages-menu {
+  overflow: hidden;
+  border: 1px solid var(--vac-line);
+  border-top: 0;
+  border-radius: 0 0 6px 6px;
+  background: var(--vac-paper);
+}
+.vac-app .vac-developer-theme .vac-lab-menu-group h4 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  padding: 10px 14px;
+  background: var(--ph-neutral-background);
+  font-size: 12px;
+  font-weight: 600;
+  color: #2f80fa;
+}
+.vac-app .vac-developer-theme .vac-lab-product-icon {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+.vac-app .vac-developer-theme [data-product="error-tracking"] h4 { color: #eb9d2a; }
+.vac-app .vac-developer-theme [data-product="session-replay"] h4 { color: #f7a501; }
+.vac-app .vac-developer-theme [data-product="ai-observability"] h4 { color: #b62ad9; }
+.vac-app .vac-developer-theme .vac-lab-menu-group ul {
+  margin: 0;
+  padding: 6px 14px 12px;
+  list-style: none;
+}
+.vac-app .vac-developer-theme .vac-lab-menu-group li button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 6px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--vac-ink);
+  text-align: left;
+  font-size: 12px;
+  line-height: 1.35;
+}
+.vac-app .vac-developer-theme .vac-lab-menu-group li button:hover,
+.vac-app .vac-developer-theme .vac-lab-menu-group li button:focus-visible {
+  background: var(--ph-neutral-background);
+}
+.vac-app .vac-developer-theme .vac-lab-menu-group li button strong,
+.vac-app .vac-developer-theme .vac-lab-menu-group li button small {
+  display: block;
+}
+.vac-app .vac-developer-theme .vac-lab-menu-group li button small {
+  margin-top: 2px;
+  color: var(--vac-muted);
+  font-size: 11px;
 }
 .vac-app .vac-developer-theme .vac-event-picker {
   gap: 0;
@@ -172,6 +343,33 @@
 .vac-app .vac-developer-theme .vac-event-comparison [data-mismatch="true"] {
   background: var(--ph-neutral-accent);
 }
+.vac-app .vac-developer-theme .vac-error-issue h4 { margin: 0 0 12px; }
+.vac-app .vac-developer-theme .vac-error-issue .vac-event-comparison {
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--vac-line);
+  border-radius: 0;
+}
+.vac-app .vac-developer-theme .vac-error-issue .vac-event-comparison > div {
+  padding: 10px 0;
+}
+.vac-app .vac-developer-theme .vac-error-posthog-preview { margin: 16px 0; padding: 0; overflow: hidden; }
+.vac-app .vac-developer-theme .vac-error-posthog-list-heading { padding: 8px 12px; font-size: 12px; font-weight: 600; }
+.vac-app .vac-developer-theme .vac-error-posthog-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 12px; }
+.vac-app .vac-developer-theme .vac-error-posthog-table th,
+.vac-app .vac-developer-theme .vac-error-posthog-table td { width: 50%; padding: 9px 12px; text-align: left; border-top: 1px solid var(--vac-line); overflow-wrap: anywhere; }
+.vac-app .vac-developer-theme .vac-error-posthog-table th { background: var(--ph-neutral-background); font-size: 11px; font-weight: 600; }
+.vac-app .vac-developer-theme .vac-error-posthog-table td code { font-size: inherit; }
+.vac-app .vac-developer-theme .vac-error-posthog-properties-table th:first-child,
+.vac-app .vac-developer-theme .vac-error-posthog-properties-table td:first-child { width: 40%; }
+.vac-app .vac-developer-theme .vac-error-posthog-properties-table th:last-child,
+.vac-app .vac-developer-theme .vac-error-posthog-properties-table td:last-child { width: 60%; }
+.vac-app .vac-developer-theme .vac-error-posthog-selected { display: grid; gap: 2px; padding: 9px 12px; border-top: 1px solid var(--vac-line); border-bottom: 1px solid var(--vac-line); background: var(--ph-neutral-accent); font-size: 12px; }
+.vac-app .vac-developer-theme .vac-error-posthog-selected code { min-width: 0; overflow-wrap: anywhere; }
+.vac-app .vac-developer-theme .vac-error-posthog-selected mark,
+.vac-app .vac-developer-theme .vac-error-posthog-properties-table mark { background: var(--ph-brand-yellow); color: var(--ph-neutral-ink); }
+.vac-app .vac-developer-theme .vac-error-posthog-stack { padding: 0 12px 12px; }
+.vac-app .vac-developer-theme .vac-error-posthog-stack pre { margin: 0; }
 
 .vac-ai-fields {
   border: 0;
@@ -190,7 +388,7 @@
   width: 18px;
   height: 18px;
   flex: 0 0 auto;
-  accent-color: var(--ph-brand-cobalt);
+  accent-color: var(--ph-brand-purple);
 }
 .vac-ai-fields code {
   display: block;
@@ -234,8 +432,8 @@
 }
 
 .vac-app .vac-developer-theme .vac-ai-code-highlight {
-  background: var(--ph-highlight);
-  color: var(--ph-light-12);
+  background: var(--ph-brand-purple);
+  color: var(--ph-neutral-white);
   border-radius: 2px;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
@@ -251,8 +449,8 @@
 }
 
 .vac-app .vac-developer-theme pre .vac-ai-code-highlight {
-  background: var(--ph-highlight);
-  color: var(--ph-light-12);
+  background: var(--ph-brand-purple);
+  color: var(--ph-neutral-white);
 }
 .vac-app .vac-developer-theme .vac-ai-code-context {
   background: transparent;
@@ -325,24 +523,47 @@
   align-items: center;
   gap: 14px;
   padding: 12px 16px;
-  border: 1px solid var(--ph-neutral-ink);
+  border: 1px solid #d0d1c9;
   border-radius: 6px;
-  background: var(--ph-neutral-background);
-  color: var(--ph-neutral-ink);
-  box-shadow: 0 2px 8px var(--ph-neutral-border);
-  font: 14px/1.4 sans-serif;
+  background: #eeefe9;
+  color: #151515;
+  box-shadow: 0 3px 0 #d0d1c9, 0 12px 28px #15151524;
+  font: 600 14px/1.4 PlaygroundRoundHog, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.vac-replay-stop::before {
+  content: "";
+  flex: 0 0 9px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ff5c1c;
+}
+.vac-replay-stop span {
+  color: #4d4f46;
+  font-weight: 400;
 }
 .vac-replay-stop button {
-  background: var(--ph-brand-cobalt);
-  color: var(--ph-neutral-white);
-  border: 0;
-  border-radius: 4px;
+  background: #fff;
+  color: #151515;
+  border: 1.5px solid #b17816;
+  border-radius: 6px;
   padding: 10px 14px;
   white-space: nowrap;
   cursor: pointer;
+  font: inherit;
+  box-shadow: 0 4px 0 #ffa81c;
+}
+.vac-replay-stop button:hover {
+  background: #fff;
+  box-shadow: 0 6px 0 #ffa81c;
+  transform: translateY(-2px);
+}
+.vac-replay-stop button:active {
+  box-shadow: 0 2px 0 #ffa81c;
+  transform: translateY(2px);
 }
 .vac-replay-stop button:focus-visible {
-  outline: 3px solid var(--ph-neutral-ink);
+  outline: 3px solid #151515;
   outline-offset: 3px;
 }
 .vac-session-viewport {
@@ -379,9 +600,13 @@
     bottom: 12px;
     font-size: 12px;
     gap: 8px;
+    flex-wrap: wrap;
   }
   .vac-replay-stop span {
     display: none;
+  }
+  .vac-replay-stop button {
+    flex: 1;
   }
 }
 .vac-session-player input[type="range"] {
@@ -401,19 +626,85 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 4px 16px;
+  gap: 8px;
   margin-top: 4px;
 }
-.vac-lab-navigation .vac-lab-reset {
+.vac-lab-navigation-links,
+.vac-lab-navigation-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.vac-lab-navigation-links {
+  flex-wrap: wrap;
+}
+.vac-lab-navigation-actions {
   margin-inline-start: auto;
 }
 .vac-lab-navigation .vac-text-button {
   padding: 4px 0;
   text-align: left;
 }
+.vac-lab-navigation .vac-lab-reset-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--vac-line);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ph-neutral-ink);
+  cursor: pointer;
+}
+.vac-lab-navigation .vac-lab-reset-icon:hover {
+  background: color-mix(in srgb, var(--ph-neutral-ink) 8%, transparent);
+}
+.vac-lab-previous-short {
+  display: none;
+}
+@media (max-width: 360px) {
+  .vac-lab-previous-full { display: none; }
+  .vac-lab-previous-short { display: inline; }
+}
+.vac-reset-confirm {
+  flex-basis: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--ph-os-button-border);
+  border-radius: 6px;
+  background: var(--ph-brand-yellow);
+  background: color-mix(in srgb, var(--ph-brand-yellow) 22%, var(--ph-neutral-white));
+}
+.vac-reset-confirm h3,
+.vac-reset-confirm p {
+  margin: 0;
+}
+.vac-app .vac-developer-theme .vac-reset-confirm h3 {
+  font-size: 14px;
+  line-height: 1.3;
+  margin-bottom: 3px;
+}
+.vac-reset-confirm p { line-height: 1.45; }
+.vac-reset-confirm-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 10px;
+}
+.vac-app .vac-developer-theme .vac-reset-confirm-actions .vac-button {
+  width: auto;
+  margin: 0;
+  white-space: normal;
+}
 
 .vac-app .vac-developer-theme :focus-visible {
   outline-color: var(--ph-brand-cobalt);
+}
+/* The lesson region is focused for screen readers after step changes, but it is not an interactive control. */
+.vac-app .vac-developer-theme #guide-panel:focus {
+  outline: none;
 }
 .vac-app .vac-developer-theme input {
   accent-color: var(--ph-brand-cobalt);
@@ -552,10 +843,15 @@
   margin: 0;
 }
 
-.vac-app .vac-developer-theme pre.vac-booking-code {
-  white-space: pre;
-  overflow-wrap: normal;
-  overflow-x: auto;
+.vac-app .vac-developer-theme .vac-error-intro-steps {
+  margin: 0;
+  padding-left: 20px;
+  list-style: decimal;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.vac-app .vac-developer-theme .vac-error-intro-steps li + li {
+  margin-top: 8px;
 }
 
 .vac-app .vac-developer-theme .vac-selected-lab {
@@ -772,3 +1068,250 @@
     animation: none;
   }
 }
+
+/* AI request evidence uses the same lab surface in Twig and the workbench. */
+
+/* Request tabs browse two views of the same event, rather than quiz choices. */
+.vac-app .vac-developer-theme .vac-request-tabs { display: flex; margin-top: 16px; border: 1px solid var(--vac-line); border-radius: 6px 6px 0 0; overflow: hidden; }
+.vac-app .vac-developer-theme .vac-request-tabs [role="tab"] { flex: 1; min-width: 0; min-height: 44px; padding: 10px 8px; border: 0; background: var(--ph-neutral-background); color: var(--vac-muted); font-weight: 600; }
+.vac-app .vac-developer-theme .vac-request-tabs [role="tab"] + [role="tab"] { border-left: 1px solid var(--vac-line); }
+.vac-app .vac-developer-theme .vac-request-tabs [aria-selected="true"] { background: var(--ph-neutral-white); color: var(--vac-ink); }
+.vac-app .vac-developer-theme .vac-request-tabs [role="tab"]:focus-visible { outline: 2px solid var(--ph-brand-cobalt); outline-offset: -4px; }
+.vac-app .vac-developer-theme .vac-request-panel { padding: 16px; background: var(--ph-neutral-white); border: 1px solid var(--vac-line); border-top: 0; border-radius: 0 0 6px 6px; overflow-wrap: anywhere; }
+.vac-app .vac-developer-theme .vac-request-panel h4 { margin-top: 0; }
+.vac-app .vac-developer-theme .vac-request-panel p:last-child { margin-bottom: 0; }
+
+/* Connect the capture property directly to the recorded message. */
+.vac-app .vac-developer-theme .vac-capture-context { margin: 8px 0 12px; font-size: 13px; }
+.vac-app .vac-developer-theme .vac-recorded-message { margin: 20px 0 0; }
+.vac-app .vac-developer-theme .vac-recorded-message figcaption { margin-bottom: 8px; font-size: 12px; }
+.vac-app .vac-developer-theme .vac-recorded-message figcaption code { background: var(--ph-brand-yellow); color: var(--ph-neutral-ink); padding: 1px 3px; }
+.vac-app .vac-developer-theme .vac-recorded-message blockquote { margin: 0; padding: 12px; border-left: 3px solid var(--ph-brand-yellow); background: var(--ph-neutral-background); font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.vac-app .vac-developer-theme .vac-trip-walkthrough { margin: 0; }
+.vac-app .vac-developer-theme .vac-trip-walkthrough > :first-child { margin-top: 0; }
+.vac-app .vac-developer-theme .vac-trip-walkthrough > p { font-size: 13px; font-weight: 400; }
+.vac-app .vac-developer-theme .vac-request-next { padding: 16px 0 0; }
+.vac-app .vac-developer-theme .vac-request-next .vac-button { width: 100%; margin: 0; white-space: normal; }
+
+.vac-app .vac-developer-theme .vac-capacity-result { margin-top: 16px; padding: 12px; background: var(--ph-neutral-white); border-left: 3px solid var(--ph-brand-cobalt); font-size: 13px; }
+.vac-app .vac-developer-theme .vac-capacity-result p { margin: 6px 0 0; }
+
+.vac-app .vac-developer-theme .vac-request-switch { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+
+.vac-app .vac-developer-theme .vac-request-switch .vac-event-choice { flex: 1; min-height: 44px; }
+
+/* Match the host breakpoint that exposes the chat’s Playground action. */
+.vac-app .vac-developer-theme .vac-trip-mobile-hint { display: none; }
+@media (max-width: 800px) {
+  .vac-app .vac-developer-theme .vac-trip-mobile-hint { display: block; }
+}
+
+/* A compact trace outline separates the recorded result from capture code. */
+.vac-app .vac-developer-theme .vac-trace-preview { margin: 20px 0 0; }
+.vac-app .vac-developer-theme .vac-trace-preview > figcaption { margin-bottom: 12px; }
+.vac-app .vac-developer-theme .vac-trace-preview-surface { background: var(--ph-neutral-white); border: 1px solid var(--vac-line); border-radius: 8px; overflow: hidden; }
+.vac-app .vac-developer-theme .vac-trace-preview-name { padding: 12px 16px; background: var(--ph-neutral-background); border-bottom: 1px solid var(--vac-line); font-size: 13px; }
+.vac-app .vac-developer-theme .vac-trace-preview-call { display: grid; gap: 4px; padding: 12px 16px; border-bottom: 1px solid var(--vac-line); font-size: 13px; }
+.vac-app .vac-developer-theme .vac-trace-preview-data { padding: 12px 16px; }
+.vac-app .vac-developer-theme .vac-trace-preview-source { display: grid; gap: 4px; font-size: 13px; }
+.vac-app .vac-developer-theme :is(.vac-trace-preview-call, .vac-trace-preview-source) code { background: none; border: 0; padding: 0; color: var(--vac-muted); font-size: 12px; overflow-wrap: anywhere; }
+.vac-app .vac-developer-theme .vac-trace-preview-message { margin-top: 12px; }
+.vac-app .vac-developer-theme .vac-trace-preview-message + .vac-trace-preview-message { border-top: 1px solid var(--vac-line); padding-top: 12px; }
+.vac-app .vac-developer-theme .vac-trace-preview-role { font-size: 12px; color: var(--vac-muted); }
+.vac-app .vac-developer-theme .vac-trace-preview-message p { margin: 4px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* A session header groups simple trace rows, as in PostHog's session view. */
+.vac-app .vac-developer-theme .vac-conversation-traces { margin: 16px 0; background: var(--ph-neutral-white); border: 1px solid var(--vac-line); border-radius: 8px; overflow: hidden; font-size: 13px; }
+.vac-app .vac-developer-theme .vac-conversation-session { display: grid; gap: 6px; padding: 12px 16px; border-bottom: 1px solid var(--vac-line); background: var(--ph-neutral-background); }
+.vac-app .vac-developer-theme .vac-conversation-session > code:first-child { font-weight: 600; }
+.vac-app .vac-developer-theme .vac-conversation-traces ol { list-style: none; padding: 0 0 0 16px; margin: 0 16px 16px 24px; border-left: 1px solid var(--vac-line); }
+.vac-app .vac-developer-theme .vac-conversation-traces li { position: relative; padding: 12px 0; }
+.vac-app .vac-developer-theme .vac-conversation-traces li::before { content: ""; position: absolute; top: 22px; left: -16px; width: 10px; border-top: 1px solid var(--vac-line); }
+.vac-app .vac-developer-theme .vac-conversation-traces dl { margin: 8px 0 0; }
+.vac-app .vac-developer-theme .vac-conversation-traces li > dl:first-child { margin-top: 0; }
+.vac-app .vac-developer-theme .vac-conversation-traces dt { color: var(--vac-muted); }
+.vac-app .vac-developer-theme .vac-conversation-traces dd { margin: 4px 0 0; }
+.vac-app .vac-developer-theme .vac-conversation-traces code { font-size: inherit; overflow-wrap: anywhere; }
+
+.vac-app .vac-developer-theme .vac-conversation-hierarchy li > ol { margin: 8px 0 0; }
+
+.vac-app .vac-developer-theme .vac-trip-definitions { margin: 16px 0; padding-left: 20px; list-style: disc; }
+.vac-app .vac-developer-theme .vac-trip-definitions li { display: list-item; font-size: 13px; }
+.vac-app .vac-developer-theme .vac-trip-definitions li + li { margin-top: 6px; }
+
+.vac-app .vac-developer-theme .vac-trip-overview-card { display: block; text-align: left; padding: 16px; }
+.vac-app .vac-developer-theme .vac-trip-overview-card p { width: 100%; margin: 0 0 12px; font-size: 13px; }
+
+/* Keep the two-part overview as a simple numbered reading list. */
+.vac-app .vac-developer-theme .vac-trip-overview { margin: 0; padding-left: 20px; list-style: decimal; }
+.vac-app .vac-developer-theme .vac-trip-overview li { display: list-item; font-size: 13px; }
+.vac-app .vac-developer-theme .vac-trip-overview li + li { margin-top: 12px; }
+.vac-app .vac-developer-theme .vac-trip-milestone li { font-size: 13px; }
+@media (max-width: 520px) {
+  .vac-app .vac-developer-theme .vac-trip-overview-card { padding: 14px; }
+  .vac-app .vac-developer-theme .vac-request-panel { padding: 12px; }
+  .vac-app .vac-developer-theme .vac-conversation-session { padding: 10px 12px; }
+  .vac-app .vac-developer-theme .vac-conversation-traces ol { margin: 0 12px 12px 20px; }
+}
+
+/* Keep the embedded homepage card in Twig's theme inside the PostHog lab. */
+.vac-app .vac-developer-theme .twig-trip-listing-preview {
+  --vac-paper: #f7eddf;
+  --vac-ink: #2d2b29;
+  --vac-muted: #6d6258;
+  --vac-line: #d7c8b6;
+  --vac-fill: #efe1ce;
+  margin: 0 0 16px;
+  padding: 16px;
+  border: 0;
+  border-radius: 0;
+  font: 15px/1.6 var(--font-twig, TwigHalfre), sans-serif;
+}
+.vac-app .vac-developer-theme .twig-trip-listing-preview .vac-card { position: relative; }
+.vac-app .vac-developer-theme .twig-trip-listing-preview .vac-card-save { position: absolute; top: 10px; right: 10px; z-index: 2; }
+.vac-app .vac-developer-theme .twig-trip-listing-preview .vac-card-body { padding: 14px 0; }
+.vac-app .vac-developer-theme .twig-trip-listing-preview h3,
+.vac-app .vac-developer-theme #guide-panel .twig-trip-listing-preview h3 { margin: 0; font: 500 19px/1.6 var(--font-twig, TwigHalfre), sans-serif; color: var(--vac-ink); }
+.vac-app .vac-developer-theme .twig-trip-listing-preview p { margin: 8px 0; font: 15px/1.6 var(--font-twig, TwigHalfre), sans-serif; color: var(--vac-ink); }
+.vac-app .vac-developer-theme .twig-trip-listing-preview .vac-muted { color: var(--vac-muted); font-size: 13px; }
+.vac-app .vac-developer-theme .twig-trip-listing-preview a { color: inherit; text-decoration: none; }
+.vac-app .vac-developer-theme .twig-trip-listing-photo { background: url("./assets/city.jpg") center / cover; }
+
+/* Events and properties: portable lesson UI shared by both hosts. */
+.vac-events-lab { min-width: 0; }
+.vac-app .vac-developer-theme .vac-web-evidence { border: 1px solid var(--vac-line); border-radius: 6px; background: var(--vac-paper); padding: 12px; margin: 16px 0; }
+.vac-web-toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; border-bottom: 1px solid var(--vac-line); padding-bottom: 10px; }
+.vac-web-toolbar span { font-size: 11px; color: var(--vac-muted); }
+.vac-app .vac-developer-theme .vac-event-row { display: grid; gap: 5px; width: 100%; text-align: left; border: 0; border-bottom: 1px solid var(--vac-line); padding: 14px 0; color: var(--vac-ink); background: none; overflow-wrap: anywhere; font-size: 12px; }
+.vac-event-row span { font-size: 11px; }
+.vac-event-reader { margin-top: 12px; min-width: 0; }
+.vac-event-reader > strong { display: block; overflow-wrap: anywhere; margin: 6px 0; font: 12px/1.5 ui-monospace, monospace; }
+.vac-event-reader dl { margin: 12px 0; }
+.vac-event-reader dl > div { padding: 8px 0; border-bottom: 1px solid var(--vac-line); }
+.vac-event-reader dt { font: 12px/1.5 ui-monospace, monospace; overflow-wrap: anywhere; }
+.vac-event-reader dd { margin: 4px 0 0; font-weight: 600; }
+.vac-event-reader small { margin-left: 6px; font-size: 10px; font-weight: 400; }
+.vac-event-reader summary { font-size: 12px; }
+.vac-app .vac-developer-theme .vac-agent-terminal { background: var(--ph-neutral-ink); color: var(--ph-neutral-background); border-radius: 6px; padding: 14px; margin: 16px 0; font: 12px/1.65 ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; min-width: 0; }
+.vac-app .vac-developer-theme .vac-agent-terminal :is(p, input, button, summary, pre, strong) { font-family: inherit; font-size: 12px; }
+.vac-agent-title { display: flex; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid var(--ph-neutral-muted); padding-bottom: 10px; }
+.vac-agent-title > span:last-child { margin-left: auto; color: var(--ph-brand-yellow); }
+.vac-agent-transcript { max-height: 470px; overflow-y: auto; scrollbar-gutter: stable; }
+.vac-agent-turn { border-top: 1px solid var(--ph-neutral-muted); padding: 10px 0; }
+.vac-agent-prompt { color: var(--ph-brand-yellow); }
+.vac-app .vac-developer-theme .vac-agent-terminal .vac-agent-muted,
+.vac-app .vac-developer-theme .vac-agent-terminal .vac-muted { color: var(--ph-neutral-border); }
+.vac-agent-tool { margin: 8px 0; }
+.vac-agent-tool summary { cursor: pointer; }
+.vac-app .vac-developer-theme .vac-agent-terminal pre { border: 1px solid var(--ph-neutral-muted); color: var(--ph-neutral-background); background: var(--ph-neutral-ink); font-size: 11px; }
+.vac-agent-input { border-top: 1px solid var(--ph-neutral-muted); padding-top: 12px; }
+.vac-app .vac-developer-theme .vac-agent-input button { flex-shrink: 0; padding: 6px; border: 1px solid var(--ph-neutral-border); border-radius: 3px; background: var(--ph-neutral-background); color: var(--ph-neutral-ink); }
+.vac-app .vac-developer-theme .vac-agent-suggestion { display: block; border: 0; padding: 8px 0; color: var(--ph-brand-yellow); text-align: left; background: none; text-decoration: underline; text-underline-offset: 3px; }
+.vac-app .vac-developer-theme .vac-breakdown-row { display: grid; width: 100%; grid-template-columns: 60px minmax(0,1fr) 24px; gap: 8px; align-items: center; padding: 9px 4px; background: transparent; color: inherit; border: 0; text-align: left; font-size: 12px; }
+.vac-breakdown-row[aria-pressed="true"] { outline: 1px solid currentColor; }
+.vac-breakdown-track { height: 15px; background: var(--ph-neutral-border); }
+.vac-breakdown-track > span { height: 100%; display: block; background: var(--ph-brand-cobalt); }
+.vac-event-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.vac-app .vac-developer-theme .vac-agent-terminal .vac-text-button { color: var(--ph-brand-yellow); }
+.vac-understanding { border: 0; padding: 16px 0; margin: 0; }
+.vac-understanding legend { padding-top: 16px; }
+.vac-understanding label { display: flex; gap: 8px; align-items: flex-start; padding: 10px 0; font-size: 13px; }
+.vac-understanding input { margin-top: 4px; }
+.vac-lab-handoff { border-top: 1px solid var(--vac-line); margin-top: 20px; padding-top: 12px; }
+.vac-events-lab :is(button, input, summary, a):focus-visible { outline: 2px solid var(--ph-brand-cobalt); outline-offset: 3px; }
+.vac-agent-terminal :is(button, input, summary):focus-visible { outline-color: var(--ph-brand-yellow); }
+@media (max-width: 800px) { .vac-agent-transcript { max-height: none; } }
+.vac-events-lab .vac-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+.vac-path-entry { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; margin: 20px 0; }
+.vac-app .vac-developer-theme .vac-experience-card { display: flex; flex-direction: column; align-items: stretch; min-width: 0; padding: 0 12px 14px; text-align: left; border: 1px solid var(--ph-neutral-border); border-radius: 6px; background: var(--ph-neutral-white); color: var(--ph-neutral-ink); box-shadow: none; transition: transform 200ms ease, box-shadow 200ms ease; }
+.vac-app .vac-developer-theme .vac-experience-card:hover { transform: translateY(-2px); box-shadow: 0 8px 18px -8px rgb(21 21 21 / 25%); }
+.vac-app .vac-developer-theme .vac-experience-card:active { transform: translateY(0); box-shadow: none; }
+.vac-choice-art { display: block; margin: 0 -12px 12px; padding: 8px; border-radius: 5px 5px 0 0; border-bottom: 1px solid var(--ph-neutral-border); background: var(--ph-neutral-background); }
+.vac-choice-art { height: 112px; background-repeat: no-repeat; background-position: center; background-size: auto 96px; }
+.vac-choice-browser { background-image: url("./assets/hoggie-chart.png"); }
+.vac-choice-terminal { background-image: url("./assets/hoggie-robot.png"); }
+.vac-choice-title { display: flex; justify-content: space-between; gap: 6px; font-size: 16px; font-weight: 600; line-height: 1.3; }
+.vac-choice-title > span { color: var(--ph-neutral-muted); }
+.vac-choice-description { margin-top: 8px; font-size: 12px; font-weight: 400; line-height: 1.5; }
+@media (prefers-reduced-motion: reduce) { .vac-app .vac-developer-theme .vac-experience-card { transition: none; } }
+.vac-breakdown-select { display: grid; gap: 6px; margin: 12px 0; font-size: 12px; }
+.vac-breakdown-select select { width: 100%; min-width: 0; padding: 8px; background: var(--vac-paper); color: var(--vac-ink); border: 1px solid var(--vac-line); border-radius: 4px; font: inherit; }
+.vac-agent-terminal .vac-event-reader { border-left: 2px solid var(--ph-neutral-muted); padding-left: 10px; }
+.vac-agent-terminal .vac-event-reader dl { margin: 8px 0; }
+.vac-agent-terminal .vac-event-reader dl > div { border-color: var(--ph-neutral-muted); }
+
+.vac-agent-count { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid var(--ph-neutral-muted); }
+.vac-agent-count .vac-breakdown-track { display: none; }
+
+.vac-agent-input { display: grid; gap: 12px; }
+.vac-app .vac-developer-theme .vac-agent-input .vac-agent-draft { margin: 0; white-space: normal; overflow-wrap: anywhere; color: var(--ph-neutral-white); }
+.vac-agent-input > button { justify-self: end; }
+
+/* Compact adaptation of posthog.com/components/RadixUI/Toast: surface, border, radius and shadow. */
+.vac-event-recorded {
+  display: block;
+  max-width: calc(100vw - 32px);
+  padding: 12px 16px;
+  border: 1px solid var(--ph-neutral-border);
+  border-radius: 6px;
+  background: var(--ph-neutral-white);
+  color: var(--ph-neutral-ink);
+  box-shadow: hsl(206 22% 7% / 35%) 0 10px 38px -10px, hsl(206 22% 7% / 20%) 0 10px 20px -15px;
+  font: 400 14px/1.4 PlaygroundRoundHog, sans-serif;
+  overflow-wrap: anywhere;
+}
+
+/* PostHog.com RadixUI/ToggleGroup small variant: shared border and shaded selection. */
+.vac-experience-control { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--vac-line); font-size: 12px; }
+.vac-experience-toggle { display: inline-flex; gap: 1px; padding: 2px; border: 1px solid var(--vac-line); border-radius: 4px; }
+.vac-app .vac-developer-theme .vac-experience-toggle button { border: 1px solid transparent; border-radius: 3px; padding: 4px 12px; background: transparent; color: var(--vac-ink); font: 500 12px/1.4 PlaygroundRoundHog, sans-serif; box-shadow: none; }
+.vac-app .vac-developer-theme .vac-experience-toggle button:hover,
+.vac-app .vac-developer-theme .vac-experience-toggle button[aria-pressed="true"] { background: var(--ph-neutral-accent); }
+.vac-experience-toggle button:focus-visible { outline: 2px solid var(--ph-brand-cobalt); outline-offset: 1px; }
+
+/* Compact Activity/Explore table and EventDetails Properties view from app.posthog.com. */
+.vac-activity-preview { margin: 16px 0; border: 1px solid var(--ph-neutral-border); border-radius: 6px; overflow: hidden; background: var(--ph-neutral-white); color: var(--ph-neutral-ink); }
+.vac-activity-heading { display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid var(--ph-neutral-border); }
+.vac-activity-heading span { font-size: 12px; color: var(--ph-neutral-muted); border-left: 1px solid var(--ph-neutral-border); padding-left: 12px; }
+.vac-activity-list { max-height: 180px; overflow: auto; }
+.vac-activity-preview table { width: 100%; border-collapse: collapse; font-size: 11px; table-layout: fixed; }
+.vac-activity-preview th, .vac-activity-preview td { padding: 8px; text-align: left; border-bottom: 1px solid var(--ph-neutral-border); overflow-wrap: anywhere; }
+.vac-activity-preview th { background: var(--ph-neutral-background); font-weight: 600; }
+.vac-activity-list th:first-child { width: 68%; }
+.vac-activity-list time { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.vac-app .vac-developer-theme .vac-activity-list button { display: flex; align-items: flex-start; gap: 4px; padding: 0; width: 100%; border: none; background: none; color: inherit; text-align: left; font-size: 11px; }
+.vac-activity-preview code { font-size: 11px; }
+.vac-activity-list .is-selected { background: var(--ph-neutral-accent); }
+.vac-activity-property-heading { padding: 10px 12px; border-bottom: 2px solid var(--ph-brand-cobalt); font-size: 12px; font-weight: 600; width: fit-content; }
+.vac-activity-detail td:last-child { color: var(--ph-brand-cobalt); }
+.vac-activity-detail tr:last-child td { border-bottom: 0; }
+
+.vac-save-insight { margin: 20px 0; }
+.vac-playground-dashboard { margin: 16px 0; padding: 12px; border: 1px solid var(--ph-neutral-border); border-radius: 6px; background: var(--ph-neutral-background); }
+.vac-dashboard-heading { display: grid; gap: 4px; margin-bottom: 12px; }
+.vac-dashboard-heading > span { font-size: 12px; color: var(--ph-neutral-muted); }
+.vac-dashboard-insight { padding: 12px; border: 1px solid var(--ph-neutral-border); border-radius: 6px; background: var(--ph-neutral-white); }
+.vac-app .vac-developer-theme .vac-dashboard-insight h4 { margin: 0 0 8px; }
+.vac-dashboard-insight > p { font-size: 12px; }
+
+.vac-app .vac-developer-theme .vac-handoff-card { margin: 16px 0; padding: 16px; border: 1px solid var(--vac-line); border-radius: 6px; background: var(--vac-paper); }
+.vac-handoff-card h4 { display: flex; align-items: center; gap: 10px; margin-top: 0; }
+.vac-handoff-number { display: inline-grid; place-items: center; flex: 0 0 26px; height: 26px; border: 1px solid var(--vac-line); border-radius: 50%; font-size: 14px; }
+.vac-handoff-card .vac-browse-link { display: block; margin-top: 16px; }
+.vac-handoff-card pre { overflow-x: auto; }
+
+.vac-command-block { position: relative; margin: 16px 0; background: #151515; border-radius: 6px; }
+.vac-app .vac-developer-theme .vac-command-block pre { margin: 0; padding-right: 52px; }
+.vac-app .vac-command-copy { position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 1px solid transparent; border-radius: 4px; background: transparent; color: #eee; cursor: pointer; }
+.vac-app .vac-command-copy:hover { background: #ffffff14; color: #fff; }
+
+
+.vac-app .vac-developer-theme .vac-prompt-block pre { padding: 48px 16px 16px; font-size: 12px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
+.vac-app .vac-developer-theme .vac-prompt-block code { font: inherit; }
+
+.vac-agent-spinner { display: inline-block; color: var(--ph-brand-yellow); animation: vac-agent-spin 1.2s steps(8) infinite; }
+.vac-agent-cursor { color: var(--ph-brand-yellow); animation: vac-agent-blink .7s steps(2) infinite; }
+@keyframes vac-agent-spin { to { transform: rotate(360deg); } }
+@keyframes vac-agent-blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .vac-agent-spinner, .vac-agent-cursor { animation: none; } }

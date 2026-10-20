@@ -39,6 +39,23 @@ const recaps: Record<TouchpointId, { title: string; points: string[] }> = {
       "Recorded your own visit and opened its replay with your masking setting.",
     ],
   },
+  errors: {
+    title: "You traced the trip-details error, repaired Twig's host lookup, and resolved the example issue.",
+    points: [
+      "Used the exception and stack trace to find where Twig failed.",
+      "Used the stay ID to inspect the broken host lookup.",
+      "Saw the host name return without adding a new exception.",
+    ],
+  },
+};
+
+const completionTitles: Record<TouchpointId, string> = {
+  catalog: "Product Analytics lab complete",
+  discovery: "AIO lab complete",
+  booking: "Product Analytics lab complete",
+  stay: "Product Analytics lab complete",
+  replay: "Session Replay lab complete",
+  errors: "Error Tracking lab complete",
 };
 
 export function LabCompletionView({
@@ -46,20 +63,24 @@ export function LabCompletionView({
   onChoose,
   onReview,
   headingRef,
+  title,
+  recap: customRecap,
 }: {
+  title?: string;
+  recap?: { title: string; points: string[] };
   lab: TouchpointId;
   onChoose: () => void;
-  onReview: () => void;
+  onReview?: () => void;
   headingRef: RefObject<HTMLHeadingElement | null>;
 }) {
-  const recap = recaps[lab];
+  const recap = customRecap ?? recaps[lab];
   return (
     <section className="vac-lab vac-lab-completion" aria-label="Lab complete">
       <h3 className="vac-completion-title" ref={headingRef} tabIndex={-1}>
         <span className="vac-completion-check" aria-hidden="true">
           ✓
         </span>
-        <span>Lab complete!</span>
+        <span>{title ?? completionTitles[lab]}</span>
       </h3>
       <p>{recap.title}</p>
       <div className="vac-guide-example">
@@ -70,16 +91,16 @@ export function LabCompletionView({
           ))}
         </ul>
       </div>
-      <p>
+      {onReview && <p>
         You’re done with this lab. Your results are still here if you want
         another look.
-      </p>
+      </p>}
       <button type="button" className="vac-button" onClick={onChoose}>
         <span className="vac-os-button-face">Choose another lab</span>
       </button>
-      <button type="button" className="vac-text-button" onClick={onReview}>
+      {onReview && <button type="button" className="vac-text-button" onClick={onReview}>
         Review results
-      </button>
+      </button>}
     </section>
   );
 }

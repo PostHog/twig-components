@@ -1,39 +1,46 @@
 /** Stable IDs identify instrumentation; displayed marker numbers are page-local. */
+const productColors = {
+  "Product Analytics": "blue",
+  "AI Observability": "purple",
+  "Error Tracking": "yellow",
+  "Session Replay": "orange",
+} as const;
+
+function product<T extends keyof typeof productColors>(tool: T) {
+  return { tool, color: productColors[tool] };
+}
+
 export const touchpointDefinitions = {
   discovery: {
     title: "AI trip discovery",
-    color: "yellow",
-    tool: "AI observability",
-    lesson: "Inspect a trip-planning request and its model response.",
+    ...product("AI Observability"),
+    lesson: "Follow a conversation through its PostHog events.",
     lab: "ai-discovery",
     description:
-      "Configure AI observability fields, then test a simulated recommendation or timeout.",
-    evidence: "Local generation events only; no model or PostHog connection.",
+      "Inspect model input and output, connect requests in a conversation, and investigate a wrong recommendation.",
+    evidence: "Compare requests using their session, trace, and generation IDs.",
   },
   catalog: {
-    title: "Stay filters",
-    color: "blue",
-    tool: "Product analytics",
-    lesson: "Capture filter clicks and attach the selected setting.",
+    title: "Events and properties",
+    ...product("Product Analytics"),
+    lesson: "Turn a filter click into an event, add properties, and compare selections.",
     lab: "filter-events",
     description:
       "Setting filters narrow the catalog. Select a stay to see its details and nightly rate.",
-    evidence: "No analytics capture connected.",
+    evidence: "Guided web app and MCP paths. Local demo events only.",
   },
   replay: {
     title: "Follow a visitor",
-    color: "red",
-    tool: "Session Replay",
+    ...product("Session Replay"),
     lesson:
       "Watch a ghost visit, then record and inspect your own interactions.",
     lab: "session-replay",
     description: "Explore interaction sequences and input masking.",
-    evidence: "Local interaction reconstruction; no PostHog recording.",
+    evidence: "Local interaction reconstruction. No PostHog recording.",
   },
   stay: {
     title: "Stay details",
-    color: "blue",
-    tool: "Product analytics",
+    ...product("Product Analytics"),
     lesson: "Connect a stay’s ID to its view event.",
     lab: "stay-views",
     description:
@@ -43,8 +50,7 @@ export const touchpointDefinitions = {
   },
   booking: {
     title: "Booking",
-    color: "yellow",
-    tool: "Product analytics",
+    ...product("Product Analytics"),
     lesson: "Record a completed booking only after confirmation.",
     lab: "booking-events",
     description:
@@ -52,15 +58,34 @@ export const touchpointDefinitions = {
     evidence:
       "Local simulated availability and booking responses. No reservation or payment created.",
   },
+  errors: {
+    title: "Trip details",
+    ...product("Error Tracking"),
+    lesson: "Investigate a trip-details error and check the fix.",
+    lab: "error-tracking",
+    description: "Book a stay in Twig, then open its trip details to investigate an error.",
+    evidence: "Local example data only. Nothing is sent to PostHog.",
+  },
 } as const;
 
 export type TouchpointId = keyof typeof touchpointDefinitions;
-type PageKind = "discover" | "stay" | "about";
+type PageKind = "discover" | "stay" | "about" | "bookings";
+export type LabStartPage = "discover" | "stay";
+
+const labStartPages: Record<TouchpointId, { page: LabStartPage; location: string }> = {
+  discovery: { page: "discover", location: "Find a stay" },
+  catalog: { page: "discover", location: "Find a stay" },
+  replay: { page: "discover", location: "Find a stay" },
+  stay: { page: "stay", location: "A stay page" },
+  booking: { page: "stay", location: "A stay page" },
+  errors: { page: "stay", location: "A stay page, then Booked stays" },
+};
 
 const pageTouchpoints: Record<PageKind, readonly TouchpointId[]> = {
   discover: ["discovery", "catalog", "replay"],
   about: [],
-  stay: ["stay", "booking", "replay"],
+  stay: ["stay", "booking", "errors", "replay"],
+  bookings: [],
 };
 
 export function playgroundPage(
@@ -77,6 +102,8 @@ export function playgroundPage(
       ? "discover"
       : path === "/about"
       ? "about"
+      : path === "/profile/bookings"
+      ? "bookings"
       : stay
       ? "stay"
       : null;
@@ -90,6 +117,8 @@ export function playgroundPage(
         ? "Find a stay"
         : kind === "about"
         ? "About Twig"
+        : kind === "bookings"
+        ? "Booked stays"
         : stay
         ? `Stay details${stay.title ? ` · ${stay.title}` : ""}`
         : "This page",
@@ -103,6 +132,14 @@ export function playgroundPage(
 
 export type PlaygroundPage = ReturnType<typeof playgroundPage>;
 export type PlaygroundSelection = { pageKey: string; id: TouchpointId };
+
+/** Show labs on other pages, except Error Tracking on Booked stays, which only continues an active lab. */
+export function labsOnOtherPages(page: PlaygroundPage) {
+  const localIds = new Set(page.touchpoints.map(({ id }) => id));
+  return (Object.keys(touchpointDefinitions) as TouchpointId[])
+    .filter((id) => !localIds.has(id) && !(page.kind === "bookings" && id === "errors"))
+    .map((id) => ({ id, ...touchpointDefinitions[id], ...labStartPages[id] }));
+}
 
 export function selectedTouchpoint(
   page: PlaygroundPage,
