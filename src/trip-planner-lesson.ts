@@ -1,5 +1,5 @@
 import { tripPlannerPrompts } from "./trip-planner.js";
-import { capacityPrompt, evaluateCapacity } from "./trip-planner-capacity.js";
+import { capacityPrompt, type CapacityEvidence } from "./trip-planner-capacity.js";
 import type { TripPlannerRecord } from "./trip-planner-records.js";
 
 export type TripLessonField = "input" | "output";
@@ -14,8 +14,8 @@ export type TripLessonState = {
   request: TripLessonRequest;
   field: TripLessonField;
   inspected: string[];
-  beforeEvaluation?: ReturnType<typeof evaluateCapacity>;
-  afterEvaluation?: ReturnType<typeof evaluateCapacity>;
+  beforeEvaluation?: Omit<CapacityEvidence["evaluation"], "generationId">;
+  afterEvaluation?: Omit<CapacityEvidence["evaluation"], "generationId">;
   investigation: "evaluate-before" | "overview" | "lookup" | "fix" | "retry" | "evaluation";
 };
 export const initialTripLesson: TripLessonState = {
@@ -55,10 +55,8 @@ export function tripLessonReducer(state: TripLessonState, action: TripLessonActi
       if (!isBefore && !state.beforeEvaluation) return state;
       const record = state.failureEvidence[isBefore ? 0 : 1];
       if (!record?.capacityEvidence) return state;
-      const recommendation = record.capacityEvidence.lookup.properties.$ai_output_state
-        .find(stay => stay.id === record.properties.selected_stay_id);
-      const result = evaluateCapacity(recommendation, 4);
-      return { ...state, [isBefore ? "beforeEvaluation" : "afterEvaluation"]: result };
+      const { name, result, reason } = record.capacityEvidence.evaluation;
+      return { ...state, [isBefore ? "beforeEvaluation" : "afterEvaluation"]: { name, result, reason } };
     }
     case "apply-capacity-fix": return state.step === 4 && state.investigation === "fix" && state.beforeEvaluation && state.failureEvidence[0]
       ? { ...state, capacityFixed: true, investigation: "retry" } : state;

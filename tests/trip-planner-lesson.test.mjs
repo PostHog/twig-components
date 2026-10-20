@@ -251,3 +251,18 @@ test("evaluation actions cannot run outside their stage or before evidence exist
   }
   assert.equal(reduce(initialTripLesson, { type: "run-evaluation" }), initialTripLesson);
 });
+
+
+test("running an evaluation reveals the result recorded for that generation", async () => {
+  const { createCapacityRequest } = await import("../dist/trip-planner-capacity.js");
+  const record = createCapacityRequest(stays, {
+    sessionId: "recorded", traceId: "city", generationId: "city-generation", startedAt: 1000,
+  }, "capacity-broken").record;
+  const evaluation = record.capacityEvidence.evaluation;
+  evaluation.reason += " Recorded for this generation.";
+  const state = reduce({ ...initialTripLesson, step: 4, failureEvidence: [record] }, { type: "run-evaluation" });
+  assert.deepEqual(state.beforeEvaluation, {
+    name: evaluation.name, result: evaluation.result, reason: evaluation.reason,
+  });
+  assert.equal(state.afterEvaluation, undefined);
+});
