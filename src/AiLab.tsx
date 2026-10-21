@@ -84,7 +84,7 @@ export function useResetAiLab() {
 export function AiIntroduction({ onContinue }: { onContinue: () => void }) {
   return (
     <div className="vac-guide-intro">
-      <h3>AIO lab</h3>
+      <h3>AI inputs and outputs</h3>
       <p>
         A visitor says Twig suggested the wrong stay. What would you need to see
         to investigate?

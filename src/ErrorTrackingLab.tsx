@@ -1,5 +1,7 @@
 "use client";
 
+import { touchpointDefinitions } from "./playground.js";
+
 import { createContext, useContext, useReducer, type ReactNode } from "react";
 import { LabChecklist } from "./LabChecklist.js";
 import { characters, stays } from "./catalog.js";
@@ -65,7 +67,7 @@ function PostHogExceptionProperties({ occurrence, highlightStayId = false }: {
   return <section className="vac-lab-output vac-error-posthog-preview" aria-label="Example PostHog exception properties">
     <PostHogExceptionRow occurrence={occurrence} />
     <div className="vac-error-posthog-list-heading">Properties</div>
-    <table className="vac-error-posthog-table vac-error-posthog-properties-table" aria-label="Selected exception properties">
+    <table className="vac-lab-table vac-lab-table-key-value vac-error-posthog-table vac-error-posthog-properties-table" aria-label="Selected exception properties">
       <thead><tr><th scope="col">Property</th><th scope="col">Value</th></tr></thead>
       <tbody>
         <tr><td><code>surface</code></td><td><code>trip_details</code></td></tr>
@@ -148,7 +150,7 @@ export function ErrorTrackingLab({
   const { state, dispatch } = useErrorTrackingLab();
   const count = state.occurrences.length;
   if (stage === 0) return <div className="vac-guide-intro">
-    <h3>Error Tracking lab</h3>
+    <h3>{touchpointDefinitions.errors.title}</h3>
     <p>Book a stay on Twig, then open its trip details and investigate a recoverable error.</p>
     <div className="vac-guide-example vac-booking-overview">
       <ol className="vac-error-intro-steps" aria-label="What you’ll do in this lab">
@@ -239,7 +241,7 @@ export function ErrorTrackingLab({
     </section>;
 
   return <section className="vac-lab vac-builder">
-    <h3>Error Tracking lab complete</h3>
+    <h3>{touchpointDefinitions.errors.title} complete</h3>
     <p>The exception, stack trace, and stay ID pointed to the broken host lookup. The Twig repair restored the host name in trip details. That successful load added no new occurrence before the issue was marked resolved.</p>
   </section>;
 }

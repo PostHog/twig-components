@@ -1,5 +1,7 @@
 "use client";
 
+import { touchpointDefinitions } from "./playground.js";
+
 import { useEffect, useRef, type ReactNode } from "react";
 import { FinishLabButton } from "./FinishLabButton.js";
 import { LabChecklist } from "./LabChecklist.js";
@@ -122,7 +124,7 @@ export function ReplayLab({
   if (stage === 0)
     return (
       <div className="vac-guide-intro">
-        <h3>Session Replay lab</h3>
+        <h3>{touchpointDefinitions.replay.title}</h3>
         <p>
           Events tell you a visitor selected Coast. Replay adds the sequence:
           where they moved, what they typed, and which stay they opened.

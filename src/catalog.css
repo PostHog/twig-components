@@ -55,7 +55,7 @@
   padding: 8px 12px 8px 20px;
   border-bottom: 1px solid var(--vac-line);
 }
-.twig-trip-planner-header h2 { margin: 0; font-size: 18px; font-weight: 600; outline: none; }
+.twig-trip-planner-header h2 { display:flex; align-items:center; gap:8px; margin: 0; font-size: 18px; font-weight: 600; outline: none; }
 .twig-trip-planner-window-action {
   margin-left: auto;
   min-height: 44px;

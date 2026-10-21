@@ -1,5 +1,7 @@
 "use client";
 
+import { touchpointDefinitions } from "./playground.js";
+
 import { LabChoices } from "./LabChoices.js";
 
 import { FinishLabButton } from "./FinishLabButton.js";
@@ -75,7 +77,7 @@ export function StayLab({
   if (stage === 0)
     return (
       <div className="vac-guide-intro">
-        <h3>Product Analytics lab</h3>
+        <h3>{touchpointDefinitions.stay.title}</h3>
         <p>
           A view event tells you someone opened a listing. To compare listings,
           it also needs to say which stay they viewed.

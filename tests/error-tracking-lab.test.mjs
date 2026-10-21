@@ -43,7 +43,7 @@ test("the lab starts on stay listings and has no entry on booked stays", () => {
   assert.deepEqual(bookingsPage.touchpoints, []);
   assert.ok(!labsOnOtherPages(bookingsPage).some((item) => item.id === "errors"));
   const html = renderToStaticMarkup(h(ErrorTrackingLabProvider, { active: true }, h(ErrorTrackingLab, { stage: 0, onStage: () => {}, location: "stay", onFocusBooking: () => {}, onFocusDetails: () => {} })));
-  assert.match(html, /Error Tracking lab/);
+  assert.match(html, /Exceptions and issue resolution/);
   assert.match(html, /How this simulation works/);
   assert.match(html, /not sent to PostHog/);
 });

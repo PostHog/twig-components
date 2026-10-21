@@ -12,7 +12,7 @@ function product<T extends keyof typeof productColors>(tool: T) {
 
 export const touchpointDefinitions = {
   discovery: {
-    title: "AI trip discovery",
+    title: "Traces, generations, and evaluations",
     ...product("AI Observability"),
     lesson: "Follow a conversation through its PostHog events.",
     lab: "ai-discovery",
@@ -30,7 +30,7 @@ export const touchpointDefinitions = {
     evidence: "Guided web app and MCP paths. Local demo events only.",
   },
   replay: {
-    title: "Follow a visitor",
+    title: "Session playback and masking",
     ...product("Session Replay"),
     lesson:
       "Watch a ghost visit, then record and inspect your own interactions.",
@@ -39,7 +39,7 @@ export const touchpointDefinitions = {
     evidence: "Local interaction reconstruction. No PostHog recording.",
   },
   stay: {
-    title: "Stay details",
+    title: "Breakdowns by property",
     ...product("Product Analytics"),
     lesson: "Connect a stay’s ID to its view event.",
     lab: "stay-views",
@@ -49,7 +49,7 @@ export const touchpointDefinitions = {
       "Locally simulated view events from navigation between stay pages.",
   },
   booking: {
-    title: "Booking",
+    title: "Funnels and conversion events",
     ...product("Product Analytics"),
     lesson: "Record a completed booking only after confirmation.",
     lab: "booking-events",
@@ -59,7 +59,7 @@ export const touchpointDefinitions = {
       "Local simulated availability and booking responses. No reservation or payment created.",
   },
   errors: {
-    title: "Trip details",
+    title: "Exceptions and issue resolution",
     ...product("Error Tracking"),
     lesson: "Investigate a trip-details error and check the fix.",
     lab: "error-tracking",
@@ -151,4 +151,12 @@ export function selectedTouchpoint(
     page.touchpoints[0] ||
     null
   );
+}
+
+/** Product landing pages list every existing lab, independent of the host route. */
+export function labsForProduct(id: TouchpointId) {
+  const tool = touchpointDefinitions[id].tool;
+  return (Object.keys(touchpointDefinitions) as TouchpointId[])
+    .filter(labId => touchpointDefinitions[labId].tool === tool)
+    .map(labId => ({ id: labId, ...touchpointDefinitions[labId], ...labStartPages[labId] }));
 }

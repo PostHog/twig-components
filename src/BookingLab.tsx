@@ -1,5 +1,7 @@
 "use client";
 
+import { touchpointDefinitions } from "./playground.js";
+
 import { LabChoices } from "./LabChoices.js";
 import { LabChecklist } from "./LabChecklist.js";
 
@@ -92,7 +94,7 @@ export function BookingLab({
   if (stage === 0)
     return (
       <div className="vac-guide-intro">
-        <h3>Product Analytics lab</h3>
+        <h3>{touchpointDefinitions.booking.title}</h3>
         <p>
           First, complete a successful booking and inspect its events. Then
           repeat the exercise with a failed request.

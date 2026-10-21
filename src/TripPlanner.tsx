@@ -184,7 +184,7 @@ export function TripPlanner({ scenario, stays, renderStayLink, accessory, inputI
           if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); close(); }
         }}>
           <header className="twig-trip-planner-header">
-            <h2 ref={heading} id={`${id}-title`} tabIndex={-1}>Plan your getaway</h2>
+            <h2 ref={heading} id={`${id}-title`} tabIndex={-1}><AiSearchIcon /> AI trip planner</h2>
             {windowAction && <button type="button" className="twig-trip-planner-window-action" onClick={() => {
               setOpen(false);
               windowAction.onSelect();

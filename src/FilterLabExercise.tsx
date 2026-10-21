@@ -1,5 +1,7 @@
 "use client";
 
+import { touchpointDefinitions } from "./playground.js";
+
 import { LabChoices } from "./LabChoices.js";
 import { LabChecklist } from "./LabChecklist.js";
 import { FilterInspector } from "./FilterInspector.js";
@@ -8,7 +10,7 @@ import { filterLabCode, labPassed, type LabAction, type LabState } from "./filte
 export function FilterLabIntroduction({ onContinue }: { onContinue: () => void }) {
   return (
     <div className="vac-guide-intro">
-      <h3>Product Analytics lab</h3>
+      <h3>{touchpointDefinitions.catalog.title}</h3>
       <p>Visitors choose different filters, but your events keep recording Forest.</p>
       <div className="vac-guide-example vac-guide-lesson">
         <p>Follow a click into its event, find the fixed value, then connect the filter’s actual value.</p>

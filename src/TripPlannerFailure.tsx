@@ -71,7 +71,7 @@ export function TripPlannerFailure({ stays, renderStayCard, onEvaluate }: { stay
         <p>Twig gives both events the same <code>$ai_trace_id</code>, so PostHog groups them in one trace.</p>
         {action("Inspect the recorded search →", () => dispatch({ type: "next" }))}
       </> : lesson.investigation === "lookup" ? <>
-        <p>Twig captures the search’s filters and results with this call:</p>
+        <p>A capture call like this records the search’s filters and results:</p>
         <pre><code>{'posthog.capture("$ai_span", {\n  $ai_trace_id: traceId,\n  $ai_span_name: "search_stays",\n'}<mark>{'  $ai_input_state: filters,\n  $ai_output_state: matches,\n'}</mark>{'});'}</code></pre>
         <p>In PostHog, that event shows:</p>
         <div className="vac-conversation-traces" role="group" aria-label="Recorded catalog search filters and results">
@@ -104,7 +104,7 @@ export function TripPlannerFailure({ stays, renderStayCard, onEvaluate }: { stay
         </> : action("Run evaluation again →", () => runEvaluation("after"))}
       </> : !after ? <>
         <p>Twig’s search now includes the guest filter. Send the city request again, then inspect the events Twig captures.</p>
-        <LabChecklist label="Next chat action" items={[{ done: false, label: <>Click <strong>↑ Send</strong> in the highlighted chat bar to send <strong>“Find me a city stay for four.”</strong></> }]} />
+        <LabChecklist label="Next chat action" items={[{ done: false, label: <>Send <strong>“Find me a city stay for four.”</strong> in the highlighted AI trip planner.</> }]} />
         <p className="vac-muted vac-trip-mobile-hint">On mobile, tap <strong>Playground</strong> in the chat to return here.</p>
       </> : <>
         <p>Twig searched with <code>guests: 4</code> and found no matching listings. PostHog shows those results in the new search span:</p>

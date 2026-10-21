@@ -13,7 +13,7 @@ export function TripPlannerConversation() {
         </li>)}
       </ol>
     </div>
-    <p>Twig includes both IDs in each <code>$ai_generation</code> capture call:</p>
+    <p>Include both IDs in each <code>$ai_generation</code> capture call:</p>
     <pre><code>{'posthog.capture("$ai_generation", {\n'}<mark>{'  $ai_trace_id: traceId,\n'}</mark><mark>{'  $ai_session_id: sessionId,\n'}</mark>{'});'}</code></pre>
   </>;
 }

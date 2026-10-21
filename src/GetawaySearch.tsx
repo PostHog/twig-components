@@ -16,7 +16,7 @@ export function SearchWorkspace({ mode, onModeChange, destination, assistant }: 
    <div id="twig-ai-search" hidden={mode!=='ai'}>{assistant}</div>
  </div>;
 }
-export function GetawaySearch({stays,preferences,onPreferencesChange,onOutcome,renderStayLink,hidden=false,onChatVisibilityChange,windowClassName}:{stays:readonly Stay[];preferences:GetawayPreferences;onPreferencesChange:(p:GetawayPreferences)=>void;onOutcome?:(reply:GetawayReply)=>void;renderStayLink:(stay:Stay)=>ReactNode;windowClassName?:string;hidden?:boolean;onChatVisibilityChange?:(open:boolean)=>void}) {
+export function GetawaySearch({stays,preferences,onPreferencesChange,onOutcome,onReset,renderStayLink,hidden=false,onChatVisibilityChange,windowClassName}:{stays:readonly Stay[];preferences:GetawayPreferences;onPreferencesChange:(p:GetawayPreferences)=>void;onOutcome?:(reply:GetawayReply)=>void;onReset?:()=>void;renderStayLink:(stay:Stay)=>ReactNode;windowClassName?:string;hidden?:boolean;onChatVisibilityChange?:(open:boolean)=>void}) {
  const [draft,setDraft]=useState('');
  const [turns,setTurns]=useState<{prompt:string;reply:GetawayReply}[]>([]);
  const [open,setOpen]=useState(false);
@@ -30,7 +30,7 @@ export function GetawaySearch({stays,preferences,onPreferencesChange,onOutcome,r
  function collapse(){setOpen(false);onChatVisibilityChange?.(false);requestAnimationFrame(()=>launcher.current?.focus({preventScroll:true}));}
  function send(){
    if(!draft.trim()||draft.length>500)return;
-   if(/^(?:start over|reset)(?: please)?[.!]?$/i.test(draft.trim())){setTurns([]);setDraft('');onPreferencesChange({...preferences,destination:'',unverified:false,setting:undefined,excludedSetting:undefined,amenities:[],budget:undefined,budgetBasis:undefined});expand();return;}
+   if(/^(?:start over|reset)(?: please)?[.!]?$/i.test(draft.trim())){setTurns([]);setDraft('');onReset?.();onPreferencesChange({...preferences,destination:'',unverified:false,setting:undefined,excludedSetting:undefined,amenities:[],budget:undefined,budgetBasis:undefined});expand();return;}
    const reply=findGetaway(draft,preferences,stays);
    setTurns(old=>[...old,{prompt:draft,reply}].slice(-12));onPreferencesChange(reply.preferences);onOutcome?.(reply);setDraft('');expand();
  }
@@ -48,7 +48,7 @@ export function GetawaySearch({stays,preferences,onPreferencesChange,onOutcome,r
  return <>
    <div className="twig-getaway-search twig-trip-planner">{composer(false)}</div>
    {!hidden&&open&&createPortal(<div className={`twig-trip-planner twig-trip-planner-window twig-getaway-window${windowClassName ? ` ${windowClassName}` : ""}`} role="dialog" aria-labelledby={`${id}-title`} onKeyDown={e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();collapse();}}}>
-     <header className="twig-trip-planner-header"><h2 id={`${id}-title`} ref={heading} tabIndex={-1}>Plan your getaway</h2><button type="button" className="twig-trip-planner-close" aria-label="Collapse chat" onClick={collapse}><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 12h14" fill="none" stroke="currentColor" strokeWidth="1.8"/></svg></button></header>
+     <header className="twig-trip-planner-header"><h2 id={`${id}-title`} ref={heading} tabIndex={-1}><AiSearchIcon /> AI trip planner</h2><button type="button" className="twig-trip-planner-close" aria-label="Collapse chat" onClick={collapse}><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 12h14" fill="none" stroke="currentColor" strokeWidth="1.8"/></svg></button></header>
      <div ref={log} className="twig-trip-planner-history">
        <div role="log" aria-label="Getaway conversation" aria-live="polite" aria-relevant="additions" tabIndex={0}>
        {turns.map((turn,index)=><div className="twig-getaway-turn" key={index}>
