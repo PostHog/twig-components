@@ -10,6 +10,8 @@ Change the visual contract only when Sarah explicitly requests or approves that 
 
 For every UI change, identify the existing patterns being reused and inspect all consumers and states. Shared tokens or broad selectors require Twig.com’s full route/state review, including login and every account page, not only the homepage. Keep Twig and PostHog surfaces distinct. A component is unfinished if an affected consumer drifts from the approved system.
 
+Keep prose and text to a minimum throughout Twig, the Playground, and labs. Prefer intuitive, familiar controls and seamless flows over explanatory text. Keep only essential context, avoid repetition, and reveal detail at the point of need. Apply this leading principle to landing pages too.
+
 ## Preserve the design
 
 Do not add decorative status or metadata labels such as “Listening · Local preview”, “selected node”, or “selected properties”. Keep functional section names and controls; let the actual instrumentation data supply context.

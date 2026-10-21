@@ -17,6 +17,10 @@ const productIcons = {
   "Session Replay": new URL("./assets/posthog-session-replay.svg", import.meta.url).href,
 } as const;
 
+function InspectorCursorIcon({ size = 22 }: { size?: number }) {
+  return <svg width={size} fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height={size} aria-hidden="true"><path d="M3 4.75C3 3.784 3.784 3 4.75 3h14.5c.966 0 1.75.784 1.75 1.75v6a.75.75 0 0 1-1.5 0v-6a.25.25 0 0 0-.25-.25H4.75a.25.25 0 0 0-.25.25v14.5c0 .138.112.25.25.25h6a.75.75 0 0 1 0 1.5h-6A1.75 1.75 0 0 1 3 19.25V4.75Z"></path><path d="M12.374 11.143a1 1 0 0 0-1.23 1.23l2.48 9.019c.233.844 1.361 1.003 1.818.256l2.355-3.852 3.852-2.355c.747-.457.588-1.585-.256-1.817l-9.02-2.48Z"></path></svg>;
+}
+
 export function LabDirectory({ page, choose, showMarker, onVisitLab }: {
   page: PlaygroundPage;
   choose: (id: TouchpointId) => void;
@@ -119,6 +123,68 @@ export function LabDirectory({ page, choose, showMarker, onVisitLab }: {
     );
 }
 
+/** First-visit orientation. Hosts own navigation and analytics. */
+export function PlaygroundHome({ onInspect, onStart, onSelect, onVisitLab }: {
+  onInspect: () => void;
+  onStart?: () => void;
+  onSelect?: (id: TouchpointId) => void;
+  onVisitLab?: (id: TouchpointId, page: LabStartPage) => void;
+}) {
+  const products = ["catalog", "discovery", "replay", "errors"] as const;
+  return <section className="vac-lab vac-playground-home" aria-label="Playground Home">
+    <h3>Meet Twig</h3>
+    <p>Twig is a demo vacation rental site. The PostHog Playground reveals the PostHog events and code behind it.</p>
+    <div className="vac-home-panel">
+      <button type="button" className="vac-home-tour" onClick={onStart ?? onInspect}>
+        <strong>Take a tour</strong>
+        <span aria-hidden="true">→</span>
+      </button>
+    </div>
+    <div className="vac-home-panel">
+      <button type="button" className="vac-home-explore" onClick={onInspect}>
+        <strong>Explore on your own</strong>
+        <span aria-hidden="true">→</span>
+      </button>
+    </div>
+    <section className="vac-home-panel vac-home-labs" aria-label="Learn with labs">
+      <div className="vac-home-panel-intro">
+        <h4>Learn with labs</h4>
+        <p>Go deeper with guided, hands-on lessons for each PostHog product.</p>
+      </div>
+      <nav aria-label="Playground labs">
+      {products.map(id => {
+        const product = touchpointDefinitions[id].tool;
+        return <details className="vac-lab-other-pages" key={id}>
+          <summary aria-label={`${product} labs`}>
+            <span className="vac-lab-menu-end"><img src={productIcons[product]} className="vac-lab-product-icon" width={16} height={16} alt="" />{product} labs</span>
+            <span className="vac-lab-menu-end" aria-hidden="true"><span className="vac-lab-menu-chevron" /></span>
+          </summary>
+          <div className="vac-lab-other-pages-menu"><div className="vac-lab-menu-group"><ul>
+            {labsForProduct(id).map(lab => <li key={lab.id}><button type="button" aria-label={`Start lab: ${lab.title}`} onClick={() => onVisitLab ? onVisitLab(lab.id, lab.page) : onSelect?.(lab.id)}>{lab.title}</button></li>)}
+          </ul></div></div>
+        </details>;
+      })}
+      </nav>
+    </section>
+  </section>;
+}
+
+/** A compact tour inside the live Inspector; the newest event remains selected automatically. */
+export function PlaygroundOnboarding({ phase }: {
+  phase: "stay" | "filter" | "another-stay" | "history" | "compare" | "compare-again" | "follow" | "reset" | "complete";
+}) {
+  return <section aria-label="Guided tour">
+    {phase === "stay" ? <LabChecklist label="Your first interaction" items={[{ label: <>Open a <strong>stay</strong> on Twig.</>, done: false }]} />
+      : phase === "filter" ? <LabChecklist label="Build your event history" items={[{ label: <>Go <strong>Back</strong> to Browse stays, then choose a <strong>setting</strong> in <strong>Filters</strong>.</>, done: false }]} />
+      : phase === "another-stay" ? <LabChecklist label="Build your event history" items={[{ label: <>Open a stay from the <strong>filtered results</strong>.</>, done: false }]} />
+      : phase === "history" ? <><p>The latest event’s details are already shown below.</p><LabChecklist label="Explore your event history" items={[{ label: <>Select earlier entries in the <strong>console</strong> to compare their details and tracking code.</>, done: false }]} /></>
+      : phase === "compare" || phase === "compare-again" ? <LabChecklist label="Explore your event history" items={[{ label: <>Keep selecting entries to compare their event details.</>, done: false }]} />
+      : phase === "follow" ? <LabChecklist label="Resume live tracking" items={[{ label: <>Click the <strong>down arrow</strong> in the console to resume live tracking.</>, done: false }]} />
+      : phase === "reset" ? <LabChecklist label="Reset the console" items={[{ label: <>Click the <strong>reset icon</strong> to reset the console.</>, done: false }]} />
+      : <LabChecklist label="Inspect new events" items={[{ label: <>Click around the site a few times to inspect <strong>new events</strong>.</>, done: false }]} />}
+  </section>;
+}
+
 /** One product landing page, using the established directory cards and start controls. */
 export function ProductLabLanding({ selectedId, choose }: {
   selectedId: TouchpointId;
@@ -126,7 +192,7 @@ export function ProductLabLanding({ selectedId, choose }: {
 }) {
   const product = touchpointDefinitions[selectedId].tool;
   return <section id="twig-playground-detail" className="vac-lab vac-lab-directory" aria-label={`${product} labs`}>
-    <h3>{product}</h3>
+    <h3>{product} labs</h3>
     <ol className="vac-lab-directory-list" aria-label={`${product} labs`}>
       {labsForProduct(selectedId).map(lab => <li key={lab.id} data-lab-color={lab.color}>
         <h4>{lab.title}</h4>
@@ -397,19 +463,23 @@ export type { InspectionGuide, InspectionSource } from "./InstrumentationInspect
 export type PlaygroundActivity = { id: number; operationId?: string; kind: TouchpointId; label: string; detail: string; event?: string; timestamp?: string; properties?: Record<string, InspectorValue>; element?: string };
 
 /** Compact terminal controls share accessible hover/focus tooltips. */
-function ConsoleControl({ label, disabled, onClick, children }: { label: string; disabled: boolean; onClick: () => void; children: ReactNode }) {
+function ConsoleControl({ label, disabled, onClick, children, surface = false }: { label: string; disabled: boolean; onClick: () => void; children: ReactNode; surface?: boolean }) {
   const tipId = useId();
   const [visible, setVisible] = useState(false);
   return <span className="vac-inspector-control-anchor" onMouseEnter={() => setVisible(true)} onMouseLeave={() => setVisible(false)}>
-    <button type="button" className="vac-inspector-control" aria-label={label} aria-describedby={visible ? tipId : undefined} disabled={disabled} onClick={onClick} onFocus={() => setVisible(true)} onBlur={() => setVisible(false)} onKeyDown={event => { if (event.key === "Escape" && visible) { event.preventDefault(); event.stopPropagation(); setVisible(false); } }}>{children}</button>
+    <button type="button" className="vac-inspector-control" data-surface={surface || undefined} aria-label={label} aria-describedby={visible ? tipId : undefined} disabled={disabled} onClick={onClick} onFocus={() => setVisible(true)} onBlur={() => setVisible(false)} onKeyDown={event => { if (event.key === "Escape" && visible) { event.preventDefault(); event.stopPropagation(); setVisible(false); } }}>{children}</button>
     {visible && <span role="tooltip" id={tipId} className="vac-inspector-control-tooltip">{label}</span>}
   </span>;
 }
 
 /** Persistent tools rail. Hosts own picking, placement, and analytics. */
-export function PlaygroundToolRail({ open, picking, selectedId, page, onOpen, onCollapse, onPick, onSelect, toggleRef, pickerRef, onHelpOpened, helpOpen = false, joinedBranding = false }: {
+export function PlaygroundToolRail({ open, picking, selectedId, page, onOpen, onCollapse, onPick, onSelect, toggleRef, pickerRef, onHomeOpened, homeOpen, onHelpOpened, helpOpen = false, joinedBranding = false }: {
   joinedBranding?: boolean;
+  homeOpen?: boolean;
+  onHomeOpened?: () => void;
+  /** @deprecated Use homeOpen. */
   helpOpen?: boolean;
+  /** @deprecated Use onHomeOpened. */
   onHelpOpened?: (trigger: "hover" | "focus" | "click") => void;
   open: boolean; picking: boolean; selectedId?: TouchpointId | null; page: PlaygroundPage;
   onOpen: () => void; onCollapse: () => void; onPick: () => void; onSelect: (id: TouchpointId) => void;
@@ -428,6 +498,7 @@ export function PlaygroundToolRail({ open, picking, selectedId, page, onOpen, on
     { tool: "Session Replay", id: "replay" },
     { tool: "Error Tracking", id: "errors" },
   ] as const;
+  const homeActive = homeOpen ?? helpOpen;
   const selectedTool = selectedId ? touchpointDefinitions[selectedId].tool : null;
   return <aside className={`vac-tool-rail vac-developer-theme${joinedBranding ? " vac-joined-branding" : ""}`} data-open={open} data-tips-dismissed={tipsDismissed}
     onPointerLeave={() => setTipsDismissed(false)} onFocusCapture={() => setTipsDismissed(false)}
@@ -437,29 +508,25 @@ export function PlaygroundToolRail({ open, picking, selectedId, page, onOpen, on
       if (tool && tool !== previous) setTipsDismissed(false);
     }}
     aria-label="PostHog website tools">
-    <div className="vac-tool-rail-logo" aria-hidden="true">
-      <img src={new URL("./assets/posthog-logomark.svg", import.meta.url).href} width={28} height={24} alt="" />
+    <div className="vac-tool-rail-logo">
+      <button type="button" aria-label="Playground Home" aria-describedby={`${tipId}-home`} aria-pressed={open && homeActive} aria-controls="twig-playground" onClick={() => { if (onHomeOpened) onHomeOpened(); else onHelpOpened?.("click"); }}>
+        <img src={new URL("./assets/posthog-logomark.svg", import.meta.url).href} width={28} height={24} alt="" />
+        <span id={`${tipId}-home`} role="tooltip" className="vac-tool-tip">Home</span>
+      </button>
     </div>
     <div className="vac-tool-rail-group" role="group" aria-label="Inspection tools">
-      <button ref={pickerRef} type="button" aria-label="Inspect an element" aria-describedby={`${tipId}-inspect`} aria-pressed={open && !helpOpen && picking} onClick={open && !helpOpen && picking ? onCollapse : onPick}>
+      <button ref={pickerRef} type="button" aria-label="Inspect an element" aria-describedby={`${tipId}-inspect`} aria-pressed={open && !homeActive && picking} onClick={open && !homeActive && picking ? onCollapse : onPick}>
         {/* Exact IconCursorBox from @posthog/icons, matching the existing product asset source. */}
-        <svg width="22" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="22" aria-hidden="true"><path d="M3 4.75C3 3.784 3.784 3 4.75 3h14.5c.966 0 1.75.784 1.75 1.75v6a.75.75 0 0 1-1.5 0v-6a.25.25 0 0 0-.25-.25H4.75a.25.25 0 0 0-.25.25v14.5c0 .138.112.25.25.25h6a.75.75 0 0 1 0 1.5h-6A1.75 1.75 0 0 1 3 19.25V4.75Z"></path><path d="M12.374 11.143a1 1 0 0 0-1.23 1.23l2.48 9.019c.233.844 1.361 1.003 1.818.256l2.355-3.852 3.852-2.355c.747-.457.588-1.585-.256-1.817l-9.02-2.48Z"></path></svg><span id={`${tipId}-inspect`} role="tooltip" className="vac-tool-tip">Inspect Twig</span>
+        <InspectorCursorIcon /><span id={`${tipId}-inspect`} role="tooltip" className="vac-tool-tip">Inspect Twig</span>
       </button>
-      {tools.map(item => <button key={item.tool} type="button" aria-label={`Open ${item.tool}`} aria-describedby={`${tipId}-${item.id}`} aria-pressed={open && !helpOpen && !picking && selectedTool === item.tool} onClick={() => { if (open && !helpOpen && !picking && selectedTool === item.tool) onCollapse(); else onSelect(item.id); }}>
-        <img src={productIcons[item.tool]} width={22} height={22} alt="" /><span id={`${tipId}-${item.id}`} role="tooltip" className="vac-tool-tip">{item.tool}</span>
+      {tools.map(item => <button key={item.tool} type="button" aria-label={`Open ${item.tool} labs`} aria-describedby={`${tipId}-${item.id}`} aria-pressed={open && !homeActive && !picking && selectedTool === item.tool} onClick={() => { if (open && !homeActive && !picking && selectedTool === item.tool) onCollapse(); else onSelect(item.id); }}>
+        <img src={productIcons[item.tool]} width={22} height={22} alt="" /><span id={`${tipId}-${item.id}`} role="tooltip" className="vac-tool-tip">{item.tool} labs</span>
       </button>)}
     </div>
     <div className="vac-tool-rail-footer">
     <button ref={toggleRef} className="vac-tool-rail-toggle" type="button" aria-label={open ? "Collapse Playground" : "Expand Playground"} aria-expanded={open} aria-describedby={`${tipId}-toggle`} aria-controls="twig-playground" onClick={open ? onCollapse : onOpen}>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d={open ? "m9 6 6 6-6 6" : "m15 6-6 6 6 6"} /></svg><span id={`${tipId}-toggle`} role="tooltip" className="vac-tool-tip">{open ? "Collapse" : "Expand"}</span>
     </button>
-      <div className="vac-tool-help">
-        <button type="button" aria-label="About the PostHog toolbar" aria-pressed={open && helpOpen} aria-controls="twig-playground"
-          onClick={() => { if (open && helpOpen) onCollapse(); else onHelpOpened?.("click"); }}>
-          <svg width="22" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="22" aria-hidden="true"><path fillRule="evenodd" clipRule="evenodd" d="M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16ZM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Z"></path><path fillRule="evenodd" clipRule="evenodd" d="M12 9a1 1 0 0 0-.879.522 1 1 0 1 1-1.754-.96A3 3 0 0 1 12 7c1.515 0 2.567 1.006 2.866 2.189.302 1.189-.156 2.574-1.524 3.258A.618.618 0 0 0 13 13a1 1 0 1 1-2 0c0-.992.56-1.898 1.447-2.342.455-.227.572-.618.48-.978C12.836 9.314 12.529 9 12 9Z"></path><path d="M13 16a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>
-        </button>
-
-      </div>
     </div>
   </aside>;
 }
@@ -560,7 +627,10 @@ export function PlaygroundExplorer({ page, activity, choose, showMarker, onInspe
 
 
 /** Live local instrumentation, intentionally separate from the guided lesson directory. */
-export function PlaygroundInspectionView({ activity, selectedId, onSelect, describe, contexts, session, onSessionChange }: {
+export function PlaygroundInspectionView({ activity, selectedId, onSelect, describe, contexts, session, onSessionChange, showIntroduction = true, guidance, onExitTour }: {
+  onExitTour?: () => void;
+  guidance?: ReactNode;
+  showIntroduction?: boolean;
   describe?: (activity: PlaygroundActivity) => InspectionGuide | undefined;
   contexts?: Partial<Record<TouchpointId, InspectionGuide>>;
   activity: readonly PlaygroundActivity[];
@@ -596,9 +666,15 @@ export function PlaygroundInspectionView({ activity, selectedId, onSelect, descr
     change({ type: "select", id: item.id });
     onSelect(item.kind);
   }
-  return <section id="twig-playground-detail" className="vac-lab vac-inspector" aria-label="Inspector">
-    <h3 className="vac-inspector-title">Inspector</h3>
-    <p>Interact with Twig to see its PostHog events in the console. Select any entry, including an earlier event or AI generation, to inspect its data and tracking code below.</p>
+  return <section id="twig-playground-detail" className="vac-lab vac-inspector" aria-label={onExitTour ? "Tour" : "Inspector"}>
+    {showIntroduction && <><div className="vac-inspector-heading">
+      <h3 tabIndex={-1} className="vac-inspector-title">{onExitTour ? "Tour" : "Inspector"}</h3>
+      {onExitTour && <ConsoleControl label="Exit tour" disabled={false} surface onClick={onExitTour}>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18" /></svg>
+      </ConsoleControl>}
+    </div>
+    {!guidance && <p>Interact with Twig to see its PostHog events in the console. Select any entry, including an earlier event or AI generation, to inspect its data and tracking code below.</p>}</>}
+    {guidance}
     <div className="vac-inspector-stream-browser">
       <div className="vac-inspector-stream-controls" role="group" aria-label="Console controls">
         <ConsoleControl label="Track live events" disabled={state.followLatest || !consoleRecords.length} onClick={() => { change({type:"follow"}); setExampleFor(null); const latest=consoleRecords.at(-1); if(latest) onSelect(latest.kind); }}>

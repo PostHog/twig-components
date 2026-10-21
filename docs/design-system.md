@@ -2,6 +2,10 @@
 
 Use this guide for every new or changed Twig view, playground panel, or lab. The existing components and CSS remain the source of truth; this document records the choices contributors should preserve. Twig.com applies these shared views on the site. See [integration](integration.md) for ownership.
 
+## Minimum text, intuitive interactions
+
+Keep prose and text to a minimum across Twig, the Playground, and every lab. Prefer intuitive, familiar controls and seamless flows over explanations. Make the next action obvious through the interface. Keep only essential context, avoid repeating labels or describing self-evident controls, and reveal detail where it is needed. Teach concepts when necessary, without front-loading instructions. This is a leading design principle, including on landing pages.
+
 ## Approved contract and future work
 
 This is the approved visual contract for all existing UI and every new feature, component, route, dialog, menu, form, and state. It is mandatory, including on login, account, saved/booked stays, fallbacks, mobile layouts, and later lesson steps. Feature development does not authorize new styling, alternate tokens/fonts, a host override, or a one-off visual pattern.
@@ -151,7 +155,7 @@ Sarah requested a persistent neutral tool rail with the existing PostHog logo/pr
 
 At narrow widths the persistent rail becomes a bottom tool strip, preserving Twig’s full content width. Keep tooltips inside the viewport and chat/replay controls above that strip. The host places those windows; search uses its own width as a container for its established responsive layouts.
 
-The rail uses the exact PostHog `IconCursorBox` and `IconQuestion` glyphs. Its bottom help control opens the dedicated `PlaygroundHelp` page on click or keyboard activation, through `onHelpOpened("click")`. Pass `helpOpen` for the active state. On mobile, the open rail hides its decorative logo to make room for collapse beside help. The edge workspace has no header collapse control.
+The rail uses the existing PostHog cursor and product icons. The logo is the Home button, controlled by `homeOpen` and `onHomeOpened`, with the same neutral selected state, tooltip, and keyboard focus as the other tools. Keep Home and collapse available on mobile, with no question-mark control. The edge workspace has no header collapse control.
 
 The rail logo is decorative: no button, link, tooltip, focus stop, or opening action. `toggleRef` belongs to the expand/collapse control. Hosts return focus to the inspect control on mobile.
 
@@ -196,7 +200,7 @@ Instrumentation circles retain their product colors and hover/focus notes. Notes
 
 The open edge Playground is one neutral surface with a single divider between the icon rail and content (above the bottom rail on mobile): no outer frame or header separator. Keep the divider below the desktop rail logo in both expanded and collapsed states. Keep borders on content cards, evidence, and controls. Its content scrollbar uses a thin neutral thumb on a transparent track without a reserved gutter; hosts should also keep the page scrollbar track transparent. Closed toolbar boundaries remain unchanged.
 
-The question-mark button opens `PlaygroundHelp` in the existing dock on click or keyboard activation, with no hover card. Pass controlled `helpOpen` to the rail and use `onHelpOpened` to show the view and track the existing click trigger. Help explains Inspect, product lab entry, and markers. Clicking the active help button closes the dock; selecting another tool exits help while preserving lesson progress.
+The PostHog logo is the Playground Home button. Use the existing rail button, neutral selected state, Home tooltip, and visible keyboard focus; keep it available on mobile. Home starts expanded on Twig.com with `PlaygroundHome`: a brief introduction, Take a tour, and the lab directory. Selecting a product or Inspect leaves Home; selecting Home does not reset lessons or console history. There is no question-mark control or help page in the toolbar. Hosts own the controlled Home state and activation analytics.
 
 Lab names describe the PostHog concept taught. The six toolbar labs are Events and properties; Breakdowns by property; Funnels and conversion events; Traces, generations, and evaluations; Session playback and masking; and Exceptions and issue resolution. Shared `touchpointDefinitions` owns the names; stable IDs, event names, lesson exercises, and page/action labels stay unchanged.
 
@@ -250,3 +254,25 @@ For edge placement, the full-height Playground scroll region contains a sticky h
 Console controls are persistent icon buttons on one uninterrupted black surface, with no title or divider. Use a 16px down arrow labeled and tooltipped “Track live events” to resume automatic latest-event selection after inspecting history. Keep it visible but disabled and muted while already following live events (or empty); enable it when selection is pinned. Reset stays alongside it. Both share the same compact hover, focus, Escape-dismissable tooltip, and disabled treatment. Preserve continued event collection while inspecting history and all existing callbacks.
 
 Selected Product Analytics records always use the generic “Event” drill-down title, regardless of the Twig action or feature. Keep actual event names in the console and interaction-specific explanations in prose. AI generation records retain “AI generation”; do not invent per-action titles for Product Analytics detail cards. Standalone lab Inspector examples retain their authored labels.
+
+
+
+## Compact Playground pages and hands-on onboarding
+
+All edge Playground pages use one top-spacing rule: remove the content's top padding and the first section/first child's top margins. Keep the existing header height, horizontal insets, and spacing within and between later sections. Apply this to Home, all product landings, Inspector, and every lab step, rather than a Home-only override. Inline embeds retain their composition.
+
+Home combines a brief introduction, a short optional real-interaction walkthrough, and a compact lab directory. Reuse `vac-lab` typography and the grouped `vac-home-panel` surfaces: “Meet Twig” introduces the demo vacation site and explains that the Playground reveals its PostHog events and code. “Take a tour” starts the walkthrough; the “Explore on your own” card and toolbar’s Inspector button open independent inspection. Use `PlaygroundOnboarding` with the shared `LabChecklist` for one action at a time inside the existing Inspector. Highlight an actual stay with `vac-lab-target`; its new `twig_stay_viewed` event advances to choosing a setting in Filters, followed by opening a filtered stay. Only those real events advance the tour. After three interactions, explain that the latest details are already shown and invite comparison of earlier console entries. Do not require selecting the newest event or divert the tour into the AI planner. Never fabricate an onboarding event or inject a response.
+
+Keep the site usable, retain Inspector history and lesson progress, and allow independent exploration at every stage. Home and tool changes pause the prompts without restarting them; explicit lab starts end the walkthrough. Hosts own in-memory progression, route/scroll coordination, and fixed milestone telemetry without visitor inputs. Reload starts fresh.
+
+The Home lab directory composes existing `vac-lab-other-pages` disclosures, product icons, and indented `vac-lab-menu-group` buttons. Each product expands to its actual concept-named labs, and selecting one starts it directly through the host callback. Keep the compact global header spacing, existing neutral surfaces, RoundHog, focus states, and product icon colors. No explanatory captions, invented illustrations, new palette, or Home-only CSS overrides. References: https://posthog.com/docs (contained get-started area and icon-led directory), https://posthog.com/product-analytics (clear purpose and direct action), and https://brand.posthog.com/catalog.json (brand assets, typeface and colors), checked 2026-10-21.
+
+Inspector and product lab landings share the standard `vac-lab h3` title size and line height. Name product pages, rail tooltips/accessibility labels, and Home product groups “[Product name] labs”, such as “Product Analytics labs” and “Session Replay labs”. Product names in event data and instrumentation retain their established names.
+
+All tour directions, including the final invitation to keep exploring event history, use the shared `LabChecklist` instruction box. Keep explanatory context outside the box.
+
+After three changes to earlier console selections, the tour prompts the down arrow to resume live tracking. Its actual follow action reveals the reset instruction; resetting then invites a few more site interactions to inspect new events. Repeated clicks on the same entry do not advance the tour. Keep all of these directions in `LabChecklist`; preserve the exit control and ordinary console behavior.
+
+Home follows the [PostHog docs landing page](https://posthog.com/docs) with stacked white panels, using existing neutral borders, the small corner token, and RoundHog. The top card contains only “Take a tour” and an arrow, followed by a separate “Explore on your own” CTA card that opens the Inspector. Keep that card to its label and arrow, without an explanation or separate Inspector label. The labs panel groups Learn with labs, its one-sentence introduction, and full-width neutral product bars with indented lab rows. Keep the 16px panel spacing, 44px interaction targets, and visible focus. Scope this composition to Home; other lab menus and Inspector views keep their established styling.
+
+Home’s Take a tour and Explore on your own cards share one control rule and the same label typography as Learn with labs: 14px / 20px, weight 600. Do not introduce a separate larger tour label. Product disclosure rows keep the shared menu typography.

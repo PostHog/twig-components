@@ -36,7 +36,7 @@ import { StayLab, StayLabProvider, useStayLab } from "../src/StayLab.js";
 import { stays, stayLabel } from "../src/catalog.js";
 import { ReplayLab, type ReplayLabViewState } from "../src/ReplayLab.js";
 import { ReplayProvider, useReplay } from "../src/ReplayRecorder.js";
-import { LabDirectory, PlaygroundMarker, PlaygroundInspectionView, PlaygroundHelp, PlaygroundToolRail, PlaygroundDock, PlaygroundInvitation, PlaygroundLauncher, ProductLabLanding, type PlaygroundActivity } from "../src/PlaygroundPanels.js";
+import { LabDirectory, PlaygroundMarker, PlaygroundInspectionView, PlaygroundHome, PlaygroundOnboarding, PlaygroundToolRail, PlaygroundDock, PlaygroundInvitation, PlaygroundLauncher, ProductLabLanding, type PlaygroundActivity } from "../src/PlaygroundPanels.js";
 import { LabNavigationView } from "../src/LabNavigation.js";
 import { playgroundPage, touchpointDefinitions } from "../src/playground.js";
 import "../src/catalog.css";
@@ -314,30 +314,44 @@ function AccountPreview() {
 }
 
 function InspectPreview() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [picking, setPicking] = useState(false);
-  const [helpOpen, setHelpOpen] = useState(false);
+  const [homeOpen, setHomeOpen] = useState(true);
+  const [onboarding, setOnboarding] = useState<"stay" | "filter" | "another-stay" | "history" | "compare" | "compare-again" | "follow" | "reset" | "complete" | null>(null);
+  const previousConsoleSelection = useRef<number | null>(null);
   const [feature, setFeature] = useState<"catalog" | "discovery" | "replay" | "errors">("catalog");
   const [activity, setActivity] = useState<PlaygroundActivity[]>([]);
   const [chosen, setChosen] = useState<string | null>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   return <div className="vac-app workbench-inspect-preview" data-open={open}>
-    <PlaygroundToolRail joinedBranding page={playgroundPage("/", stays)} open={open} picking={picking} selectedId={feature} helpOpen={helpOpen} onHelpOpened={() => { setHelpOpen(true); setOpen(true); }}
-      onOpen={() => setOpen(true)} onCollapse={() => setOpen(false)} onPick={() => { setHelpOpen(false); setPicking(true); setOpen(true); }}
-      onSelect={id => { setHelpOpen(false); setFeature(id as typeof feature); setOpen(true); setPicking(false); }} toggleRef={toggleRef} />
+    <PlaygroundToolRail joinedBranding page={playgroundPage("/", stays)} open={open} picking={picking} selectedId={feature} homeOpen={homeOpen} onHomeOpened={() => { setHomeOpen(true); setPicking(false); setOpen(true); }}
+      onOpen={() => setOpen(true)} onCollapse={() => setOpen(false)} onPick={() => { setHomeOpen(false); setPicking(true); setOpen(true); }}
+      onSelect={id => { setHomeOpen(false); setFeature(id as typeof feature); setOpen(true); setPicking(false); }} toggleRef={toggleRef} />
     <div className="workbench-controls" aria-label="Instrumentation markers">{playgroundPage("/", stays).touchpoints.map(point => <PlaygroundMarker key={point.id} touchpoint={point} highlighted={false} onHighlight={() => {}} onChoose={id => { setChosen(id); setOpen(true); }} />)}</div>
     {picking && <p role="status">Inspection observes normal Twig interactions. Simulate an event below to preview the live feed.</p>}
     <PlaygroundDock open={open} joinedBranding embedded={false} placement="edge" onClose={() => setOpen(false)} headingRef={headingRef}
       logo={<img src={new URL("../assets/posthog-logomark.svg", import.meta.url).href} width={26} height={26} alt="" />}
       navigation={null} recordingBar={null} pageKey="inspect"
-      guide={helpOpen ? <PlaygroundHelp /> : <>
+      guide={homeOpen ? <PlaygroundHome onVisitLab={id => { setChosen(id); setHomeOpen(false); setPicking(false); }} onStart={() => { setHomeOpen(false); setPicking(true); setOnboarding("stay"); }} onInspect={() => { setOnboarding(null); setHomeOpen(false); setPicking(true); }} onSelect={id => { setHomeOpen(false); setPicking(false); setFeature(id as typeof feature); }} /> : <>
+        {picking && onboarding && ["stay", "filter", "another-stay"].includes(onboarding) && <div className="workbench-controls"><button onClick={() => {
+          const filtering = onboarding === "filter";
+          setActivity(previous => [...previous, {id:previous.length+1,kind:filtering ? "catalog" : "stay",label:filtering ? "Setting selected" : "Stay viewed",event:filtering ? "twig_stay_filter_selected" : "twig_stay_viewed",detail:"",properties:filtering ? {setting:"Forest",result_count:1} : {stay_id:onboarding === "stay" ? "stay-01" : "stay-02"}}]);
+          setOnboarding(onboarding === "stay" ? "filter" : filtering ? "another-stay" : "history");
+        }}>Simulate {onboarding === "filter" ? "setting click" : "stay click"}</button></div>}
         <div className="workbench-controls"><button onClick={() => setActivity(previous => [...previous, { id: previous.length + 1, kind: "catalog" as const, label: "Setting selected", event: "twig_stay_filter_selected", detail: "setting: Forest", timestamp: new Date().toISOString(), properties: { setting: "Forest", result_count: 1 }, element: '<button aria-pressed="true">Forest</button>' }])}>Simulate Forest click</button><button onClick={() => setActivity(previous => {
           const operationId = `preview-${previous.length + 1}`;
           const generation = createGenerationRecord([{role:"user",content:"A forest getaway"}], [{role:"assistant",content:"stay-01"}], {sessionId:"preview-chat",traceId:operationId,generationId:`${operationId}-generation`,startedAt:Date.now()}, {scenario:"forest",turn_number:1,selected_stay_id:"stay-01",group_size:null,response_kind:"recommendation"}, 1.2, "Plan a getaway");
           return [...previous, {id:previous.length+1,kind:"discovery" as const,label:"AI response ready",event:"twig_ai_search_answered",detail:"",operationId,timestamp:generation.timestamp,properties:{outcome:"recommendation",result_count:1}}, {id:previous.length+2,kind:"discovery" as const,label:"AI generation",event:generation.event,detail:"",operationId,timestamp:generation.timestamp,properties:generation.properties}];
         })}>Simulate AI response</button></div>
-        {chosen ? <p role="status">Host starts the {chosen} lab. Existing lesson flow is unchanged.</p> : picking ? <PlaygroundInspectionView describe={item => ({method:item.event === "$ai_generation" ? "generation" : "capture",description:item.event === "$ai_generation" ? "A simulated model call, connected to the planner outcome." : item.kind === "discovery" ? "Records whether AI search found a stay." : "A filter handler records the selected setting and result count.",question:"What did this interaction produce?",sources:[{path:"Example capture call",line:1,caption:"",code:item.event === "$ai_generation" ? 'posthog.capture({\n  distinctId: userId,\n  event: "$ai_generation",\n  properties: {\n    $ai_trace_id: traceId,\n    $ai_model: model,\n    $ai_input_tokens: inputTokens,\n    $ai_output_tokens: outputTokens,\n    $ai_latency: latencySeconds\n  }\n})' : item.kind === "discovery" ? 'posthog.capture(\n  "twig_ai_search_answered",\n  {\n    outcome: "recommendation",\n    result_count: 1\n  }\n)' : 'posthog.capture(\n  "twig_stay_filter_selected",\n  {\n    setting: "Forest",\n    result_count: 1\n  }\n)'},{path:'src/example-tracking.ts',line:12,label:'Event handler',highlightLines:[2],code:'function selectSetting(setting) {\n  trackTwigEvent("twig_stay_filter_selected", { setting });\n}'}]})} contexts={{discovery:{method:"capture",description:"AI feature usage is a product event; model calls have generation evidence.",question:"How did the model produce its response?",sources:[],aiExample:true}}} activity={activity} selectedId={feature} onSelect={id => setFeature(id as typeof feature)} choose={id => { setChosen(id); setPicking(false); }} /> : <ProductLabLanding selectedId={feature} choose={id => setChosen(id)} />}
+        {chosen ? <p role="status">Host starts the {chosen} lab. Existing lesson flow is unchanged.</p> : picking ? <PlaygroundInspectionView onSessionChange={(_, action) => {
+          if (action.type === "clear" && onboarding) { setOnboarding(onboarding === "reset" || onboarding === "complete" ? "complete" : "stay"); previousConsoleSelection.current = null; }
+          if (action.type === "follow") { if (onboarding === "follow") setOnboarding("reset"); previousConsoleSelection.current = null; }
+          if (action.type === "select") {
+            if (action.id !== activity.at(-1)?.id && action.id !== previousConsoleSelection.current) setOnboarding(previous => previous === "history" ? "compare" : previous === "compare" ? "compare-again" : previous === "compare-again" ? "follow" : previous);
+            previousConsoleSelection.current = action.id;
+          }
+        }} guidance={onboarding ? <PlaygroundOnboarding phase={onboarding} /> : undefined} onExitTour={onboarding ? () => { setOnboarding(null); setHomeOpen(true); setPicking(false); headingRef.current?.focus({ preventScroll: true }); } : undefined} describe={item => ({method:item.event === "$ai_generation" ? "generation" : "capture",description:item.event === "$ai_generation" ? "A simulated model call, connected to the planner outcome." : item.kind === "discovery" ? "Records whether AI search found a stay." : "A filter handler records the selected setting and result count.",question:"What did this interaction produce?",sources:[{path:"Example capture call",line:1,caption:"",code:item.event === "$ai_generation" ? 'posthog.capture({\n  distinctId: userId,\n  event: "$ai_generation",\n  properties: {\n    $ai_trace_id: traceId,\n    $ai_model: model,\n    $ai_input_tokens: inputTokens,\n    $ai_output_tokens: outputTokens,\n    $ai_latency: latencySeconds\n  }\n})' : item.kind === "discovery" ? 'posthog.capture(\n  "twig_ai_search_answered",\n  {\n    outcome: "recommendation",\n    result_count: 1\n  }\n)' : 'posthog.capture(\n  "twig_stay_filter_selected",\n  {\n    setting: "Forest",\n    result_count: 1\n  }\n)'},{path:'src/example-tracking.ts',line:12,label:'Event handler',highlightLines:[2],code:'function selectSetting(setting) {\n  trackTwigEvent("twig_stay_filter_selected", { setting });\n}'}]})} contexts={{discovery:{method:"capture",description:"AI feature usage is a product event; model calls have generation evidence.",question:"How did the model produce its response?",sources:[],aiExample:true}}} activity={activity} selectedId={feature} onSelect={id => setFeature(id as typeof feature)} choose={id => { setChosen(id); setPicking(false); }} /> : <ProductLabLanding selectedId={feature} choose={id => setChosen(id)} />}
       </>} />
   </div>;
 }

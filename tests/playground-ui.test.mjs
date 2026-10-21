@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { labsOnOtherPages, playgroundPage } from "@posthog/twig-components/playground";
+import { labsOnOtherPages, playgroundPage, touchpointDefinitions } from "@posthog/twig-components/playground";
 import { characters, stays } from "@posthog/twig-components/catalog";
 import { AiLabProvider, AiLab, AiIntroduction } from "@posthog/twig-components/ai-lab-ui";
 import { BookingLabProvider, BookingLab } from "@posthog/twig-components/booking-lab-ui";
@@ -15,7 +15,8 @@ import { LabNavigationView } from "@posthog/twig-components/lab-navigation";
 import {
   LabDirectory,
   ProductLabLanding,
-  PlaygroundHelp,
+  PlaygroundHome,
+  PlaygroundOnboarding,
   PlaygroundToolRail,
   PlaygroundDock,
   PlaygroundMarker,
@@ -247,6 +248,7 @@ test("each product landing lists all of its labs once, independent of the curren
   for(const title of ["Events and properties","Breakdowns by property","Funnels and conversion events"]) assert.ok(analytics.includes(`Start lab: ${title}`));
   assert.equal((analytics.match(/Start lab:/g)||[]).length,3);
   assert.equal(analytics,stay);
+  assert.match(analytics, /<h3>Product Analytics labs<\/h3>/);
   assert.doesNotMatch(analytics,/Show me where|Activity on Twig|Local preview|Labs on other pages/);
   for(const [id,title] of [["discovery","Traces, generations, and evaluations"],["replay","Session playback and masking"],["errors","Exceptions and issue resolution"]]) {
     const html=render(h(ProductLabLanding,{selectedId:id,choose:noop}));
@@ -254,13 +256,11 @@ test("each product landing lists all of its labs once, independent of the curren
   }
 });
 
-test("toolbar help is a dedicated page with a click-only entry", () => {
-  const page = render(h(PlaygroundHelp));
-  for (const title of ["Using the toolbar", "Inspect Twig", "Explore a lab", "Follow the markers"]) assert.match(page, new RegExp(title));
-  const rail = render(h(PlaygroundToolRail, { page: playgroundPage("/", stays), open: true, helpOpen: true, picking: false, selectedId: "catalog", onOpen: noop, onCollapse: noop, onPick: noop, onSelect: noop, toggleRef: { current: null } }));
-  assert.match(rail, /aria-label="About the PostHog toolbar" aria-pressed="true" aria-controls="twig-playground"/);
-  assert.doesNotMatch(rail, /vac-tool-help-content/);
-  assert.doesNotMatch(rail, /aria-label="Open Product Analytics"[^>]*aria-pressed="true"/);
+test("the logo opens Home without a separate help control or selected product", () => {
+  const rail = render(h(PlaygroundToolRail, { page: playgroundPage("/", stays), open: true, homeOpen: true, picking: false, selectedId: "catalog", onHomeOpened: noop, onOpen: noop, onCollapse: noop, onPick: noop, onSelect: noop, toggleRef: { current: null } }));
+  assert.match(rail, /aria-label="Playground Home"[^>]*aria-pressed="true"[^>]*aria-controls="twig-playground"/);
+  assert.doesNotMatch(rail, /About the PostHog toolbar|vac-tool-help/);
+  assert.doesNotMatch(rail, /aria-label="Open Product Analytics labs"[^>]*aria-pressed="true"/);
 });
 
 test("joined edge branding keeps the logo out of the expanded title", () => {
@@ -480,4 +480,32 @@ test("every Product Analytics drill-down uses Event while console records retain
   assert.equal(document.querySelector('.vac-inspector-record-heading code').textContent,event);
   assert.ok(document.querySelector('.vac-inspector-context').textContent.includes('What the interaction records.'));
  }
+});
+
+
+test("Home introduces Twig, offers a stay interaction and groups every lab by product", () => {
+  const html = render(h(PlaygroundHome, { onInspect: noop, onStart: noop, onVisitLab: noop }));
+  for (const text of ["Meet Twig", "demo vacation rental site", "The PostHog Playground reveals", "Take a tour", "Explore on your own", "Learn with labs", "Go deeper with guided, hands-on lessons for each PostHog product."]) assert.ok(html.includes(text));
+  assert.equal((html.match(/<details /g) ?? []).length, 4);
+  assert.equal((html.match(/aria-label="Start lab:/g) ?? []).length, 6);
+  for (const id of ["catalog", "discovery", "replay", "errors"]) assert.ok(html.includes(`${touchpointDefinitions[id].tool} labs`));
+  assert.doesNotMatch(html, /<small|<caption/);
+});
+
+test("tour guidance stays inside the normal Inspector with an exit in every phase", () => {
+  for (const phase of ["stay", "filter", "another-stay", "history", "compare", "compare-again", "follow", "reset", "complete"]) {
+    const guidance = h(PlaygroundOnboarding, { phase });
+    const prompt = render(guidance);
+    assert.doesNotMatch(prompt, /End tour|Exit tour/);
+    assert.doesNotMatch(prompt, /<h[1-6]|Try the AI trip planner|stay view event/);
+    assert.match(prompt, /vac-booking-checklist/);
+    const html = render(h(PlaygroundInspectionView, { activity: [], onSelect: noop, guidance, onExitTour: noop }));
+    assert.match(html, /vac-inspector-title[^>]*>Tour/);
+    assert.match(html, /Guided tour/);
+    assert.match(html, /aria-label="Exit tour"/);
+    assert.match(html, /data-surface="true"/);
+    assert.match(html, /Event console/);
+    assert.doesNotMatch(html, /Interact with Twig to see/);
+    assert.ok(html.indexOf('aria-label="Tour"') < html.indexOf('aria-label="Guided tour"'));
+  }
 });
