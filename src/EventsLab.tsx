@@ -1,5 +1,5 @@
 "use client";
-import { PlaygroundSummary, DisclosureIcon } from "./PlaygroundDisclosure.js";
+import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { Children, isValidElement, useEffect, useId, useRef, useState, type Dispatch, type ReactNode } from "react";
 import { canContinue, captureCode, currentEvents, destinationCounts, eventInspectionRequest, eventTrendsRequest, handoffTask, hasCurrentAgentReply, needsConfiguration, type EventsAction, type EventsState, type TeachingEvent } from "./events-lab.js";
 function Button({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
@@ -54,7 +54,7 @@ function WebExperience({ state, dispatch }: ExperienceProps) {
 function ActivityPreview({ events, selected, onSelect }: { events: TeachingEvent[]; selected: TeachingEvent; onSelect: (id: string) => void }) {
   return <section className="vac-activity-preview" aria-label="PostHog Activity preview">
     <div className="vac-activity-heading"><strong>Twig playground events</strong></div>
-    <div className="vac-activity-list"><table className="vac-lab-table" aria-label="Recorded events"><thead><tr><th scope="col">Event</th><th scope="col">Time</th></tr></thead><tbody>{[...events].reverse().map(event => <tr key={event.id} className={event.id === selected.id ? "is-selected" : undefined}><td><button type="button" aria-pressed={event.id === selected.id} onClick={() => onSelect(event.id)}><DisclosureIcon expanded={event.id === selected.id} /><code>{event.event}</code></button></td><td><time dateTime={event.timestamp}>{new Date(event.timestamp).toLocaleTimeString([], { hour12: false })}</time></td></tr>)}</tbody></table></div>
+    <div className="vac-activity-list"><table className="vac-lab-table" aria-label="Recorded events"><thead><tr><th scope="col">Event</th><th scope="col">Time</th></tr></thead><tbody>{[...events].reverse().map(event => <tr key={event.id} className={event.id === selected.id ? "is-selected" : undefined}><td><button type="button" aria-pressed={event.id === selected.id} onClick={() => onSelect(event.id)}><code>{event.event}</code></button></td><td><time dateTime={event.timestamp}>{new Date(event.timestamp).toLocaleTimeString([], { hour12: false })}</time></td></tr>)}</tbody></table></div>
     <div className="vac-activity-detail"><div className="vac-activity-property-heading">Properties</div><table className="vac-lab-table vac-lab-table-key-value" aria-label="Event properties"><thead><tr><th scope="col">Property</th><th scope="col">Value</th></tr></thead><tbody>{Object.entries(selected.properties).map(([name, value]) => <tr key={name}><td><code>{name}</code></td><td><code>{String(value)}</code></td></tr>)}{!Object.keys(selected.properties).length && <tr><td colSpan={2}>No custom properties</td></tr>}</tbody></table></div>
   </section>;
 }
