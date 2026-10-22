@@ -22,6 +22,7 @@
   /* PostHog.com light tertiary window scheme (global.css), not Twig tokens. */
   --ph-window-background: #e5e7e0;
   --ph-window-border: #9ea096;
+  /* Reserved for established raised controls/popovers, never lab content. */
   --ph-window-elevation: 0 3px 0 var(--ph-window-border);
   /* PostHog product base.scss --modal-shadow-elevation. */
   --ph-window-shadow: 0 16px 16px -16px rgb(0 0 0 / 35%);
@@ -42,8 +43,8 @@
 .vac-app .vac-developer-theme .vac-lab legend { font-size: 14px; font-weight: 600; }
 .vac-app .vac-developer-theme .vac-lab-step { border: 0; border-top: 1px solid var(--vac-line); padding: 16px 0; margin-top: 16px; }
 .vac-app .vac-developer-theme .vac-lab summary { cursor: pointer; font-size: 14px; font-weight: 500; }
-.vac-app .vac-developer-theme .vac-lab-output { padding: 16px; background: var(--vac-paper); border: 1px solid var(--vac-line); border-radius: 8px; }
-.vac-app .vac-developer-theme .vac-lab pre { font: 12px/1.65 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre-wrap; overflow-wrap: anywhere; background: var(--vac-ink); color: var(--vac-paper); padding: 12px; border-radius: 4px; margin: 12px 0; }
+.vac-app .vac-developer-theme .vac-lab-output { padding: 16px; background: var(--vac-paper); border: 1px solid var(--vac-line); border-radius: var(--ph-radius-sm); }
+.vac-app .vac-developer-theme .vac-lab pre { font: 12px/1.65 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre-wrap; overflow-wrap: anywhere; background: var(--vac-ink); color: var(--vac-paper); padding: 12px; border-radius: var(--ph-radius-sm); margin: 12px 0; }
 .vac-app .vac-developer-theme .vac-lab-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
 .vac-app .vac-developer-theme .vac-browse-link { display: block; width: fit-content; margin: 8px 0; text-decoration: underline; text-underline-offset: 4px; font-size: 14px; }
 .vac-app .vac-developer-theme .vac-inspect-name { display: block; font-size: 12px; overflow-wrap: anywhere; margin: 8px 0 16px; }
@@ -90,8 +91,8 @@
   color: var(--vac-ink);
   background: var(--vac-fill);
   border-color: var(--ph-neutral-border);
-  border-radius: 6px;
-  box-shadow: 0 3px 0 var(--ph-neutral-border);
+  border-radius: var(--ph-radius-sm);
+  box-shadow: none;
 }
 .vac-app .vac-developer-theme :is(h1, h2, h3, h4) {
   font-family: inherit;
@@ -127,7 +128,7 @@
   border: 1px solid var(--ph-window-border);
   background: var(--ph-window-background);
   color: var(--ph-neutral-ink);
-  box-shadow: var(--ph-window-elevation), var(--ph-window-shadow);
+  box-shadow: var(--ph-window-shadow);
 }
 .vac-app .vac-playground-invite.vac-developer-theme .vac-invite-brand {
   display: flex;
@@ -179,7 +180,7 @@
 .vac-app .vac-developer-theme .vac-lab-badge {
   background: var(--ph-neutral-background);
   border-color: var(--vac-line);
-  border-radius: 4px;
+  border-radius: var(--ph-radius-sm);
   font-size: 11px;
 }
 .vac-app .vac-developer-theme .vac-eyebrow {
@@ -193,7 +194,7 @@
 .vac-app .vac-developer-theme .vac-lab :is(p, li) > code {
   padding: 1px 4px;
   border: 1px solid rgb(245 78 0 / 50%);
-  border-radius: 2px;
+  border-radius: var(--ph-radius-sm);
   background: rgb(245 78 0 / 10%);
   color: #c03300;
   font-size: 0.93em;
@@ -203,7 +204,7 @@
   -webkit-box-decoration-break: clone;
 }
 .vac-app .vac-developer-theme .vac-lab-directory-list > li {
-  border-radius: 6px;
+  border-radius: var(--ph-radius-sm);
 }
 .vac-app .vac-developer-theme .vac-lab-other-pages {
   margin-top: 12px;
@@ -215,7 +216,7 @@
   gap: 12px;
   padding: 12px 14px;
   border: 1px solid var(--vac-line);
-  border-radius: 6px;
+  border-radius: var(--ph-radius-sm);
   background: var(--vac-paper);
   list-style: none;
   font-size: 13px;
@@ -230,7 +231,7 @@
   display: none;
 }
 .vac-app .vac-developer-theme .vac-lab-other-pages[open] > summary {
-  border-radius: 6px 6px 0 0;
+  border-radius: var(--ph-radius-sm) var(--ph-radius-sm) 0 0;
 }
 .vac-app .vac-developer-theme .vac-lab-menu-end {
   display: inline-flex;
@@ -252,7 +253,7 @@
   overflow: hidden;
   border: 1px solid var(--vac-line);
   border-top: 0;
-  border-radius: 0 0 6px 6px;
+  border-radius: 0 0 var(--ph-radius-sm) var(--ph-radius-sm);
   background: var(--vac-paper);
 }
 .vac-app .vac-developer-theme .vac-lab-menu-group h4 {
@@ -288,7 +289,7 @@
   width: 100%;
   padding: 7px 6px;
   border: 0;
-  border-radius: 4px;
+  border-radius: var(--ph-radius-sm);
   background: transparent;
   color: var(--vac-ink);
   text-align: left;
@@ -312,7 +313,7 @@
   gap: 0;
   padding: 0;
   border: 1px solid var(--vac-line);
-  border-radius: 6px;
+  border-radius: var(--ph-radius-sm);
   background: var(--ph-neutral-white);
 }
 .vac-app .vac-developer-theme .vac-event-choice {
@@ -335,7 +336,7 @@
   grid-template-columns: 1fr;
   gap: 0;
   border: 1px solid var(--vac-line);
-  border-radius: 6px;
+  border-radius: var(--ph-radius-sm);
   overflow: hidden;
 }
 .vac-app .vac-developer-theme .vac-event-comparison > div {
@@ -417,7 +418,7 @@
 .vac-ai-compare {
   background: var(--ph-neutral-white);
   border: 1px solid var(--vac-line);
-  border-radius: 6px;
+  border-radius: var(--ph-radius-sm);
   padding: 12px;
 }
 .vac-ai-compare h4 {
@@ -441,7 +442,7 @@
 .vac-app .vac-developer-theme .vac-ai-code-highlight {
   background: var(--ph-brand-purple);
   color: var(--ph-neutral-white);
-  border-radius: 2px;
+  border-radius: var(--ph-radius-sm);
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
@@ -479,7 +480,7 @@
   background: var(--ph-brand-yellow);
   color: var(--ph-neutral-ink);
   padding: 4px 8px;
-  border-radius: 4px;
+  border-radius: var(--ph-radius-sm);
   white-space: nowrap;
 }
 .vac-replay-recording {
@@ -531,10 +532,10 @@
   gap: 14px;
   padding: 12px 16px;
   border: 1px solid #d0d1c9;
-  border-radius: 6px;
+  border-radius: var(--ph-radius-sm);
   background: #eeefe9;
   color: #151515;
-  box-shadow: 0 3px 0 #d0d1c9, 0 12px 28px #15151524;
+  box-shadow: var(--ph-window-shadow);
   font: 600 14px/1.4 PlaygroundRoundHog, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 .vac-replay-stop::before {
@@ -553,7 +554,7 @@
   background: #fff;
   color: #151515;
   border: 1.5px solid #b17816;
-  border-radius: 6px;
+  border-radius: var(--ph-radius-sm);
   padding: 10px 14px;
   white-space: nowrap;
   cursor: pointer;
@@ -660,7 +661,7 @@
   height: 32px;
   padding: 0;
   border: 1px solid var(--vac-line);
-  border-radius: 4px;
+  border-radius: var(--ph-radius-sm);
   background: transparent;
   color: var(--ph-neutral-ink);
   cursor: pointer;
@@ -679,7 +680,7 @@
   flex-basis: 100%;
   padding: 10px 12px;
   border: 1px solid var(--ph-os-button-border);
-  border-radius: 6px;
+  border-radius: var(--ph-radius-sm);
   background: var(--ph-brand-yellow);
   background: color-mix(in srgb, var(--ph-brand-yellow) 22%, var(--ph-neutral-white));
 }
@@ -754,7 +755,7 @@
   min-height: 0;
   padding: 0;
   border: 1.5px solid var(--ph-os-button-border);
-  border-radius: 6px;
+  border-radius: var(--ph-radius-sm);
   background: var(--ph-brand-yellow);
   color: var(--vac-ink);
   font-size: 13px;
@@ -772,7 +773,7 @@
   margin-inline: -1.5px;
   padding: 4px 10px;
   border: 1.5px solid var(--ph-os-button-border);
-  border-radius: 6px;
+  border-radius: var(--ph-radius-sm);
   background: var(--ph-neutral-white);
   color: var(--ph-neutral-ink);
   transform: translateY(-2px);
@@ -961,7 +962,7 @@
 .vac-filter-comparisons {
   margin: 16px 0;
   border: 1px solid var(--ph-neutral-border);
-  border-radius: 6px;
+  border-radius: var(--ph-radius-sm);
   overflow: hidden;
 }
 .vac-filter-comparison-head,
@@ -1079,12 +1080,12 @@
 /* AI request evidence uses the same lab surface in Twig and the workbench. */
 
 /* Request tabs browse two views of the same event, rather than quiz choices. */
-.vac-app .vac-developer-theme .vac-request-tabs { display: flex; margin-top: 16px; border: 1px solid var(--vac-line); border-radius: 6px 6px 0 0; overflow: hidden; }
+.vac-app .vac-developer-theme .vac-request-tabs { display: flex; margin-top: 16px; border: 1px solid var(--vac-line); border-radius: var(--ph-radius-sm) var(--ph-radius-sm) 0 0; overflow: hidden; }
 .vac-app .vac-developer-theme .vac-request-tabs [role="tab"] { flex: 1; min-width: 0; min-height: 44px; padding: 10px 8px; border: 0; background: var(--ph-neutral-background); color: var(--vac-muted); font-weight: 600; }
 .vac-app .vac-developer-theme .vac-request-tabs [role="tab"] + [role="tab"] { border-left: 1px solid var(--vac-line); }
 .vac-app .vac-developer-theme .vac-request-tabs [aria-selected="true"] { background: var(--ph-neutral-white); color: var(--vac-ink); }
 .vac-app .vac-developer-theme .vac-request-tabs [role="tab"]:focus-visible { outline: 2px solid var(--ph-brand-cobalt); outline-offset: -4px; }
-.vac-app .vac-developer-theme .vac-request-panel { padding: 16px; background: var(--ph-neutral-white); border: 1px solid var(--vac-line); border-top: 0; border-radius: 0 0 6px 6px; overflow-wrap: anywhere; }
+.vac-app .vac-developer-theme .vac-request-panel { padding: 16px; background: var(--ph-neutral-white); border: 1px solid var(--vac-line); border-top: 0; border-radius: 0 0 var(--ph-radius-sm) var(--ph-radius-sm); overflow-wrap: anywhere; }
 .vac-app .vac-developer-theme .vac-request-panel h4 { margin-top: 0; }
 .vac-app .vac-developer-theme .vac-request-panel p:last-child { margin-bottom: 0; }
 
@@ -1116,7 +1117,7 @@
 /* A compact trace outline separates the recorded result from capture code. */
 .vac-app .vac-developer-theme .vac-trace-preview { margin: 20px 0 0; }
 .vac-app .vac-developer-theme .vac-trace-preview > figcaption { margin-bottom: 12px; }
-.vac-app .vac-developer-theme .vac-trace-preview-surface { background: var(--ph-neutral-white); border: 1px solid var(--vac-line); border-radius: 8px; overflow: hidden; }
+.vac-app .vac-developer-theme .vac-trace-preview-surface { background: var(--ph-neutral-white); border: 1px solid var(--vac-line); border-radius: var(--ph-radius-sm); overflow: hidden; }
 .vac-app .vac-developer-theme .vac-trace-preview-name { padding: 12px 16px; background: var(--ph-neutral-background); border-bottom: 1px solid var(--vac-line); font-size: 13px; }
 .vac-app .vac-developer-theme .vac-trace-preview-call { display: grid; gap: 4px; padding: 12px 16px; border-bottom: 1px solid var(--vac-line); font-size: 13px; }
 .vac-app .vac-developer-theme .vac-trace-preview-data { padding: 12px 16px; }
@@ -1128,7 +1129,7 @@
 .vac-app .vac-developer-theme .vac-trace-preview-message p { margin: 4px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 
 /* A session header groups simple trace rows, as in PostHog's session view. */
-.vac-app .vac-developer-theme .vac-conversation-traces { margin: 16px 0; background: var(--ph-neutral-white); border: 1px solid var(--vac-line); border-radius: 8px; overflow: hidden; font-size: 13px; }
+.vac-app .vac-developer-theme .vac-conversation-traces { margin: 16px 0; background: var(--ph-neutral-white); border: 1px solid var(--vac-line); border-radius: var(--ph-radius-sm); overflow: hidden; font-size: 13px; }
 .vac-app .vac-developer-theme .vac-conversation-session { display: grid; gap: 6px; padding: 12px 16px; border-bottom: 1px solid var(--vac-line); background: var(--ph-neutral-background); }
 .vac-app .vac-developer-theme .vac-conversation-session > code:first-child { font-weight: 600; }
 .vac-app .vac-developer-theme .vac-conversation-traces ol { list-style: none; padding: 0 0 0 16px; margin: 0 16px 16px 24px; border-left: 1px solid var(--vac-line); }
@@ -1186,7 +1187,7 @@
 
 /* Events and properties: portable lesson UI shared by both hosts. */
 .vac-events-lab { min-width: 0; }
-.vac-app .vac-developer-theme .vac-web-evidence { border: 1px solid var(--vac-line); border-radius: 6px; background: var(--vac-paper); padding: 12px; margin: 16px 0; }
+.vac-app .vac-developer-theme .vac-web-evidence { border: 1px solid var(--vac-line); border-radius: var(--ph-radius-sm); background: var(--vac-paper); padding: 12px; margin: 16px 0; }
 .vac-web-toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; border-bottom: 1px solid var(--vac-line); padding-bottom: 10px; }
 .vac-web-toolbar span { font-size: 11px; color: var(--vac-muted); }
 .vac-app .vac-developer-theme .vac-event-row { display: grid; gap: 5px; width: 100%; text-align: left; border: 0; border-bottom: 1px solid var(--vac-line); padding: 14px 0; color: var(--vac-ink); background: none; overflow-wrap: anywhere; font-size: 12px; }
@@ -1199,7 +1200,7 @@
 .vac-event-reader dd { margin: 4px 0 0; font-weight: 600; }
 .vac-event-reader small { margin-left: 6px; font-size: 10px; font-weight: 400; }
 .vac-event-reader summary { font-size: 12px; }
-.vac-app .vac-developer-theme .vac-agent-terminal { background: var(--ph-neutral-ink); color: var(--ph-neutral-background); border-radius: 6px; padding: 14px; margin: 16px 0; font: 12px/1.65 ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; min-width: 0; }
+.vac-app .vac-developer-theme .vac-agent-terminal { background: var(--ph-neutral-ink); color: var(--ph-neutral-background); border-radius: var(--ph-radius-sm); padding: 14px; margin: 16px 0; font: 12px/1.65 ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; min-width: 0; }
 .vac-app .vac-developer-theme .vac-agent-terminal :is(p, input, button, summary, pre, strong) { font-family: inherit; font-size: 12px; }
 .vac-agent-title { display: flex; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid var(--ph-neutral-muted); padding-bottom: 10px; }
 .vac-agent-title > span:last-child { margin-left: auto; color: var(--ph-brand-yellow); }
@@ -1212,7 +1213,7 @@
 .vac-agent-tool summary { cursor: pointer; }
 .vac-app .vac-developer-theme .vac-agent-terminal pre { border: 1px solid var(--ph-neutral-muted); color: var(--ph-neutral-background); background: var(--ph-neutral-ink); font-size: 11px; }
 .vac-agent-input { border-top: 1px solid var(--ph-neutral-muted); padding-top: 12px; }
-.vac-app .vac-developer-theme .vac-agent-input button { flex-shrink: 0; padding: 6px; border: 1px solid var(--ph-neutral-border); border-radius: 3px; background: var(--ph-neutral-background); color: var(--ph-neutral-ink); }
+.vac-app .vac-developer-theme .vac-agent-input button { flex-shrink: 0; padding: 6px; border: 1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); background: var(--ph-neutral-background); color: var(--ph-neutral-ink); }
 .vac-app .vac-developer-theme .vac-agent-suggestion { display: block; border: 0; padding: 8px 0; color: var(--ph-brand-yellow); text-align: left; background: none; text-decoration: underline; text-underline-offset: 3px; }
 .vac-app .vac-developer-theme .vac-breakdown-row { display: grid; width: 100%; grid-template-columns: 60px minmax(0,1fr) 24px; gap: 8px; align-items: center; padding: 9px 4px; background: transparent; color: inherit; border: 0; text-align: left; font-size: 12px; }
 .vac-breakdown-row[aria-pressed="true"] { outline: 1px solid currentColor; }
@@ -1231,10 +1232,10 @@
 .vac-events-lab .vac-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 
 .vac-path-entry { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; margin: 20px 0; }
-.vac-app .vac-developer-theme .vac-experience-card { display: flex; flex-direction: column; align-items: stretch; min-width: 0; padding: 0 12px 14px; text-align: left; border: 1px solid var(--ph-neutral-border); border-radius: 6px; background: var(--ph-neutral-white); color: var(--ph-neutral-ink); box-shadow: none; transition: transform 200ms ease, box-shadow 200ms ease; }
-.vac-app .vac-developer-theme .vac-experience-card:hover { transform: translateY(-2px); box-shadow: 0 8px 18px -8px rgb(21 21 21 / 25%); }
+.vac-app .vac-developer-theme .vac-experience-card { display: flex; flex-direction: column; align-items: stretch; min-width: 0; padding: 0 12px 14px; text-align: left; border: 1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); background: var(--ph-neutral-white); color: var(--ph-neutral-ink); box-shadow: none; transition: none; }
+.vac-app .vac-developer-theme .vac-experience-card:hover { transform: none; box-shadow: none; }
 .vac-app .vac-developer-theme .vac-experience-card:active { transform: translateY(0); box-shadow: none; }
-.vac-choice-art { display: block; margin: 0 -12px 12px; padding: 8px; border-radius: 5px 5px 0 0; border-bottom: 1px solid var(--ph-neutral-border); background: var(--ph-neutral-background); }
+.vac-choice-art { display: block; margin: 0 -12px 12px; padding: 8px; border-radius: var(--ph-radius-sm) var(--ph-radius-sm) 0 0; border-bottom: 1px solid var(--ph-neutral-border); background: var(--ph-neutral-background); }
 .vac-choice-art { height: 112px; background-repeat: no-repeat; background-position: center; background-size: auto 96px; }
 .vac-choice-browser { background-image: url("./assets/hoggie-chart.png"); }
 .vac-choice-terminal { background-image: url("./assets/hoggie-robot.png"); }
@@ -1243,7 +1244,7 @@
 .vac-choice-description { margin-top: 8px; font-size: 12px; font-weight: 400; line-height: 1.5; }
 @media (prefers-reduced-motion: reduce) { .vac-app .vac-developer-theme .vac-experience-card { transition: none; } }
 .vac-breakdown-select { display: grid; gap: 6px; margin: 12px 0; font-size: 12px; }
-.vac-breakdown-select select { width: 100%; min-width: 0; padding: 8px; background: var(--vac-paper); color: var(--vac-ink); border: 1px solid var(--vac-line); border-radius: 4px; font: inherit; }
+.vac-breakdown-select select { width: 100%; min-width: 0; padding: 8px; background: var(--vac-paper); color: var(--vac-ink); border: 1px solid var(--vac-line); border-radius: var(--ph-radius-sm); font: inherit; }
 .vac-agent-terminal .vac-event-reader { border-left: 2px solid var(--ph-neutral-muted); padding-left: 10px; }
 .vac-agent-terminal .vac-event-reader dl { margin: 8px 0; }
 .vac-agent-terminal .vac-event-reader dl > div { border-color: var(--ph-neutral-muted); }
@@ -1261,18 +1262,18 @@
   max-width: calc(100vw - 32px);
   padding: 12px 16px;
   border: 1px solid var(--ph-neutral-border);
-  border-radius: 6px;
+  border-radius: var(--ph-radius-sm);
   background: var(--ph-neutral-white);
   color: var(--ph-neutral-ink);
-  box-shadow: hsl(206 22% 7% / 35%) 0 10px 38px -10px, hsl(206 22% 7% / 20%) 0 10px 20px -15px;
+  box-shadow: var(--ph-window-shadow);
   font: 400 14px/1.4 PlaygroundRoundHog, sans-serif;
   overflow-wrap: anywhere;
 }
 
 /* PostHog.com RadixUI/ToggleGroup small variant: shared border and shaded selection. */
 .vac-experience-control { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--vac-line); font-size: 12px; }
-.vac-experience-toggle { display: inline-flex; gap: 1px; padding: 2px; border: 1px solid var(--vac-line); border-radius: 4px; }
-.vac-app .vac-developer-theme .vac-experience-toggle button { border: 1px solid transparent; border-radius: 3px; padding: 4px 12px; background: transparent; color: var(--vac-ink); font: 500 12px/1.4 PlaygroundRoundHog, sans-serif; box-shadow: none; }
+.vac-experience-toggle { display: inline-flex; gap: 1px; padding: 2px; border: 1px solid var(--vac-line); border-radius: var(--ph-radius-sm); }
+.vac-app .vac-developer-theme .vac-experience-toggle button { border: 1px solid transparent; border-radius: var(--ph-radius-sm); padding: 4px 12px; background: transparent; color: var(--vac-ink); font: 500 12px/1.4 PlaygroundRoundHog, sans-serif; box-shadow: none; }
 .vac-app .vac-developer-theme .vac-experience-toggle button:hover,
 .vac-app .vac-developer-theme .vac-experience-toggle button[aria-pressed="true"] { background: var(--ph-neutral-accent); }
 .vac-experience-toggle button:focus-visible { outline: 2px solid var(--ph-brand-cobalt); outline-offset: 1px; }
@@ -1285,13 +1286,13 @@
 .vac-app .vac-developer-theme .vac-lab-table tbody th { background:transparent; }
 .vac-app .vac-developer-theme .vac-lab-table tbody tr:last-child > :is(th,td) { border-bottom:0; }
 .vac-app .vac-developer-theme .vac-lab-table code { padding:0; border:0; background:transparent; font-size:inherit; line-height:inherit; color:inherit; white-space:normal; overflow-wrap:anywhere; }
-.vac-app .vac-developer-theme .vac-lab-table .vac-lab-table-value { margin:0; padding:0; border:0; border-radius:0; background:transparent; color:inherit; font:inherit; white-space:pre-wrap; overflow-wrap:anywhere; }
+.vac-app .vac-developer-theme .vac-lab-table .vac-lab-table-value { margin:0; padding:0; border:0; border-radius: 0; background:transparent; color:inherit; font:inherit; white-space:pre-wrap; overflow-wrap:anywhere; }
 .vac-app .vac-developer-theme .vac-lab-table .vac-lab-table-value code { white-space:pre-wrap; }
 .vac-app .vac-developer-theme .vac-lab-table-key-value tr > :first-child { width:40%; }
 .vac-app .vac-developer-theme .vac-lab-table-key-value tr > :last-child { width:60%; }
 
 /* Compact Activity/Explore table and EventDetails Properties view from app.posthog.com. */
-.vac-activity-preview { margin: 16px 0; border: 1px solid var(--ph-neutral-border); border-radius: 6px; overflow: hidden; background: var(--ph-neutral-white); color: var(--ph-neutral-ink); }
+.vac-activity-preview { margin: 16px 0; border: 1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); overflow: hidden; background: var(--ph-neutral-white); color: var(--ph-neutral-ink); }
 .vac-activity-heading { display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid var(--ph-neutral-border); }
 .vac-activity-heading span { font-size: 12px; color: var(--ph-neutral-muted); border-left: 1px solid var(--ph-neutral-border); padding-left: 12px; }
 .vac-activity-list { max-height: 180px; overflow: auto; }
@@ -1302,22 +1303,22 @@
 .vac-activity-property-heading { padding: 10px 12px; border-bottom: 2px solid var(--ph-brand-cobalt); font-size: 12px; font-weight: 600; width: fit-content; }
 
 .vac-save-insight { margin: 20px 0; }
-.vac-playground-dashboard { margin: 16px 0; padding: 12px; border: 1px solid var(--ph-neutral-border); border-radius: 6px; background: var(--ph-neutral-background); }
+.vac-playground-dashboard { margin: 16px 0; padding: 12px; border: 1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); background: var(--ph-neutral-background); }
 .vac-dashboard-heading { display: grid; gap: 4px; margin-bottom: 12px; }
 .vac-dashboard-heading > span { font-size: 12px; color: var(--ph-neutral-muted); }
-.vac-dashboard-insight { padding: 12px; border: 1px solid var(--ph-neutral-border); border-radius: 6px; background: var(--ph-neutral-white); }
+.vac-dashboard-insight { padding: 12px; border: 1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); background: var(--ph-neutral-white); }
 .vac-app .vac-developer-theme .vac-dashboard-insight h4 { margin: 0 0 8px; }
 .vac-dashboard-insight > p { font-size: 12px; }
 
-.vac-app .vac-developer-theme .vac-handoff-card { margin: 16px 0; padding: 16px; border: 1px solid var(--vac-line); border-radius: 6px; background: var(--vac-paper); }
+.vac-app .vac-developer-theme .vac-handoff-card { margin: 16px 0; padding: 16px; border: 1px solid var(--vac-line); border-radius: var(--ph-radius-sm); background: var(--vac-paper); }
 .vac-handoff-card h4 { display: flex; align-items: center; gap: 10px; margin-top: 0; }
 .vac-handoff-number { display: inline-grid; place-items: center; flex: 0 0 26px; height: 26px; border: 1px solid var(--vac-line); border-radius: 50%; font-size: 14px; }
 .vac-handoff-card .vac-browse-link { display: block; margin-top: 16px; }
 .vac-handoff-card pre { overflow-x: auto; }
 
-.vac-command-block { position: relative; margin: 16px 0; background: #151515; border-radius: 6px; }
+.vac-command-block { position: relative; margin: 16px 0; background: #151515; border-radius: var(--ph-radius-sm); }
 .vac-app .vac-developer-theme .vac-command-block pre { margin: 0; padding-right: 52px; }
-.vac-app .vac-command-copy { position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 1px solid transparent; border-radius: 4px; background: transparent; color: #eee; cursor: pointer; }
+.vac-app .vac-command-copy { position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 1px solid transparent; border-radius: var(--ph-radius-sm); background: transparent; color: #eee; cursor: pointer; }
 .vac-app .vac-command-copy:hover { background: #ffffff14; color: #fff; }
 
 
@@ -1335,27 +1336,27 @@
 .vac-app .vac-dock.vac-developer-theme {
  background:var(--ph-window-background);
  border-color:var(--ph-window-border);
- box-shadow:var(--ph-window-elevation), var(--ph-window-shadow);
+ box-shadow:none;
 }
 
 /* Inspect Twig exploration: existing PostHog menu rows, checklist, evidence surface, OS button. */
 .vac-app .vac-inspect-launcher.vac-developer-theme { background:transparent; border:0; box-shadow:none; }
-.vac-inspect-launcher .vac-button { border-radius:6px 0 0 6px; }
-.vac-inspect-launcher .vac-os-button-face { display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:6px 0 0 6px; background:var(--ph-neutral-white); }
+.vac-inspect-launcher .vac-button { border-radius: var(--ph-radius-sm) 0 0 var(--ph-radius-sm); }
+.vac-inspect-launcher .vac-os-button-face { display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius: var(--ph-radius-sm) 0 0 var(--ph-radius-sm); background:var(--ph-neutral-white); }
 .vac-inspect-launcher strong { font-size:14px; line-height:20px; letter-spacing:.02em; }
 .vac-inspect-launcher img { object-fit:contain; flex-shrink:0; }
 .vac-app .vac-edge-inspector .vac-dock-header { padding:12px 16px; background:var(--ph-neutral-background); border-bottom:0; }
 .vac-app .vac-edge-inspector .vac-dock-header h2 { font-size:15px; gap:8px; }
 .vac-edge-inspector .vac-dock-header h2 img { width:26px; height:26px; object-fit:contain; }
 .vac-edge-inspector .vac-dock-header > .vac-row { min-height:44px; }
-.vac-app .vac-edge-inspector .vac-dock-header > .vac-row > button { display:grid; place-items:center; width:44px; height:44px; padding:0; border:1px solid transparent; border-radius:4px; text-decoration:none; }
+.vac-app .vac-edge-inspector .vac-dock-header > .vac-row > button { display:grid; place-items:center; width:44px; height:44px; padding:0; border:1px solid transparent; border-radius: var(--ph-radius-sm); text-decoration:none; }
 .vac-app .vac-edge-inspector .vac-dock-header > .vac-row > button:hover { background:var(--ph-neutral-background); border-color:var(--ph-neutral-border); }
 .vac-edge-inspector { --ph-dock-motion:240ms cubic-bezier(.4,0,.2,1); transform:translateX(0); transition:transform var(--ph-dock-motion); }
 .vac-edge-inspector[data-open="false"] { transform:translateX(100%); pointer-events:none; }
 @starting-style { .vac-edge-inspector[data-open="true"] { transform:translateX(100%); } }
 @media(prefers-reduced-motion:reduce) { .vac-edge-inspector { transition:none; } }
 .vac-app .vac-developer-theme .vac-inspect-explorer h3 { margin:0 0 8px; font-size:22px; }
-.vac-inspect-options { display:grid; margin:20px 0 16px; border:1px solid var(--ph-neutral-border); border-radius:6px; overflow:hidden; background:var(--ph-neutral-white); }
+.vac-inspect-options { display:grid; margin:20px 0 16px; border:1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); overflow:hidden; background:var(--ph-neutral-white); }
 .vac-inspect-options button { display:flex; align-items:center; gap:12px; min-height:64px; padding:12px; border:0; background:transparent; color:var(--ph-neutral-ink); text-align:left; font:inherit; }
 .vac-inspect-options button + button { border-top:1px solid var(--ph-neutral-border); }
 .vac-inspect-options button:is(:hover,[aria-pressed="true"]) { background:var(--ph-neutral-background); }
@@ -1368,7 +1369,7 @@
 .vac-inspect-focus { margin-bottom:20px; }
 .vac-inspect-focus .vac-booking-checklist { margin-bottom:4px; }
 .vac-inspect-focus .vac-text-button { min-height:44px; font-size:13px; }
-.vac-inspect-activity { background:var(--ph-neutral-white); border:1px solid var(--ph-neutral-border); border-radius:6px; overflow:hidden; }
+.vac-inspect-activity { background:var(--ph-neutral-white); border:1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); overflow:hidden; }
 .vac-inspect-activity-header { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px; padding:12px; border-bottom:1px solid var(--ph-neutral-border); font-size:12px; }
 .vac-inspect-activity-header > span { color:var(--ph-neutral-muted); font-size:11px; }
 .vac-inspect-activity ol { list-style:none; padding:0; margin:0; }
@@ -1390,23 +1391,23 @@
 
 /* Developer rail prototype: existing PostHog neutral surfaces, product icons, and focus. */
 .vac-app .vac-tool-rail { display:flex; flex-direction:column; align-items:center; gap:12px; padding:12px 0; background:var(--ph-neutral-background); border-left:1px solid var(--ph-neutral-border); }
-.vac-app .vac-tool-rail button { position:relative; display:grid; place-items:center; flex-shrink:0; width:44px; height:44px; padding:0; border:1px solid transparent; border-radius:4px; background:transparent; color:var(--ph-neutral-muted); }
+.vac-app .vac-tool-rail button { position:relative; display:grid; place-items:center; flex-shrink:0; width:44px; height:44px; padding:0; border:1px solid transparent; border-radius: var(--ph-radius-sm); background:transparent; color:var(--ph-neutral-muted); }
 .vac-app .vac-tool-rail button:is(:hover,[aria-pressed="true"]) { background:var(--ph-neutral-accent); color:var(--ph-neutral-ink); }
 .vac-app .vac-tool-rail button:focus-visible { outline:2px solid var(--ph-brand-cobalt); outline-offset:-3px; }
 .vac-tool-rail-group { display:flex; flex-direction:column; align-items:center; width:100%; padding-top:12px; border-top:1px solid var(--ph-neutral-border); gap:4px; }
 .vac-app .vac-tool-rail .vac-tool-rail-toggle { margin-top:auto; }
 .vac-tool-rail img { object-fit:contain; }
-.vac-tool-tip { position:absolute; z-index:1; right:calc(100% + 8px); top:50%; transform:translateY(-50%); padding:6px 8px; border:1px solid var(--ph-neutral-border); border-radius:4px; background:var(--ph-neutral-background); color:var(--ph-neutral-ink); box-shadow:none; font-size:12px; font-weight:500; line-height:18px; white-space:nowrap; pointer-events:none; visibility:hidden; opacity:0; transition:opacity 100ms ease, visibility 100ms ease; }
+.vac-tool-tip { position:absolute; z-index:1; right:calc(100% + 8px); top:50%; transform:translateY(-50%); padding:6px 8px; border:1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); background:var(--ph-neutral-background); color:var(--ph-neutral-ink); box-shadow:none; font-size:12px; font-weight:500; line-height:18px; white-space:nowrap; pointer-events:none; visibility:hidden; opacity:0; transition:opacity 100ms ease, visibility 100ms ease; }
 .vac-tool-rail button:hover .vac-tool-tip { visibility:visible; opacity:1; transition-delay:250ms; }
 .vac-tool-rail button:focus-visible .vac-tool-tip { visibility:visible; opacity:1; transition-delay:0ms; }
 .vac-tool-rail[data-tips-dismissed="true"] button .vac-tool-tip { visibility:hidden; opacity:0; transition:none; }
 @media(min-width:801px) { .vac-tool-tip::after { content:""; position:absolute; right:-4px; top:calc(50% - 4px); width:6px; height:6px; transform:rotate(-45deg); background:var(--ph-neutral-background); border-right:1px solid var(--ph-neutral-border); border-bottom:1px solid var(--ph-neutral-border); } }
 .vac-app [data-twig-inspect-target] { outline:2px solid var(--ph-brand-cobalt); outline-offset:3px; }
-.vac-app .vac-picker-hint { display:flex; align-items:center; flex-wrap:wrap; gap:12px; padding:12px 16px; border:1px solid var(--ph-neutral-border); border-radius:6px; background:var(--ph-neutral-white); color:var(--ph-neutral-ink); box-shadow:var(--ph-window-shadow); font-size:13px; }
-.vac-app .vac-picker-hint button { min-height:32px; padding:4px 8px; border:1px solid var(--ph-neutral-border); border-radius:4px; background:var(--ph-neutral-background); color:inherit; }
+.vac-app .vac-picker-hint { display:flex; align-items:center; flex-wrap:wrap; gap:12px; padding:12px 16px; border:1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); background:var(--ph-neutral-white); color:var(--ph-neutral-ink); box-shadow:var(--ph-window-shadow); font-size:13px; }
+.vac-app .vac-picker-hint button { min-height:32px; padding:4px 8px; border:1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); background:var(--ph-neutral-background); color:inherit; }
 .vac-picker-hint kbd { font-size:11px; color:var(--ph-neutral-muted); }
 
-.vac-app .vac-tool-rail { border-radius:0; border-top:0; border-right:0; border-bottom:0; box-shadow:none; }
+.vac-app .vac-tool-rail { border-radius: 0; border-top:0; border-right:0; border-bottom:0; box-shadow:none; }
 .vac-app .vac-edge-inspector .vac-dock-header h2:focus { outline:none; box-shadow:none; }
 @media(max-width:800px) {
   .vac-app .vac-tool-rail { flex-direction:row; justify-content:space-between; gap:0; padding:0 4px; border-left:0; border-top:1px solid var(--ph-neutral-border); }
@@ -1440,8 +1441,8 @@
 .vac-app .vac-edge-inspector .vac-dock-content :is(.vac-lab, .vac-guide-intro):first-child > :first-child { margin-top:0; }
 .vac-edge-inspector .vac-dock-scroll::-webkit-scrollbar { width:6px; }
 .vac-edge-inspector .vac-dock-scroll::-webkit-scrollbar-track { background:transparent; }
-.vac-edge-inspector .vac-dock-scroll::-webkit-scrollbar-thumb { background:var(--ph-neutral-border); border-radius:4px; }
-.vac-app .vac-instrumentation-tooltip { position:fixed; z-index:100; width:300px; max-width:calc(100vw - 16px); box-sizing:border-box; padding:12px 16px; border:1px solid var(--ph-window-border); border-radius:4px; background:var(--ph-neutral-background); color:var(--ph-neutral-ink); box-shadow:var(--ph-window-shadow); font-size:13px; line-height:1.5; }
+.vac-edge-inspector .vac-dock-scroll::-webkit-scrollbar-thumb { background:var(--ph-neutral-border); border-radius: var(--ph-radius-sm); }
+.vac-app .vac-instrumentation-tooltip { position:fixed; z-index:100; width:300px; max-width:calc(100vw - 16px); box-sizing:border-box; padding:12px 16px; border:1px solid var(--ph-window-border); border-radius: var(--ph-radius-sm); background:var(--ph-neutral-background); color:var(--ph-neutral-ink); box-shadow:var(--ph-window-shadow); font-size:13px; line-height:1.5; }
 .vac-instrumentation-tooltip[data-positioned="false"] { visibility:hidden; }
 .vac-app .vac-instrumentation-tooltip .vac-instrumentation-product { display:flex; align-items:center; gap:8px; font-size:12px; line-height:1.5; }
 .vac-instrumentation-product img { flex-shrink:0; }
@@ -1451,7 +1452,7 @@
 .vac-tool-rail[data-open="true"] button[aria-label="Inspect an element"][aria-pressed="true"] .vac-tool-tip { display:none; }
 
 .vac-app .vac-inspect-activity .vac-inspect-event-row { display:block; padding:0; }
-.vac-app .vac-inspect-event { display:flex; align-items:flex-start; gap:12px; width:100%; padding:12px; border:0; border-radius:0; background:transparent; color:var(--ph-neutral-ink); text-align:left; font:inherit; }
+.vac-app .vac-inspect-event { display:flex; align-items:flex-start; gap:12px; width:100%; padding:12px; border:0; border-radius: 0; background:transparent; color:var(--ph-neutral-ink); text-align:left; font:inherit; }
 .vac-app .vac-inspect-event:is(:hover,[aria-pressed="true"]) { background:var(--ph-neutral-background); }
 .vac-app .vac-inspect-event:focus-visible { outline:2px solid var(--ph-brand-cobalt); outline-offset:-2px; }
 .vac-inspect-event > img { flex-shrink:0; margin-top:2px; }
@@ -1464,12 +1465,12 @@
 .vac-inspector-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:16px; }
 .vac-app .vac-developer-theme .vac-inspector .vac-inspector-title { margin:0; }
 .vac-inspector-title:focus { outline:none; }
-.vac-app .vac-inspector-history { margin:0 0 16px; padding:0; border:0; border-radius:0; background:transparent; }
+.vac-app .vac-inspector-history { margin:0 0 16px; padding:0; border:0; border-radius: 0; background:transparent; }
 .vac-app .vac-developer-theme .vac-inspector-history-heading { margin:0; padding:8px 0; font-size:13px; line-height:20px; font-weight:500; }
 .vac-inspector-history ol { max-height:176px; overflow-y:auto; list-style:none; margin:0; padding:0; }
 .vac-app .vac-inspector-history .vac-inspect-event { min-height:44px; align-items:center; padding:8px; gap:8px; border-bottom:1px solid var(--ph-neutral-border); }
 .vac-inspector-history code { font-size:12px; overflow-wrap:anywhere; }
-.vac-instrumentation-inspector { --inspector-border:#d3d0c8; --inspector-key:#77529a; --inspector-string:#9a4b1c; border:1px solid var(--inspector-border); border-radius:4px; overflow:hidden; background:#fffdfa; color:#292724; }
+.vac-instrumentation-inspector { --inspector-border:#d3d0c8; --inspector-key:#77529a; --inspector-string:#9a4b1c; border:1px solid var(--inspector-border); border-radius: var(--ph-radius-sm); overflow:hidden; background:#fffdfa; color:#292724; }
 .vac-app .vac-developer-theme .vac-inspector-section-title { margin:0; padding:12px 16px; border-bottom:1px solid var(--inspector-border); background:#faf8f3; font-size:13px; line-height:20px; }
 .vac-instrumentation-inspector > section + section { border-top:1px solid var(--inspector-border); }
 .vac-inspector-node { overflow-x:auto; display:flex; gap:16px; padding:12px 16px; border-left:3px solid var(--ph-brand-yellow); background:#fff0dc; font:13px/1.7 ui-monospace,monospace; }
@@ -1480,7 +1481,7 @@
 .vac-inspector-string { color:var(--inspector-string); }
 .vac-inspector-literal { color:#135e91; }
 .vac-app .vac-inspector-tree { padding:12px 16px; font:13px/1.8 ui-monospace,monospace; }
-.vac-app .vac-inspector-tree details { margin:0; padding:0; border:0; border-radius:0; background:transparent; font:inherit; }
+.vac-app .vac-inspector-tree details { margin:0; padding:0; border:0; border-radius: 0; background:transparent; font:inherit; }
 .vac-app .vac-inspector-tree summary { min-height:32px; padding:4px 0; color:#5f5a52; font:inherit; cursor:pointer; }
 .vac-inspector-tree-branch { min-width:0; margin-left:5px; padding-left:16px; border-left:1px solid #dedad2; }
 .vac-inspector-tree-value { white-space:pre-wrap; overflow-wrap:anywhere; }
@@ -1512,12 +1513,12 @@
 .vac-app .vac-developer-theme .vac-inspector-context { padding:12px 16px; }
 .vac-app .vac-developer-theme .vac-inspector-context p { margin:0; font-size:13px; line-height:1.6; font-weight:400; }
 .vac-app .vac-developer-theme .vac-inspector-context p + p { margin-top:8px; color:var(--ph-neutral-muted); }
-.vac-app .vac-inspector-source, .vac-app .vac-inspector-source-extra { margin:0; padding:0; border:0; border-radius:0; background:transparent; }
+.vac-app .vac-inspector-source, .vac-app .vac-inspector-source-extra { margin:0; padding:0; border:0; border-radius: 0; background:transparent; }
 .vac-app .vac-inspector-source > summary, .vac-app .vac-inspector-source-extra > summary { padding:12px 16px; font-size:13px; cursor:pointer; }
 .vac-app .vac-inspector-source > summary { background:#faf8f3; }
 .vac-app .vac-inspector-source-code { min-width:0; border-left:3px solid var(--ph-brand-yellow); background:#fff0dc; }
 .vac-inspector-source-code > small { display:block; padding:8px 12px 0; font:10px/1.6 ui-monospace,monospace; color:var(--ph-neutral-muted); overflow-wrap:anywhere; }
-.vac-app .vac-developer-theme .vac-inspector-source-code pre { margin:0; padding:8px 12px 12px; border:0; border-radius:0; background:transparent; color:var(--ph-neutral-ink); font:12px/1.7 ui-monospace,monospace; white-space:pre-wrap; overflow-wrap:anywhere; }
+.vac-app .vac-developer-theme .vac-inspector-source-code pre { margin:0; padding:8px 12px 12px; border:0; border-radius: 0; background:transparent; color:var(--ph-neutral-ink); font:12px/1.7 ui-monospace,monospace; white-space:pre-wrap; overflow-wrap:anywhere; }
 .vac-app .vac-inspector-related { min-height:44px; padding:8px 0; font-size:13px; text-align:left; }
 .vac-inspector-source summary:focus-visible, .vac-inspector-source-extra summary:focus-visible { outline:2px solid var(--ph-brand-cobalt); outline-offset:-2px; }
 .vac-inspector-trace, .vac-inspector-trace ol { margin:12px 0; padding-left:16px; border-left:1px solid var(--ph-neutral-border); list-style:none; }
@@ -1528,7 +1529,7 @@
 .vac-inspector-facts dd { margin:0; font-size:12px; overflow-wrap:anywhere; }
 .vac-app .vac-developer-theme .vac-inspector-wait { margin:0; padding:16px 0; font-size:13px; color:var(--ph-neutral-muted); }
 
-.vac-app .vac-developer-theme .vac-inspector .vac-inspector-trace code { padding:0; border:0; border-radius:0; background:transparent; color:var(--ph-neutral-ink); box-shadow:none; }
+.vac-app .vac-developer-theme .vac-inspector .vac-inspector-trace code { padding:0; border:0; border-radius: 0; background:transparent; color:var(--ph-neutral-ink); box-shadow:none; }
 .vac-inspector-evidence-title { display:flex; align-items:center; gap:8px; }
 
 /* PostHog.com RadixUI/Accordion: full-row label with right-aligned plus/minus icons. */
@@ -1584,7 +1585,7 @@ details[open] > .vac-inspector-disclosure > .vac-inspector-disclosure-minus { di
 /* One console uses the existing terminal surface above the selected-event Inspector. */
 /* Persistent icon controls and output share one uninterrupted terminal surface. */
 .vac-app .vac-developer-theme .vac-inspector-stream-browser { margin-bottom:16px; border:1px solid var(--ph-neutral-border); border-radius:var(--ph-radius-sm); overflow:hidden; background:var(--ph-neutral-ink); }
-.vac-app .vac-developer-theme .vac-inspector-console { margin:0; padding:0; border-radius:0; }
+.vac-app .vac-developer-theme .vac-inspector-console { margin:0; padding:0; border-radius: 0; }
 .vac-inspector-stream-controls { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:4px; padding:4px 8px; background:var(--ph-neutral-ink); color:var(--ph-neutral-border); }
 .vac-app .vac-developer-theme .vac-inspector-control { display:inline-flex; align-items:center; justify-content:center; min-width:28px; min-height:28px; padding:4px; border:0; border-radius:var(--ph-radius-sm); background:transparent; color:var(--ph-neutral-border); font-size:12px; font-weight:500; line-height:1.2; text-decoration:none; }
 .vac-app .vac-developer-theme .vac-inspector-control:hover:not(:disabled) { background:color-mix(in srgb,var(--ph-neutral-background) 10%,var(--ph-neutral-ink)); }
@@ -1625,6 +1626,6 @@ details[open] > .vac-inspector-disclosure > .vac-inspector-disclosure-minus { di
 .vac-app .vac-developer-theme :is(.vac-home-tour,.vac-home-explore):hover { background:var(--ph-neutral-background); }
 .vac-app .vac-developer-theme :is(.vac-home-tour,.vac-home-explore):focus-visible { outline:2px solid var(--ph-brand-cobalt); outline-offset:-2px; }
 .vac-app .vac-developer-theme .vac-home-labs .vac-lab-other-pages { margin:0; }
-.vac-app .vac-developer-theme .vac-home-labs .vac-lab-other-pages > summary { min-height:44px; padding:12px 16px; border:0; border-top:1px solid var(--ph-neutral-border); border-radius:0; background:var(--ph-neutral-background); }
-.vac-app .vac-developer-theme .vac-home-labs .vac-lab-other-pages-menu { border:0; border-radius:0; }
+.vac-app .vac-developer-theme .vac-home-labs .vac-lab-other-pages > summary { min-height:44px; padding:12px 16px; border:0; border-top:1px solid var(--ph-neutral-border); border-radius: 0; background:var(--ph-neutral-background); }
+.vac-app .vac-developer-theme .vac-home-labs .vac-lab-other-pages-menu { border:0; border-radius: 0; }
 .vac-app .vac-developer-theme .vac-home-labs .vac-lab-menu-group li button { min-height:44px; }

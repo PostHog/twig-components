@@ -118,7 +118,7 @@ export function DatePicker({ id, label: fieldLabel, value, minDate, onChange, on
       <span className={value ? undefined : "vac-date-placeholder"}>{value ? label(value, { month: "short", day: "numeric", year: "numeric" }) : "Choose date"}</span>
       <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18"/></svg>
     </button>
-    {open && <div ref={panel} id={panelId} className="vac-date-panel" role="dialog" aria-label={`Choose ${fieldLabel.toLowerCase()} date`} onKeyDown={keyboard}>
+    {open && <div ref={panel} id={panelId} className="vac-date-panel twig-dropdown-menu" role="dialog" aria-label={`Choose ${fieldLabel.toLowerCase()} date`} onKeyDown={keyboard}>
       <div className="vac-date-heading">
         <button type="button" aria-label="Previous month" disabled={moveMonth(first, -1).slice(0, 7) < minDate.slice(0, 7)} onClick={() => setCursor(moveMonth(first, -1) < minDate ? minDate : moveMonth(first, -1))}>‹</button>
         <strong aria-live="polite">{label(first, { month: "long", year: "numeric" })}</strong>

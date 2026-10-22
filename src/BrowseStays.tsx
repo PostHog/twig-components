@@ -180,10 +180,10 @@ function DestinationSearch({ value, destinations, onChange, onSelect }: {
         }
         if (event.key === "Enter" && open && options[active]) { event.preventDefault(); choose(options[active]); }
       }} />
-    {open && <div className="vac-destination-panel">
+    {open && <div className="vac-destination-panel twig-dropdown-menu">
       <ul id={id} role="listbox" aria-label="Destinations">
         {options.map((destination, index) => <li key={destination} role="presentation">
-          <button type="button" role="option" id={`${id}-${index}`} aria-selected={active === index} tabIndex={-1} data-replay-label={`Destination: ${destination}`}
+          <button type="button" className="twig-dropdown-item" role="option" id={`${id}-${index}`} aria-selected={active === index} tabIndex={-1} data-replay-label={`Destination: ${destination}`}
             onMouseDown={event => event.preventDefault()} onClick={() => choose(destination)}>{destination}</button>
         </li>)}
       </ul>

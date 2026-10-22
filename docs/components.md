@@ -68,6 +68,8 @@ import "@posthog/twig-components/catalog.css";
 
 ## Account views
 
+`AccountLayout` and `ProfileMenu` reuse the shared dropdown shell and rows, including spacing and typography at every width. The account list stays one column on mobile.
+
 Account components own Twig's visual presentation and interface behavior. They
 do not own the session, profile fixture, local storage, booking mutations, or
 site routes. A host can use the same views interactively in Twig.com or with
@@ -294,3 +296,5 @@ After three changes to earlier console selections, the tour prompts the down arr
 Home follows the [PostHog docs landing page](https://posthog.com/docs) with stacked white panels, using existing neutral borders, the small corner token, and RoundHog. The top card contains only “Take a tour” and an arrow, followed by a separate “Explore on your own” CTA card that opens the Inspector. Keep that card to its label and arrow, without an explanation or separate Inspector label. The labs panel groups Learn with labs, its one-sentence introduction, and full-width neutral product bars with indented lab rows. Keep the 16px panel spacing, 44px interaction targets, and visible focus. Scope this composition to Home; other lab menus and Inspector views keep their established styling.
 
 Home’s Take a tour and Explore on your own cards share one control rule and the same label typography as Learn with labs: 14px / 20px, weight 600. Do not introduce a separate larger tour label. Product disclosure rows keep the shared menu typography.
+
+Twig menus share `twig-dropdown-menu` and `twig-dropdown-item` from `catalog.css`; GuestPicker, destination suggestions and ProfileMenu reuse the same surface and row states. Calendar popovers reuse the surface with their calendar layout.

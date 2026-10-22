@@ -369,20 +369,7 @@
 .vac-guest-trigger:disabled { background: var(--vac-fill); color: var(--vac-muted); cursor: not-allowed; }
 .vac-guest-trigger svg { width: 20px; height: 20px; flex: none; color: var(--vac-muted); }
 .vac-guest-placeholder { color: var(--vac-muted); }
-.vac-guest-panel {
-  position: absolute; z-index: 61; top: calc(100% + 8px); left: 0;
-  width: 100%; padding: 6px;
-  border: 1px solid var(--vac-line); border-radius: 3px;
-  background: var(--vac-paper); color: var(--vac-ink);
-  box-shadow: 0 12px 30px #2846a426;
-}
-.vac-guest-option {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  width: 100%; min-height: 42px; padding: 8px 12px;
-  border: 0; border-radius: 3px; background: transparent;
-  color: var(--vac-ink); font: inherit; text-align: left; cursor: pointer;
-}
-.vac-guest-option:hover, .vac-guest-option:focus-visible { background: var(--vac-fill); }
+.vac-guest-panel { position: absolute; z-index: 61; top: calc(100% + 8px); left: 0; width: 100%; }
 .vac-guest-option[aria-selected="true"] { font-weight: 600; }
 .vac-guest-option:focus-visible, .vac-guest-trigger:focus-visible { outline: 2px solid var(--vac-ink); outline-offset: 2px; }
 @media (max-width: 600px) {
@@ -945,14 +932,14 @@
 }
 .twig-profile-popover {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 8px);
   right: 0;
   width: min(300px, calc(100vw - 32px));
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid var(--twig-account-line);
   border-radius: 3px;
   background: var(--twig-account-paper);
-  box-shadow: 0 12px 36px #30362f24;
+  box-shadow: var(--twig-dropdown-shadow);
   font-size: 14px;
   line-height: 20px;
 }
@@ -964,7 +951,7 @@
   min-width: 0;
 }
 .twig-profile-summary {
-  padding: 16px;
+  padding: 8px 12px;
   border-bottom: 1px solid var(--twig-account-line);
 }
 .twig-profile-summary > span,
@@ -985,31 +972,9 @@
 }
 .twig-profile-popover nav {
   display: grid;
-  padding: 8px;
+  padding: 0;
 }
-.twig-profile-popover nav a,
-.twig-profile-signout {
-  display: block;
-  width: 100%;
-  min-height: 44px;
-  padding: 12px;
-  border: 0;
-  border-radius: 3px;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  text-decoration: none;
-}
-.twig-profile-popover nav a:hover,
-.twig-profile-signout:hover {
-  background: var(--twig-account-fill);
-}
-.twig-profile-signout {
-  border-top: 1px solid var(--twig-account-line);
-  border-radius: 0;
-  cursor: pointer;
-}
+.twig-profile-signout { border-top: 1px solid var(--vac-line); cursor: pointer; }
 .twig-account-layout {
   display: grid;
   grid-template-columns: minmax(200px, 250px) minmax(0, 1fr);
@@ -1021,35 +986,14 @@
   align-self: start;
   position: sticky;
   top: 24px;
-  padding: 20px;
-  border: 1px solid var(--twig-account-line);
-  border-radius: 3px;
 }
 .twig-account-identity {
-  padding-bottom: 18px;
+  padding: 8px 12px;
   border-bottom: 1px solid var(--twig-account-line);
 }
 .twig-account-sidebar nav {
   display: grid;
-  gap: 4px;
-  margin-top: 12px;
-}
-.twig-account-sidebar nav a {
-  display: flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 10px 12px;
-  border-radius: 3px;
-  color: inherit;
-  text-decoration: none;
-}
-.twig-account-sidebar nav a:hover {
-  background: var(--twig-account-fill);
-}
-.twig-account-sidebar nav a[aria-current="page"] {
-  background: var(--twig-account-fill);
-  color: var(--twig-account-text);
-  font-weight: 600;
+  gap: 0;
 }
 .twig-account-content {
   min-width: 0;
@@ -1480,14 +1424,6 @@
   .twig-account-sidebar {
     position: static;
   }
-  .twig-account-sidebar nav {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    padding-bottom: 4px;
-  }
-  .twig-account-sidebar nav a {
-    min-width: 0;
-  }
 }
 @container (max-width: 500px) {
   .twig-account-stay-grid,
@@ -1521,10 +1457,6 @@
   }
   .twig-account-sidebar {
     position: static;
-  }
-  .twig-account-sidebar nav {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .twig-account-stay-grid,
   .twig-booking-card {
@@ -1599,11 +1531,9 @@
 }
 
 .vac-destination-picker { position: relative; }
-.vac-destination-panel { position: absolute; z-index: 62; top: calc(100% + 6px); left: 0; width: 100%; background: var(--vac-paper); border: 1px solid var(--vac-line); border-radius: 3px; box-shadow: 0 8px 24px #2846a419; }
-.vac-destination-panel ul { padding: 4px; margin: 0; list-style: none; }
-.vac-destination-panel button { width: 100%; min-height: 44px; padding: 10px; text-align: left; background: transparent; border: 0; color: var(--vac-ink); font: inherit; cursor: pointer; }
-.vac-destination-panel button:is(:hover, [aria-selected="true"]) { background: var(--vac-fill); }
-.vac-destination-panel p { padding: 10px; font-size: 13px; }
+.vac-destination-panel { position: absolute; z-index: 62; top: calc(100% + 8px); left: 0; width: 100%; }
+.vac-destination-panel ul { padding: 0; margin: 0; list-style: none; }
+.vac-destination-panel p { padding: 8px 12px; font-size: 13px; }
 .vac-trip-search { grid-template-columns: minmax(180px, 1.6fr) repeat(2, minmax(145px, 1fr)) minmax(130px, .8fr) auto auto; }
 .vac-trip-filter-controls { display: contents; }
 .vac-trip-filter-controls > button { margin-top: 23px; align-self: start; }
@@ -1823,12 +1753,50 @@
  .twig-account-layout .vac-button, .twig-login-view .vac-button { transition:background-color 140ms ease,color 140ms ease,border-color 140ms ease; }
 }
 
-@media(max-width:600px) {
- .twig-account-sidebar { padding:16px; }
- .twig-account-sidebar nav a { display:flex; align-items:center; min-height:44px; padding:8px 6px; font-size:13px; line-height:20px; }
-}
-
 .twig-ai-icon { width:18px; height:18px; flex-shrink:0; }
 
 /* Search responds to its available workspace beside the developer inspector. */
 .twig-search-workspace { container-type:inline-size; }
+
+/* One Twig dropdown contract: guest choices, destinations, profile and calendar shell. */
+.vac-app, .twig-browser, .twig-trip-planner-window {
+  --twig-dropdown-shadow: 0 12px 30px #2846a426;
+}
+.twig-dropdown-menu {
+  padding: 6px;
+  border: 1px solid var(--vac-line, #e5e2d8);
+  border-radius: 3px;
+  background: var(--vac-paper, #fffdf6);
+  color: var(--vac-muted, #625e57);
+  box-shadow: var(--twig-dropdown-shadow, 0 12px 30px #2846a426);
+  font: 15px/24px var(--twig-font-body, TwigDMSans, sans-serif);
+}
+.twig-dropdown-menu .twig-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--vac-muted, #625e57);
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.twig-dropdown-menu .twig-dropdown-item:is(:hover, :focus-visible, [aria-selected="true"], [aria-current="page"]) {
+  background: var(--vac-fill, #edf1e8);
+}
+.twig-dropdown-menu .twig-dropdown-item:is([aria-selected="true"], [aria-current="page"]) { font-weight: 600; }
+.twig-dropdown-menu .twig-dropdown-item:focus-visible {
+  outline: 3px solid var(--vac-ink, #2846a4);
+  outline-offset: 4px;
+}
+.twig-dropdown-menu .twig-dropdown-item:disabled { opacity: .55; cursor: not-allowed; }
+.twig-dropdown-menu .twig-profile-signout { border-top: 1px solid var(--vac-line); }
+/* Calendar cells retain their grid; only the containing surface is shared. */
+.vac-date-panel.twig-dropdown-menu { padding: 16px; }

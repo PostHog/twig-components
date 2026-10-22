@@ -183,7 +183,7 @@ export function ProfileMenu({
         </svg>
       </button>
       {open && (
-        <div id={menuId} className="twig-profile-popover">
+        <div id={menuId} className="twig-profile-popover twig-dropdown-menu">
           <div className="twig-profile-summary">
             <DefaultAvatarIcon />
             <span><strong>{profile.displayName}</strong><small>{profile.email}</small></span>
@@ -192,6 +192,7 @@ export function ProfileMenu({
             {links.map((link) => (
               <a
                 key={link.id}
+                className="twig-dropdown-item"
                 href={link.href}
                 onClick={(event) => {
                   followLink(event, link.href, onNavigate);
@@ -202,7 +203,7 @@ export function ProfileMenu({
               </a>
             ))}
           </nav>
-          <button type="button" className="twig-profile-signout" onClick={onSignOut}>Log out</button>
+          <button type="button" className="twig-profile-signout twig-dropdown-item" onClick={onSignOut}>Log out</button>
         </div>
       )}
     </div>
@@ -226,7 +227,7 @@ export function AccountLayout({
 }: AccountLayoutProps): ReactElement {
   return (
     <div className="twig-account-layout">
-      <aside className="twig-account-sidebar">
+      <aside className="twig-account-sidebar twig-dropdown-menu">
         <div className="twig-account-identity">
           <DefaultAvatarIcon />
           <span><strong>{profile.displayName}</strong><small>{profile.email}</small></span>
@@ -235,6 +236,7 @@ export function AccountLayout({
           {links.map((link) => (
             <a
               key={link.id}
+              className="twig-dropdown-item"
               href={link.href}
               aria-current={link.id === active ? "page" : undefined}
               onClick={(event) => followLink(event, link.href, onNavigate)}

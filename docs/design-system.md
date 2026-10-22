@@ -23,6 +23,20 @@ The component reference documents APIs; this guide and Twig.com’s visual syste
 
 Keep these surfaces distinct. Reuse an existing component and its state styles before adding CSS. Do not introduce a second font, color system, reset, or decorative treatment for one screen. Verify any new PostHog brand color against `brand.posthog.com`.
 
+## Corner radius
+
+Twig cards and controls use 3px. PostHog Playground and labs use one 4px default through `--ph-radius-sm`, including buttons, fields, cards, menus, windows, tooltips and inline code. Do not introduce size-based radius variants. Circular avatars/markers remain circular; connected surfaces and viewport-joined dock edges retain square joining corners. This is the approved learning-system standard, not a universal PostHog brand mandate.
+
+## Playground elevation
+
+Labs and Playground content stay flat in every state, including hover. Do not apply shadows, raised edges or hover lift to lessons, summaries, evidence, tables, code surfaces or content cards. Use neutral borders and spacing for grouping. The attached dock and tool rail remain flat.
+
+Elevation is restricted to separate UI roles: the existing soft `--ph-window-shadow` for floating overlays, and established raised controls or dropdown/popover treatments. OS buttons retain their own base/face construction. Never stack a raised edge and soft shadow as a generic panel style, or apply control elevation to lab content. Twig keeps its own existing shadows.
+
+## Dropdowns
+
+All Twig dropdown menus reuse `twig-dropdown-menu` and `twig-dropdown-item`: warm-white surface, 1px neutral border, 3px corners, 6px menu padding, the shared soft shadow and an 8px trigger gap. Rows use DM Sans 15/24, 8px 12px padding, a 44px minimum target, sage hover/selection and a visible keyboard-focus ring. Guest choices, destination suggestions and the account menu share these classes. Keep their existing content, selection semantics and keyboard behavior. Calendar popovers share the outer surface, with their existing 16px padding and calendar grid. Playground menus retain their separate PostHog styling.
+
 ## CSS ownership and consistency
 
 Use CSS classes and existing design tokens for presentation, not inline `style` props. Put Twig rules in `src/catalog.css` and PostHog rules in `src/lab.css`. Hosts own routes, page placement, and responsive coordination, without overriding shared component design. Reuse components and classes before adding CSS.
@@ -65,7 +79,7 @@ The interactive `BrowseStays` can put its search and filters behind a controlled
 
 ## Surfaces and controls
 
-- Group related evidence in one restrained surface: white or neutral fill, a thin existing border, and the radius already used by neighboring cards. Use spacing to show hierarchy. Avoid an extra standalone card or accent when the surrounding surface already groups the content.
+- Group related evidence in one restrained surface: white or neutral fill, a thin existing border, and the shared 4px Playground radius. Use spacing to show hierarchy. Avoid an extra standalone card or accent when the surrounding surface already groups the content.
 - Input/Output and similar evidence tabs form **one connected bar** above their panel. Tabs share an outer border, meet at a divider, and have at least a 44px target. The active tab uses the existing white surface and dark text; inactive tabs use the neutral fill and muted text. Do not add a blue underline, vertical selection stripe, or other decorative highlight to these tabs. Preserve a visible keyboard focus outline.
 - A current instruction is a `LabChecklist` item, not a tab. Keep its established current-step indicator and never apply tab text-decoration or tab selection rules to instruction sentences. Choice rows and event rows keep their own established selected states.
 - Use the existing dark code block and yellow `mark` treatment to point to the relevant code. Let long code scroll or wrap within the panel without making the page overflow.
@@ -135,7 +149,7 @@ The decorative AI sparkle uses the shared `twig-ai-icon` class at 18px square so
 
 ## Playground window contrast
 
-The invitation and inline dock use PostHog.com’s solid light tertiary window surface `#e5e7e0` and border `#9ea096`, with the product’s existing raised-edge and modal-shadow treatments. This is the source-backed contrast adjustment requested for Twig’s warm-white surroundings. Keep it in `lab.css`, scoped to the invitation/dock shell, not a Twig override or a new global neutral palette. Retain the original RoundHog, logo, dimensions, animation, CTA, white lesson cards, product accents, menu gray, and lesson flow.
+The invitation and inline dock use PostHog.com’s solid light tertiary window surface `#e5e7e0` and border `#9ea096`, with the existing soft shadow on the floating invitation only. The attached dock and all lab content stay flat. This is the source-backed contrast adjustment requested for Twig’s warm-white surroundings. Keep it in `lab.css`, scoped to the invitation/dock shell, not a Twig override or a new global neutral palette. Retain the original RoundHog, logo, dimensions, animation, CTA, white lesson cards, product accents, menu gray, and lesson flow.
 
 Sources: [PostHog.com light tertiary scheme](https://github.com/PostHog/posthog.com/blob/master/src/styles/global.css), [window scheme](https://github.com/PostHog/posthog.com/blob/master/src/constants/frostedSurfaces.ts), [PostHog product surfaces and elevation](https://github.com/PostHog/posthog/blob/master/frontend/src/styles/base.scss), [brand colors and RoundHog](https://brand.posthog.com/catalog.json). The brand catalog defines colors and assets; the repos supply the UI patterns. Do not invent a bright brand-colored panel merely because its hue appears in the palette.
 
@@ -276,3 +290,8 @@ After three changes to earlier console selections, the tour prompts the down arr
 Home follows the [PostHog docs landing page](https://posthog.com/docs) with stacked white panels, using existing neutral borders, the small corner token, and RoundHog. The top card contains only “Take a tour” and an arrow, followed by a separate “Explore on your own” CTA card that opens the Inspector. Keep that card to its label and arrow, without an explanation or separate Inspector label. The labs panel groups Learn with labs, its one-sentence introduction, and full-width neutral product bars with indented lab rows. Keep the 16px panel spacing, 44px interaction targets, and visible focus. Scope this composition to Home; other lab menus and Inspector views keep their established styling.
 
 Home’s Take a tour and Explore on your own cards share one control rule and the same label typography as Learn with labs: 14px / 20px, weight 600. Do not introduce a separate larger tour label. Product disclosure rows keep the shared menu typography.
+
+
+## Account navigation uses shared dropdowns
+
+Account sidebar and profile menus use `twig-dropdown-menu` and `twig-dropdown-item`: 6px outer padding, no row gaps, 44px minimum rows, 8px/12px row padding, and DM Sans 15px/24px at every width. Keep compact navigation in one column. Identity headers use the same 8px/12px inset. Reuse the dropdown surface, border, 3px corners, shadow, hover, current-page and keyboard-focus states; do not add account-specific row spacing or mobile typography. This is a visual change; existing callbacks and analytics are unchanged.
