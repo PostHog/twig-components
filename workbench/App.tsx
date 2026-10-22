@@ -369,11 +369,16 @@ function InvitationPreview() {
 }
 
 function ProductMenuPreview() {
+  const [menu, setMenu] = useState("home");
   const [pathname, setPathname] = useState("/about");
   const [selectedLab, setSelectedLab] = useState("");
   const page = playgroundPage(pathname, stays);
   return <LabPreview>
     <div className="workbench-controls">
+      <label>Menu <select value={menu} onChange={(event) => setMenu(event.target.value)}>
+        <option value="home">Home</option>
+        <option value="directory">Other labs</option>
+      </select></label>
       <label>Preview page <select value={pathname} onChange={(event) => setPathname(event.target.value)}>
         <option value="/">Find a stay</option>
         <option value="/about">About Twig</option>
@@ -381,10 +386,10 @@ function ProductMenuPreview() {
         <option value="/profile/bookings">Booked stays</option>
       </select></label>
     </div>
-    <LabDirectory page={page} choose={setSelectedLab} showMarker={() => {}} onVisitLab={(id, startPage) => {
+    {menu === "home" ? <PlaygroundHome onInspect={() => setSelectedLab("Inspector")} onVisitLab={setSelectedLab} /> : <LabDirectory page={page} choose={setSelectedLab} showMarker={() => {}} onVisitLab={(id, startPage) => {
       setSelectedLab(id);
       setPathname(startPage === "discover" ? "/" : "/stays/stay-01");
-    }} />
+    }} />}
     {selectedLab && <p role="status">Selected lab: {selectedLab}</p>}
   </LabPreview>;
 }

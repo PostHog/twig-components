@@ -232,6 +232,7 @@
 }
 .vac-app .vac-developer-theme .vac-lab-other-pages[open] > summary {
   border-radius: var(--ph-radius-sm) var(--ph-radius-sm) 0 0;
+  border-bottom: 1px solid var(--ph-neutral-border);
 }
 .vac-app .vac-developer-theme .vac-lab-menu-end {
   display: inline-flex;
@@ -264,6 +265,7 @@
   margin: 0;
   padding: 10px 14px;
   background: var(--ph-neutral-background);
+  border-bottom: 1px solid var(--ph-neutral-border);
   font-size: 12px;
   font-weight: 600;
   color: #2f80fa;
@@ -278,7 +280,7 @@
 .vac-app .vac-developer-theme [data-product="ai-observability"] h4 { color: #b62ad9; }
 .vac-app .vac-developer-theme .vac-lab-menu-group ul {
   margin: 0;
-  padding: 6px 14px 12px;
+  padding: 0 0 12px;
   list-style: none;
 }
 .vac-app .vac-developer-theme .vac-lab-menu-group li button {
@@ -287,18 +289,27 @@
   justify-content: space-between;
   gap: 8px;
   width: 100%;
-  padding: 7px 6px;
+  min-height: 44px;
+  padding: 7px 20px;
   border: 0;
-  border-radius: var(--ph-radius-sm);
+  border-radius: 0;
   background: transparent;
   color: var(--vac-ink);
   text-align: left;
   font-size: 12px;
   line-height: 1.35;
 }
+.vac-app .vac-developer-theme .vac-lab-menu-group li:first-child button {
+  min-height: 50px;
+  padding-top: 13px;
+}
 .vac-app .vac-developer-theme .vac-lab-menu-group li button:hover,
 .vac-app .vac-developer-theme .vac-lab-menu-group li button:focus-visible {
   background: var(--ph-neutral-background);
+}
+.vac-app .vac-developer-theme .vac-lab-menu-group li button:focus-visible {
+  outline: 2px solid var(--ph-brand-cobalt);
+  outline-offset: -2px;
 }
 .vac-app .vac-developer-theme .vac-lab-menu-group li button strong,
 .vac-app .vac-developer-theme .vac-lab-menu-group li button small {
@@ -1627,5 +1638,5 @@ details[open] > .vac-inspector-disclosure > .vac-inspector-disclosure-minus { di
 .vac-app .vac-developer-theme :is(.vac-home-tour,.vac-home-explore):focus-visible { outline:2px solid var(--ph-brand-cobalt); outline-offset:-2px; }
 .vac-app .vac-developer-theme .vac-home-labs .vac-lab-other-pages { margin:0; }
 .vac-app .vac-developer-theme .vac-home-labs .vac-lab-other-pages > summary { min-height:44px; padding:12px 16px; border:0; border-top:1px solid var(--ph-neutral-border); border-radius: 0; background:var(--ph-neutral-background); }
+.vac-app .vac-developer-theme .vac-home-labs .vac-lab-other-pages[open] > summary { border-bottom:1px solid var(--ph-neutral-border); }
 .vac-app .vac-developer-theme .vac-home-labs .vac-lab-other-pages-menu { border:0; border-radius: 0; }
-.vac-app .vac-developer-theme .vac-home-labs .vac-lab-menu-group li button { min-height:44px; }

@@ -305,3 +305,8 @@ On single-column stay pages, place the booking form directly after the photo gal
 ## Mobile account navigation
 
 Mobile account pages open with content visible and the avatar menu closed. Use `ProfileMenu` for Profile, Saved stays, Booked stays, Account settings and Log out. `AccountLayout` hides its sidebar in single-column layouts (container widths up to 700px, or viewport widths up to 600px); desktop keeps the sidebar. Hosts using this layout must keep the header avatar menu available. Preserve dropdown spacing, Escape/return focus, outside-click dismissal and navigation callbacks.
+
+
+## Playground lab menus
+
+Product headers and expanded lab choices are separated by a 1px neutral border. Hover and keyboard focus use the same full-width neutral gray as the product bar, with square joined row edges and no white gap below the header. Keep labels at a 20px inline inset. The first row includes the previous 6px top inset in its 50px minimum target; later rows have 44px minimum targets. Allow wrapped labels to grow. Open, hover and focus retain identical text positions. Preserve the 2px cobalt keyboard outline inset by 2px, 4px outer corners, flat surfaces, existing product icons, content and callbacks. Apply the shared rules to Home and other-lab menus; Twig dropdowns retain their own style.

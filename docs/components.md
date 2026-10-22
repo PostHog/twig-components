@@ -300,3 +300,6 @@ Home’s Take a tour and Explore on your own cards share one control rule and th
 Twig menus share `twig-dropdown-menu` and `twig-dropdown-item` from `catalog.css`; GuestPicker, destination suggestions and ProfileMenu reuse the same surface and row states. Calendar popovers reuse the surface with their calendar layout.
 
 `AccountLayout` hides its sidebar on narrow single-column layouts. Compose it with the existing header `ProfileMenu` so account destinations remain accessible; the menu starts closed. Desktop retains the sidebar.
+
+
+Playground lab menus share the approved full-width hover/focus rows and neutral header divider from `lab.css`. ProductMenuPreview in the workbench switches between Home and other-lab menus for pointer and keyboard review. This changes presentation only; public props, lab choices and navigation callbacks are unchanged.
