@@ -63,7 +63,7 @@ Twig.com shows “Browse stays” without an Explore eyebrow or visible count; r
 
 The interactive `BrowseStays` can put its search and filters behind a controlled “Search & filters” button beside the heading. Keep applied filter/search state when collapsed and show the active control count on the button. Existing consumers without the disclosure callback keep expanded controls. Browse photos use a restrained 16:9 crop capped at 320px high. Keep its existing filters, result count, copy, callbacks, and cards. This compact toolbar keeps listing photography near the top of the host page. Hosts own optional AI entry placement and whether it is expanded.
 
-TripSearch keeps destination, dates, guests, and Search stays visible at every width. Only optional setting and amenity filters collapse behind Filters; do not add a date/guest summary toggle.
+TripSearch keeps destination, dates, guests, and Search stays visible at every width. Only optional setting and amenity filters collapse behind Filters; do not add a date/guest summary toggle. Mobile uses full-width destination and guest fields, paired date fields, left-aligned Filters and a full-width Search stays action at the end. Expanded settings use two equal columns.
 
 ## Type hierarchy
 
@@ -117,7 +117,7 @@ The settled search surface is sage with neutral labels and borders. Hosts use wa
 
 `SearchWorkspace` and `GetawaySearch` are exported from `/trip-planner`. Tabs read “Search stays” and “AI trip planner”, with conventional search selected first. Keep the sparkle icon without a plus. The location field remains “Destination”. The workbench includes a working Getaway search view. Hosts supply preferences, navigation, booking transfer, and content-free outcome analytics. The original `TripPlanner` and guided labs remain unchanged.
 
-The shared workspace is a single sage surface with quiet neutral boundaries and no cobalt outer outline. Desktop search controls share 48px heights. Mobile keeps destination and search visible, with dates and guests in their compact disclosure. All placeholders, typed/selected values, date and guest controls, and choices use warm charcoal at full opacity. Keep primary actions cobalt, selected-calendar contrast, and visible caret/keyboard focus.
+The shared workspace is a single sage surface with quiet neutral boundaries and no cobalt outer outline. Desktop search controls share 48px heights. Mobile keeps destination, paired dates, and guests visible, followed by optional Filters and a full-width Search stays action. All placeholders, typed/selected values, date and guest controls, and choices use warm charcoal at full opacity. Keep primary actions cobalt, selected-calendar contrast, and visible caret/keyboard focus.
 
 AI capabilities belong in the local simulated conversation: help choosing, budgets, dates, mismatches, and recovery. The initial planner contains an editable composer and “Simulated AI responses”. Do not add trip summaries, Edit trip, suggestion buttons, or separate feature controls. Unknown requirements must be clarified rather than assumed.
 

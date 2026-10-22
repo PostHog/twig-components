@@ -127,7 +127,7 @@ function Preview() {
   return <>
     <div className="workbench-controls"><label>Selected guide preview <select value={selected} onChange={(event) => setSelected(event.target.value as typeof selected)}><option>Forest</option><option>Coast</option><option>City</option></select></label></div>
     <BrowseStaysPreview selected={selected} />
-    <p>Interactive browse: dates and guests stay visible. Filters toggles settings and amenities.</p>
+    <p>Interactive browse: full-width mobile fields, paired dates, optional filters, and Search stays at the end.</p>
     <div className="twig-browser workbench-twig"><main><BrowseStays activeFilterCount={Number(filter !== "All") + amenities.length} additionalFilters={<AmenityFilters value={amenities} onChange={(value, selected) => setAmenities(previous => selected ? [...previous, value] : previous.filter(item => item !== value))} />} primarySearch={filters => <TripSearch filters={filters} destinations={stays.flatMap(stay => stay.location ? [stay.location] : [])} value={tripSearch} minDate="2026-10-20" capacity={5} onChange={setTripSearch} onSubmit={() => setSubmitted(tripSearch)} />} results={filterStays(filter, submitted.destination).filter(stay => (stay.capacity ?? 0) >= Number(submitted.guests) && matchesStayAmenities(stay.amenities, amenities))} controlsExpanded={controlsExpanded} onControlsExpandedChange={setControlsExpanded} id="workbench-browse" setting={filter} search={search} onSettingChange={setFilter} onSearchChange={setSearch} renderStay={(stay) => <article className="vac-card" key={stay.id}><StayCardContent stay={stay} image={<div className="vac-image"><span>Photo on Twig.com</span></div>} /></article>} /><StayDetails stay={stays[0]} /></main></div>
   </>;
 }

@@ -1516,10 +1516,11 @@
 .vac-trip-search-options { display: contents; }
 .vac-trip-search-options > div { min-width: 0; }
 @container (max-width: 550px) {
-  .vac-trip-search { grid-template-columns: minmax(0, 1fr) auto; padding: 0; border: 0; gap: 8px; }
-  .vac-trip-search-destination { grid-column: 1; grid-row: 1; }
-  .vac-trip-search-submit { grid-column: 2; grid-row: 1; margin-top: 23px; padding-inline: 12px; }
-  .vac-trip-search-options { display: grid; grid-column: 1 / -1; grid-row: 2; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .vac-trip-search { grid-template-columns: minmax(0, 1fr); padding: 16px; border: 0; gap: 12px; }
+  .vac-trip-search-destination { grid-column: 1 / -1; grid-row: auto; }
+  .vac-trip-search-submit { grid-column: 1 / -1; grid-row: auto; margin-top: 0; padding-inline: 12px; }
+  .vac-trip-search-options { display: grid; grid-column: 1 / -1; grid-row: auto; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .vac-trip-search-options > div:last-child { grid-column: 1 / -1; }
   .vac-trip-search .vac-date-trigger svg { display: none; }
   .vac-trip-search .vac-date-trigger > span { white-space: nowrap; }
 }
@@ -1545,10 +1546,13 @@
   .vac-trip-filter-panel { grid-row: auto; }
 }
 @container (max-width: 550px) {
-  .vac-trip-search { grid-template-columns: minmax(0, 1fr) auto; }
-  .vac-trip-search-submit { grid-row: 1; margin-top: 23px; }
-  .vac-trip-filter-controls > button { grid-column: 2; grid-row: 3; margin-top: 0; }
-  .vac-trip-filter-panel { grid-row: 4; }
+  .vac-trip-search { grid-template-columns: minmax(0, 1fr); }
+  .vac-trip-search-submit { grid-column: 1 / -1; grid-row: auto; margin-top: 0; }
+  .vac-trip-filter-controls > button { grid-column: 1 / -1; grid-row: auto; justify-self: start; margin-top: 0; }
+  .vac-trip-filter-panel { grid-row: auto; }
+  .vac-trip-filter-panel .vac-filters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .vac-trip-filter-panel .vac-filter { width: 100%; }
+  .vac-trip-filter-panel .vac-amenity-filters { flex-direction: column; gap: 8px; }
   .vac-destination-panel { width: max(100%, 230px); max-width: calc(100vw - 40px); }
 }
 
@@ -1702,9 +1706,9 @@
   .twig-search-workspace :is(.vac-trip-search-submit,.vac-trip-filter-controls > button) { margin-top:0; }
 }
 @container(max-width:550px) {
-  .twig-search-workspace .vac-trip-search { padding:8px 12px 12px; gap:8px; }
-  .twig-search-modes { padding-inline:12px; }
-  .twig-search-workspace .vac-trip-search .vac-trip-search-submit { margin-top:24px; }
+  .twig-search-workspace .vac-trip-search { padding:16px; gap:12px; }
+  .twig-search-modes { padding-inline:16px; }
+  .twig-search-workspace .vac-trip-search .vac-trip-search-submit { margin-top:0; }
   .twig-search-workspace .vac-trip-search label { margin-bottom:8px; }
   .twig-search-workspace .vac-trip-filter-controls > button { min-height:44px; font-size:13px; }
   .twig-getaway-search { padding:8px 12px 12px; }
