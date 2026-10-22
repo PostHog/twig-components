@@ -398,7 +398,8 @@ function LessonNavigationPreview() {
   const [step, setStep] = useState(1);
   const [away, setAway] = useState(false);
   const props = { selected: "catalog" as const, stage: step, embedded: false, resetScope: "twig" as const, onAllLabs: () => setStep(0), onPrevious: () => setStep(Math.max(0, step - 1)), onReset: () => setStep(0), returnTo: away ? { label: "Find a stay", onClick: () => setAway(false) } : undefined };
-  return <LessonNavigationProvider active><div className="workbench-controls"><button onClick={() => setAway(!away)}>Toggle away state</button></div><LabNavigationView {...props} placement="header" /><p>Lesson {step + 1}</p><LabPrimaryAction><button className="vac-button" onClick={() => setStep(step + 1)}><span className="vac-os-button-face">Continue →</span></button></LabPrimaryAction><LabNavigationView {...props} placement="footer" /></LessonNavigationProvider>;
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  return <><div className="workbench-controls"><button onClick={() => setAway(!away)}>Toggle away state</button></div><PlaygroundDock embedded onClose={() => {}} headingRef={headingRef} logo={null} pageKey="reset-preview" navigation={<LabNavigationView {...props} placement="header" />} footer={<LabNavigationView {...props} placement="footer" />} recordingBar={null} guide={<><p>Lesson {step + 1}</p><LabPrimaryAction><button className="vac-button" onClick={() => setStep(step + 1)}><span className="vac-os-button-face">Continue →</span></button></LabPrimaryAction></>} /></>;
 }
 
 function ResetPreview() {

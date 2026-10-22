@@ -143,7 +143,7 @@ For directions that ask the learner to act on Twig, use `LabChecklist` in every 
 | `/replay-recorder` | `ReplayProvider`, `useReplay` | Records the current tab locally or runs a ghost visit with rrweb; pass `open` and `pathname`. | ReplayLab / Playground |
 | `/replay-lab-ui` | `ReplayLab`, `ReplayRecordingBar`, `ReplayLabViewState` | Replay lesson and recording status; host passes stage, replay state, return link, and player. | ReplayLab |
 | `/session-player` | `SessionPlayer` | Plays an rrweb recording; pass recorded `events`. | ReplayLab |
-| `/lab-navigation` | `LabNavigationView` | Keeps All labs, Previous step, and the optional `returnTo` action visible as text navigation. The labeled reset icon opens the existing confirmation in Twig.com. | FilterLab adapter |
+| `/lab-navigation` | `LabNavigationView` | Keeps All labs, Previous step, and the optional `returnTo` action visible as text navigation. Twig.com header options open the shared flat reset confirmation; legacy consumers retain their reset entry. | FilterLab adapter |
 | `/lab-completion-view` | `LabCompletionView` | Recap for one completed lab; host supplies choose/review actions and heading ref. | LabCompletion |
 | `/lab-checklist` | `LabChecklist` | Shared directions for learner interactions, with done/current/upcoming states; pass `label` and `items`. | Lab UI |
 | `/lab-choices` | `LabChoices` | Accessible radio choice group; pass `label`, `value`, `options`, and `onChange`. | Lab UI |
@@ -307,3 +307,5 @@ Playground lab menus share the approved full-width hover/focus rows and neutral 
 Playground disclosures share `DisclosureIcon` / `PlaygroundSummary` internally, including native nested details. Event rows select data without an icon and show Properties beneath the full event list. Event-table focus spans both columns. No props, lesson flow or tracking changes.
 
 Lesson navigation: LabNavigationView accepts header/footer placement; LessonActionScope suppresses actions from hidden review screens; PlaygroundDock accepts an optional footer. LessonNavigationProvider and LabPrimaryAction preserve real handlers while moving the primary action into that footer. Defaults keep existing consumers inline.
+
+Reset confirmation keeps the lesson mounted while replacing its visible content. Cancel/Escape restores the lesson and trigger focus; only the explicitly labeled Reset Twig data action invokes the host reset callback. Navigation and reset buttons retain the original OSButton proportions with an invisible 44px hit area.

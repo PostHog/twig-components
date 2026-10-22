@@ -323,3 +323,10 @@ Use the approved header/footer navigation in every Playground lab. All labs and 
 
 
 Playground actions update evidence, checklists and progression directly. Do not show transient confirmation popups or toasts for completing a requested lab action. Keep actual errors and essential inline state in their existing context.
+
+
+## Reset confirmation and button proportions
+
+Reset Twig data replaces the visible lesson with a flat white confirmation beneath the Playground title. Keep the lesson mounted and its progress intact; hide its normal navigation, content and footer until Cancel or Escape returns to the same step and restores menu focus. Use an 18px title, one concise consequence paragraph, 24px body padding, and a neutral divider above the 16px action row. Cancel is left-aligned quiet navigation; Reset Twig data is the existing OSButton on the right. Focus Cancel initially; clear data only after explicit confirmation.
+
+Navigation and reset actions use the original OSButton face: 4px/10px padding, existing type, border and yellow base, with intrinsic content width. Do not enlarge the face or base to meet touch targets. Extend only the invisible button hit area to 44px. Preserve normal hover, pressed, keyboard-focus and disabled states.
