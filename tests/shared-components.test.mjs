@@ -331,7 +331,7 @@ test("portable filter exercise renders both the code step and event comparison",
   );
   assert.doesNotMatch(starting, /<h3/);
   assert.match(starting, /aria-label="Next filter actions"/);
-  assert.match(starting, /posthog\.capture/);
+  assert.match(starting.replace(/<wbr\s*\/?\>/g, ""), /posthog\.capture/);
 
   let state = filterLabReducer(initialLabState, { type: "example" });
   state = filterLabReducer(state, { type: "filter", setting: "Forest" });

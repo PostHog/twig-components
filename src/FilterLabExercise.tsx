@@ -1,5 +1,7 @@
 "use client";
 
+import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
+
 import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
@@ -31,7 +33,7 @@ export function FilterLabIntroduction({ onContinue }: { onContinue: () => void }
 
 function FilterCode({ config }: { config: LabState["config"] }) {
   return (
-    <pre>
+    <PlaygroundCodeBlock>
       {`// Inside the filter's click handler\nposthog.capture(${JSON.stringify(
         config.eventName
       )}, {\n`}
@@ -41,7 +43,7 @@ function FilterCode({ config }: { config: LabState["config"] }) {
           : JSON.stringify(config.fixedValue)
       },`}</mark>
       {"\n});"}
-    </pre>
+    </PlaygroundCodeBlock>
   );
 }
 
@@ -94,18 +96,20 @@ export function FilterLabExercise({
                     The property now reads <code>selectedDestinationType</code>{" "}
                     from each click.
                   </p>
-                  <LabChecklist label="Next filter actions" items={[{
-                    label: <>Apply the code, then test <strong>Forest</strong> and <strong>Coast</strong>.</>,
-                    done: false,
-                  }]} />
+                  <LabChecklist label="Next filter actions" items={[
+                    { label: <>Click <strong>Apply the code</strong>.</>, done: false },
+                    { label: <>Choose <strong>Forest</strong> on Twig.</>, done: false },
+                    { label: <>Choose <strong>Coast</strong> to compare the events.</>, done: false },
+                  ]} />
                 </>
               ) : (
                 <>
                   <p><code>{'"Forest"'}</code> is a fixed value.</p>
-                  <LabChecklist label="Next filter actions" items={[{
-                    label: <>Apply the code, then click <strong>Forest</strong> to see how it becomes an event. Then try <strong>Coast</strong>.</>,
-                    done: false,
-                  }]} />
+                  <LabChecklist label="Next filter actions" items={[
+                    { label: <>Click <strong>Apply the code</strong>.</>, done: false },
+                    { label: <>Choose <strong>Forest</strong> on Twig.</>, done: false },
+                    { label: <>Choose <strong>Coast</strong> to compare the events.</>, done: false },
+                  ]} />
                 </>
               )}
               <button
@@ -280,13 +284,13 @@ export function FilterLabExercise({
       {stage === 1 && (
         <details className="vac-lab-step">
           <PlaygroundSummary>Code and session options</PlaygroundSummary>
-          <pre>
+          <PlaygroundCodeBlock>
             {filterLabCode(
               embedSource && state.step === 0
                 ? { ...example, source: embedSource }
                 : state.applied ?? state.config
             )}
-          </pre>
+          </PlaygroundCodeBlock>
           <div className="vac-lab-actions">
             {state.events.length > 0 && (
               <button

@@ -1,5 +1,7 @@
 "use client";
 
+import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
+
 import { LabPrimaryAction } from "./LabNavigation.js";
 import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
@@ -162,7 +164,7 @@ export function BookingLab({
         )}
         <details className="vac-lab-step">
           <PlaygroundSummary>Applied code</PlaygroundSummary>
-          <pre className="vac-booking-code">{bookingCode("confirmation")}</pre>
+          <PlaygroundCodeBlock className="vac-booking-code">{bookingCode("confirmation")}</PlaygroundCodeBlock>
         </details>
       </section>
     );
@@ -180,13 +182,13 @@ export function BookingLab({
             "This request will fail. Keep the same code: it should record the attempt without recording a completed booking."
           )}
         </p>
-        {success && <LabChecklist label="Next booking action" items={[{
-          label: <>Apply it, then make a simulated booking to see <code>booking_started</code> on click and <code>booking_completed</code> after confirmation.</>,
+        {<LabChecklist label="Next booking action" items={[{
+          label: <>Click <strong>Apply the code</strong>, then complete the booking form on Twig.</>,
           done: false,
         }]} />}
-        <pre className="vac-booking-code" aria-label="Booking capture code">
+        <PlaygroundCodeBlock className="vac-booking-code" aria-label="Booking capture code">
           {bookingCode("confirmation")}
-        </pre>
+        </PlaygroundCodeBlock>
         <Action onClick={apply}>Apply the code →</Action>
       </section>
     );
@@ -316,7 +318,7 @@ export function BookingLab({
           Availability is recorded when the local availability check succeeds.
           Start records the request. Completion depends on the code you applied.
         </p>
-        <pre className="vac-booking-code">{bookingCode(run.source)}</pre>
+        <PlaygroundCodeBlock className="vac-booking-code">{bookingCode(run.source)}</PlaygroundCodeBlock>
         <pre>{JSON.stringify(run.events, null, 2)}</pre>
       </details>
     </section>

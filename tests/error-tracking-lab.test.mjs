@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { JSDOM } from "jsdom";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { errorTrackingReducer, initialErrorTrackingState, isErrorTrackingLabComplete } from "@posthog/twig-components/error-tracking-lab";
@@ -80,7 +81,9 @@ test("the trip error explanation has no extra inspection screen", () => {
   const stackVisual = inspection.match(/aria-label="Example PostHog stack trace"([\s\S]*?)<\/section>/)?.[1] ?? "";
   assert.equal((stackVisual.match(/<strong>TypeError<\/strong>/g) ?? []).length, 1);
   assert.match(stackVisual, /<mark>undefined<\/mark>/);
-  assert.match(stackVisual, /<pre aria-label="Stack frames">at <mark>readTripHost<\/mark> \(trip-details\.ts\)/);
+  const stackDocument = new JSDOM(`<section ${stackVisual}</section>`).window.document;
+  assert.match(stackDocument.querySelector('pre[aria-label="Stack frames"]').textContent, /at readTripHost \(trip-details\.ts\)/);
+  assert.match(stackDocument.querySelector('[data-highlighted="true"]').textContent, /readTripHost/);
   assert.match(inspection, /Selected exception properties/);
   assert.match(inspection, /stay_id/);
   assert.match(inspection, /<mark>undefined<\/mark>/);
@@ -129,9 +132,9 @@ test("the error lab distinguishes the fallback from repairing missing host data"
   const beforeFallback = renderStage(5);
   assert.match(beforeFallback, /Twig keeps a host record for each stay, saving details about the host/);
   assert.doesNotMatch(beforeFallback, /Woody.s name and bio/);
-  assert.match(beforeFallback, /generic error message seen on Twig:<\/p><pre/);
-  assert.match(beforeFallback, /<pre[^>]*>return host\.name;<\/pre>/);
-  assert.match(beforeFallback, /<pre[^>]*>return host\?\.name \?\?/);
+  assert.match(beforeFallback, /generic error message seen on Twig:<\/p><div class="vac-code-block/);
+  assert.match(new JSDOM(beforeFallback).window.document.body.textContent, /return host\.name;/);
+  assert.match(new JSDOM(beforeFallback).window.document.body.textContent, /return host\?\.name \?\?/);
   assert.match(beforeFallback, /Apply the Twig code fix/);
   assert.doesNotMatch(beforeFallback, /\/\/ Before|\/\/ After/);
   const retry = renderStage(6);
@@ -260,5 +263,5 @@ test("every Twig action in the error lab uses single or numbered directions", ()
     assert.equal((checklist.match(/<li /g) ?? []).length, steps, `${label} at stage ${stage}`);
     assert.equal((checklist.match(/class="vac-check-status"/g) ?? []).length, steps === 1 ? 0 : steps);
   }
-  assert.doesNotMatch(render(9, verified, "bookings"), /vac-booking-checklist/);
+  assert.match(render(9, verified, "bookings"), /aria-label="Resolve the issue"/);
 });

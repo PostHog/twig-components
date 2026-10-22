@@ -1,5 +1,7 @@
 "use client";
 
+import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
+
 import { LabPrimaryAction } from "./LabNavigation.js";
 import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
@@ -101,8 +103,7 @@ export function StayLab({
         <p>
           {repair ? (
             <>
-              Twig holds the listing’s ID in <code>stay.id</code>. Add it as{" "}
-              <code>stay_id</code> so the event identifies the listing.
+              Twig holds the listing’s ID in <code>stay.id</code>. The <code>stay_id</code> property identifies the listing.
             </>
           ) : (
             <>
@@ -111,6 +112,10 @@ export function StayLab({
             </>
           )}
         </p>
+        <LabChecklist label="Prepare stay tracking" items={repair ? [
+          { label: <>Enable <strong>Include <code>stay_id</code></strong>.</>, done: identified },
+          { label: <>Click <strong>Apply the code</strong>.</>, done: false },
+        ] : [{ label: <>Click <strong>Apply the code</strong>.</>, done: false }]} />
         {repair && (
           <label className="vac-replay-mask">
             <input
@@ -121,7 +126,7 @@ export function StayLab({
             Include <code>stay_id</code>
           </label>
         )}
-        <pre className="vac-booking-code">{stayCode(repair && identified)}</pre>
+        <PlaygroundCodeBlock className="vac-booking-code">{stayCode(repair && identified)}</PlaygroundCodeBlock>
         <button
           className="vac-button"
           disabled={repair && !identified}
@@ -163,9 +168,9 @@ export function StayLab({
         )}
         <details className="vac-lab-step">
           <PlaygroundSummary>Applied code</PlaygroundSummary>
-          <pre className="vac-booking-code">
+          <PlaygroundCodeBlock className="vac-booking-code">
             {stayCode(state.applied === "identified")}
-          </pre>
+          </PlaygroundCodeBlock>
         </details>
       </section>
     );

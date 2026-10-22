@@ -1,5 +1,7 @@
 "use client";
 
+import { TooltipBubble } from "./PlaygroundTooltip.js";
+
 import { LessonNavigationProvider } from "./LabNavigation.js";
 import { DisclosureIcon } from "./PlaygroundDisclosure.js";
 import { useEffect, useId, useRef, useState, type ReactNode, type RefObject } from "react";
@@ -473,7 +475,7 @@ function ConsoleControl({ label, disabled, onClick, children, surface = false }:
   const [visible, setVisible] = useState(false);
   return <span className="vac-inspector-control-anchor" onMouseEnter={() => setVisible(true)} onMouseLeave={() => setVisible(false)}>
     <button type="button" className="vac-inspector-control" data-surface={surface || undefined} aria-label={label} aria-describedby={visible ? tipId : undefined} disabled={disabled} onClick={onClick} onFocus={() => setVisible(true)} onBlur={() => setVisible(false)} onKeyDown={event => { if (event.key === "Escape" && visible) { event.preventDefault(); event.stopPropagation(); setVisible(false); } }}>{children}</button>
-    {visible && <span role="tooltip" id={tipId} className="vac-inspector-control-tooltip">{label}</span>}
+    {visible && <TooltipBubble role="tooltip" id={tipId} className="vac-inspector-control-tooltip">{label}</TooltipBubble>}
   </span>;
 }
 
@@ -516,21 +518,21 @@ export function PlaygroundToolRail({ open, picking, selectedId, page, onOpen, on
     <div className="vac-tool-rail-logo">
       <button type="button" aria-label="Playground Home" aria-describedby={`${tipId}-home`} aria-pressed={open && homeActive} aria-controls="twig-playground" onClick={() => { if (onHomeOpened) onHomeOpened(); else onHelpOpened?.("click"); }}>
         <img src={new URL("./assets/posthog-logomark.svg", import.meta.url).href} width={28} height={24} alt="" />
-        <span id={`${tipId}-home`} role="tooltip" className="vac-tool-tip">Home</span>
+        <TooltipBubble id={`${tipId}-home`} role="tooltip" className="vac-tool-tip">Home</TooltipBubble>
       </button>
     </div>
     <div className="vac-tool-rail-group" role="group" aria-label="Inspection tools">
       <button ref={pickerRef} type="button" aria-label="Inspect an element" aria-describedby={`${tipId}-inspect`} aria-pressed={open && !homeActive && picking} onClick={open && !homeActive && picking ? onCollapse : onPick}>
         {/* Exact IconCursorBox from @posthog/icons, matching the existing product asset source. */}
-        <InspectorCursorIcon /><span id={`${tipId}-inspect`} role="tooltip" className="vac-tool-tip">Inspect Twig</span>
+        <InspectorCursorIcon /><TooltipBubble id={`${tipId}-inspect`} role="tooltip" className="vac-tool-tip">Inspect Twig</TooltipBubble>
       </button>
       {tools.map(item => <button key={item.tool} type="button" aria-label={`Open ${item.tool} labs`} aria-describedby={`${tipId}-${item.id}`} aria-pressed={open && !homeActive && !picking && selectedTool === item.tool} onClick={() => { if (open && !homeActive && !picking && selectedTool === item.tool) onCollapse(); else onSelect(item.id); }}>
-        <img src={productIcons[item.tool]} width={22} height={22} alt="" /><span id={`${tipId}-${item.id}`} role="tooltip" className="vac-tool-tip">{item.tool} labs</span>
+        <img src={productIcons[item.tool]} width={22} height={22} alt="" /><TooltipBubble id={`${tipId}-${item.id}`} role="tooltip" className="vac-tool-tip">{item.tool} labs</TooltipBubble>
       </button>)}
     </div>
     <div className="vac-tool-rail-footer">
     <button ref={toggleRef} className="vac-tool-rail-toggle" type="button" aria-label={open ? "Collapse Playground" : "Expand Playground"} aria-expanded={open} aria-describedby={`${tipId}-toggle`} aria-controls="twig-playground" onClick={open ? onCollapse : onOpen}>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d={open ? "m9 6 6 6-6 6" : "m15 6-6 6 6 6"} /></svg><span id={`${tipId}-toggle`} role="tooltip" className="vac-tool-tip">{open ? "Collapse" : "Expand"}</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d={open ? "m9 6 6 6-6 6" : "m15 6-6 6 6 6"} /></svg><TooltipBubble id={`${tipId}-toggle`} role="tooltip" className="vac-tool-tip">{open ? "Collapse" : "Expand"}</TooltipBubble>
     </button>
     </div>
   </aside>;
@@ -678,7 +680,7 @@ export function PlaygroundInspectionView({ activity, selectedId, onSelect, descr
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18" /></svg>
       </ConsoleControl>}
     </div>
-    {!guidance && <p>Interact with Twig to see its PostHog events in the console. Select any entry, including an earlier event or AI generation, to inspect its data and tracking code below.</p>}</>}
+    {!guidance && <LabChecklist label="Explore Twig" items={[{ label: <>Interact with <strong>Twig</strong> to record its events.</>, done: consoleRecords.length > 0 }, { label: <>Select an entry in the <strong>console</strong> to inspect its data and tracking code.</>, done: Boolean(selectedEvent && !state.followLatest) }]} />}</>}
     {guidance}
     <div className="vac-inspector-stream-browser">
       <div className="vac-inspector-stream-controls" role="group" aria-label="Console controls">

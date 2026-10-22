@@ -1,7 +1,8 @@
 "use client";
 
-import { Fragment, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
+import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
 
 export type InspectorValue = string | number | boolean | null | InspectorValue[] | { [key: string]: InspectorValue };
 
@@ -100,29 +101,13 @@ export function InstrumentationInspector({ event, timestamp, properties, element
 
 export function Source({ source, compact = false, wrap = compact }: { source: InspectionSource; compact?: boolean; wrap?: boolean }) {
   const location = source.caption === "" ? null : <small title={source.caption ? undefined : source.path}>{source.caption ?? `${compact ? source.path.split("/").at(-1) : source.path}:${source.line}`}</small>;
-  const code = <pre aria-label={compact ? "Instrumentation source code" : undefined}><code><CodeSyntax value={source.code} wrap={wrap} highlightLines={wrap ? source.highlightLines : undefined} /></code></pre>;
-  return <div className="vac-inspector-source-code">{compact ? <>{code}{location}</> : <>{location}{code}</>}</div>;
+  return <div className="vac-inspector-source-code"><PlaygroundCodeBlock code={source.code} label={source.caption === "" ? "JavaScript" : source.path.split("/").at(-1)} highlightLines={source.highlightLines} aria-label={compact ? "Instrumentation source code" : "Source code"} />{location}</div>;
 }
 
 export function Payload({ event, properties }: {event: string; properties: Record<string, InspectorValue>}) {
   return <div className="vac-inspector-tree"><details><InspectorSummary>Event data</InspectorSummary><div className="vac-inspector-tree-branch"><Value name="event" value={event} /><Value name="properties" value={properties} /></div></details></div>;
 }
 
-function CodeSyntax({ value, wrap = false, highlightLines = [] }: {value: string; wrap?: boolean; highlightLines?: readonly number[]}) {
-  const lines = value.split("\n");
-  const indentation = Math.min(...lines.slice(1).filter(line => line.trim()).map(line => line.match(/^ */)![0].length));
-  const formatted = [lines[0]!, ...lines.slice(1).map(line => Number.isFinite(indentation) ? line.slice(indentation) : line)];
-  const syntax = (text: string) => text.split(/("[^"\n]*"|'[^'\n]*'|\b(?:const|let|if|return|function|true|false|null)\b)/g).map((token,index) =>
-    <span key={index} className={/^["']/.test(token) ? "vac-inspector-string" : /^(const|let|if|return|function|true|false|null)$/.test(token) ? "vac-inspector-key" : undefined}>
-      {wrap ? token.split(/([_./])/g).map((part,partIndex) => <Fragment key={partIndex}>{part}{/^[_./]$/.test(part) && <wbr />}</Fragment>) : token}
-    </span>
-  );
-  if (!wrap) return <>{syntax(formatted.join("\n"))}</>;
-  return <>{formatted.map((line,index) => {
-    const indent = line.match(/^ */)![0];
-    return <Fragment key={index}><span className="vac-inspector-code-line" data-highlighted={highlightLines.includes(index + 1) ? "true" : undefined}><span className="vac-inspector-code-indent">{indent}</span><span className="vac-inspector-code-content">{syntax(line.slice(indent.length))}</span></span>{index < formatted.length - 1 ? "\n" : null}</Fragment>;
-  })}</>;
-}
 
 function Value({ name, value, expanded = true }: { name: string; value: InspectorValue; expanded?: boolean }) {
   if (value !== null && typeof value === "object") {

@@ -8,7 +8,8 @@ export function DisclosureIcon({ expanded }: { expanded?: boolean }) {
   </span>;
 }
 
-export function PlaygroundSummary({ children, className = "" }: { children: ReactNode; className?: string }) {
+export function PlaygroundSummary({ children, className = "", terminal = false }: { children: ReactNode; className?: string; terminal?: boolean }) {
+  if (terminal) return <summary className="vac-agent-disclosure"><span className="vac-agent-caret" aria-hidden="true">›</span><span>{children}</span></summary>;
   return <summary className={`vac-playground-disclosure ${className}`.trim()}>
     <span className="vac-inspector-disclosure-label">{children}</span>
     <DisclosureIcon />

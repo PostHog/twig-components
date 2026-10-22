@@ -158,7 +158,7 @@ export function ReplayLab({
                   done: false,
                 }]} />
               ) : (
-                <p>Your recording is ready. Play it back to see the interactions you captured.</p>
+                <LabChecklist label="Review your recording" items={[{ label: <>Click <strong>Watch the recording</strong> to review your visit.</>, done: false }]} />
               )}
               {replay.mode === "manual" && (
                 <LabPrimaryAction><button className="vac-button" onClick={replay.stop}>
@@ -223,7 +223,7 @@ export function ReplayLab({
         <>
           {replay.recording.length < 2 ? (
             <>
-              <p>Record a new visit to capture the page for playback.</p>
+              <LabChecklist label="Capture a recording" items={[{ label: <>Return to the exercise and <strong>record a new visit</strong>.</>, done: false }]} />
               <LabPrimaryAction><button
                 className="vac-button"
                 onClick={() => {
@@ -244,13 +244,13 @@ export function ReplayLab({
               </p>
               {sessionPlayer}
               <div className="vac-lab-output">
-                <h4>Look for the search</h4>
                 <p>
                   {replay.capturedMasked
                     ? "Search words were masked before storage. You can still watch the typing and surrounding interactions."
-                    : "Search words are visible in this recording. Record another visit with masking on to compare."}
+                    : "Search words are visible in this recording."}
                 </p>
               </div>
+              {!replay.capturedMasked && <LabChecklist label="Compare masking" items={[{ label: <>Record another visit with <strong>Hide search text in the replay</strong> enabled.</>, done: false }]} />}
               <section
                 className="vac-lab-step"
                 aria-label="Captured interactions"

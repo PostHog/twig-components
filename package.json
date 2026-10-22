@@ -189,6 +189,22 @@
     "./events-lab-provider": {
       "types": "./dist/EventsLabProvider.d.ts",
       "import": "./dist/EventsLabProvider.js"
+    },
+    "./code-block": {
+      "types": "./dist/PlaygroundCodeBlock.d.ts",
+      "import": "./dist/PlaygroundCodeBlock.js"
+    },
+    "./tooltip": {
+      "types": "./dist/PlaygroundTooltip.d.ts",
+      "import": "./dist/PlaygroundTooltip.js"
+    },
+    "./wizard-command": {
+      "types": "./dist/WizardCommand.d.ts",
+      "import": "./dist/WizardCommand.js"
+    },
+    "./mcp-composer": {
+      "types": "./dist/McpComposer.d.ts",
+      "import": "./dist/McpComposer.js"
     }
   },
   "scripts": {
@@ -342,6 +358,18 @@
       ],
       "events-lab-provider": [
         "dist/EventsLabProvider.d.ts"
+      ],
+      "code-block": [
+        "dist/PlaygroundCodeBlock.d.ts"
+      ],
+      "tooltip": [
+        "dist/PlaygroundTooltip.d.ts"
+      ],
+      "wizard-command": [
+        "dist/WizardCommand.d.ts"
+      ],
+      "mcp-composer": [
+        "dist/McpComposer.d.ts"
       ]
     }
   }

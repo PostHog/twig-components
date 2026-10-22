@@ -1,5 +1,7 @@
 "use client";
 
+import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
+
 import { LabPrimaryAction } from "./LabNavigation.js";
 import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
@@ -82,14 +84,14 @@ export function TripPlannerWalkthrough({ stays, onAllLabs, renderStayCard, onEva
           </ol>
         </div>
         <p>A model response is recorded as a <code>$ai_generation</code> event. In your app, a capture call like this connects it to its trace and session:</p>
-        <pre><code>{generationCaptureExample}</code></pre>
+        <PlaygroundCodeBlock><code>{generationCaptureExample}</code></PlaygroundCodeBlock>
         <p>A product event tells you someone used the planner. A generation shows how the model answered.</p>
         <p>Let’s follow a chat to break down this capture call.</p>
         <Action onClick={next}>Follow the chat →</Action>
       </> : !first ? <>
         <LabChecklist label="Next chat action" items={[{ done: false, label: <>Send the pre-filled <strong>forest getaway for four</strong> message in Twig’s highlighted AI trip planner.</> }]} />
         <p>Each answer creates a local <code>$ai_generation</code> example with input and output. The guided chat uses pre-filled messages so you can follow the same conversation.</p>
-        <p className="vac-muted vac-trip-mobile-hint">On mobile, tap <strong>Playground</strong> in the chat to return here.</p>
+        <div className="vac-trip-mobile-hint"><LabChecklist label="Return to the lab" items={[{ label: <>Tap <strong>Playground</strong> in the chat to return here.</>, done: false }]} /></div>
       </> : showConversation ? <>
         <TripPlannerConversation />
         <Action onClick={next}>Review what you’ve learned →</Action>
@@ -99,13 +101,13 @@ export function TripPlannerWalkthrough({ stays, onAllLabs, renderStayCard, onEva
           { value: "input", label: "Input" }, { value: "output", label: "Output" },
         ]}>
           <p className="vac-capture-context">After the model responds, one capture call records both input and output. This tab highlights the {input ? "input" : "output"}:</p>
-          <pre><code>{'posthog.capture("$ai_generation", {\n  $ai_trace_id: traceId,\n  $ai_session_id: sessionId,\n'}{input ? <mark>{inputField}</mark> : inputField}{input ? outputField : <mark>{outputField}</mark>}{'  // Other fields omitted\n});'}</code></pre>
+          <PlaygroundCodeBlock><code>{'posthog.capture("$ai_generation", {\n  $ai_trace_id: traceId,\n  $ai_session_id: sessionId,\n'}{input ? <mark>{inputField}</mark> : inputField}{input ? outputField : <mark>{outputField}</mark>}{'  // Other fields omitted\n});'}</code></PlaygroundCodeBlock>
           <TripPlannerTracePreview record={first} field={lesson.field} />
           {input && <Action inline onClick={inspectOutput}>Inspect output →</Action>}
         </EvidenceTabs>
         {!second && firstInspected && <LabChecklist label="Next chat action" items={[{ done: false, label: <>Next, send the pre-filled <strong>beach access question</strong> in Twig’s chat.</> }]} />}
         {second && firstInspected && <Action onClick={next}>Connect the requests →</Action>}
-        {!second && resetConversation && <p>The chat was restarted. Use <strong>Reset lab</strong> to follow a fresh conversation.</p>}
+        {!second && resetConversation && <LabChecklist label="Restart the conversation" items={[{ label: <>Use <strong>Reset Twig data</strong> to follow a fresh conversation.</>, done: false }]} />}
       </>}
     </>}
     {lesson.step === 2 && <TripPlannerMilestone onContinue={next} />}

@@ -360,7 +360,7 @@ test("source wrapping preserves exact code text and indentation without insertin
  const pre=dom.window.document.querySelector('pre');
  assert.equal(pre.textContent,value);
  assert.ok(pre.querySelectorAll('wbr').length>0);
- assert.deepEqual([...pre.querySelectorAll('.vac-inspector-code-indent')].map(node=>node.textContent),['','  ','  ','    ','  ','']);
+ assert.deepEqual([...pre.querySelectorAll('.vac-code-indent')].map(node=>node.textContent),['','  ','  ','    ','  ','']);
  assert.equal(pre.hasAttribute('tabindex'),false);
  dom.window.close();
 });

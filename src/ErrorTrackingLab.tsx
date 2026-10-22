@@ -1,5 +1,7 @@
 "use client";
 
+import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
+
 import { LabPrimaryAction } from "./LabNavigation.js";
 import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
@@ -84,7 +86,7 @@ function PostHogStackTrace({ occurrence }: { occurrence: ErrorOccurrence | undef
     <PostHogExceptionRow occurrence={occurrence} highlightMessage />
     <div className="vac-error-posthog-list-heading">Stack Trace</div>
     <div className="vac-error-posthog-stack">
-      <pre aria-label="Stack frames">at <mark>readTripHost</mark> (trip-details.ts){"\n"}at openTripDetails (AccountPages.tsx)</pre>
+      <PlaygroundCodeBlock aria-label="Stack frames">at <mark>readTripHost</mark> (trip-details.ts){"\n"}at openTripDetails (AccountPages.tsx)</PlaygroundCodeBlock>
     </div>
   </section>;
 }
@@ -115,9 +117,10 @@ function PostHogIssueInvestigation({ onStage }: { onStage: (stage: number) => vo
     <PostHogExceptionProperties occurrence={last} highlightStayId />
     <p>The stay ID in PostHog points to this booking in Twig. The book's data and trip-details code show why the host lookup failed.</p>
     <p>Stay <code>{last?.stayId}</code> points to host <code>{bookedStay?.hostId}</code>. But trip details passes an empty set of host records to <code>readTripHost</code>, so the lookup returns no host:</p>
-    <pre className="vac-booking-code">{"readTripHost({}, stay.hostId);"}</pre>
+    <PlaygroundCodeBlock className="vac-booking-code">{"readTripHost({}, stay.hostId);"}</PlaygroundCodeBlock>
     <p>The fix for this is to pass Twig's loaded host records instead:</p>
-    <pre className="vac-booking-code">{"readTripHost(hosts, stay.hostId);"}</pre>
+    <PlaygroundCodeBlock className="vac-booking-code">{"readTripHost(hosts, stay.hostId);"}</PlaygroundCodeBlock>
+    {!state.hostLookupRepaired && <LabChecklist label="Repair the host lookup" items={[{ label: <>Click <strong>Apply the Twig repair</strong>.</>, done: false }]} />}
     {state.hostLookupRepaired
       ? <Continue onClick={() => onStage(8)}>Check the Twig repair →</Continue>
       : <Continue onClick={() => { dispatch({ type: "repair-host-lookup" }); onStage(8); }}>Apply the Twig repair →</Continue>}
@@ -132,7 +135,7 @@ function PostHogIssueResolution({ onStage }: { onStage: (stage: number) => void 
   return <section className="vac-lab vac-builder">
     <p>After reloading trip details, Twig now shows <strong>{bookedHost?.name}</strong> instead of the fallback. This load added no new exception.</p>
     <IssuePreview count={state.occurrences.length} resolved={state.resolved} />
-    <p>The earlier failures stay in the issue's history. Resolve the issue in PostHog to mark it handled.</p>
+    <p>The earlier failures stay in the issue's history.</p><LabChecklist label="Resolve the issue" items={[{ label: <>Click <strong>Resolve the issue</strong> to mark it handled.</>, done: state.resolved }]} />
     {state.resolved
       ? <Continue onClick={() => onStage(10)}>Finish lab →</Continue>
       : <Continue onClick={() => { dispatch({ type: "resolve" }); onStage(10); }}>Resolve the issue →</Continue>}
@@ -210,10 +213,10 @@ export function ErrorTrackingLab({
   if (stage === 5) return <section className="vac-lab vac-builder">
     <p>Twig keeps a host record for each stay, saving details about the host. For this trip, the record doesn't reach the lookup, so <code>host</code> is <code>undefined</code>.</p>
     <p>Currently, there's no fallback in place when <code>host</code> is <code>undefined</code>, resulting in the generic error message seen on Twig:</p>
-    <pre className="vac-booking-code">{"return host.name;"}</pre>
+    <PlaygroundCodeBlock className="vac-booking-code">{"return host.name;"}</PlaygroundCodeBlock>
     <p>The Twig code fix avoids reading a name from a missing host and shows a message if no name is available:</p>
-    <pre className="vac-booking-code">{"return host?.name ??\n  'Host information unavailable';"}</pre>
-    <p>The exception and stack trace show where Twig failed. Apply this code fix to see how it works.</p>
+    <PlaygroundCodeBlock className="vac-booking-code">{"return host?.name ??\n  'Host information unavailable';"}</PlaygroundCodeBlock>
+    <LabChecklist label="Apply the fallback" items={[{ label: <>Click <strong>Apply the Twig code fix</strong>.</>, done: false }]} />
     <Continue onClick={() => { dispatch({ type: "fix" }); onStage(6); }}>Apply the Twig code fix →</Continue>
   </section>;
 

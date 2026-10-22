@@ -1,5 +1,7 @@
 "use client";
 
+import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
+
 import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { LabChoices } from "./LabChoices.js";
 
@@ -126,7 +128,7 @@ function CaptureMapping({ config }: { config: AiConfig }) {
       <span className="vac-muted">
         Inside the generation event’s properties
       </span>
-      <pre>
+      <PlaygroundCodeBlock>
         <code>
           {"{\n"}
           {config.input && (
@@ -147,7 +149,7 @@ function CaptureMapping({ config }: { config: AiConfig }) {
           )}
           {"  // Other fields omitted\n}"}
         </code>
-      </pre>
+      </PlaygroundCodeBlock>
     </div>
   );
 }
@@ -181,10 +183,10 @@ export function AiLab({
                 code puts it in PostHog’s <code>$ai_input</code> field.
               </p>
               <CaptureMapping config={initialAiState.config} />
-              <LabChecklist label="Next AI action" items={[{
-                label: "Run it once to see those values in the recorded event.",
-                done: false,
-              }]} />
+              <LabChecklist label="Next AI action" items={[
+                { label: <>Click <strong>Apply the code</strong>.</>, done: false },
+                { label: <>Click <strong>Run simulation</strong> on Twig.</>, done: false },
+              ]} />
               <button
                 className="vac-button"
                 onClick={() => {
@@ -269,11 +271,11 @@ export function AiLab({
                 />
               )}
               {lesson === "timeout" ? (
-                <pre>
+                <PlaygroundCodeBlock>
                   {state.config.errors
                     ? `$ai_is_error: Boolean(error),\n$ai_error: error?.message`
                     : "// Error fields are not captured yet"}
-                </pre>
+                </PlaygroundCodeBlock>
               ) : (
                 <CaptureMapping config={state.config} />
               )}
@@ -479,11 +481,11 @@ export function AiLab({
       )}
       <details className="vac-lab-step">
         <PlaygroundSummary>Code and session options</PlaygroundSummary>
-        <pre>
+        <PlaygroundCodeBlock>
           {aiCode(
             stage === 2 && run ? run.config : state.applied ?? state.config
           )}
-        </pre>
+        </PlaygroundCodeBlock>
         {stage === 2 && run && (
           <>
             <h4>Captured event JSON</h4>

@@ -309,3 +309,12 @@ Playground disclosures share `DisclosureIcon` / `PlaygroundSummary` internally, 
 Lesson navigation: LabNavigationView accepts header/footer placement; LessonActionScope suppresses actions from hidden review screens; PlaygroundDock accepts an optional footer. LessonNavigationProvider and LabPrimaryAction preserve real handlers while moving the primary action into that footer. Defaults keep existing consumers inline.
 
 Reset confirmation keeps the lesson mounted while replacing its visible content. Cancel/Escape restores the lesson and trigger focus; only the explicitly labeled Reset Twig data action invokes the host reset callback. Navigation and reset buttons retain the original OSButton proportions with an invisible 44px hit area.
+
+## Playground primitives
+
+| Import | Exports | Use |
+| --- | --- | --- |
+| `/code-block` | `PlaygroundCodeBlock` | Read-only code with a language/filename, copy control, and full-width yellow line highlights. Pass `code`, `highlightLines` (1-based), and optional `lineNumbers`; existing `<mark>` snippets work as children. |
+| `/tooltip` | `PlaygroundTooltip`, `TooltipBubble`, `CopyControl` | Neutral hover/focus hints; successful copy displays `Copied!` for 500ms. No action-confirmation toast. |
+| `/wizard-command` | `WizardCommand` | PostHog.com’s dedicated gradient command and attached Learn more tab. Pass the Wizard subcommand (for example `mcp add`). All Wizard commands use this component. |
+| `/mcp-composer` | `McpComposer` | Editable local agent message, Enter/Shift+Enter behavior, plain monospace white send arrow, and stop control. `onSend` and `onStop` stay local; no inference or analytics. |

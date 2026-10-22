@@ -59,3 +59,8 @@ Choose **Trip planner** and start the lab. Follow the chat through the city requ
 In the account preview, log in and check Profile, Saved stays, Booked stays and Account settings at 390px and 320px. Content appears immediately; open the header avatar to navigate. Check closed/open states, Escape returning focus, outside-click dismissal and Log out. Desktop keeps the sidebar. Add saved/booking fixtures to check populated states as well as empty states.
 
 Check plus/minus states in Product menu and the later lab steps, including nested disclosures. In Events and properties, tab to a recorded event: the blue keyboard outline spans the event and time cells.
+
+Check Events and properties in both Web app and Agent: the first filter action is a single instruction, and configuration plus distinct filter selections use one progressive checklist. Repeated clicks on the same setting must not complete the different-setting item. Check later setup, retry and mobile-return directions across every lab.
+
+
+The Playground controls preview exercises connected choices, highlighted code, transient copy feedback, Wizard commands and the editable local MCP composer. Review it at 1440, 390 and 320px, including keyboard focus, copy denial and reduced motion. The Events and properties preview exercises all five steps in both experiences, including switching from web evidence to an unsent agent request.

@@ -330,3 +330,21 @@ Playground actions update evidence, checklists and progression directly. Do not 
 Reset Twig data replaces the visible lesson with a flat white confirmation beneath the Playground title. Keep the lesson mounted and its progress intact; hide its normal navigation, content and footer until Cancel or Escape returns to the same step and restores menu focus. Use an 18px title, one concise consequence paragraph, 24px body padding, and a neutral divider above the 16px action row. Cancel is left-aligned quiet navigation; Reset Twig data is the existing OSButton on the right. Focus Cancel initially; clear data only after explicit confirmation.
 
 Navigation and reset actions use the original OSButton face: 4px/10px padding, existing type, border and yellow base, with intrinsic content width. Do not enlarge the face or base to meet touch targets. Extend only the invisible button hit area to 44px. Preserve normal hover, pressed, keyboard-focus and disabled states.
+
+
+## One lab instruction pattern
+
+Use the shared `LabChecklist` for every requested learner action: configuration, site interactions, agent messages, retries, verification, recording and mobile return. One action uses the single-step callout; sequential actions share one numbered checklist with current/done/upcoming states tied to existing lesson evidence. Never replace directions with an Activity waiting card, a plain instruction paragraph, or a separate custom card. Keep explanatory prose and recorded data outside the checklist; navigation remains a button or link.
+
+
+## Shared Playground controls, code, and terminal
+
+All directions for user activity use `LabChecklist`, including setup, retries, repair, verification, and mobile returns. Do not use an Activity/Waiting card. A single action uses the blue-left row; sequential actions use numbered rows. Completion reflects real local state and keeps existing gates.
+
+Choices use one connected neutral box with blue radios, white selected rows, and a full-row blue keyboard outline. Web app/Agent uses the compact joined toggle geometry from Input/Output; no inset pill.
+
+`PlaygroundCodeBlock` is the shared read-only code surface, including Inspector instrumentation. Use a language or filename, never Terminal. Single-line and contiguous section emphasis use the full-width PostHog.com yellow 10% tint (`--ph-code-line-highlight`). Copy keeps its icon and shows the reusable neutral `Copied!` tooltip for 500ms; no persistent copied label or action-confirmation toast. Hover/focus tooltips use the same neutral surface and dismiss on Escape.
+
+Wizard commands always use `WizardCommand`, adapted from PostHog.com `WizardCommand` → `PlatformInstall/InlineCommand.tsx`: source gradient, monospace command, chevron, copy icon, and attached Learn more tab. Do not render Wizard commands as generic code blocks. The displayed command stays clean; copied commands pin `-y` and `@latest`, matching the source builder. These commands are never executed by the Playground.
+
+The mock MCP terminal and Inspector console are separate roles. The local MCP composer uses editable monospace text and a plain white upward-arrow send control, with a stop square during generation. No circle, raised OS button, or standalone Send/Continue CTA inside the transcript. Carets are allowed only for nested tool calls in this mock MCP terminal; other Playground disclosures keep plus/minus. Ordinary lesson navigation retains the existing OSButton outside the transcript. All agent requests and teaching data remain local.

@@ -3,6 +3,7 @@ await mkdir(new URL("./dist/assets/", import.meta.url), { recursive: true });
 for (const [source, target] of [
   ["./src/catalog.css", "catalog.css"],
   ["./src/lab.css", "lab.css"],
+  ["./assets/playground-copy.svg", "assets/playground-copy.svg"],
   ["./assets/DMSans.ttf", "assets/DMSans.ttf"],
   ["./assets/Fraunces.ttf", "assets/Fraunces.ttf"],
   ["./assets/Fraunces-Italic.ttf", "assets/Fraunces-Italic.ttf"],
