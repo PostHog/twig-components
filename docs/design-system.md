@@ -297,3 +297,7 @@ Home’s Take a tour and Explore on your own cards share one control rule and th
 ## Account navigation uses shared dropdowns
 
 Account sidebar and profile menus use `twig-dropdown-menu` and `twig-dropdown-item`: 6px outer padding, no row gaps, 44px minimum rows, 8px/12px row padding, and DM Sans 15px/24px at every width. Keep compact navigation in one column. Identity headers use the same 8px/12px inset. Reuse the dropdown surface, border, 3px corners, shadow, hover, current-page and keyboard-focus states; do not add account-specific row spacing or mobile typography. This is a visual change; existing callbacks and analytics are unchanged.
+
+## Stay-detail booking placement
+
+On single-column stay pages, place the booking form directly after the photo gallery, before the description, facts, bedrooms, amenities, host and cancellation policy. Desktop keeps stay information on the left and booking on the right. Use one booking form in the reading order and the host grid for placement; preserve the shared controls, validation and booking behavior.
