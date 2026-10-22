@@ -63,6 +63,8 @@ Twig.com shows “Browse stays” without an Explore eyebrow or visible count; r
 
 The interactive `BrowseStays` can put its search and filters behind a controlled “Search & filters” button beside the heading. Keep applied filter/search state when collapsed and show the active control count on the button. Existing consumers without the disclosure callback keep expanded controls. Browse photos use a restrained 16:9 crop capped at 320px high. Keep its existing filters, result count, copy, callbacks, and cards. This compact toolbar keeps listing photography near the top of the host page. Hosts own optional AI entry placement and whether it is expanded.
 
+TripSearch keeps destination, dates, guests, and Search stays visible at every width. Only optional setting and amenity filters collapse behind Filters; do not add a date/guest summary toggle.
+
 ## Type hierarchy
 
 - Explanatory paragraphs use regular weight throughout a lesson, including the first paragraph on each step. In the lab, prose is 13px, weight 400, with the existing 1.6 line height. Do not make an opening sentence look like a heading by enlarging or bolding it.

@@ -1515,17 +1515,11 @@
 
 .vac-trip-search-options { display: contents; }
 .vac-trip-search-options > div { min-width: 0; }
-.vac-trip-search .vac-trip-search-details { display: none; }
 @container (max-width: 550px) {
   .vac-trip-search { grid-template-columns: minmax(0, 1fr) auto; padding: 0; border: 0; gap: 8px; }
   .vac-trip-search-destination { grid-column: 1; grid-row: 1; }
   .vac-trip-search-submit { grid-column: 2; grid-row: 1; margin-top: 23px; padding-inline: 12px; }
-  .vac-trip-search .vac-trip-search-details {
-    display: block; grid-column: 1 / -1; grid-row: 2; min-height: 44px; text-align: left;
-    background: var(--vac-paper); color: var(--vac-ink); font: inherit;
-  }
-  .vac-trip-search-options { display: grid; grid-column: 1 / -1; grid-row: 3; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .vac-trip-search[data-details-open="false"] .vac-trip-search-options { display: none; }
+  .vac-trip-search-options { display: grid; grid-column: 1 / -1; grid-row: 2; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .vac-trip-search .vac-date-trigger svg { display: none; }
   .vac-trip-search .vac-date-trigger > span { white-space: nowrap; }
 }
@@ -1553,8 +1547,7 @@
 @container (max-width: 550px) {
   .vac-trip-search { grid-template-columns: minmax(0, 1fr) auto; }
   .vac-trip-search-submit { grid-row: 1; margin-top: 23px; }
-  .vac-trip-search .vac-trip-search-details { grid-column: 1; font-size: 13px; }
-  .vac-trip-filter-controls > button { grid-column: 2; grid-row: 2; margin-top: 0; }
+  .vac-trip-filter-controls > button { grid-column: 2; grid-row: 3; margin-top: 0; }
   .vac-trip-filter-panel { grid-row: 4; }
   .vac-destination-panel { width: max(100%, 230px); max-width: calc(100vw - 40px); }
 }
@@ -1565,7 +1558,7 @@
 .vac-catalog .vac-browse-toolbar h2 { color: var(--vac-ink); margin: 0; }
 @container (max-width: 550px) {
   .vac-trip-search { background: transparent; }
-  .vac-trip-search .vac-trip-search-details, .vac-trip-search .vac-browse-toggle { background: var(--vac-fill); }
+  .vac-trip-search .vac-browse-toggle { background: var(--vac-fill); }
 }
 
 /* Host identity stays compact beneath listing facts. Portraits come from the catalog. */
@@ -1632,7 +1625,7 @@
 }
 
 /* Field values and placeholders share one readable text color. */
-:is(.vac-app, .twig-browser, .twig-trip-planner) :is(input, textarea, select, .vac-date-trigger, .vac-guest-trigger, .vac-guest-option, .vac-trip-search-details, .vac-destination-panel [role="option"]):not(.vac-developer-theme *) {
+:is(.vac-app, .twig-browser, .twig-trip-planner) :is(input, textarea, select, .vac-date-trigger, .vac-guest-trigger, .vac-guest-option, .vac-destination-panel [role="option"]):not(.vac-developer-theme *) {
   color:var(--vac-muted);
 }
 .twig-getaway-search textarea, .twig-getaway-window textarea { caret-color:var(--vac-muted); }
@@ -1713,7 +1706,6 @@
   .twig-search-modes { padding-inline:12px; }
   .twig-search-workspace .vac-trip-search .vac-trip-search-submit { margin-top:24px; }
   .twig-search-workspace .vac-trip-search label { margin-bottom:8px; }
-  .twig-search-workspace .vac-trip-search .vac-trip-search-details { min-height:44px; border-color:transparent; background:transparent; font-size:12px; }
   .twig-search-workspace .vac-trip-filter-controls > button { min-height:44px; font-size:13px; }
   .twig-getaway-search { padding:8px 12px 12px; }
   .vac-catalog .vac-card-body { padding-top:12px; }
