@@ -53,3 +53,7 @@ Check both paths, the experience toggle, Previous, Reset, and both copy icons on
 ## Review the AIO trip planner
 
 Choose **Trip planner** and start the lab. Follow the chat through the city request. Run the capacity evaluation before inspecting the trace, apply the guest filter, retry the request, then run the same evaluation again. The first check fails and the second passes. Check Previous and Reset at both evaluation stages, and verify chat prompts stay locked until their lesson step.
+
+## Review mobile account navigation
+
+In the account preview, log in and check Profile, Saved stays, Booked stays and Account settings at 390px and 320px. Content appears immediately; open the header avatar to navigate. Check closed/open states, Escape returning focus, outside-click dismissal and Log out. Desktop keeps the sidebar. Add saved/booking fixtures to check populated states as well as empty states.

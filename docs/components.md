@@ -298,3 +298,5 @@ Home follows the [PostHog docs landing page](https://posthog.com/docs) with stac
 Home’s Take a tour and Explore on your own cards share one control rule and the same label typography as Learn with labs: 14px / 20px, weight 600. Do not introduce a separate larger tour label. Product disclosure rows keep the shared menu typography.
 
 Twig menus share `twig-dropdown-menu` and `twig-dropdown-item` from `catalog.css`; GuestPicker, destination suggestions and ProfileMenu reuse the same surface and row states. Calendar popovers reuse the surface with their calendar layout.
+
+`AccountLayout` hides its sidebar on narrow single-column layouts. Compose it with the existing header `ProfileMenu` so account destinations remain accessible; the menu starts closed. Desktop retains the sidebar.

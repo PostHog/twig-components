@@ -296,8 +296,12 @@ Home’s Take a tour and Explore on your own cards share one control rule and th
 
 ## Account navigation uses shared dropdowns
 
-Account sidebar and profile menus use `twig-dropdown-menu` and `twig-dropdown-item`: 6px outer padding, no row gaps, 44px minimum rows, 8px/12px row padding, and DM Sans 15px/24px at every width. Keep compact navigation in one column. Identity headers use the same 8px/12px inset. Reuse the dropdown surface, border, 3px corners, shadow, hover, current-page and keyboard-focus states; do not add account-specific row spacing or mobile typography. This is a visual change; existing callbacks and analytics are unchanged.
+Account sidebar and profile menus use `twig-dropdown-menu` and `twig-dropdown-item`: 6px outer padding, no row gaps, 44px minimum rows, 8px/12px row padding, and DM Sans 15px/24px at every width. On narrow account layouts, hide the sidebar and use the header avatar dropdown for navigation. Identity headers use the same 8px/12px inset. Reuse the dropdown surface, border, 3px corners, shadow, hover, current-page and keyboard-focus states; do not add account-specific row spacing or mobile typography. This is a visual change; existing callbacks and analytics are unchanged.
 
 ## Stay-detail booking placement
 
 On single-column stay pages, place the booking form directly after the photo gallery, before the description, facts, bedrooms, amenities, host and cancellation policy. Desktop keeps stay information on the left and booking on the right. Use one booking form in the reading order and the host grid for placement; preserve the shared controls, validation and booking behavior.
+
+## Mobile account navigation
+
+Mobile account pages open with content visible and the avatar menu closed. Use `ProfileMenu` for Profile, Saved stays, Booked stays, Account settings and Log out. `AccountLayout` hides its sidebar in single-column layouts (container widths up to 700px, or viewport widths up to 600px); desktop keeps the sidebar. Hosts using this layout must keep the header avatar menu available. Preserve dropdown spacing, Escape/return focus, outside-click dismissal and navigation callbacks.

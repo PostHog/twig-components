@@ -1422,7 +1422,7 @@
     grid-template-columns: minmax(0, 1fr);
   }
   .twig-account-sidebar {
-    position: static;
+    display: none;
   }
 }
 @container (max-width: 500px) {
@@ -1456,7 +1456,7 @@
     grid-template-columns: minmax(0, 1fr);
   }
   .twig-account-sidebar {
-    position: static;
+    display: none;
   }
   .twig-account-stay-grid,
   .twig-booking-card {
