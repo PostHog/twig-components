@@ -7,6 +7,8 @@ import { useTripPlannerLab } from "./TripPlannerLab.js";
 import { useEffect, useRef, type ReactNode } from "react";
 import type { Stay } from "./catalog.js";
 import { TripPlannerStayPreview } from "./TripPlannerStayPreview.js";
+import { PlaygroundEvaluation, PlaygroundTraceExplorer } from "./PlaygroundAiEvidence.js";
+import { traceForGeneration } from "./TripPlannerTracePreview.js";
 import { TripPlannerFailureTrace } from "./TripPlannerFailureTrace.js";
 import { LabChecklist } from "./LabChecklist.js";
 
@@ -26,6 +28,13 @@ export function TripPlannerFailure({ stays, renderStayCard, onEvaluate }: { stay
   const lookup = before?.capacityEvidence?.lookup.properties;
   const recommendedStay = stays.find(stay => stay.id === before?.properties.selected_stay_id);
   const correctedLookup = after?.capacityEvidence?.lookup.properties;
+  const evaluation = (phase: "before" | "after") => {
+    const result = phase === "before" ? lesson.beforeEvaluation : lesson.afterEvaluation;
+    const record = phase === "before" ? before : after;
+    const stay = stays.find(stay => stay.id === record?.properties.selected_stay_id);
+    return <PlaygroundEvaluation status={!result ? "ready" : result.result === "fail" ? "failed" : result.result === "pass" ? "passed" : "not-applicable"}
+      expected="4+ guests or no match" observed={result ? stay ? `${stay.title} · ${stay.capacity ?? "Unknown"} guests` : "No stay recommended" : undefined} />;
+  };
   const action = (label: string, onClick: () => void) => <LabPrimaryAction><button className="vac-button" type="button" onClick={onClick}><span className="vac-os-button-face">{label}</span></button></LabPrimaryAction>;
   return <section className="vac-lab vac-builder vac-trip-walkthrough">
     {lesson.step === 3 && <>
@@ -54,35 +63,29 @@ export function TripPlannerFailure({ stays, renderStayCard, onEvaluate }: { stay
         <p>An evaluation checks an answer against a rule. For this request: any recommended stay must sleep at least four.</p>
         <p>The lab’s <code>evaluateCapacity</code> function checks the recommended listing’s capacity. If the model recommends no stay, the check passes.</p>
         <PlaygroundCodeBlock><code>{'evaluateCapacity(recommendation, 4).result;'}</code></PlaygroundCodeBlock>
+        <div ref={evaluationResult} tabIndex={-1} role={lesson.beforeEvaluation ? "status" : undefined}>
+          {evaluation("before")}
+        </div>
         {lesson.beforeEvaluation ? <>
-          <div className="vac-guide-example" ref={evaluationResult} tabIndex={-1} role="status">
-            <p><code>{lesson.beforeEvaluation.result}</code> · {lesson.beforeEvaluation.reason}</p>
-          </div>
           <p>The check catches the bad recommendation. Now inspect the trace in PostHog to find the cause.</p>
           {action("Investigate this request →", () => dispatch({ type: "next" }))}
         </> : <><LabChecklist label="Run the capacity check" items={[{ label: <>Click <strong>Run evaluation</strong>.</>, done: false }]} />{action("Run evaluation →", () => runEvaluation("before"))}</>}
       </> : lesson.investigation === "overview" ? <>
         <p>For the city request, Twig’s code searches its listings, then passes the results to the model for a recommendation.</p>
         <p>Twig captures the search as an <code>$ai_span</code> event. A span records one operation within the request.</p>
-        <div className="vac-conversation-traces" role="group" aria-label="City request trace and its two operations">
-          <div className="vac-conversation-session"><code>$ai_trace_id</code><code>example-9c4a7b2e1d06</code></div>
-          <ol aria-label="Operations in the city request">
-            <li><strong>search_stays</strong><dl><dt><code>$ai_span</code></dt><dd>Twig’s code searches the listings.</dd></dl></li>
-            <li><strong>Recommend a city stay</strong><dl><dt><code>$ai_generation</code></dt><dd>The model uses the results to answer.</dd></dl></li>
-          </ol>
-        </div>
+        <PlaygroundTraceExplorer traces={[traceForGeneration(before)]} sessionId={before.properties.$ai_session_id} />
         <p>Twig gives both events the same <code>$ai_trace_id</code>, so PostHog groups them in one trace.</p>
         {action("Inspect the recorded search →", () => dispatch({ type: "next" }))}
       </> : lesson.investigation === "lookup" ? <>
         <p>A capture call like this records the search’s filters and results:</p>
         <PlaygroundCodeBlock><code>{'posthog.capture("$ai_span", {\n  $ai_trace_id: traceId,\n  $ai_span_name: "search_stays",\n'}<mark>{'  $ai_input_state: filters,\n  $ai_output_state: matches,\n'}</mark>{'});'}</code></PlaygroundCodeBlock>
         <p>In PostHog, that event shows:</p>
-        <div className="vac-conversation-traces" role="group" aria-label="Recorded catalog search filters and results">
-          <div className="vac-conversation-session"><code>$ai_span_name</code><code>{lookup.$ai_span_name}</code></div>
-          <ol aria-label="Recorded search properties">
-            <li><dl><dt><code>$ai_input_state</code></dt><dd><code>{JSON.stringify(lookup.$ai_input_state)}</code></dd></dl></li>
-            <li><dl><dt><code>$ai_output_state</code></dt>{lookup.$ai_output_state.map(stay => <dd key={stay.id}>{stay.name} · <code>capacity: {stay.capacity}</code></dd>)}</dl></li>
-          </ol>
+        <div className="vac-ai-tool-call"><div className="vac-ai-evaluation-header"><strong>Tool call: Search stays</strong></div>
+          <table className="vac-lab-table vac-lab-table-key-value" aria-label="Recorded catalog search filters and results">
+            <thead><tr><th scope="col">Property</th><th scope="col">Value</th></tr></thead><tbody>
+              <tr><td>Filters</td><td><code>{JSON.stringify(lookup.$ai_input_state)}</code></td></tr>
+              <tr><td>Results</td><td>{lookup.$ai_output_state.map(stay => <div key={stay.id}>{stay.name} · {stay.capacity} guests</div>)}</td></tr>
+            </tbody></table>
         </div>
         <p>Twig’s search code used <code>setting: "City"</code> but omitted <code>guests</code>. Twig passed a two-person stay to the model without checking capacity.</p>
         {action("Fix the search →", () => dispatch({ type: "next" }))}
@@ -94,15 +97,12 @@ export function TripPlannerFailure({ stays, renderStayCard, onEvaluate }: { stay
       </> : lesson.investigation === "evaluation" && after ? <>
         <p>Run the same capacity check on the new answer. The rule is unchanged: any recommended stay must sleep at least four.</p>
         <PlaygroundCodeBlock><code>{'evaluateCapacity(recommendation, 4).result;'}</code></PlaygroundCodeBlock>
+        {!lesson.afterEvaluation && evaluation("after")}
         {lesson.afterEvaluation ? <>
-          <div className="vac-conversation-traces" ref={evaluationResult} tabIndex={-1} role="status" aria-label="Capacity evaluation before and after the fix">
-            <div className="vac-conversation-session">Capacity check</div>
-            <ol aria-label="Evaluation results">
-              <li><dl><dt>Before the fix</dt><dd><code>{lesson.beforeEvaluation?.result}</code> · Le Nid Chic sleeps two.</dd></dl></li>
-              <li><dl><dt>After the fix</dt><dd><code>{lesson.afterEvaluation.result}</code> · The model recommended no stay.</dd></dl></li>
-            </ol>
+          <div className="vac-ai-evidence-stack" ref={evaluationResult} tabIndex={-1} role="status" aria-label="Capacity evaluation before and after the fix">
+            <div><p className="vac-ai-role">Before the fix</p>{evaluation("before")}</div>
+            <div><p className="vac-ai-role">After the fix</p>{evaluation("after")}</div>
           </div>
-          <p>No undersized stay was recommended, so this check passes. Twig still found no matching listings.</p>
           {action("Finish the lab →", () => dispatch({ type: "next" }))}
         </> : <><LabChecklist label="Verify the capacity check" items={[{ label: <>Click <strong>Run evaluation again</strong>.</>, done: false }]} />{action("Run evaluation again →", () => runEvaluation("after"))}</>}
       </> : !after ? <>
@@ -111,12 +111,12 @@ export function TripPlannerFailure({ stays, renderStayCard, onEvaluate }: { stay
         <div className="vac-trip-mobile-hint"><LabChecklist label="Return to the lab" items={[{ label: <>Tap <strong>Playground</strong> in the chat to return here.</>, done: false }]} /></div>
       </> : <>
         <p>Twig searched with <code>guests: 4</code> and found no matching listings. PostHog shows those results in the new search span:</p>
-        <div className="vac-conversation-traces" role="group" aria-label="Corrected catalog search filters and results">
-          <div className="vac-conversation-session"><code>$ai_span_name</code><code>search_stays</code></div>
-          <ol aria-label="Recorded search properties">
-            <li><dl><dt><code>$ai_input_state</code></dt><dd><code>{JSON.stringify(correctedLookup?.$ai_input_state)}</code></dd></dl></li>
-            <li><dl><dt><code>$ai_output_state</code></dt><dd><code>{JSON.stringify(correctedLookup?.$ai_output_state)}</code></dd></dl></li>
-          </ol>
+        <div className="vac-ai-tool-call"><div className="vac-ai-evaluation-header"><strong>Tool call: Search stays</strong></div>
+          <table className="vac-lab-table vac-lab-table-key-value" aria-label="Corrected catalog search filters and results">
+            <thead><tr><th scope="col">Property</th><th scope="col">Value</th></tr></thead><tbody>
+              <tr><td>Filters</td><td><code>{JSON.stringify(correctedLookup?.$ai_input_state)}</code></td></tr>
+              <tr><td>Results</td><td>{correctedLookup?.$ai_output_state.length ? correctedLookup.$ai_output_state.map(stay => <div key={stay.id}>{stay.name} · {stay.capacity} guests</div>) : "No matches"}</td></tr>
+            </tbody></table>
         </div>
         <p>Twig passes the empty results to the model. PostHog shows the model’s response in the new generation:</p>
         <TripPlannerFailureTrace record={after} />

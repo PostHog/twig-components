@@ -1,3 +1,5 @@
+import { PlaygroundEvaluation, PlaygroundGeneration, PlaygroundTraceExplorer } from "../src/PlaygroundAiEvidence.js";
+import { PlaygroundStatus } from "../src/PlaygroundStatus.js";
 import { createGenerationRecord } from "../src/trip-planner-records.js";
 import { GetawaySearch, SearchWorkspace, type GetawayPreferences } from "../src/GetawaySearch.js";
 import { useEffect, useReducer, useRef, useState, type ReactNode } from "react";
@@ -519,6 +521,13 @@ function PlaygroundControlsPreview() {
   const [choice,setChoice]=useState("Setting");
   const [messages,setMessages]=useState<string[]>([]);
   return <LabPreview>
+    <div className="vac-ai-evidence-stack">
+      {["ready", "running", "failed", "passed"].map(value => <PlaygroundStatus key={value} value={value as "ready" | "running" | "failed" | "passed"} />)}
+      <PlaygroundTraceExplorer traces={[{id:"fixture",title:"City stay for four",toolCall:"Search stays",generation:"Recommend a city stay"}]} />
+      <PlaygroundGeneration input={[{role:"user",content:"Find me a city stay for four."}]} output={[{role:"assistant",content:"No city stays match your group of four."}]} facts={[{label:"Model",value:"Claude Haiku 4.5"},{label:"Duration",value:"1.1s"}]} />
+      <PlaygroundEvaluation status="failed" expected="4+ guests or no match" observed="Le Nid Chic · 2 guests" />
+      <PlaygroundEvaluation status="passed" expected="4+ guests or no match" observed="No stay recommended" />
+    </div>
     <LabChoices label="Break down by" value={choice} onChange={setChoice} options={["Setting","Price per night","Capacity"].map(value=>({value,label:value}))} />
     <PlaygroundCodeBlock code={'posthog.capture(\n  "twig_stay_filter_selected",\n  { setting: "Forest" }\n);'} highlightLines={[2,3]} />
     <WizardCommand command="mcp add" />

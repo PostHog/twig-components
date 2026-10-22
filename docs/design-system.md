@@ -348,3 +348,22 @@ Choices use one connected neutral box with blue radios, white selected rows, and
 Wizard commands always use `WizardCommand`, adapted from PostHog.com `WizardCommand` → `PlatformInstall/InlineCommand.tsx`: source gradient, monospace command, chevron, copy icon, and attached Learn more tab. Do not render Wizard commands as generic code blocks. The displayed command stays clean; copied commands pin `-y` and `@latest`, matching the source builder. These commands are never executed by the Playground.
 
 The mock MCP terminal and Inspector console are separate roles. The local MCP composer uses editable monospace text and a plain white upward-arrow send control, with a stop square during generation. No circle, raised OS button, or standalone Send/Continue CTA inside the transcript. Carets are allowed only for nested tool calls in this mock MCP terminal; other Playground disclosures keep plus/minus. Ordinary lesson navigation retains the existing OSButton outside the transcript. All agent requests and teaching data remain local.
+
+## AI evidence and statuses
+
+Use the shared trace, generation, and evaluation views throughout the Playground, including later lesson steps and Inspector examples. Session is the neutral gray group header; nested Trace, Tool call, and Generation rows stay white. Plus/minus controls only expand real nested content. Keyboard focus spans the entire interactive row.
+
+Captured chat uses connected Input/Output tabs, with **User message** and **AI response** labels. Model names, durations, property labels, messages, and evaluation results use RoundHog. Only actual code, raw identifiers, and JSON use monospace; do not style readable metadata as code.
+
+Evaluations use one connected surface: a 13px semibold evaluation name, a 12px medium status, and Expected/Observed columns. Do not repeat the observed result in a footer. Passing the guest-capacity check can mean no stay was recommended; it does not imply a matching stay was found.
+
+Statuses are text, with optional existing check/cross marks, never pills. Fixed colors from [PostHog brand colors](https://brand.posthog.com/colors) ([catalog](https://brand.posthog.com/catalog.json)):
+
+| Status | Token | Brand value |
+| --- | --- | --- |
+| Ready | `--ph-status-ready` | Neutral muted `#4D4F46` |
+| Running | `--ph-status-running` | Cobalt `#0457FF` |
+| Failed | `--ph-status-failed` | Coral darker `#F00008` |
+| Passed | `--ph-status-passed` | Green darker `#35B14E` |
+
+Keep the readable status alongside color. Missing capacity remains neutral **Not applicable**. These brand values are fixed; do not substitute product UI success/danger colors or invent shades.

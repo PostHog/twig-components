@@ -318,3 +318,12 @@ Reset confirmation keeps the lesson mounted while replacing its visible content.
 | `/tooltip` | `PlaygroundTooltip`, `TooltipBubble`, `CopyControl` | Neutral hover/focus hints; successful copy displays `Copied!` for 500ms. No action-confirmation toast. |
 | `/wizard-command` | `WizardCommand` | PostHog.com’s dedicated gradient command and attached Learn more tab. Pass the Wizard subcommand (for example `mcp add`). All Wizard commands use this component. |
 | `/mcp-composer` | `McpComposer` | Editable local agent message, Enter/Shift+Enter behavior, plain monospace white send arrow, and stop control. `onSend` and `onStop` stay local; no inference or analytics. |
+
+## AI evidence primitives
+
+| Import path | Export | Contract |
+| --- | --- | --- |
+| `/status` | `PlaygroundStatus`, `PlaygroundStatusValue` | Ready, Running, Failed, Passed text statuses using fixed brand colors; neutral Not applicable for unavailable checks. |
+| `/ai-evidence` | `PlaygroundTraceExplorer`, `PlaygroundGeneration`, `PlaygroundEvaluation`, types and generation helpers | Connected trace hierarchy, captured chat evidence, and Expected/Observed evaluation. Hosts supply actual records and callbacks. No service calls. |
+
+`PlaygroundGeneration` accepts `input`/`output` messages, readable `facts`, optional raw `details`, and optional controlled `field`/`onFieldChange`. `PlaygroundTraceExplorer` accepts traces and optional session ID, selection callback, and selected ID; only disclosures use plus/minus. `PlaygroundEvaluation` accepts name, status, expected and observed values. These compose the trip-planner lesson and Inspector. Load `lab.css` inside `.vac-app .vac-developer-theme`.

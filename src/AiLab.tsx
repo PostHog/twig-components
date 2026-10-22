@@ -1,5 +1,6 @@
 "use client";
 
+import { PlaygroundGeneration } from "./PlaygroundAiEvidence.js";
 import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
 
 import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
@@ -376,47 +377,11 @@ export function AiLab({
                   }))}
                 />
               )}
-              <div className="vac-ai-compare">
-                <h4>Recorded evidence</h4>
-                <dl>
-                  <dt>
-                    Visitor’s request · <code>$ai_input</code>
-                  </dt>
-                  <dd>
-                    {run.config.input ? (
-                      <mark className="vac-ai-code-highlight">
-                        {run.prompt}
-                      </mark>
-                    ) : (
-                      "Not captured"
-                    )}
-                  </dd>
-                  <dt>
-                    {run.response ? (
-                      <>
-                        Model’s response · <code>$ai_output_choices</code>
-                      </>
-                    ) : (
-                      "Model error"
-                    )}
-                  </dt>
-                  <dd>
-                    {run.response ? (
-                      run.config.output ? (
-                        <mark className="vac-ai-code-highlight">
-                          {run.response}
-                        </mark>
-                      ) : (
-                        "Not captured"
-                      )
-                    ) : run.config.errors ? (
-                      "Simulated provider timeout"
-                    ) : (
-                      "Not captured"
-                    )}
-                  </dd>
-                </dl>
-              </div>
+              <PlaygroundGeneration
+                input={run.config.input ? [{ role: "user", content: run.prompt }] : []}
+                output={run.response && run.config.output ? [{ role: "assistant", content: run.response }] : []}
+                facts={!run.response && run.config.errors ? [{ label: "Model error", value: "Simulated provider timeout" }] : []}
+              />
               <div className="vac-lab-output" role="status">
                 {lesson === "observe" && (
                   <p>

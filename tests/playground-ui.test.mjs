@@ -417,28 +417,28 @@ test("recording configuration remains available independently of the console pro
 });
 
 
-test("AI drill-down teaches capture before expandable generation details without repeating metrics", async () => {
+test("AI drill-down shares captured chat evidence and keeps raw generation details expandable", async () => {
  const {InstrumentationInspector}=await import('../dist/InstrumentationInspector.js');
  const {JSDOM}=await import('jsdom');
  const properties={$ai_model:'example-model',$ai_latency:1.2,$ai_input_tokens:14,$ai_output_tokens:20,$ai_total_cost_usd:0.000114,$ai_trace_id:'trace-1',$ai_span_id:'span-1',$ai_input:[{role:'user',content:'Fixture'}]};
  const guide={method:'generation',description:'Simulated locally.',instrumentationDescription:'Manual capture example.',sources:[{path:'Docs example',line:1,caption:'Manual capture example',code:'posthog.capture({ event: "$ai_generation" })'},{path:'src/planner.ts',line:12,label:'Twig call',code:'publishPlannerGeneration(record)'}]};
  const document=new JSDOM(render(h(InstrumentationInspector,{drilldown:true,event:'$ai_generation',properties,additionalProperties:properties,guide}))).window.document;
  const sections=[...document.querySelectorAll('[aria-label="Selected event details"] > section')];
- assert.deepEqual(sections.map(section=>section.getAttribute('aria-label')),['Interaction','Instrumentation code','Generation details','Twig source code']);
- const generation=document.querySelector('[aria-label="Generation details"] > details');
+ assert.deepEqual(sections.map(section=>section.getAttribute('aria-label')),['Interaction','Instrumentation code','AI generation','Twig source code']);
+ const generation=document.querySelector('.vac-ai-generation .vac-ai-evidence-details');
  assert.equal(generation.open,false);
  const table=generation.querySelector('table.vac-lab-table-key-value');
  assert.ok(table);
- assert.deepEqual([...table.querySelectorAll('th[scope="row"]')].map(th=>th.textContent),['Model','Duration','Tokens','Cost','Trace ID','Generation ID','Input']);
- assert.equal(table.querySelectorAll('tr').length,7);
+ assert.deepEqual([...table.querySelectorAll('th[scope="row"]')].map(th=>th.textContent),['Model ID','Tokens','Cost','Trace ID','Generation ID','Input']);
+ assert.equal(table.querySelectorAll('tr').length,6);
 
- for(const value of ['example-model','1.2s','14 in / 20 out','$0.000114','trace-1','span-1'])assert.ok(generation.textContent.includes(value));
+ for(const value of ['example-model','14 in / 20 out','$0.000114','trace-1','span-1'])assert.ok(generation.textContent.includes(value));
  assert.equal(document.querySelector('[aria-label="More event data"]'),null);
  assert.ok(generation.textContent.includes('Fixture'));
  assert.equal(table.querySelector('td > details').open,false);
  const partial=new JSDOM(render(h(InstrumentationInspector,{drilldown:true,event:'$ai_generation',properties:{$ai_input_tokens:14},additionalProperties:{$ai_input_tokens:14},guide}))).window.document;
  assert.equal(partial.querySelector('[aria-label="More event data"]'),null);
- assert.ok(partial.querySelector('[aria-label="Generation details"]').textContent.includes('Input tokens'));
+ assert.ok(partial.querySelector('.vac-ai-generation').textContent.includes('Input tokens'));
 });
 
 test("edge dock owns the full-height scroll region while inline headers stay outside it", async () => {

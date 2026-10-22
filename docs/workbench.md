@@ -64,3 +64,5 @@ Check Events and properties in both Web app and Agent: the first filter action i
 
 
 The Playground controls preview exercises connected choices, highlighted code, transient copy feedback, Wizard commands and the editable local MCP composer. Review it at 1440, 390 and 320px, including keyboard focus, copy denial and reduced motion. The Events and properties preview exercises all five steps in both experiences, including switching from web evidence to an unsent agent request.
+
+The Controls preview includes shared AI trace, captured Input/Output chat, failed/passed evaluation surfaces, and the four brand statuses. The Trip planner and Inspector previews exercise the same primitives with recorded evidence.

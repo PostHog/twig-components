@@ -1675,3 +1675,88 @@ details[open] > summary .vac-disclosure-icon:not([data-expanded]) > .vac-disclos
 @media(prefers-reduced-motion:reduce) { .vac-app .vac-developer-theme code.vac-wizard-gradient { animation:none; } .vac-app .vac-developer-theme .vac-wizard-copy { transition:none; } }
 .vac-code-number::before { content:attr(data-line); }
 .vac-code-indent { flex:none; white-space:pre; }
+
+/* Approved AI evidence: connected, flat surfaces and readable UI typography.
+   Chromatic status colors are fixed brand.posthog.com/catalog.json colors. */
+:root {
+  --ph-brand-coral-darker: #f00008;
+  --ph-brand-green-darker: #35b14e;
+  --ph-status-ready: var(--ph-neutral-muted);
+  --ph-status-running: var(--ph-brand-cobalt);
+  --ph-status-failed: var(--ph-brand-coral-darker);
+  --ph-status-passed: var(--ph-brand-green-darker);
+}
+.vac-app .vac-developer-theme .vac-playground-status {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  color: var(--ph-status-ready);
+  font: 500 12px/1.7 "PlaygroundRoundHog", sans-serif;
+}
+.vac-app .vac-developer-theme .vac-playground-status[data-status="running"] { color: var(--ph-status-running); }
+.vac-app .vac-developer-theme .vac-playground-status[data-status="failed"] { color: var(--ph-status-failed); }
+.vac-app .vac-developer-theme .vac-playground-status[data-status="passed"] { color: var(--ph-status-passed); }
+.vac-app .vac-developer-theme :is(.vac-ai-evaluation, .vac-ai-tool-call, .vac-ai-trace-tree, .vac-ai-generation-surface) {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--ph-neutral-border);
+  border-radius: var(--ph-radius-sm);
+  background: var(--ph-neutral-white);
+  color: var(--ph-neutral-ink);
+  box-shadow: none;
+  font: 400 13px/1.7 "PlaygroundRoundHog", sans-serif;
+}
+.vac-app .vac-developer-theme .vac-ai-evaluation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  padding: 12px;
+  background: var(--ph-neutral-background);
+}
+.vac-app .vac-developer-theme .vac-ai-evaluation-header strong { min-width: 0; font-size: 13px; font-weight: 600; }
+.vac-app .vac-developer-theme .vac-ai-evaluation .vac-lab-table { margin: 0; }
+.vac-app .vac-developer-theme .vac-ai-evaluation .vac-lab-table :is(th, td) { width: 50%; }
+.vac-app .vac-developer-theme .vac-ai-evidence-stack { display: grid; gap: 16px; margin: 16px 0; min-width: 0; }
+.vac-app .vac-developer-theme .vac-ai-role { color: var(--ph-neutral-muted); font: 400 12px/1.7 "PlaygroundRoundHog", sans-serif; }
+.vac-app .vac-developer-theme .vac-ai-trace-tree details { margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; }
+.vac-app .vac-developer-theme .vac-ai-trace-tree summary {
+  min-height: 44px;
+  padding: 12px;
+  font: 400 13px/1.7 "PlaygroundRoundHog", sans-serif;
+}
+.vac-app .vac-developer-theme .vac-ai-trace-tree .vac-ai-session-summary { background: var(--ph-neutral-background); font-weight: 600; }
+.vac-app .vac-developer-theme .vac-ai-trace-tree .vac-ai-trace > summary { padding-left: 16px; }
+.vac-app .vac-developer-theme .vac-ai-trace-tree .vac-ai-role { font-size: inherit; }
+.vac-app .vac-developer-theme .vac-ai-operation {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  padding: 12px 24px;
+  border: 0;
+  border-radius: 0;
+  background: var(--ph-neutral-white);
+  color: var(--ph-neutral-ink);
+  text-align: left;
+  font: inherit;
+  overflow-wrap: anywhere;
+}
+.vac-app .vac-developer-theme .vac-ai-trace-tree :is(summary, button):focus-visible {
+  outline: 2px solid var(--ph-brand-cobalt);
+  outline-offset: -2px;
+}
+.vac-app .vac-developer-theme .vac-ai-generation { min-width: 0; margin: 16px 0; }
+.vac-app .vac-developer-theme .vac-ai-generation > h4 { margin: 0 0 8px; font-size: 16px; font-weight: 600; }
+.vac-app .vac-developer-theme .vac-ai-generation .vac-request-tabs { margin: 0; border: 0; border-radius: 0; }
+.vac-app .vac-developer-theme .vac-ai-generation .vac-request-panel { padding: 0; border: 0; border-radius: 0; }
+.vac-app .vac-developer-theme .vac-ai-messages { padding: 16px; }
+.vac-app .vac-developer-theme .vac-ai-message + .vac-ai-message { margin-top: 16px; }
+.vac-app .vac-developer-theme .vac-ai-message p { margin: 8px 0 0; white-space: pre-wrap; font: 400 13px/1.7 "PlaygroundRoundHog", sans-serif; }
+.vac-app .vac-developer-theme .vac-ai-evidence-details { margin: 0; border-top: 1px solid var(--ph-neutral-border); }
+.vac-app .vac-developer-theme .vac-ai-evidence-details > summary { min-height: 44px; padding: 12px; font: 600 12px/1.7 "PlaygroundRoundHog", sans-serif; }
+.vac-app .vac-developer-theme .vac-ai-detail-value { padding: 12px; overflow-wrap: anywhere; }
+.vac-app .vac-developer-theme .vac-ai-generation .vac-lab-table-value { font: 12px/1.7 monospace; }
+.vac-app .vac-developer-theme .vac-ai-generation .vac-lab-table-value code { white-space: pre-wrap; }
+.vac-app .vac-developer-theme .vac-playground-status { gap: 4px; }
+.vac-app .vac-developer-theme .vac-ai-evidence-stack > .vac-ai-generation { margin: 0; }

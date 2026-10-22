@@ -205,6 +205,14 @@
     "./mcp-composer": {
       "types": "./dist/McpComposer.d.ts",
       "import": "./dist/McpComposer.js"
+    },
+    "./status": {
+      "types": "./dist/PlaygroundStatus.d.ts",
+      "import": "./dist/PlaygroundStatus.js"
+    },
+    "./ai-evidence": {
+      "types": "./dist/PlaygroundAiEvidence.d.ts",
+      "import": "./dist/PlaygroundAiEvidence.js"
     }
   },
   "scripts": {
@@ -370,6 +378,12 @@
       ],
       "mcp-composer": [
         "dist/McpComposer.d.ts"
+      ],
+      "status": [
+        "dist/PlaygroundStatus.d.ts"
+      ],
+      "ai-evidence": [
+        "dist/PlaygroundAiEvidence.d.ts"
       ]
     }
   }

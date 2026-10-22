@@ -12,9 +12,9 @@ import { LabCompletionView } from "./LabCompletionView.js";
 import { TripPlannerMilestone } from "./TripPlannerMilestone.js";
 import { TripPlannerConversation } from "./TripPlannerConversation.js";
 import { TripPlannerTracePreview } from "./TripPlannerTracePreview.js";
+import { PlaygroundTraceExplorer } from "./PlaygroundAiEvidence.js";
 import { TripPlannerFailure } from "./TripPlannerFailure.js";
 import { LabChecklist } from "./LabChecklist.js";
-import { EvidenceTabs } from "./TripPlannerEvidenceTabs.js";
 import { useTripPlannerLab } from "./TripPlannerLab.js";
 import type { Stay } from "./catalog.js";
 
@@ -73,16 +73,7 @@ export function TripPlannerWalkthrough({ stays, onAllLabs, renderStayCard, onEva
           <li><strong>Generation:</strong> one model call, with its input and output.</li>
         </ul>
         <p>Here’s the hierarchy: sessions contain traces, and traces contain generations.</p>
-        <div className="vac-conversation-traces vac-conversation-hierarchy" role="group" aria-label="Session contains traces, each trace contains generations">
-          <div className="vac-conversation-session">Session</div>
-          <ol aria-label="Traces in the session">
-            <li>Trace
-              <ol aria-label="Generations in the trace">
-                <li>Generation</li>
-              </ol>
-            </li>
-          </ol>
-        </div>
+        <PlaygroundTraceExplorer traces={[{ id: "example-request", title: "Request", generation: "Model call" }]} />
         <p>A model response is recorded as a <code>$ai_generation</code> event. In your app, a capture call like this connects it to its trace and session:</p>
         <PlaygroundCodeBlock><code>{generationCaptureExample}</code></PlaygroundCodeBlock>
         <p>A product event tells you someone used the planner. A generation shows how the model answered.</p>
@@ -97,14 +88,12 @@ export function TripPlannerWalkthrough({ stays, onAllLabs, renderStayCard, onEva
         <Action onClick={next}>Review what you’ve learned →</Action>
       </> : <>
         <p>This generation shows the request’s input and output. In your app, PostHog captures both in the same event:</p>
-        <EvidenceTabs label="Request data" value={lesson.field} onChange={(value) => dispatch({ type: "field", value })} options={[
-          { value: "input", label: "Input" }, { value: "output", label: "Output" },
-        ]}>
+        <TripPlannerTracePreview record={first} field={lesson.field} onFieldChange={value => dispatch({ type: "field", value })} />
+        <details className="vac-lab-step"><PlaygroundSummary>Instrumentation</PlaygroundSummary>
           <p className="vac-capture-context">After the model responds, one capture call records both input and output. This tab highlights the {input ? "input" : "output"}:</p>
           <PlaygroundCodeBlock><code>{'posthog.capture("$ai_generation", {\n  $ai_trace_id: traceId,\n  $ai_session_id: sessionId,\n'}{input ? <mark>{inputField}</mark> : inputField}{input ? outputField : <mark>{outputField}</mark>}{'  // Other fields omitted\n});'}</code></PlaygroundCodeBlock>
-          <TripPlannerTracePreview record={first} field={lesson.field} />
-          {input && <Action inline onClick={inspectOutput}>Inspect output →</Action>}
-        </EvidenceTabs>
+        </details>
+        {input && <Action inline onClick={inspectOutput}>Inspect output →</Action>}
         {!second && firstInspected && <LabChecklist label="Next chat action" items={[{ done: false, label: <>Next, send the pre-filled <strong>beach access question</strong> in Twig’s chat.</> }]} />}
         {second && firstInspected && <Action onClick={next}>Connect the requests →</Action>}
         {!second && resetConversation && <LabChecklist label="Restart the conversation" items={[{ label: <>Use <strong>Reset Twig data</strong> to follow a fresh conversation.</>, done: false }]} />}

@@ -2,6 +2,7 @@
 
 import { type ReactNode } from "react";
 import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
+import { PlaygroundGeneration, generationMessages, generationModelLabel } from "./PlaygroundAiEvidence.js";
 import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
 
 export type InspectorValue = string | number | boolean | null | InspectorValue[] | { [key: string]: InspectorValue };
@@ -44,26 +45,21 @@ export function InstrumentationInspector({ event, timestamp, properties, element
   const dataProperties = additionalProperties ?? properties;
   const hasData = !generationDrilldown && Boolean(guide?.configuration || (event && (!additionalOnly || Object.keys(dataProperties).length)));
   const dataLabel = guide?.configuration ? "Recording configuration" : additionalOnly ? "More event data" : "Event data";
-  const generationDetails = guide?.method === "generation" ? <div className="vac-inspector-context">
-        {drilldown ? <table className="vac-lab-table vac-lab-table-key-value" aria-label="Generation details">
-          <tbody>
-            <tr><th scope="row">Model</th><td><code>{String(properties.$ai_model ?? "Unknown")}</code></td></tr>
-            {typeof properties.$ai_latency === "number" && <tr><th scope="row">Duration</th><td>{properties.$ai_latency}s</td></tr>}
-            {typeof properties.$ai_input_tokens === "number" && typeof properties.$ai_output_tokens === "number" && <tr><th scope="row">Tokens</th><td>{properties.$ai_input_tokens} in / {properties.$ai_output_tokens} out</td></tr>}
-            {typeof properties.$ai_total_cost_usd === "number" && <tr><th scope="row">Cost</th><td>${properties.$ai_total_cost_usd.toFixed(6)}</td></tr>}
-            {typeof properties.$ai_trace_id === "string" && <tr><th scope="row">Trace ID</th><td><code>{properties.$ai_trace_id}</code></td></tr>}
-            {typeof properties.$ai_span_id === "string" && <tr><th scope="row">Generation ID</th><td><code>{properties.$ai_span_id}</code></td></tr>}
-            {generationFields.map(([name,value]) => <tr key={name}><th scope="row">{generationLabels[name] ?? <code>{name}</code>}</th><td>{value !== null && typeof value === "object" ? <details><InspectorSummary>{Array.isArray(value) ? `${value.length} ${value.length === 1 ? "item" : "items"}` : "View fields"}</InspectorSummary><pre className="vac-lab-table-value"><code>{JSON.stringify(value,null,2)}</code></pre></details> : <code>{typeof value === "boolean" ? value ? "Yes" : "No" : String(value)}</code>}</td></tr>)}
-          </tbody>
-        </table> : <>        <dl className="vac-inspector-facts">
-          <div><dt>Model</dt><dd>{String(properties.$ai_model ?? "Unknown")}</dd></div>
-          {typeof properties.$ai_latency === "number" && <div><dt>Duration</dt><dd>{properties.$ai_latency}s</dd></div>}
-          {typeof properties.$ai_input_tokens === "number" && typeof properties.$ai_output_tokens === "number" && <div><dt>Tokens</dt><dd>{properties.$ai_input_tokens} in / {properties.$ai_output_tokens} out</dd></div>}
-          {typeof properties.$ai_total_cost_usd === "number" && <div><dt>Cost</dt><dd>${properties.$ai_total_cost_usd.toFixed(6)}</dd></div>}
-        </dl>
-        {typeof properties.$ai_trace_id === "string" && <ol className="vac-inspector-trace"><li><span>Trace</span><code>{properties.$ai_trace_id}</code><ol><li><span>Generation</span><code>{String(properties.$ai_span_id ?? "")}</code></li></ol></li></ol>}</>}
-
-      </div> : null;
+  const generationDetails = guide?.method === "generation" ? <PlaygroundGeneration
+    input={generationMessages(properties.$ai_input).filter(message => message.role === "user").slice(-1)}
+    output={generationMessages(properties.$ai_output_choices)}
+    facts={[
+      { label: "Model", value: generationModelLabel(String(properties.$ai_model ?? "Unknown")) },
+      ...(typeof properties.$ai_latency === "number" ? [{ label: "Duration", value: `${properties.$ai_latency}s` }] : []),
+    ]}
+    details={<table className="vac-lab-table vac-lab-table-key-value" aria-label="Captured generation details"><tbody>
+      <tr><th scope="row">Model ID</th><td><code>{String(properties.$ai_model ?? "Unknown")}</code></td></tr>
+      {typeof properties.$ai_input_tokens === "number" && typeof properties.$ai_output_tokens === "number" && <tr><th scope="row">Tokens</th><td>{properties.$ai_input_tokens} in / {properties.$ai_output_tokens} out</td></tr>}
+      {typeof properties.$ai_total_cost_usd === "number" && <tr><th scope="row">Cost</th><td>${properties.$ai_total_cost_usd.toFixed(6)}</td></tr>}
+      {typeof properties.$ai_trace_id === "string" && <tr><th scope="row">Trace ID</th><td><code>{properties.$ai_trace_id}</code></td></tr>}
+      {typeof properties.$ai_span_id === "string" && <tr><th scope="row">Generation ID</th><td><code>{properties.$ai_span_id}</code></td></tr>}
+      {generationFields.map(([name,value]) => <tr key={name}><th scope="row">{generationLabels[name] ?? <code>{name}</code>}</th><td>{value !== null && typeof value === "object" ? <details><InspectorSummary>{Array.isArray(value) ? `${value.length} ${value.length === 1 ? "item" : "items"}` : "View fields"}</InspectorSummary><pre className="vac-lab-table-value"><code>{JSON.stringify(value,null,2)}</code></pre></details> : name.endsWith("_id") || !generationLabels[name] ? <code>{String(value)}</code> : typeof value === "boolean" ? value ? "Yes" : "No" : String(value)}</td></tr>)}
+    </tbody></table>} /> : null;
   return <div className={`vac-instrumentation-inspector${drilldown ? " vac-inspector-drilldown" : ""}${drilldown && guide?.method === "generation" ? " vac-inspector-generation" : ""}`} role={drilldown ? "region" : undefined} aria-label={drilldown ? "Selected event details" : undefined}>
     {guide ? <>
       <section aria-label="Interaction">
@@ -81,7 +77,7 @@ export function InstrumentationInspector({ event, timestamp, properties, element
           </details>}
         </details>
       </section>}
-      {drilldown && generationDetails && <section aria-label="Generation details"><details className="vac-inspector-source"><InspectorSummary>Generation details</InspectorSummary>{generationDetails}</details></section>}
+      {drilldown && generationDetails && <section aria-label="AI generation">{generationDetails}</section>}
       {drilldown && guide.sources.length > 1 && <section aria-label="Twig source code">
         <details className="vac-inspector-source">
           <InspectorSummary>Twig source code</InspectorSummary>

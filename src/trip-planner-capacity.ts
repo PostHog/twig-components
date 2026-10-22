@@ -16,16 +16,16 @@ export type CapacityEvidence = {
       $ai_output_state: Candidate[];
     };
   };
-  evaluation: { name: "Fits the group"; generationId: string; result: "pass" | "fail" | "not-applicable"; reason: string };
+  evaluation: { name: "Guest capacity"; generationId: string; result: "pass" | "fail" | "not-applicable"; reason: string };
 };
 
 /** Capacity is checked independently of whether the model call completed. */
 export function evaluateCapacity(recommendation: Candidate | undefined, guests: number): Omit<CapacityEvidence["evaluation"], "generationId"> {
-  if (!recommendation) return { name: "Fits the group", result: "pass", reason: "No undersized stay was recommended. This does not mean a matching stay was found." };
-  if (recommendation.capacity === null) return { name: "Fits the group", result: "not-applicable", reason: "The recommended stay has no recorded capacity to check." };
+  if (!recommendation) return { name: "Guest capacity", result: "pass", reason: "No undersized stay was recommended. This does not mean a matching stay was found." };
+  if (recommendation.capacity === null) return { name: "Guest capacity", result: "not-applicable", reason: "The recommended stay has no recorded capacity to check." };
   return recommendation.capacity < guests
-    ? { name: "Fits the group", result: "fail", reason: `${recommendation.name} sleeps ${recommendation.capacity}, but the visitor asked for ${guests}.` }
-    : { name: "Fits the group", result: "pass", reason: `${recommendation.name} sleeps ${recommendation.capacity}, enough for ${guests}.` };
+    ? { name: "Guest capacity", result: "fail", reason: `${recommendation.name} sleeps ${recommendation.capacity}, but the visitor asked for ${guests}.` }
+    : { name: "Guest capacity", result: "pass", reason: `${recommendation.name} sleeps ${recommendation.capacity}, enough for ${guests}.` };
 }
 
 /** A scripted website failure, plus the corrected lookup used after the guided fix. */
