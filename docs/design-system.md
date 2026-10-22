@@ -315,3 +315,11 @@ Product headers and expanded lab choices are separated by a 1px neutral border. 
 ## Playground disclosure and row focus
 
 Use the shared PostHog.com plus/minus icons for every Playground and lab expand/collapse control: plus closed, minus open. Use these icons only when that control reveals or collapses actual nested content directly beneath it; never use them for selection, navigation, or content shown elsewhere. This includes product menus, simulation notes and nested evidence. Event rows select an event; they have no disclosure icon. Show the selected event’s Properties beneath the entire event list. Preserve directional navigation arrows. Event-table keyboard focus outlines the entire row, including its time cell, using the existing blue 2px inset outline. Selected event rows retain `--ph-neutral-accent`; hover/menu backgrounds retain `--ph-neutral-background`.
+
+
+## Lesson navigation
+
+Use the approved header/footer navigation in every Playground lab. All labs and More lesson options belong in the header; Reset Twig data is an explicitly labeled menu action with confirmation. Previous and the existing gated primary action belong in a 44px footer. Return to lab replaces that action when away from the required page. Preserve lesson handlers and completion gates; contextual controls remain beside their evidence. Hidden lesson/review screens must not contribute footer actions. Keep the fixed PostHog colors, RoundHog, 4px corners and existing OSButton styling.
+
+
+Playground actions update evidence, checklists and progression directly. Do not show transient confirmation popups or toasts for completing a requested lab action. Keep actual errors and essential inline state in their existing context.

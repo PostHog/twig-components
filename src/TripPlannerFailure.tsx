@@ -1,5 +1,6 @@
 "use client";
 
+import { LabPrimaryAction } from "./LabNavigation.js";
 import { useTripPlannerLab } from "./TripPlannerLab.js";
 import { useEffect, useRef, type ReactNode } from "react";
 import type { Stay } from "./catalog.js";
@@ -23,7 +24,7 @@ export function TripPlannerFailure({ stays, renderStayCard, onEvaluate }: { stay
   const lookup = before?.capacityEvidence?.lookup.properties;
   const recommendedStay = stays.find(stay => stay.id === before?.properties.selected_stay_id);
   const correctedLookup = after?.capacityEvidence?.lookup.properties;
-  const action = (label: string, onClick: () => void) => <div className="vac-request-next"><button className="vac-button" type="button" onClick={onClick}><span className="vac-os-button-face">{label}</span></button></div>;
+  const action = (label: string, onClick: () => void) => <LabPrimaryAction><button className="vac-button" type="button" onClick={onClick}><span className="vac-os-button-face">{label}</span></button></LabPrimaryAction>;
   return <section className="vac-lab vac-builder vac-trip-walkthrough">
     {lesson.step === 3 && <>
       {!before ? <>

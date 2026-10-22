@@ -37,7 +37,7 @@ import { stays, stayLabel } from "../src/catalog.js";
 import { ReplayLab, type ReplayLabViewState } from "../src/ReplayLab.js";
 import { ReplayProvider, useReplay } from "../src/ReplayRecorder.js";
 import { LabDirectory, PlaygroundMarker, PlaygroundInspectionView, PlaygroundHome, PlaygroundOnboarding, PlaygroundToolRail, PlaygroundDock, PlaygroundInvitation, PlaygroundLauncher, ProductLabLanding, type PlaygroundActivity } from "../src/PlaygroundPanels.js";
-import { LabNavigationView } from "../src/LabNavigation.js";
+import { LabNavigationView, LessonNavigationProvider, LabPrimaryAction } from "../src/LabNavigation.js";
 import { playgroundPage, touchpointDefinitions } from "../src/playground.js";
 import "../src/catalog.css";
 import "../src/lab.css";
@@ -394,6 +394,13 @@ function ProductMenuPreview() {
   </LabPreview>;
 }
 
+function LessonNavigationPreview() {
+  const [step, setStep] = useState(1);
+  const [away, setAway] = useState(false);
+  const props = { selected: "catalog" as const, stage: step, embedded: false, resetScope: "twig" as const, onAllLabs: () => setStep(0), onPrevious: () => setStep(Math.max(0, step - 1)), onReset: () => setStep(0), returnTo: away ? { label: "Find a stay", onClick: () => setAway(false) } : undefined };
+  return <LessonNavigationProvider active><div className="workbench-controls"><button onClick={() => setAway(!away)}>Toggle away state</button></div><LabNavigationView {...props} placement="header" /><p>Lesson {step + 1}</p><LabPrimaryAction><button className="vac-button" onClick={() => setStep(step + 1)}><span className="vac-os-button-face">Continue →</span></button></LabPrimaryAction><LabNavigationView {...props} placement="footer" /></LessonNavigationProvider>;
+}
+
 function ResetPreview() {
   const [resetCount, setResetCount] = useState(0);
   const [notice, setNotice] = useState("");
@@ -401,6 +408,7 @@ function ResetPreview() {
   return <div className="vac-app"><div className="workbench-controls"><button type="button" onClick={() => setAway((value) => !value)}>{away ? "Show lab page" : "Show away state"}</button></div><div className="vac-developer-theme workbench-lab workbench-reset-preview">
     <LabNavigationView key={resetCount} selected="errors" stage={2} embedded={false} resetScope="twig" returnTo={away ? { label: "Booked stays", onClick: () => { setAway(false); setNotice("Returned to the lab page."); } } : undefined} onAllLabs={() => setNotice("All labs selected in this preview.")} onPrevious={() => setNotice("Previous step selected in this preview.")} onReset={() => { setResetCount((count) => count + 1); setAway(false); setNotice("Twig activity reset in this preview."); }} />
     {notice && <p role="status">{notice}</p>}
+    <LessonNavigationPreview />
   </div></div>;
 }
 

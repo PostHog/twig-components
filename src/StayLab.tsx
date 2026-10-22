@@ -1,5 +1,6 @@
 "use client";
 
+import { LabPrimaryAction } from "./LabNavigation.js";
 import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
@@ -49,9 +50,9 @@ function Action({
   onClick: () => void;
 }) {
   return (
-    <button className="vac-button" type="button" onClick={onClick}>
+    <LabPrimaryAction><button className="vac-button" type="button" onClick={onClick}>
       <span className="vac-os-button-face">{children}</span>
-    </button>
+    </button></LabPrimaryAction>
   );
 }
 export function StayLab({

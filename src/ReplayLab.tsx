@@ -1,5 +1,6 @@
 "use client";
 
+import { LabPrimaryAction } from "./LabNavigation.js";
 import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
@@ -114,11 +115,11 @@ export function ReplayLab({
           done: false,
         }]} />
         {replay.mode === "manual" && (
-          <button className="vac-button" onClick={replay.stop}>
+          <LabPrimaryAction><button className="vac-button" onClick={replay.stop}>
             <span className="vac-os-button-face">
               End recording and review →
             </span>
-          </button>
+          </button></LabPrimaryAction>
         )}
       </section>
     );
@@ -136,9 +137,9 @@ export function ReplayLab({
             visit.
           </p>
         </div>
-        <button className="vac-button" onClick={() => onStage(1)}>
+        <LabPrimaryAction><button className="vac-button" onClick={() => onStage(1)}>
           <span className="vac-os-button-face">Set up the ghost visit →</span>
-        </button>
+        </button></LabPrimaryAction>
         <details className="vac-lab-step">
           <PlaygroundSummary>How this simulation works</PlaygroundSummary>
           <p>The ghost visit is scripted. Your own visit is recorded locally for playback in this lab. No replay is sent to PostHog.</p>
@@ -160,18 +161,18 @@ export function ReplayLab({
                 <p>Your recording is ready. Play it back to see the interactions you captured.</p>
               )}
               {replay.mode === "manual" && (
-                <button className="vac-button" onClick={replay.stop}>
+                <LabPrimaryAction><button className="vac-button" onClick={replay.stop}>
                   <span className="vac-os-button-face">
                     End recording and review →
                   </span>
-                </button>
+                </button></LabPrimaryAction>
               )}
               {!replay.mode && hasVisit && (
-                <button className="vac-button" onClick={() => onStage(2)}>
+                <LabPrimaryAction><button className="vac-button" onClick={() => onStage(2)}>
                   <span className="vac-os-button-face">
                     Watch the recording →
                   </span>
-                </button>
+                </button></LabPrimaryAction>
               )}
             </>
           ) : (
@@ -200,7 +201,7 @@ export function ReplayLab({
               {source === "ghost" && pathname !== "/" ? (
                 returnHome
               ) : (
-                <button
+                <LabPrimaryAction><button
                   className="vac-button"
                   disabled={replay.starting}
                   onClick={() => replay.start(source)}
@@ -212,7 +213,7 @@ export function ReplayLab({
                       ? "Run ghost simulation →"
                       : "Start my recording →"}
                   </span>
-                </button>
+                </button></LabPrimaryAction>
               )}
               {replay.message && <p role="status">{replay.message}</p>}
             </>
@@ -223,7 +224,7 @@ export function ReplayLab({
           {replay.recording.length < 2 ? (
             <>
               <p>Record a new visit to capture the page for playback.</p>
-              <button
+              <LabPrimaryAction><button
                 className="vac-button"
                 onClick={() => {
                   replay.clear();
@@ -233,7 +234,7 @@ export function ReplayLab({
                 <span className="vac-os-button-face">
                   Continue the exercise →
                 </span>
-              </button>
+              </button></LabPrimaryAction>
             </>
           ) : (
             <>
@@ -269,7 +270,7 @@ export function ReplayLab({
                 </ol>
               </section>
               {source === "ghost" ? (
-                <button
+                <LabPrimaryAction><button
                   className="vac-button"
                   onClick={() => {
                     replay.clear();
@@ -280,7 +281,7 @@ export function ReplayLab({
                   <span className="vac-os-button-face">
                     Record my own visit →
                   </span>
-                </button>
+                </button></LabPrimaryAction>
               ) : (
                 <FinishLabButton onClick={() => onStage(3)} />
               )}

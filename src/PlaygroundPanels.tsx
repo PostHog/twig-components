@@ -1,5 +1,6 @@
 "use client";
 
+import { LessonNavigationProvider } from "./LabNavigation.js";
 import { DisclosureIcon } from "./PlaygroundDisclosure.js";
 import { useEffect, useId, useRef, useState, type ReactNode, type RefObject } from "react";
 import { createPortal } from "react-dom";
@@ -372,6 +373,7 @@ export function PlaygroundDock({
   logo,
   navigation,
   recordingBar,
+  footer,
   pageKey,
   guide,
   placement = "inline",
@@ -384,6 +386,7 @@ export function PlaygroundDock({
   logo: ReactNode;
   navigation: ReactNode;
   recordingBar: ReactNode;
+  footer?: ReactNode;
   pageKey: string;
   guide: ReactNode;
   placement?: "inline" | "edge";
@@ -433,12 +436,12 @@ export function PlaygroundDock({
       </div>);
   if (!present && !open) return null;
   return (
-    <aside
+    <LessonNavigationProvider active={Boolean(footer)}><aside
       id="twig-playground"
       data-open={open}
       aria-hidden={!open || undefined}
       inert={!open}
-      className={`vac-dock vac-developer-theme${placement === "edge" ? " vac-edge-inspector" : ""}${joinedBranding ? " vac-joined-branding" : ""}`}
+      className={`vac-dock vac-developer-theme${placement === "edge" ? " vac-edge-inspector" : ""}${joinedBranding ? " vac-joined-branding" : ""}${footer ? " vac-lesson-shell" : ""}`}
       aria-label="Twig playground"
       onKeyDown={(event) => {
         if (event.key === "Escape" && !embedded) onClose();
@@ -454,7 +457,8 @@ export function PlaygroundDock({
       >
         {placement === "edge" ? <>{header}<div className="vac-dock-content">{guide}</div></> : guide}
       </div>
-    </aside>
+      {footer}
+    </aside></LessonNavigationProvider>
   );
 }
 

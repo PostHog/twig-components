@@ -1,5 +1,6 @@
 "use client";
 
+import { LabPrimaryAction } from "./LabNavigation.js";
 import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
@@ -18,8 +19,9 @@ import type { Stay } from "./catalog.js";
 const inputField = '  $ai_input: messages,\n';
 const outputField = '  $ai_output_choices: [{\n    role: "assistant",\n    content: response\n  }],\n';
 
-function Action({ children, onClick }: { children: ReactNode; onClick: () => void }) {
-  return <div className="vac-request-next"><button type="button" className="vac-button" onClick={onClick}><span className="vac-os-button-face">{children}</span></button></div>;
+function Action({ children, onClick, inline = false }: { children: ReactNode; onClick: () => void; inline?: boolean }) {
+  const button = <button type="button" className="vac-button" onClick={onClick}><span className="vac-os-button-face">{children}</span></button>;
+  return inline ? <div className="vac-request-next">{button}</div> : <LabPrimaryAction>{button}</LabPrimaryAction>;
 }
 
 export function TripPlannerWalkthrough({ stays, onAllLabs, renderStayCard, onEvaluate }: { stays: readonly Stay[]; onAllLabs: () => void; renderStayCard?: (stay: Stay) => ReactNode; onEvaluate?: (phase: "before" | "after") => void }) {
@@ -99,7 +101,7 @@ export function TripPlannerWalkthrough({ stays, onAllLabs, renderStayCard, onEva
           <p className="vac-capture-context">After the model responds, one capture call records both input and output. This tab highlights the {input ? "input" : "output"}:</p>
           <pre><code>{'posthog.capture("$ai_generation", {\n  $ai_trace_id: traceId,\n  $ai_session_id: sessionId,\n'}{input ? <mark>{inputField}</mark> : inputField}{input ? outputField : <mark>{outputField}</mark>}{'  // Other fields omitted\n});'}</code></pre>
           <TripPlannerTracePreview record={first} field={lesson.field} />
-          {input && <Action onClick={inspectOutput}>Inspect output →</Action>}
+          {input && <Action inline onClick={inspectOutput}>Inspect output →</Action>}
         </EvidenceTabs>
         {!second && firstInspected && <LabChecklist label="Next chat action" items={[{ done: false, label: <>Next, send the pre-filled <strong>beach access question</strong> in Twig’s chat.</> }]} />}
         {second && firstInspected && <Action onClick={next}>Connect the requests →</Action>}

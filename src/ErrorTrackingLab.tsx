@@ -1,5 +1,6 @@
 "use client";
 
+import { LabPrimaryAction } from "./LabNavigation.js";
 import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
@@ -29,7 +30,7 @@ export function ErrorTrackingLabProvider({ children, active, state: controlledSt
 export function useErrorTrackingLab() { return useContext(ErrorTrackingContext); }
 
 function Continue({ children, onClick }: { children: ReactNode; onClick: () => void }) {
-  return <button type="button" className="vac-button" onClick={onClick}><span className="vac-os-button-face">{children}</span></button>;
+  return <LabPrimaryAction><button type="button" className="vac-button" onClick={onClick}><span className="vac-os-button-face">{children}</span></button></LabPrimaryAction>;
 }
 
 function HighlightErrorMessage({ message }: { message: string }) {
