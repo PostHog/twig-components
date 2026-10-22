@@ -1,5 +1,6 @@
 "use client";
 
+import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
 import { createContext, useContext, useReducer, type ReactNode } from "react";
@@ -159,7 +160,7 @@ export function ErrorTrackingLab({
       </ol>
     </div>
     <Continue onClick={() => onStage(1)}>Start lab →</Continue>
-    <details className="vac-lab-step"><summary>How this simulation works</summary><p>Your booking succeeds and is saved only in this browser. For this lesson, Twig cannot load part of its trip details. The example error stays local and is not sent to PostHog. No payment or real reservation is made.</p></details>
+    <details className="vac-lab-step"><PlaygroundSummary>How this simulation works</PlaygroundSummary><p>Your booking succeeds and is saved only in this browser. For this lesson, Twig cannot load part of its trip details. The example error stays local and is not sent to PostHog. No payment or real reservation is made.</p></details>
   </div>;
 
   if (stage === 1) return <section className="vac-lab vac-builder">

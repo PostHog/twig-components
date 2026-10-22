@@ -1,5 +1,6 @@
 "use client";
 
+import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
 import { LabChoices } from "./LabChoices.js";
@@ -112,7 +113,7 @@ export function BookingLab({
             : "Continue the failure exercise →"}
         </Action>
         <details className="vac-lab-step">
-          <summary>How this simulation works</summary>
+          <PlaygroundSummary>How this simulation works</PlaygroundSummary>
           <p>Bookings and their event records are simulated locally. No reservation or payment is created, and these records are not sent to PostHog.</p>
         </details>
       </div>
@@ -159,7 +160,7 @@ export function BookingLab({
           <Action onClick={onFocusBooking}>Show the booking form →</Action>
         )}
         <details className="vac-lab-step">
-          <summary>Applied code</summary>
+          <PlaygroundSummary>Applied code</PlaygroundSummary>
           <pre className="vac-booking-code">{bookingCode("confirmation")}</pre>
         </details>
       </section>
@@ -309,7 +310,7 @@ export function BookingLab({
       )}
 
       <details className="vac-lab-step">
-        <summary>Captured events and applied code</summary>
+        <PlaygroundSummary>Captured events and applied code</PlaygroundSummary>
         <p>
           Availability is recorded when the local availability check succeeds.
           Start records the request. Completion depends on the code you applied.

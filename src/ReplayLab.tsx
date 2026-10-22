@@ -1,5 +1,6 @@
 "use client";
 
+import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
 import { useEffect, useRef, type ReactNode } from "react";
@@ -139,7 +140,7 @@ export function ReplayLab({
           <span className="vac-os-button-face">Set up the ghost visit →</span>
         </button>
         <details className="vac-lab-step">
-          <summary>How this simulation works</summary>
+          <PlaygroundSummary>How this simulation works</PlaygroundSummary>
           <p>The ghost visit is scripted. Your own visit is recorded locally for playback in this lab. No replay is sent to PostHog.</p>
         </details>
       </div>
@@ -288,7 +289,7 @@ export function ReplayLab({
         </>
       )}
       <details className="vac-lab-step">
-        <summary>About this exercise</summary>
+        <PlaygroundSummary>About this exercise</PlaygroundSummary>
         <p>
           This uses rrweb to record and replay actual page changes, clicks,
           scrolling, and typing. It stays in memory in this tab. The playground

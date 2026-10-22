@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, type ReactNode } from "react";
+import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 
 export type InspectorValue = string | number | boolean | null | InspectorValue[] | { [key: string]: InspectorValue };
 
@@ -15,13 +16,8 @@ export type InspectionGuide = {
   configuration?: Record<string, InspectorValue>;
 };
 
-/** PostHog.com Radix Accordion's right-aligned IconPlus / IconMinus pattern. */
 export function InspectorSummary({ children }: { children: ReactNode }) {
-  return <summary className="vac-inspector-disclosure">
-    <span className="vac-inspector-disclosure-label">{children}</span>
-    <svg className="vac-inspector-disclosure-plus" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" clipRule="evenodd" d="M12 3a.75.75 0 0 1 .75.75v7.5h7.5a.75.75 0 0 1 0 1.5h-7.5v7.5a.75.75 0 0 1-1.5 0v-7.5h-7.5a.75.75 0 0 1 0-1.5h7.5v-7.5A.75.75 0 0 1 12 3Z" /></svg>
-    <svg className="vac-inspector-disclosure-minus" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" clipRule="evenodd" d="M3 12a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12Z" /></svg>
-  </summary>;
+  return <PlaygroundSummary className="vac-inspector-disclosure">{children}</PlaygroundSummary>;
 }
 
 /** One evidence frame: interaction, implementation, then expandable data. */

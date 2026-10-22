@@ -1,5 +1,6 @@
 "use client";
 
+import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
 import { LabChoices } from "./LabChoices.js";
@@ -88,7 +89,7 @@ export function StayLab({
         </div>
         <Action onClick={() => onStage(1)}>Follow a stay view →</Action>
         <details className="vac-lab-step">
-          <summary>How this simulation works</summary>
+          <PlaygroundSummary>How this simulation works</PlaygroundSummary>
           <p>Opening a stay while this exercise is running creates a local view event. These events are not sent to PostHog.</p>
         </details>
       </div>
@@ -160,7 +161,7 @@ export function StayLab({
           renderStayLink(nextStay)
         )}
         <details className="vac-lab-step">
-          <summary>Applied code</summary>
+          <PlaygroundSummary>Applied code</PlaygroundSummary>
           <pre className="vac-booking-code">
             {stayCode(state.applied === "identified")}
           </pre>

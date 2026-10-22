@@ -1,5 +1,6 @@
 "use client";
 
+import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
 import { useEffect, useRef, type ReactNode } from "react";
@@ -53,7 +54,7 @@ export function TripPlannerWalkthrough({ stays, onAllLabs, renderStayCard, onEva
     </div>
     <Action onClick={next}>Start the lab →</Action>
     <details className="vac-lab-step">
-      <summary>How this simulation works</summary>
+      <PlaygroundSummary>How this simulation works</PlaygroundSummary>
       <p>Twig’s chat uses preset replies, and this lab builds its PostHog examples locally from the conversation. No model runs and nothing is sent to PostHog.</p>
     </details>
   </div>;

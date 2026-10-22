@@ -310,3 +310,8 @@ Mobile account pages open with content visible and the avatar menu closed. Use `
 ## Playground lab menus
 
 Product headers and expanded lab choices are separated by a 1px neutral border. Hover and keyboard focus use the same full-width neutral gray as the product bar, with square joined row edges and no white gap below the header. Keep labels at a 20px inline inset. The first row includes the previous 6px top inset in its 50px minimum target; later rows have 44px minimum targets. Allow wrapped labels to grow. Open, hover and focus retain identical text positions. Preserve the 2px cobalt keyboard outline inset by 2px, 4px outer corners, flat surfaces, existing product icons, content and callbacks. Apply the shared rules to Home and other-lab menus; Twig dropdowns retain their own style.
+
+
+## Playground disclosure and row focus
+
+Use the shared PostHog.com plus/minus icons for every Playground and lab expand/collapse control: plus closed, minus open. This includes product menus, event rows, simulation notes and nested evidence. Preserve directional navigation arrows. Event-table keyboard focus outlines the entire row, including its time cell, using the existing blue 2px inset outline. Selected event rows retain `--ph-neutral-accent`; hover/menu backgrounds retain `--ph-neutral-background`.

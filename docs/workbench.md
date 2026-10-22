@@ -57,3 +57,5 @@ Choose **Trip planner** and start the lab. Follow the chat through the city requ
 ## Review mobile account navigation
 
 In the account preview, log in and check Profile, Saved stays, Booked stays and Account settings at 390px and 320px. Content appears immediately; open the header avatar to navigate. Check closed/open states, Escape returning focus, outside-click dismissal and Log out. Desktop keeps the sidebar. Add saved/booking fixtures to check populated states as well as empty states.
+
+Check plus/minus states in Product menu and the later lab steps, including nested disclosures. In Events and properties, tab to a recorded event: the blue keyboard outline spans the event and time cells.

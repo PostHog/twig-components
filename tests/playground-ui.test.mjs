@@ -114,7 +114,7 @@ test("every lab opening page names its product and explains the simulation", () 
   ];
   for (const [html, title] of openings) {
     assert.match(html, new RegExp(`<h3>${title}<\\/h3>`));
-    assert.match(html, /<summary>How this simulation works<\/summary>/);
+    assert.match(html, /class="vac-inspector-disclosure-label">How this simulation works<\/span>/);
   }
 });
 

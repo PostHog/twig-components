@@ -1,5 +1,6 @@
 "use client";
 
+import { DisclosureIcon } from "./PlaygroundDisclosure.js";
 import { useEffect, useId, useRef, useState, type ReactNode, type RefObject } from "react";
 import { createPortal } from "react-dom";
 import { InspectorAiExample } from "./InspectorAiExample.js";
@@ -102,7 +103,7 @@ export function LabDirectory({ page, choose, showMarker, onVisitLab }: {
         <summary>
           <span>Explore other PostHog products on Twig</span>
           <span className="vac-lab-menu-end" aria-hidden="true">
-            <span className="vac-lab-menu-chevron" />
+            <DisclosureIcon />
           </span>
         </summary>
         <nav className="vac-lab-other-pages-menu" aria-label="Labs on other Twig pages">
@@ -157,7 +158,7 @@ export function PlaygroundHome({ onInspect, onStart, onSelect, onVisitLab }: {
         return <details className="vac-lab-other-pages" key={id}>
           <summary aria-label={`${product} labs`}>
             <span className="vac-lab-menu-end"><img src={productIcons[product]} className="vac-lab-product-icon" width={16} height={16} alt="" />{product} labs</span>
-            <span className="vac-lab-menu-end" aria-hidden="true"><span className="vac-lab-menu-chevron" /></span>
+            <span className="vac-lab-menu-end" aria-hidden="true"><DisclosureIcon /></span>
           </summary>
           <div className="vac-lab-other-pages-menu"><div className="vac-lab-menu-group"><ul>
             {labsForProduct(id).map(lab => <li key={lab.id}><button type="button" aria-label={`Start lab: ${lab.title}`} onClick={() => onVisitLab ? onVisitLab(lab.id, lab.page) : onSelect?.(lab.id)}>{lab.title}</button></li>)}
@@ -614,7 +615,7 @@ export function PlaygroundExplorer({ page, activity, choose, showMarker, onInspe
       <button type="button" className="vac-button" aria-label={`Start lab: ${current.title}`} onClick={() => { choose(current.id); showMarker(current.id); }}><span className="vac-os-button-face">Start lab →</span></button>
     </div>}
     {onVisitLab && otherLabs.length > 0 && <details className="vac-lab-other-pages">
-      <summary><span>{current ? "Labs on other pages" : "Explore the labs"}</span><span className="vac-lab-menu-end" aria-hidden="true"><span className="vac-lab-menu-chevron" /></span></summary>
+      <summary><span>{current ? "Labs on other pages" : "Explore the labs"}</span><span className="vac-lab-menu-end" aria-hidden="true"><DisclosureIcon /></span></summary>
       <nav className="vac-lab-other-pages-menu" aria-label="Labs on other Twig pages">
         {products.map(tool => <div className="vac-lab-menu-group" key={tool} data-product={tool.toLowerCase().replaceAll(" ", "-")}>
           <h4><img src={productIcons[tool]} className="vac-lab-product-icon" width={16} height={16} alt="" />{tool}</h4>

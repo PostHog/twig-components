@@ -1,5 +1,6 @@
 "use client";
 
+import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { LabChoices } from "./LabChoices.js";
 
 import { FinishLabButton } from "./FinishLabButton.js";
@@ -102,7 +103,7 @@ export function AiIntroduction({ onContinue }: { onContinue: () => void }) {
         <span className="vac-os-button-face">See the worked example →</span>
       </button>
       <details className="vac-lab-step">
-        <summary>How this simulation works</summary>
+        <PlaygroundSummary>How this simulation works</PlaygroundSummary>
         <p>
           Twig uses a preset request and recommendation. You’re changing what
           gets recorded, not the recommendation itself. No model runs and
@@ -477,7 +478,7 @@ export function AiLab({
         </>
       )}
       <details className="vac-lab-step">
-        <summary>Code and session options</summary>
+        <PlaygroundSummary>Code and session options</PlaygroundSummary>
         <pre>
           {aiCode(
             stage === 2 && run ? run.config : state.applied ?? state.config

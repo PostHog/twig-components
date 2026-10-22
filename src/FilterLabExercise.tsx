@@ -1,5 +1,6 @@
 "use client";
 
+import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
 import { LabChoices } from "./LabChoices.js";
@@ -20,7 +21,7 @@ export function FilterLabIntroduction({ onContinue }: { onContinue: () => void }
         <span className="vac-os-button-face">See the worked example →</span>
       </button>
       <details className="vac-lab-step">
-        <summary>How this simulation works</summary>
+        <PlaygroundSummary>How this simulation works</PlaygroundSummary>
         <p>After you apply your configuration, this lab records filter clicks locally while the exercise is open. Nothing is sent to PostHog.</p>
         <p>Returning to the list pauses recording and keeps your work. Leaving the page resets it.</p>
       </details>
@@ -278,7 +279,7 @@ export function FilterLabExercise({
       )}
       {stage === 1 && (
         <details className="vac-lab-step">
-          <summary>Code and session options</summary>
+          <PlaygroundSummary>Code and session options</PlaygroundSummary>
           <pre>
             {filterLabCode(
               embedSource && state.step === 0

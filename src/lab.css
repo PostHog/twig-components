@@ -240,16 +240,6 @@
   flex: none;
   gap: 10px;
 }
-.vac-app .vac-developer-theme .vac-lab-menu-chevron {
-  width: 8px;
-  height: 8px;
-  border-right: 1.5px solid currentColor;
-  border-bottom: 1.5px solid currentColor;
-  transform: translateY(-2px) rotate(45deg);
-}
-.vac-app .vac-developer-theme .vac-lab-other-pages[open] .vac-lab-menu-chevron {
-  transform: translateY(2px) rotate(225deg);
-}
 .vac-app .vac-developer-theme .vac-lab-other-pages-menu {
   overflow: hidden;
   border: 1px solid var(--vac-line);
@@ -1549,10 +1539,6 @@
 .vac-inspector-disclosure::marker { content:""; }
 .vac-inspector-disclosure-label { flex:1; min-width:0; overflow-wrap:anywhere; }
 .vac-inspector-disclosure > svg { flex-shrink:0; color:var(--ph-neutral-ink); }
-.vac-inspector-disclosure-plus { display:block; }
-.vac-inspector-disclosure-minus { display:none; }
-details[open] > .vac-inspector-disclosure > .vac-inspector-disclosure-plus { display:none; }
-details[open] > .vac-inspector-disclosure > .vac-inspector-disclosure-minus { display:block; }
 .vac-app .vac-instrumentation-inspector .vac-inspector-disclosure:hover { background:var(--ph-neutral-background); }
 .vac-app .vac-instrumentation-inspector .vac-inspector-disclosure:focus-visible { outline:2px solid var(--ph-brand-cobalt); outline-offset:-2px; }
 
@@ -1640,3 +1626,19 @@ details[open] > .vac-inspector-disclosure > .vac-inspector-disclosure-minus { di
 .vac-app .vac-developer-theme .vac-home-labs .vac-lab-other-pages > summary { min-height:44px; padding:12px 16px; border:0; border-top:1px solid var(--ph-neutral-border); border-radius: 0; background:var(--ph-neutral-background); }
 .vac-app .vac-developer-theme .vac-home-labs .vac-lab-other-pages[open] > summary { border-bottom:1px solid var(--ph-neutral-border); }
 .vac-app .vac-developer-theme .vac-home-labs .vac-lab-other-pages-menu { border:0; border-radius: 0; }
+
+/* Shared PostHog + / − disclosure glyphs. Only the owning details controls its icon. */
+.vac-app .vac-developer-theme .vac-playground-disclosure { display:flex; align-items:center; justify-content:space-between; gap:12px; list-style:none; }
+.vac-playground-disclosure::-webkit-details-marker { display:none; }
+.vac-playground-disclosure::marker { content:""; }
+.vac-disclosure-icon { display:inline-flex; flex:none; width:16px; height:16px; align-items:center; justify-content:center; }
+.vac-disclosure-plus { display:block; }
+.vac-disclosure-minus { display:none; }
+details[open] > summary .vac-disclosure-icon:not([data-expanded]) > .vac-disclosure-plus,
+.vac-disclosure-icon[data-expanded="true"] > .vac-disclosure-plus { display:none; }
+details[open] > summary .vac-disclosure-icon:not([data-expanded]) > .vac-disclosure-minus,
+.vac-disclosure-icon[data-expanded="true"] > .vac-disclosure-minus { display:block; }
+/* The event button owns keyboard interaction; its row supplies the full-width indicator. */
+.vac-app .vac-developer-theme .vac-activity-list button:focus-visible { outline:none; }
+.vac-activity-list tr:has(button:focus-visible) { outline:2px solid var(--ph-brand-cobalt); outline-offset:-2px; }
+.vac-activity-list button > .vac-disclosure-icon { margin-top:2px; }

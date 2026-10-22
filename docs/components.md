@@ -303,3 +303,5 @@ Twig menus share `twig-dropdown-menu` and `twig-dropdown-item` from `catalog.css
 
 
 Playground lab menus share the approved full-width hover/focus rows and neutral header divider from `lab.css`. ProductMenuPreview in the workbench switches between Home and other-lab menus for pointer and keyboard review. This changes presentation only; public props, lab choices and navigation callbacks are unchanged.
+
+Playground disclosures share `DisclosureIcon` / `PlaygroundSummary` internally, including native nested details and event selections. Event-table focus spans both columns. No props, lesson flow or tracking changes.
