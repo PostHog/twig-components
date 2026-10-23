@@ -46,3 +46,19 @@
 
 .twig-compact .twig-compact-muted { color: var(--vac-muted); }
 .twig-compact .twig-login-card :is(label, input), .twig-compact .twig-profile-trigger { color: var(--vac-text); }
+
+/* Secondary controls used by identity and retention figures. */
+.twig-compact .twig-saved-stay { font-family: TwigCompactSans, Arial, sans-serif; }
+.twig-compact .twig-saved-stay-button::before { border-radius: 3px; box-shadow: none; }
+.twig-compact .twig-profile-menu { color: var(--vac-text); }
+.twig-compact .twig-profile-popover { box-shadow: 0 12px 30px #2846a426; }
+.twig-compact .twig-profile-popover :is(a, button) { border-radius: 3px; }
+.twig-compact .twig-compact-profile .twig-profile-popover { top: calc(100% + 6px); width: 128px; }
+.twig-compact .twig-compact-profile .twig-profile-summary,
+.twig-compact .twig-compact-profile .twig-profile-popover nav { display: none; }
+.twig-compact .twig-compact-profile .twig-profile-signout { padding: 12px; }
+.twig-compact .twig-login-card input { border-radius: 3px; }
+.twig-compact :is(.twig-login-view, .twig-account-layout) .vac-primary:hover:not(:disabled) { background: #203884; border-color: #203884; }
+@media (prefers-reduced-motion: reduce) {
+  .twig-compact .twig-saved-stay-icon { transition: none; }
+}

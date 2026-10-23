@@ -108,9 +108,16 @@ function CompactPreview() {
   const stay = filterStays(setting, "")[0];
   const photo = setting === "Forest" ? "cabin" : setting === "Coast" ? "coast" : "city";
   const [saved, setSaved] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [booked, setBooked] = useState(false);
   return <div className="compact-review-grid"><CompactTwig><CompactStayFilters value={setting} onChange={setSetting} />
     <article className="twig-compact-stay"><StayCardContent compact stay={stay} image={<div className="vac-image"><img src={new URL(`../assets/${photo}.jpg`, import.meta.url).href} alt={stay.images[0]?.alt ?? ""} /></div>} /></article>
-  </CompactTwig><CompactTwig>{saved ? <SavedStaysView compact stays={[stay]} renderImage={() => <div className="vac-image"><img src={new URL(`../assets/${photo}.jpg`, import.meta.url).href} alt="Stay" /></div>} stayHref={() => "#saved"} /> : <LoginView email="traveler@example.com" onLogin={() => setSaved(true)} />}</CompactTwig></div>;
+  </CompactTwig><CompactTwig>{saved ? <SavedStaysView compact stays={[stay]} renderImage={() => <div className="vac-image"><img src={new URL(`../assets/${photo}.jpg`, import.meta.url).href} alt="Stay" /></div>} stayHref={() => "#saved"} /> : <LoginView email="traveler@example.com" onLogin={() => setSaved(true)} />}</CompactTwig>
+    <CompactTwig headerActions={<ProfileMenu className="twig-compact-profile" profile={{displayName:"Edgar Hogg",email:"edgar.hogg@fakeemail.com"}} links={[]} open={menuOpen} onOpenChange={setMenuOpen} onSignOut={() => {setMenuOpen(false);setSaved(false);}} />}>
+      <article className="twig-compact-stay"><StayCardContent compact stay={stay} image={<div className="vac-image"><img src={new URL(`../assets/${photo}.jpg`, import.meta.url).href} alt="Stay" /></div>} /><div className="twig-compact-save"><SavedStay signedIn saved={bookmarked} onSavedChange={setBookmarked} stayName={stay.title ?? "Stay"} /></div></article>
+      <div className="twig-account-layout"><button className="vac-button vac-primary" disabled={booked} onClick={() => setBooked(true)}>{booked ? "Booking confirmed" : "Book stay"}</button></div>
+    </CompactTwig></div>;
 
 }
 
