@@ -64,7 +64,7 @@ test("the trip error explanation has no extra inspection screen", () => {
   const inspection = renderToStaticMarkup(h(ErrorTrackingLabProvider, { active: true, state: failed, onAction: () => {} }, h(ErrorTrackingLab, {
     stage: 3, onStage: () => {}, location: "bookings", onFocusBooking: () => {}, onFocusDetails: () => {},
   })));
-  assert.match(inspection, /PostHog Error Tracking helps pinpoint why: it records the failure as an <strong>exception<\/strong>/);
+  assert.match(inspection, /PostHog Error Tracking helps pinpoint why: it records the failure as an exception/);
   assert.doesNotMatch(inspection, /Inspect the error|Twig showed an error when you opened the details/);
   const doc = new JSDOM(inspection).window.document;
   assert.match(doc.body.textContent, /Issue: Trip host name is missing/);

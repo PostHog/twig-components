@@ -61,9 +61,9 @@ function PostHogExceptionExplanation({ onStage }: { onStage: (stage: number) => 
   const last = state.occurrences.at(-1);
 
   return <section className="vac-lab vac-builder">
-    <p>Twig couldn't open your trip details. PostHog Error Tracking helps pinpoint why: it records the failure as an <strong>exception</strong>, one error event with clues about what went wrong. The stay ID links the event to your booking.</p>
+    <p>Twig couldn't open your trip details. PostHog Error Tracking helps pinpoint why: it records the failure as an exception, one error event with clues about what went wrong. The stay ID links the event to your booking.</p>
     <PlaygroundErrorIssue count={state.occurrences.length}><PostHogExceptionProperties occurrence={last} />
-    <p>PostHog keeps this exception in an <strong>issue</strong>, a group of similar errors. The selected exception's <strong>stack trace</strong> lists the functions Twig was running when it failed, helping pinpoint where in Twig's code the error happened.</p>
+    <p>PostHog keeps this exception in an issue, a group of similar errors. The selected exception's stack trace lists the functions Twig was running when it failed, helping pinpoint where in Twig's code the error happened.</p>
     <PlaygroundStackTrace /></PlaygroundErrorIssue>
     <p>To read a stack trace, start at the top, closest to the failure, and compare it with the error message. Twig tried to read <code>name</code> from <code>undefined</code>, so it looks like there's a missing value. The first function, <code>readTripHost</code>, retrieves the host's name for the stay details.</p>
     <Continue onClick={() => onStage(4)}>See how errors are grouped →</Continue>
@@ -169,7 +169,7 @@ export function ErrorTrackingLab({
   if (stage === 3) return <PostHogExceptionExplanation onStage={onStage} />;
 
   if (stage === 4) return <section className="vac-lab vac-builder">
-    <p>In a PostHog project, an <strong>issue</strong> groups similar exceptions using clues like their type, message, and stack trace. Each <strong>occurrence</strong> is one captured failure, not one person. An issue can include failures from different people and devices.</p>
+    <p>In a PostHog project, an issue groups similar exceptions using clues like their type, message, and stack trace. Each occurrence is one captured failure, not one person. An issue can include failures from different people and devices.</p>
     <p>{count < 2 ? "Here, every failed attempt comes from this browser." : `These ${count} failed attempts all came from this browser.`}</p>
     <IssuePreview count={count} resolved={state.resolved} />
     {count < 2 && <LabChecklist label="Retry trip details" items={[{
