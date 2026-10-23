@@ -1,6 +1,12 @@
 "use client";
 
-import { LabChoices } from "./LabChoices.js";
+import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
+
+import { LabPrimaryAction } from "./LabNavigation.js";
+import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
+import { touchpointDefinitions } from "./playground.js";
+
+import { EvidenceTabs } from "./TripPlannerEvidenceTabs.js";
 
 import { FinishLabButton } from "./FinishLabButton.js";
 
@@ -46,9 +52,9 @@ function Action({
   onClick: () => void;
 }) {
   return (
-    <button className="vac-button" type="button" onClick={onClick}>
+    <LabPrimaryAction><button className="vac-button" type="button" onClick={onClick}>
       <span className="vac-os-button-face">{children}</span>
-    </button>
+    </button></LabPrimaryAction>
   );
 }
 export function StayLab({
@@ -75,7 +81,7 @@ export function StayLab({
   if (stage === 0)
     return (
       <div className="vac-guide-intro">
-        <h3>Product Analytics lab</h3>
+        <h3>{touchpointDefinitions.stay.title}</h3>
         <p>
           A view event tells you someone opened a listing. To compare listings,
           it also needs to say which stay they viewed.
@@ -85,8 +91,8 @@ export function StayLab({
           <p>You’ll visit two stays, then connect their IDs to the event.</p>
         </div>
         <Action onClick={() => onStage(1)}>Follow a stay view →</Action>
-        <details className="vac-lab-step">
-          <summary>How this simulation works</summary>
+        <details className="vac-lab-step" open>
+          <PlaygroundSummary>How this simulation works</PlaygroundSummary>
           <p>Opening a stay while this exercise is running creates a local view event. These events are not sent to PostHog.</p>
         </details>
       </div>
@@ -97,8 +103,7 @@ export function StayLab({
         <p>
           {repair ? (
             <>
-              Twig holds the listing’s ID in <code>stay.id</code>. Add it as{" "}
-              <code>stay_id</code> so the event identifies the listing.
+              Twig holds the listing’s ID in <code>stay.id</code>. The <code>stay_id</code> property identifies the listing.
             </>
           ) : (
             <>
@@ -107,6 +112,10 @@ export function StayLab({
             </>
           )}
         </p>
+        <LabChecklist label="Prepare stay tracking" items={repair ? [
+          { label: <>Enable <strong>Include <code>stay_id</code></strong>.</>, done: identified },
+          { label: <>Click <strong>Apply the code</strong>.</>, done: false },
+        ] : [{ label: <>Click <strong>Apply the code</strong>.</>, done: false }]} />
         {repair && (
           <label className="vac-replay-mask">
             <input
@@ -117,7 +126,7 @@ export function StayLab({
             Include <code>stay_id</code>
           </label>
         )}
-        <pre className="vac-booking-code">{stayCode(repair && identified)}</pre>
+        <PlaygroundCodeBlock className="vac-booking-code">{stayCode(repair && identified)}</PlaygroundCodeBlock>
         <button
           className="vac-button"
           disabled={repair && !identified}
@@ -158,10 +167,10 @@ export function StayLab({
           renderStayLink(nextStay)
         )}
         <details className="vac-lab-step">
-          <summary>Applied code</summary>
-          <pre className="vac-booking-code">
+          <PlaygroundSummary>Applied code</PlaygroundSummary>
+          <PlaygroundCodeBlock className="vac-booking-code">
             {stayCode(state.applied === "identified")}
-          </pre>
+          </PlaygroundCodeBlock>
         </details>
       </section>
     );
@@ -177,21 +186,10 @@ export function StayLab({
       </div>
     );
   return (
-    <section className="vac-lab vac-builder">
-      <LabChoices
-        label="Recorded visit"
-        value={state.events.indexOf(event)}
-        onChange={select}
-        options={state.events.map((view, index) => ({
-          value: index,
-          label: (
-            <>
-              {index + 1}. {view.actualTitle} ·{" "}
-              <code>{view.properties.stay_id ?? "ID not captured"}</code>
-            </>
-          ),
-        }))}
-      />
+    <section className="vac-lab vac-builder vac-recorded-visit vac-evidence-selection">
+      <h4>Recorded visit</h4>
+      <EvidenceTabs label="Recorded visit" value={String(state.events.indexOf(event))} onChange={value => select(Number(value))}
+        options={state.events.map((view, index) => ({ value: String(index), label: view.actualTitle }))}>
       <dl className="vac-event-comparison">
         <div>
           <dt>Viewed on Twig</dt>
@@ -216,13 +214,13 @@ export function StayLab({
           "The lab knows which page you opened, but the captured event doesn’t. Both visits produce indistinguishable events."
         )}
       </p>
-      <pre>
+      <PlaygroundCodeBlock label="JSON">
         {JSON.stringify(
           { event: event.event, properties: event.properties },
           null,
           2
         )}
-      </pre>
+      </PlaygroundCodeBlock>
       {repair ? (
         <>
           <h4>Views by stay</h4>
@@ -256,6 +254,7 @@ export function StayLab({
           Add the missing stay ID →
         </Action>
       )}
+      </EvidenceTabs>
     </section>
   );
 }

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { eventWithTime } from "@rrweb/types";
 import type { Replayer } from "@rrweb/replay";
 import "@rrweb/replay/dist/style.css";
+import { ReplayControls } from "./ReplayControls.js";
 
 export function SessionPlayer({ events }: { events: eventWithTime[] }) {
   const container = useRef<HTMLDivElement>(null);
@@ -36,6 +37,7 @@ export function SessionPlayer({ events }: { events: eventWithTime[] }) {
             ".vac-dock, .vac-playground-invite, .vac-replay-stop, .vac-ghost-cursor { visibility: hidden !important; }",
           ],
         });
+        instance.wrapper.classList.add("vac-session-canvas");
         player.current = instance;
         const total = instance.getMetaData().totalTime;
         setDuration(total);
@@ -60,7 +62,7 @@ export function SessionPlayer({ events }: { events: eventWithTime[] }) {
                   ) / height
                 )
               : viewport.current.clientWidth / width;
-          instance.wrapper.style.transformOrigin = "top left";
+          // rrweb viewport dimensions are measured at runtime; visual rules stay in CSS.
           instance.wrapper.style.transform = `scale(${scale})`;
           viewport.current.style.height = `${height * scale}px`;
         };
@@ -104,64 +106,18 @@ export function SessionPlayer({ events }: { events: eventWithTime[] }) {
         <div ref={root} />
       </div>
       <div ref={controls} className="vac-session-controls">
-        <label htmlFor="session-playhead">
-          {(position / 1000).toFixed(1)}s / {(duration / 1000).toFixed(1)}s
-        </label>
-        <input
-          id="session-playhead"
-          aria-label="Replay position"
-          type="range"
-          min={0}
-          max={duration || 1}
-          step={100}
-          value={position}
-          disabled={!!status}
-          onChange={(event) => {
-            const time = Number(event.target.value);
-            player.current?.pause(time);
-            setPosition(time);
-            setPlaying(false);
+        <ReplayControls position={position} duration={duration} playing={playing} disabled={!!status} fullscreen={fullscreen} fullscreenUnavailable={!!fullscreenError}
+          onSeek={time => { player.current?.pause(time); setPosition(time); setPlaying(false); }}
+          onToggle={() => {
+            if (playing) { player.current?.pause(); setPlaying(false); }
+            else { player.current?.play(position >= duration ? 0 : position); setPlaying(true); }
           }}
-        />
-        <button
-          className="vac-button"
-          disabled={!!status}
-          onClick={() => {
-            if (playing) {
-              player.current?.pause();
-              setPlaying(false);
-            } else {
-              player.current?.play(position >= duration ? 0 : position);
-              setPlaying(true);
-            }
-          }}
-        >
-          <span className="vac-os-button-face">
-            {playing
-              ? "Pause"
-              : position >= duration
-              ? "Replay visit"
-              : "Play visit"}
-          </span>
-        </button>
-        <button
-          className="vac-text-button"
-          disabled={!!status}
-          onClick={async () => {
-            setFullscreenError("");
+          onFullscreen={async () => {
             try {
-              if (document.fullscreenElement === container.current)
-                await document.exitFullscreen();
+              if (document.fullscreenElement === container.current) await document.exitFullscreen();
               else await container.current?.requestFullscreen();
-            } catch {
-              setFullscreenError(
-                "Full screen is unavailable. You can still play the recording here."
-              );
-            }
-          }}
-        >
-          {fullscreen ? "Exit full screen" : "View full screen"}
-        </button>
+            } catch { setFullscreenError("Full screen is unavailable. You can still play the recording here."); }
+          }} />
         {fullscreenError && <p role="status">{fullscreenError}</p>}
       </div>
     </div>

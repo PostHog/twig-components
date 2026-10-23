@@ -1,22 +1,15 @@
+"use client";
+
+import { useState } from "react";
 import type { TripPlannerRecord } from "./trip-planner-records.js";
+import { PlaygroundTraceExplorer } from "./PlaygroundAiEvidence.js";
+import { TripPlannerTracePreview, traceForGeneration } from "./TripPlannerTracePreview.js";
 
 /** A generation and its recorded messages, using the session diagram's tree. */
 export function TripPlannerFailureTrace({ record }: { record: TripPlannerRecord }) {
-  const input = record.properties.$ai_input.filter(message => message.role === "user").at(-1);
-  return <div className="vac-conversation-traces" role="group" aria-label="City generation and its recorded input and output">
-    <div className="vac-conversation-session">
-      <code>$ai_generation</code>
-      <span>City stay for four</span>
-    </div>
-    <ol aria-label="Recorded generation properties">
-      <li><dl>
-        <dt><code>$ai_input</code></dt>
-        <dd>{input?.content}</dd>
-      </dl></li>
-      <li><dl>
-        <dt><code>$ai_output_choices</code></dt>
-        {record.properties.$ai_output_choices.map((message, index) => <dd key={index}>{message.content}</dd>)}
-      </dl></li>
-    </ol>
+  const [field, setField] = useState<"input" | "output">("output");
+  return <div className="vac-ai-evidence-stack">
+    <PlaygroundTraceExplorer traces={[traceForGeneration(record)]} />
+    <TripPlannerTracePreview record={record} field={field} onFieldChange={setField} />
   </div>;
 }

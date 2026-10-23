@@ -111,40 +111,32 @@ export function TripSearch({ value, minDate, capacity, errors = {}, destinations
   onChange: (value: TripSearchValue) => void;
   onSubmit: () => void;
 }) {
-  const [detailsOpen, setDetailsOpen] = useState(false);
-  const expanded = detailsOpen || Object.keys(errors).length > 0;
-  const dateSummary = value.checkIn && value.checkOut
-    ? `${value.checkIn.slice(5).replace("-", "/")} – ${value.checkOut.slice(5).replace("-", "/")}`
-    : "Add dates";
-  return <form data-details-open={expanded} className="vac-trip-search" aria-label="Find a stay" onSubmit={event => { event.preventDefault(); onSubmit(); }}>
+  return <form className="vac-trip-search" aria-label="Find a stay" onSubmit={event => { event.preventDefault(); onSubmit(); }}>
     <div className="vac-trip-search-destination">
       <DestinationSearch value={value.destination} destinations={destinations}
         onChange={destination => onChange({ ...value, destination })}
         onSelect={onDestinationSelect} />
     </div>
-    <button type="button" className="vac-trip-search-details vac-filter" aria-expanded={expanded} aria-controls="trip-search-options" onClick={() => setDetailsOpen(!expanded)}>
-      {dateSummary} · {value.guests || "1"} {value.guests === "1" || !value.guests ? "guest" : "guests"} <span aria-hidden="true">{expanded ? "−" : "+"}</span>
-    </button>
     <div id="trip-search-options" className="vac-trip-search-options">
     <div>
       <label htmlFor="trip-search-check-in">Check in</label>
       <DatePicker id="trip-search-check-in" label="Check in" value={value.checkIn} minDate={minDate}
         invalid={!!errors.checkIn} describedBy={errors.checkIn ? "trip-search-check-in-error" : undefined}
-        onChange={checkIn => { setDetailsOpen(true); onChange({ ...value, checkIn, checkOut: value.checkOut && value.checkOut <= checkIn ? "" : value.checkOut }); }} />
+        onChange={checkIn => { onChange({ ...value, checkIn, checkOut: value.checkOut && value.checkOut <= checkIn ? "" : value.checkOut }); }} />
       {errors.checkIn && <p className="vac-field-error" id="trip-search-check-in-error">{errors.checkIn}</p>}
     </div>
     <div>
       <label htmlFor="trip-search-check-out">Check out</label>
       <DatePicker id="trip-search-check-out" label="Check out" value={value.checkOut} minDate={value.checkIn ? addDateDays(value.checkIn, 1) : minDate}
         invalid={!!errors.checkOut} describedBy={errors.checkOut ? "trip-search-check-out-error" : undefined}
-        onChange={checkOut => { setDetailsOpen(true); onChange({ ...value, checkOut }); }} />
+        onChange={checkOut => { onChange({ ...value, checkOut }); }} />
       {errors.checkOut && <p className="vac-field-error" id="trip-search-check-out-error">{errors.checkOut}</p>}
     </div>
     <div>
       <label htmlFor="trip-search-guests">Guests</label>
       <GuestPicker id="trip-search-guests" value={value.guests} capacity={capacity}
         invalid={!!errors.guests} describedBy={errors.guests ? "trip-search-guests-error" : undefined}
-        onChange={guests => { setDetailsOpen(true); onChange({ ...value, guests }); }} />
+        onChange={guests => { onChange({ ...value, guests }); }} />
       {errors.guests && <p className="vac-field-error" id="trip-search-guests-error">{errors.guests}</p>}
     </div>
     </div>
@@ -180,10 +172,10 @@ function DestinationSearch({ value, destinations, onChange, onSelect }: {
         }
         if (event.key === "Enter" && open && options[active]) { event.preventDefault(); choose(options[active]); }
       }} />
-    {open && <div className="vac-destination-panel">
+    {open && <div className="vac-destination-panel twig-dropdown-menu">
       <ul id={id} role="listbox" aria-label="Destinations">
         {options.map((destination, index) => <li key={destination} role="presentation">
-          <button type="button" role="option" id={`${id}-${index}`} aria-selected={active === index} tabIndex={-1} data-replay-label={`Destination: ${destination}`}
+          <button type="button" className="twig-dropdown-item" role="option" id={`${id}-${index}`} aria-selected={active === index} tabIndex={-1} data-replay-label={`Destination: ${destination}`}
             onMouseDown={event => event.preventDefault()} onClick={() => choose(destination)}>{destination}</button>
         </li>)}
       </ul>

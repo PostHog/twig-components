@@ -1,3 +1,7 @@
+import { ReplayControls, RecordingControls } from "../src/ReplayControls.js";
+import { PlaygroundEvaluation, PlaygroundGeneration, PlaygroundTraceExplorer } from "../src/PlaygroundAiEvidence.js";
+import { PlaygroundStatus } from "../src/PlaygroundStatus.js";
+import { createGenerationRecord } from "../src/trip-planner-records.js";
 import { GetawaySearch, SearchWorkspace, type GetawayPreferences } from "../src/GetawaySearch.js";
 import { useEffect, useReducer, useRef, useState, type ReactNode } from "react";
 import { AiSearchIcon, TripPlanner } from "../src/TripPlanner.js";
@@ -24,6 +28,13 @@ import {
 import { AmenityFilters, matchesStayAmenities, type StayAmenity, type StaySetting } from "../src/StayFilters.js";
 import { DatePicker, addDateDays } from "../src/DatePicker.js";
 import { GuestPicker } from "../src/GuestPicker.js";
+import { PlaygroundCodeBlock } from "../src/PlaygroundCodeBlock.js";
+import { WizardCommand } from "../src/WizardCommand.js";
+import { PlaygroundSummary } from "../src/PlaygroundDisclosure.js";
+import { LabChecklist } from "../src/LabChecklist.js";
+import { LabCompletionView } from "../src/LabCompletionView.js";
+import { McpComposer } from "../src/McpComposer.js";
+import { LabChoices } from "../src/LabChoices.js";
 import { EventsLab, EventsExperienceSwitch } from "../src/EventsLab.js";
 import { eventsReducer, initialEventsState } from "../src/events-lab.js";
 import { filterStays } from "../src/catalog.js";
@@ -35,30 +46,32 @@ import { StayLab, StayLabProvider, useStayLab } from "../src/StayLab.js";
 import { stays, stayLabel } from "../src/catalog.js";
 import { ReplayLab, type ReplayLabViewState } from "../src/ReplayLab.js";
 import { ReplayProvider, useReplay } from "../src/ReplayRecorder.js";
-import { LabDirectory, PlaygroundInvitation } from "../src/PlaygroundPanels.js";
-import { LabNavigationView } from "../src/LabNavigation.js";
-import { playgroundPage } from "../src/playground.js";
+import { LabDirectory, PlaygroundMarker, PlaygroundInspectionView, PlaygroundHome, PlaygroundOnboarding, PlaygroundToolRail, PlaygroundDock, PlaygroundInvitation, PlaygroundLauncher, ProductLabLanding, type PlaygroundActivity } from "../src/PlaygroundPanels.js";
+import { LabNavigationView, LessonNavigationProvider, LabPrimaryAction } from "../src/LabNavigation.js";
+import { playgroundPage, touchpointDefinitions } from "../src/playground.js";
 import "../src/catalog.css";
 import "../src/lab.css";
 import "./workbench.css";
 
-type View = "getaway" | "planner" | "preview" | "saved" | "account" | "invite" | "products" | "reset" | "dates" | "filters" | "ai" | "booking" | "stay" | "replay" | "errors";
+type View = "controls" | "inspect" | "getaway" | "planner" | "preview" | "saved" | "account" | "invite" | "products" | "reset" | "dates" | "filters" | "ai" | "booking" | "stay" | "replay" | "errors";
 const views: { id: View; label: string; description: string }[] = [
+  { id:"controls", label:"Playground controls", description:"Shared code, Wizard commands, connected choices, and the local MCP composer" },
+  { id: "inspect", label: "Inspect Twig", description: "Console values and capture-code drill-down, with supplemental data only when the preview omits details" },
   { id: "getaway", label: "Getaway search", description: "Integrated local destination and AI search" },
-  { id: "planner", label: "Trip planner", description: "Follow a successful conversation, encounter a wrong recommendation, and investigate the recorded evidence. No inference or network requests." },
+  { id: "planner", label: touchpointDefinitions.discovery.title, description: "Follow a successful conversation, encounter a wrong recommendation, and investigate the recorded evidence. No inference or network requests." },
   { id: "preview", label: "Twig views", description: "Read-only guide preview and interactive filter control" },
   { id: "saved", label: "Saved stay", description: "Exercise host-controlled auth, save, loading, disabled, and error states" },
-  { id: "account", label: "Account", description: "Walk through login, profile navigation, empty collections, and settings" },
+  { id: "account", label: "Account", description: "Shared dropdown navigation, login, empty collections, and settings" },
   { id: "invite", label: "PostHog invitation", description: "Open and dismiss the playground invitation" },
-  { id: "products", label: "Product menu", description: "Open the other-products menu on every Twig page" },
+  { id: "products", label: "Product menu", description: "Review flat Playground content and uniform 4px controls on every Twig page" },
   { id: "reset", label: "Playground reset", description: "Preview the confirmation shown before clearing Twig activity" },
-  { id: "dates", label: "Booking details", description: "Choose dates and guests with Twig’s booking controls" },
-  { id: "filters", label: "Events and properties", description: "Click Twig filters and inspect the locally recorded events" },
-  { id: "ai", label: "AI lab", description: "Run a local recommendation fixture through the lesson" },
-  { id: "booking", label: "Booking lab", description: "Simulate a successful or failed booking" },
-  { id: "stay", label: "Stay lab", description: "Open listings and compare view events" },
-  { id: "replay", label: "Replay lab", description: "Review the replay lesson with local fixture controls" },
-  { id: "errors", label: "Error Tracking lab", description: "Book a local trip, navigate to Booked stays, and investigate its exception" },
+  { id: "dates", label: "Booking details", description: "Review shared dropdowns with dates and guest choices" },
+  { id: "filters", label: touchpointDefinitions.catalog.title, description: "Click Twig filters and inspect the locally recorded events" },
+  { id: "ai", label: "AI inputs and outputs", description: "Run a local recommendation fixture through the lesson" },
+  { id: "booking", label: touchpointDefinitions.booking.title, description: "Simulate a successful or failed booking" },
+  { id: "stay", label: touchpointDefinitions.stay.title, description: "Open listings and compare view events" },
+  { id: "replay", label: touchpointDefinitions.replay.title, description: "Review the replay lesson with local fixture controls" },
+  { id: "errors", label: touchpointDefinitions.errors.title, description: "Book a local trip, navigate to Booked stays, and investigate its exception" },
 ];
 
 function GetawayPreview() {
@@ -91,7 +104,7 @@ function TripPlannerPreviewContent() {
   }
   return <>
     <div className="twig-browser workbench-twig">
-      <p style={{ display: "flex", alignItems: "center", gap: 8 }}><AiSearchIcon /> AI search</p>
+      <p className="workbench-ai-label"><AiSearchIcon /> AI search</p>
       <TripPlanner
         key={lab.revision}
         scenario={lab.lesson.capacityFixed ? "capacity-fixed" : undefined}
@@ -125,7 +138,7 @@ function Preview() {
   return <>
     <div className="workbench-controls"><label>Selected guide preview <select value={selected} onChange={(event) => setSelected(event.target.value as typeof selected)}><option>Forest</option><option>Coast</option><option>City</option></select></label></div>
     <BrowseStaysPreview selected={selected} />
-    <p>Interactive browse: cobalt actions, sage search, and bird-host identities with small avatars and italic species.</p>
+    <p>Interactive browse: full-width mobile fields, paired dates, optional filters, and Search stays at the end.</p>
     <div className="twig-browser workbench-twig"><main><BrowseStays activeFilterCount={Number(filter !== "All") + amenities.length} additionalFilters={<AmenityFilters value={amenities} onChange={(value, selected) => setAmenities(previous => selected ? [...previous, value] : previous.filter(item => item !== value))} />} primarySearch={filters => <TripSearch filters={filters} destinations={stays.flatMap(stay => stay.location ? [stay.location] : [])} value={tripSearch} minDate="2026-10-20" capacity={5} onChange={setTripSearch} onSubmit={() => setSubmitted(tripSearch)} />} results={filterStays(filter, submitted.destination).filter(stay => (stay.capacity ?? 0) >= Number(submitted.guests) && matchesStayAmenities(stay.amenities, amenities))} controlsExpanded={controlsExpanded} onControlsExpandedChange={setControlsExpanded} id="workbench-browse" setting={filter} search={search} onSettingChange={setFilter} onSearchChange={setSearch} renderStay={(stay) => <article className="vac-card" key={stay.id}><StayCardContent stay={stay} image={<div className="vac-image"><span>Photo on Twig.com</span></div>} /></article>} /><StayDetails stay={stays[0]} /></main></div>
   </>;
 }
@@ -136,7 +149,7 @@ function DatePickerPreview() {
   const [guests, setGuests] = useState("");
   const [disabled, setDisabled] = useState(false);
   const today = "2026-10-16";
-  return <div className="twig-browser workbench-twig" style={{ maxWidth: 460, padding: 24 }}>
+  return <div className="twig-browser workbench-twig workbench-booking-controls">
     <div className="workbench-controls"><button onClick={() => { setCheckIn(""); setCheckOut(""); setGuests(""); }}>Clear details</button><button onClick={() => setDisabled(!disabled)}>{disabled ? "Enable" : "Disable"} booking controls</button></div>
     <label htmlFor="preview-check-in">Check in</label>
     <DatePicker id="preview-check-in" label="Check in" value={checkIn} minDate={today} disabled={disabled} onChange={(date) => { setCheckIn(date); if (checkOut && checkOut <= date) setCheckOut(""); }} />
@@ -311,6 +324,49 @@ function AccountPreview() {
   </>;
 }
 
+function InspectPreview() {
+  const [open, setOpen] = useState(true);
+  const [picking, setPicking] = useState(false);
+  const [homeOpen, setHomeOpen] = useState(true);
+  const [onboarding, setOnboarding] = useState<"stay" | "filter" | "another-stay" | "history" | "compare" | "compare-again" | "follow" | "reset" | "complete" | null>(null);
+  const previousConsoleSelection = useRef<number | null>(null);
+  const [feature, setFeature] = useState<"catalog" | "discovery" | "replay" | "errors">("catalog");
+  const [activity, setActivity] = useState<PlaygroundActivity[]>([]);
+  const [chosen, setChosen] = useState<string | null>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  return <div className="vac-app workbench-inspect-preview" data-open={open}>
+    <PlaygroundToolRail joinedBranding page={playgroundPage("/", stays)} open={open} picking={picking} selectedId={feature} homeOpen={homeOpen} onHomeOpened={() => { setHomeOpen(true); setPicking(false); setOpen(true); }}
+      onOpen={() => setOpen(true)} onCollapse={() => setOpen(false)} onPick={() => { setHomeOpen(false); setPicking(true); setOpen(true); }}
+      onSelect={id => { setHomeOpen(false); setFeature(id as typeof feature); setOpen(true); setPicking(false); }} toggleRef={toggleRef} />
+    <div className="workbench-controls" aria-label="Instrumentation markers">{playgroundPage("/", stays).touchpoints.map(point => <PlaygroundMarker key={point.id} touchpoint={point} highlighted={false} onHighlight={() => {}} onChoose={id => { setChosen(id); setOpen(true); }} />)}</div>
+    {picking && <p role="status">Inspection observes normal Twig interactions. Simulate an event below to preview the live feed.</p>}
+    <PlaygroundDock open={open} joinedBranding embedded={false} placement="edge" onClose={() => setOpen(false)} headingRef={headingRef}
+      logo={<img src={new URL("../assets/posthog-logomark.svg", import.meta.url).href} width={26} height={26} alt="" />}
+      navigation={null} recordingBar={null} pageKey="inspect"
+      guide={homeOpen ? <PlaygroundHome onVisitLab={id => { setChosen(id); setHomeOpen(false); setPicking(false); }} onStart={() => { setHomeOpen(false); setPicking(true); setOnboarding("stay"); }} onInspect={() => { setOnboarding(null); setHomeOpen(false); setPicking(true); }} onSelect={id => { setHomeOpen(false); setPicking(false); setFeature(id as typeof feature); }} /> : <>
+        {picking && onboarding && ["stay", "filter", "another-stay"].includes(onboarding) && <div className="workbench-controls"><button onClick={() => {
+          const filtering = onboarding === "filter";
+          setActivity(previous => [...previous, {id:previous.length+1,kind:filtering ? "catalog" : "stay",label:filtering ? "Setting selected" : "Stay viewed",event:filtering ? "twig_stay_filter_selected" : "twig_stay_viewed",detail:"",properties:filtering ? {setting:"Forest",result_count:1} : {stay_id:onboarding === "stay" ? "stay-01" : "stay-02"}}]);
+          setOnboarding(onboarding === "stay" ? "filter" : filtering ? "another-stay" : "history");
+        }}>Simulate {onboarding === "filter" ? "setting click" : "stay click"}</button></div>}
+        <div className="workbench-controls"><button onClick={() => setActivity(previous => [...previous, { id: previous.length + 1, kind: "catalog" as const, label: "Setting selected", event: "twig_stay_filter_selected", detail: "setting: Forest", timestamp: new Date().toISOString(), properties: { setting: "Forest", result_count: 1 }, element: '<button aria-pressed="true">Forest</button>' }])}>Simulate Forest click</button><button onClick={() => setActivity(previous => {
+          const operationId = `preview-${previous.length + 1}`;
+          const generation = createGenerationRecord([{role:"user",content:"A forest getaway"}], [{role:"assistant",content:"stay-01"}], {sessionId:"preview-chat",traceId:operationId,generationId:`${operationId}-generation`,startedAt:Date.now()}, {scenario:"forest",turn_number:1,selected_stay_id:"stay-01",group_size:null,response_kind:"recommendation"}, 1.2, "Plan a getaway");
+          return [...previous, {id:previous.length+1,kind:"discovery" as const,label:"AI response ready",event:"twig_ai_search_answered",detail:"",operationId,timestamp:generation.timestamp,properties:{outcome:"recommendation",result_count:1}}, {id:previous.length+2,kind:"discovery" as const,label:"AI generation",event:generation.event,detail:"",operationId,timestamp:generation.timestamp,properties:generation.properties}];
+        })}>Simulate AI response</button></div>
+        {chosen ? <p role="status">Host starts the {chosen} lab. Existing lesson flow is unchanged.</p> : picking ? <PlaygroundInspectionView onSessionChange={(_, action) => {
+          if (action.type === "clear" && onboarding) { setOnboarding(onboarding === "reset" || onboarding === "complete" ? "complete" : "stay"); previousConsoleSelection.current = null; }
+          if (action.type === "follow") { if (onboarding === "follow") setOnboarding("reset"); previousConsoleSelection.current = null; }
+          if (action.type === "select") {
+            if (action.id !== activity.at(-1)?.id && action.id !== previousConsoleSelection.current) setOnboarding(previous => previous === "history" ? "compare" : previous === "compare" ? "compare-again" : previous === "compare-again" ? "follow" : previous);
+            previousConsoleSelection.current = action.id;
+          }
+        }} guidance={onboarding ? <PlaygroundOnboarding phase={onboarding} /> : undefined} onExitTour={onboarding ? () => { setOnboarding(null); setHomeOpen(true); setPicking(false); headingRef.current?.focus({ preventScroll: true }); } : undefined} describe={item => ({method:item.event === "$ai_generation" ? "generation" : "capture",description:item.event === "$ai_generation" ? "A simulated model call, connected to the planner outcome." : item.kind === "discovery" ? "Records whether AI search found a stay." : "A filter handler records the selected setting and result count.",question:"What did this interaction produce?",sources:[{path:"Example capture call",line:1,caption:"",code:item.event === "$ai_generation" ? 'posthog.capture({\n  distinctId: userId,\n  event: "$ai_generation",\n  properties: {\n    $ai_trace_id: traceId,\n    $ai_model: model,\n    $ai_input_tokens: inputTokens,\n    $ai_output_tokens: outputTokens,\n    $ai_latency: latencySeconds\n  }\n})' : item.kind === "discovery" ? 'posthog.capture(\n  "twig_ai_search_answered",\n  {\n    outcome: "recommendation",\n    result_count: 1\n  }\n)' : 'posthog.capture(\n  "twig_stay_filter_selected",\n  {\n    setting: "Forest",\n    result_count: 1\n  }\n)'},{path:'src/example-tracking.ts',line:12,label:'Event handler',highlightLines:[2],code:'function selectSetting(setting) {\n  trackTwigEvent("twig_stay_filter_selected", { setting });\n}'}]})} contexts={{discovery:{method:"capture",description:"AI feature usage is a product event; model calls have generation evidence.",question:"How did the model produce its response?",sources:[],aiExample:true}}} activity={activity} selectedId={feature} onSelect={id => setFeature(id as typeof feature)} choose={id => { setChosen(id); setPicking(false); }} /> : <ProductLabLanding selectedId={feature} choose={id => setChosen(id)} />}
+      </>} />
+  </div>;
+}
+
 function InvitationPreview() {
   const [dismissed, setDismissed] = useState(false);
   const [open, setOpen] = useState(false);
@@ -324,11 +380,16 @@ function InvitationPreview() {
 }
 
 function ProductMenuPreview() {
+  const [menu, setMenu] = useState("home");
   const [pathname, setPathname] = useState("/about");
   const [selectedLab, setSelectedLab] = useState("");
   const page = playgroundPage(pathname, stays);
   return <LabPreview>
     <div className="workbench-controls">
+      <label>Menu <select value={menu} onChange={(event) => setMenu(event.target.value)}>
+        <option value="home">Home</option>
+        <option value="directory">Other labs</option>
+      </select></label>
       <label>Preview page <select value={pathname} onChange={(event) => setPathname(event.target.value)}>
         <option value="/">Find a stay</option>
         <option value="/about">About Twig</option>
@@ -336,12 +397,20 @@ function ProductMenuPreview() {
         <option value="/profile/bookings">Booked stays</option>
       </select></label>
     </div>
-    <LabDirectory page={page} choose={setSelectedLab} showMarker={() => {}} onVisitLab={(id, startPage) => {
+    {menu === "home" ? <PlaygroundHome onInspect={() => setSelectedLab("Inspector")} onVisitLab={setSelectedLab} /> : <LabDirectory page={page} choose={setSelectedLab} showMarker={() => {}} onVisitLab={(id, startPage) => {
       setSelectedLab(id);
       setPathname(startPage === "discover" ? "/" : "/stays/stay-01");
-    }} />
+    }} />}
     {selectedLab && <p role="status">Selected lab: {selectedLab}</p>}
   </LabPreview>;
+}
+
+function LessonNavigationPreview() {
+  const [step, setStep] = useState(1);
+  const [away, setAway] = useState(false);
+  const props = { selected: "catalog" as const, stage: step, embedded: false, resetScope: "twig" as const, onAllLabs: () => setStep(0), onPrevious: () => setStep(Math.max(0, step - 1)), onReset: () => setStep(0), returnTo: away ? { label: "Find a stay", onClick: () => setAway(false) } : undefined };
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  return <><div className="workbench-controls"><button onClick={() => setAway(!away)}>Toggle away state</button></div><PlaygroundDock embedded onClose={() => {}} headingRef={headingRef} logo={null} pageKey="reset-preview" navigation={<LabNavigationView {...props} placement="header" />} footer={<LabNavigationView {...props} placement="footer" />} recordingBar={null} guide={<><p>Lesson {step + 1}</p><LabPrimaryAction><button className="vac-button" onClick={() => setStep(step + 1)}><span className="vac-os-button-face">Continue →</span></button></LabPrimaryAction></>} /></>;
 }
 
 function ResetPreview() {
@@ -351,6 +420,7 @@ function ResetPreview() {
   return <div className="vac-app"><div className="workbench-controls"><button type="button" onClick={() => setAway((value) => !value)}>{away ? "Show lab page" : "Show away state"}</button></div><div className="vac-developer-theme workbench-lab workbench-reset-preview">
     <LabNavigationView key={resetCount} selected="errors" stage={2} embedded={false} resetScope="twig" returnTo={away ? { label: "Booked stays", onClick: () => { setAway(false); setNotice("Returned to the lab page."); } } : undefined} onAllLabs={() => setNotice("All labs selected in this preview.")} onPrevious={() => setNotice("Previous step selected in this preview.")} onReset={() => { setResetCount((count) => count + 1); setAway(false); setNotice("Twig activity reset in this preview."); }} />
     {notice && <p role="status">{notice}</p>}
+    <LessonNavigationPreview />
   </div></div>;
 }
 
@@ -361,7 +431,7 @@ function Filters() {
   return <div className="vac-app">
     <div className="twig-browser workbench-twig"><BrowseStays setting={setting} search={search} onSearchChange={setSearch} onSettingChange={value => { setSetting(value); dispatch({ type: "click", setting: value, count: filterStays(value, search).length, timestamp: new Date().toISOString() }); }} renderStay={stay => <article className="vac-card" key={stay.id}><StayCardContent stay={stay} image={<div className="vac-image">Twig stay</div>} /></article>} /></div>
     <div className="workbench-controls"><button onClick={() => dispatch({ type: "reset" })}>Reset lesson</button><button disabled={!state.step} onClick={() => dispatch({ type: "previous" })}>Previous step</button></div>
-    <div className="vac-developer-theme workbench-lab"><EventsExperienceSwitch state={state} dispatch={dispatch} /><EventsLab state={state} dispatch={dispatch} onChoose={() => dispatch({ type: "reset" })} /></div>
+    <div className="vac-developer-theme workbench-lab" aria-label="Lab directions and evidence"><EventsExperienceSwitch state={state} dispatch={dispatch} /><EventsLab state={state} dispatch={dispatch} onChoose={() => dispatch({ type: "reset" })} /></div>
   </div>;
 }
 
@@ -381,7 +451,7 @@ function Ai() {
 const bookingFacts = { stay_id: "adiron-shack", nights: 2, guests: 4, total_cents: 71000 };
 function BookingRunner() {
   const { state, dispatch } = useBookingLab();
-  return <div className="workbench-fixture" id="booking-fixture"><strong>Twig booking form</strong><p>Adiron-shack · two nights · four guests</p><button disabled={!state.applied} onClick={() => dispatch({ type: "submit", facts: bookingFacts })}>Book stay locally</button><small>{state.applied ? `Outcome: ${state.lesson}` : "Apply the lesson code first"}</small></div>;
+  return <div className="workbench-fixture" id="booking-fixture"><strong>Twig booking form</strong><p>Adiron-shack · two nights · four guests</p><button disabled={!state.applied} onClick={() => dispatch({ type: "submit", facts: bookingFacts })}>Book stay locally</button><button disabled={!state.latest} onClick={() => dispatch({ type: "invalidate" })}>Another booking attempt</button><small>{state.applied ? `Outcome: ${state.lesson}` : "Apply the lesson code first"}</small></div>;
 }
 function Booking() {
   const [stage, setStage] = useState(0);
@@ -446,7 +516,34 @@ function ErrorTrackingPreviewContent() {
 function ErrorTrackingPreview() { return <ErrorTrackingLabProvider active><ErrorTrackingPreviewContent /></ErrorTrackingLabProvider>; }
 
 export default function App() {
-  const [view, setView] = useState<View>(() => new URLSearchParams(window.location.search).get("view") === "planner" ? "planner" : "preview");
+  const [view, setView] = useState<View>(() => { const requested = new URLSearchParams(window.location.search).get("view"); return views.some(item => item.id === requested) ? requested as View : "preview"; });
   const current = views.find((item) => item.id === view)!;
-  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "getaway" ? <GetawayPreview /> : view === "planner" ? <TripPlannerPreview /> : view === "preview" ? <Preview /> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "products" ? <ProductMenuPreview /> : view === "reset" ? <ResetPreview /> : view === "dates" ? <DatePickerPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : view === "errors" ? <ErrorTrackingPreview /> : <Replay />}</div></main></div>;
+  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "controls" ? <PlaygroundControlsPreview /> : view === "inspect" ? <InspectPreview /> : view === "getaway" ? <GetawayPreview /> : view === "planner" ? <TripPlannerPreview /> : view === "preview" ? <Preview /> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "products" ? <ProductMenuPreview /> : view === "reset" ? <ResetPreview /> : view === "dates" ? <DatePickerPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : view === "errors" ? <ErrorTrackingPreview /> : <Replay />}</div></main></div>;
+}
+
+function PlaygroundControlsPreview() {
+  const [position,setPosition]=useState(0);
+  const [playing,setPlaying]=useState(false);
+  const [recording,setRecording]=useState(true);
+  const [choice,setChoice]=useState("Setting");
+  const [messages,setMessages]=useState<string[]>([]);
+  return <LabPreview>
+    <ReplayControls position={position} duration={8000} playing={playing} onSeek={value=>{setPosition(value);setPlaying(false);}} onToggle={()=>{setPosition(position>=8000?0:position);setPlaying(!playing);}} onFullscreen={()=>{}} />
+    <div className="workbench-controls"><button onClick={()=>{setPosition(8000);setPlaying(false);}}>Show ended</button></div>
+    {recording ? <RecordingControls elapsedMs={12000} onStop={()=>setRecording(false)} /> : <button className="vac-button" onClick={()=>setRecording(true)}><span className="vac-os-button-face">Start recording</span></button>}
+    <div className="vac-ai-evidence-stack">
+      {(["ready", "running", "failed", "passed", "active", "resolved"] as const).map(value => <PlaygroundStatus key={value} value={value} />)}
+      <PlaygroundTraceExplorer traces={[{id:"fixture",title:"City stay for four",toolCall:"Search stays",generation:"Recommend a city stay"}]} />
+      <PlaygroundGeneration input={[{role:"user",content:"Find me a city stay for four."}]} output={[{role:"assistant",content:"No city stays match your group of four."}]} facts={[{label:"Model",value:"Claude Haiku 4.5"},{label:"Duration",value:"1.1s"}]} />
+      <PlaygroundEvaluation status="failed" expected="4+ guests or no match" observed="Le Nid Chic · 2 guests" />
+      <PlaygroundEvaluation status="passed" expected="4+ guests or no match" observed="No stay recommended" />
+    </div>
+    <LabChoices label="Break down by" value={choice} onChange={setChoice} options={["Setting","Price per night","Capacity"].map(value=>({value,label:value}))} />
+    <PlaygroundCodeBlock code={'posthog.capture(\n  "twig_stay_filter_selected",\n  { setting: "Forest" }\n);'} highlightLines={[2,3]} />
+    <LabChecklist label="Completed action" items={[{ label: "Choose a setting in Twig’s Filters.", done: true }]} />
+    <details className="vac-lab-step" open><PlaygroundSummary>How this simulation works</PlaygroundSummary><p>These examples stay in this browser.</p></details>
+    <WizardCommand command="mcp add" />
+    <div className="vac-agent-terminal"><div className="vac-agent-title">❯_ Twig / coding agent</div>{messages.map((message,i)=><p key={i}>❯ {message}</p>)}<McpComposer suggested="What did my last filter click record?" onSend={message=>setMessages(previous=>[...previous,message])} /></div>
+    <LabCompletionView lab="stay" headingRef={{ current: null }} onChoose={()=>{}} onReview={()=>{}} />
+  </LabPreview>;
 }

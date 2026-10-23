@@ -331,7 +331,7 @@ test("portable filter exercise renders both the code step and event comparison",
   );
   assert.doesNotMatch(starting, /<h3/);
   assert.match(starting, /aria-label="Next filter actions"/);
-  assert.match(starting, /posthog\.capture/);
+  assert.match(starting.replace(/<wbr\s*\/?\>/g, ""), /posthog\.capture/);
 
   let state = filterLabReducer(initialLabState, { type: "example" });
   state = filterLabReducer(state, { type: "filter", setting: "Forest" });
@@ -431,4 +431,25 @@ test("amenity filters match catalog facts and combine with AND semantics", async
   assert.equal(matchesStayAmenities(stays[0].amenities, ["beach-access"]), false);
   assert.equal(matchesStayAmenities(stays[1].amenities, ["beach-access"]), true);
   assert.equal(matchesStayAmenities(stays[2].amenities, []), true);
+});
+
+
+test("inspection workspace separates local observations from guided lab capture", async () => {
+  const { PlaygroundExplorer, PlaygroundLauncher } = await import("../dist/PlaygroundPanels.js");
+  const { playgroundPage } = await import("../dist/playground.js");
+  const page = playgroundPage("/", stays);
+  const html = renderToStaticMarkup(createElement(PlaygroundExplorer, {
+    page, activity: [{ id: 1, kind: "catalog", label: "Filter selected", detail: "Forest" }],
+    choose() {}, showMarker() {}, onVisitLab() {},
+  }));
+  assert.match(html, /Features to inspect/);
+  assert.match(html, /Inspect Traces, generations, and evaluations/);
+  assert.match(html, /Start lab: Events and properties/);
+  assert.match(html, /Local preview\. Guided labs teach you what to capture/);
+  assert.match(html, /<code>Forest<\/code>/);
+  assert.match(html, /data-state="done"/);
+  const launcher = renderToStaticMarkup(createElement(PlaygroundLauncher, { onOpen() {}, toggleRef: { current: null } }));
+  assert.match(launcher, /PostHog Playground/);
+  assert.match(launcher, /Inspect Twig/);
+  assert.doesNotMatch(launcher, /Want to explore|Dismiss playground invitation/);
 });

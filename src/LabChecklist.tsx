@@ -21,7 +21,7 @@ export function LabChecklist({
           }
           aria-current={numbered && index === current ? "step" : undefined}
         >
-          {numbered && (
+          {(numbered || item.done) && (
             <span
               className="vac-check-status"
               aria-label={

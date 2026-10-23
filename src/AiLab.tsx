@@ -1,6 +1,11 @@
 "use client";
 
+import { PlaygroundGeneration } from "./PlaygroundAiEvidence.js";
+import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
+
+import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { LabChoices } from "./LabChoices.js";
+import { EvidenceSelection } from "./TripPlannerEvidenceTabs.js";
 
 import { FinishLabButton } from "./FinishLabButton.js";
 
@@ -84,7 +89,7 @@ export function useResetAiLab() {
 export function AiIntroduction({ onContinue }: { onContinue: () => void }) {
   return (
     <div className="vac-guide-intro">
-      <h3>AIO lab</h3>
+      <h3>AI inputs and outputs</h3>
       <p>
         A visitor says Twig suggested the wrong stay. What would you need to see
         to investigate?
@@ -101,8 +106,8 @@ export function AiIntroduction({ onContinue }: { onContinue: () => void }) {
       <button className="vac-button" onClick={onContinue}>
         <span className="vac-os-button-face">See the worked example →</span>
       </button>
-      <details className="vac-lab-step">
-        <summary>How this simulation works</summary>
+      <details className="vac-lab-step" open>
+        <PlaygroundSummary>How this simulation works</PlaygroundSummary>
         <p>
           Twig uses a preset request and recommendation. You’re changing what
           gets recorded, not the recommendation itself. No model runs and
@@ -125,7 +130,7 @@ function CaptureMapping({ config }: { config: AiConfig }) {
       <span className="vac-muted">
         Inside the generation event’s properties
       </span>
-      <pre>
+      <PlaygroundCodeBlock>
         <code>
           {"{\n"}
           {config.input && (
@@ -146,7 +151,7 @@ function CaptureMapping({ config }: { config: AiConfig }) {
           )}
           {"  // Other fields omitted\n}"}
         </code>
-      </pre>
+      </PlaygroundCodeBlock>
     </div>
   );
 }
@@ -166,7 +171,7 @@ export function AiLab({
   const run =
     selected && state.runs.includes(selected) ? selected : state.runs.at(-1);
   return (
-    <section className="vac-lab vac-builder vac-ai-lab">
+    <section className="vac-lab vac-builder vac-ai-lab vac-evidence-selection">
       {stage === 1 ? (
         <>
           {lesson === "example" ? (
@@ -180,10 +185,10 @@ export function AiLab({
                 code puts it in PostHog’s <code>$ai_input</code> field.
               </p>
               <CaptureMapping config={initialAiState.config} />
-              <LabChecklist label="Next AI action" items={[{
-                label: "Run it once to see those values in the recorded event.",
-                done: false,
-              }]} />
+              <LabChecklist label="Next AI action" items={[
+                { label: <>Click <strong>Apply the code</strong>.</>, done: false },
+                { label: <>Click <strong>Run simulation</strong> on Twig.</>, done: false },
+              ]} />
               <button
                 className="vac-button"
                 onClick={() => {
@@ -268,11 +273,11 @@ export function AiLab({
                 />
               )}
               {lesson === "timeout" ? (
-                <pre>
+                <PlaygroundCodeBlock>
                   {state.config.errors
                     ? `$ai_is_error: Boolean(error),\n$ai_error: error?.message`
                     : "// Error fields are not captured yet"}
-                </pre>
+                </PlaygroundCodeBlock>
               ) : (
                 <CaptureMapping config={state.config} />
               )}
@@ -358,62 +363,15 @@ export function AiLab({
             </>
           ) : (
             <>
-              {state.runs.length > 1 && (
-                <LabChoices
-                  label="Compare runs"
-                  value={run.id}
-                  onChange={(id) =>
-                    select(state.runs.find((item) => item.id === id) ?? null)
-                  }
-                  options={[...state.runs].reverse().map((item) => ({
-                    value: item.id,
-                    label: `Run ${item.id} · ${
-                      item.scenario === "success" ? "Recommendation" : "Timeout"
-                    }`,
-                  }))}
-                />
-              )}
-              <div className="vac-ai-compare">
-                <h4>Recorded evidence</h4>
-                <dl>
-                  <dt>
-                    Visitor’s request · <code>$ai_input</code>
-                  </dt>
-                  <dd>
-                    {run.config.input ? (
-                      <mark className="vac-ai-code-highlight">
-                        {run.prompt}
-                      </mark>
-                    ) : (
-                      "Not captured"
-                    )}
-                  </dd>
-                  <dt>
-                    {run.response ? (
-                      <>
-                        Model’s response · <code>$ai_output_choices</code>
-                      </>
-                    ) : (
-                      "Model error"
-                    )}
-                  </dt>
-                  <dd>
-                    {run.response ? (
-                      run.config.output ? (
-                        <mark className="vac-ai-code-highlight">
-                          {run.response}
-                        </mark>
-                      ) : (
-                        "Not captured"
-                      )
-                    ) : run.config.errors ? (
-                      "Simulated provider timeout"
-                    ) : (
-                      "Not captured"
-                    )}
-                  </dd>
-                </dl>
-              </div>
+              <EvidenceSelection label="Compare runs" value={run.id}
+                onChange={id => select(state.runs.find(item => item.id === id) ?? null)}
+                options={[...state.runs].reverse().map(item => ({ value: item.id, label: `Run ${item.id} · ${item.scenario === "success" ? "Recommendation" : "Timeout"}` }))}>
+              <PlaygroundGeneration
+                input={run.config.input ? [{ role: "user", content: run.prompt }] : []}
+                output={run.response && run.config.output ? [{ role: "assistant", content: run.response }] : []}
+                facts={!run.response && run.config.errors ? [{ label: "Model error", value: "Simulated provider timeout" }] : []}
+              />
+              </EvidenceSelection>
               <div className="vac-lab-output" role="status">
                 {lesson === "observe" && (
                   <p>
@@ -477,16 +435,16 @@ export function AiLab({
         </>
       )}
       <details className="vac-lab-step">
-        <summary>Code and session options</summary>
-        <pre>
+        <PlaygroundSummary>Code and session options</PlaygroundSummary>
+        <PlaygroundCodeBlock>
           {aiCode(
             stage === 2 && run ? run.config : state.applied ?? state.config
           )}
-        </pre>
+        </PlaygroundCodeBlock>
         {stage === 2 && run && (
           <>
             <h4>Captured event JSON</h4>
-            <pre>{JSON.stringify(run.event, null, 2)}</pre>
+            <PlaygroundCodeBlock label="JSON">{JSON.stringify(run.event, null, 2)}</PlaygroundCodeBlock>
           </>
         )}
         <a

@@ -10,13 +10,17 @@ Change the visual contract only when Sarah explicitly requests or approves that 
 
 For every UI change, identify the existing patterns being reused and inspect all consumers and states. Shared tokens or broad selectors require Twig.com’s full route/state review, including login and every account page, not only the homepage. Keep Twig and PostHog surfaces distinct. A component is unfinished if an affected consumer drifts from the approved system.
 
+Keep prose and text to a minimum throughout Twig, the Playground, and labs. Prefer intuitive, familiar controls and seamless flows over explanatory text. Keep only essential context, avoid repetition, and reveal detail at the point of need. Apply this leading principle to landing pages too.
+
 ## Preserve the design
+
+Do not add decorative status or metadata labels such as “Listening · Local preview”, “selected node”, or “selected properties”. Keep functional section names and controls; let the actual instrumentation data supply context.
 
 Twig pages use a clear page title without an eyebrow, category label, or repeated page-name label above it. Apply this to existing and new pages, including all account sections. Keep meaningful in-content labels, form labels, and PostHog product markers in their established roles.
 
 
 - Follow [the Twig visual system](docs/design-system.md) for every UI contribution. Keep lesson prose regular, use bold only for headings, controls, and instruction targets, and keep evidence tabs connected without blue selection accents. Check the entire flow so a style change does not affect later instruction steps.
-- For every lab and playground, title only the first, progress/recap, and ending pages. Use only the product and `lab` for opening and ending titles: `Product Analytics lab`, `Session Replay lab`, or `AIO lab`. Intermediate teaching pages start with regular prose and have no page title. Put directions to click, send, choose, or interact with Twig in the shared `LabChecklist`; keep lesson navigation as buttons or links.
+- For every lab and playground, title only the first, progress/recap, and ending pages. Name each lab for the PostHog concept it teaches, using the shared `touchpointDefinitions` title in directories, openings, and completions. Do not name a lab after its Twig location or only its PostHog product. Intermediate teaching pages start with regular prose and have no page title. Put directions to click, send, choose, or interact with Twig in the shared `LabChecklist`; keep lesson navigation as buttons or links.
 - Put `How this simulation works` on every lab's first page, after its start button. State what is simulated or stored locally and whether anything is sent to PostHog.
 - Extend an existing component or pattern when it fits. Reuse the spacing, typography, colors, controls, and states already in `src/catalog.css` and `src/lab.css`. Do not add a second styling system, global CSS reset, or new visual language for one component.
 - Use CSS classes and existing tokens for presentation, not inline `style` props. Put Twig rules in `src/catalog.css` and PostHog rules in `src/lab.css`. Use classes or established state attributes for variants, responsive behavior, and interaction states. Only genuinely runtime measurements (replay cursor coordinates or chart widths) may remain inline, with a short comment explaining why. Brand colors, fonts, spacing, and fixed photo crops must use CSS classes.
@@ -48,3 +52,5 @@ Twig pages use a clear page title without an eyebrow, category label, or repeate
 4. Run `npm test`, `npm run workbench:build`, and `npm run gallery`. Before a release, inspect `npm pack --dry-run`. Add a focused regression test when behavior or a public contract changes.
 
 Summarize what changed, which views and interactions you checked, and any host integration that still needs verification. Do not call a local workspace change a published package update.
+
+Inspector evidence must explain the interaction, show source-backed instrumentation, and keep technical details expandable. Classify by event mechanism, not feature location: AI usage custom events remain Product Analytics. Use existing generation fixtures only as clearly identified examples; never present invented captures or force Elements onto AI, error, or replay evidence. Keep explanations concise.

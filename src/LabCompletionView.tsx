@@ -1,7 +1,8 @@
 "use client";
 
+import { LabCompletionActions } from "./LabNavigation.js";
 import type { RefObject } from "react";
-import type { TouchpointId } from "./playground.js";
+import { touchpointDefinitions, type TouchpointId } from "./playground.js";
 
 const recaps: Record<TouchpointId, { title: string; points: string[] }> = {
   catalog: {
@@ -49,15 +50,6 @@ const recaps: Record<TouchpointId, { title: string; points: string[] }> = {
   },
 };
 
-const completionTitles: Record<TouchpointId, string> = {
-  catalog: "Product Analytics lab complete",
-  discovery: "AIO lab complete",
-  booking: "Product Analytics lab complete",
-  stay: "Product Analytics lab complete",
-  replay: "Session Replay lab complete",
-  errors: "Error Tracking lab complete",
-};
-
 export function LabCompletionView({
   lab,
   onChoose,
@@ -80,7 +72,7 @@ export function LabCompletionView({
         <span className="vac-completion-check" aria-hidden="true">
           ✓
         </span>
-        <span>{title ?? completionTitles[lab]}</span>
+        <span>{title ?? `${touchpointDefinitions[lab].title} complete`}</span>
       </h3>
       <p>{recap.title}</p>
       <div className="vac-guide-example">
@@ -91,16 +83,7 @@ export function LabCompletionView({
           ))}
         </ul>
       </div>
-      {onReview && <p>
-        You’re done with this lab. Your results are still here if you want
-        another look.
-      </p>}
-      <button type="button" className="vac-button" onClick={onChoose}>
-        <span className="vac-os-button-face">Choose another lab</span>
-      </button>
-      {onReview && <button type="button" className="vac-text-button" onClick={onReview}>
-        Review results
-      </button>}
+      <LabCompletionActions onChoose={onChoose} onReview={onReview} />
     </section>
   );
 }

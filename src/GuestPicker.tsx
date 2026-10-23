@@ -92,7 +92,7 @@ export function GuestPicker({ id, value, capacity, onChange, onClose, invalid, d
       <span className={selected ? undefined : "vac-guest-placeholder"}>{guestLabel}</span>
       <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="m5 9 7 7 7-7" /></svg>
     </button>
-    {open && <div id={listId} className="vac-guest-panel" role="listbox" aria-label="Guests">
+    {open && <div id={listId} className="vac-guest-panel twig-dropdown-menu" role="listbox" aria-label="Guests">
       {Array.from({ length: capacity }, (_, index) => {
         const guests = index + 1;
         return <button
@@ -100,7 +100,7 @@ export function GuestPicker({ id, value, capacity, onChange, onClose, invalid, d
           ref={(node) => { options.current[index] = node; }}
           type="button"
           role="option"
-          className="vac-guest-option"
+          className="vac-guest-option twig-dropdown-item"
           aria-selected={guests === selected}
           tabIndex={index === active ? 0 : -1}
           onClick={() => choose(guests)}
