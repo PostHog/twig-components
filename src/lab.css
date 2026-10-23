@@ -272,16 +272,13 @@
   border-bottom: 1px solid var(--ph-neutral-border);
   font-size: 12px;
   font-weight: 600;
-  color: #2f80fa;
+  color: var(--ph-neutral-ink);
 }
 .vac-app .vac-developer-theme .vac-lab-product-icon {
   width: 16px;
   height: 16px;
   flex: none;
 }
-.vac-app .vac-developer-theme [data-product="error-tracking"] h4 { color: var(--ph-brand-yellow); }
-.vac-app .vac-developer-theme [data-product="session-replay"] h4 { color: #f7a501; }
-.vac-app .vac-developer-theme [data-product="ai-observability"] h4 { color: #b62ad9; }
 .vac-app .vac-developer-theme .vac-lab-menu-group ul {
   margin: 0;
   padding: 0 0 12px;
@@ -859,7 +856,7 @@
   font-size: 12px;
   color: var(--vac-muted);
 }
-.vac-app .vac-developer-theme #guide-panel h3 {
+.vac-app .vac-developer-theme #guide-panel h3:not(.vac-completion-title) {
   font-size: 22px;
   line-height: 1.25;
   margin: 0 0 16px;
@@ -928,13 +925,15 @@
   margin-top: 10px;
 }
 
-.vac-app .vac-developer-theme .vac-lab-completion > * {
+.vac-app .vac-developer-theme .vac-lab.vac-lab-completion > *,
+.vac-app .vac-developer-theme .vac-trip-milestone > * {
   margin: 0;
 }
 .vac-app .vac-developer-theme .vac-lab-completion .vac-guide-example {
   display: block;
   text-align: left;
   padding: 16px;
+  border: 0;
 }
 .vac-app .vac-developer-theme .vac-lab-completion ul {
   list-style: disc;
@@ -1046,7 +1045,7 @@
 
 /* Request tabs browse two views of the same event, rather than quiz choices. */
 .vac-app .vac-developer-theme .vac-request-tabs { display: flex; margin-top: 16px; border: 1px solid var(--vac-line); border-radius: var(--ph-radius-sm) var(--ph-radius-sm) 0 0; overflow: hidden; }
-.vac-app .vac-developer-theme .vac-request-tabs [role="tab"] { flex: 1; min-width: 0; min-height: 44px; padding: 10px 8px; border: 0; background: var(--ph-neutral-background); color: var(--vac-muted); font-weight: 600; }
+.vac-app .vac-developer-theme .vac-request-tabs [role="tab"] { flex: 1; min-width: 0; min-height: 44px; padding: 10px 8px; border: 0; background: var(--ph-neutral-background); color: var(--vac-muted); font:600 15px/24px PlaygroundRoundHog,sans-serif; }
 .vac-app .vac-developer-theme .vac-request-tabs [role="tab"] + [role="tab"] { border-left: 1px solid var(--vac-line); }
 .vac-app .vac-developer-theme .vac-request-tabs [aria-selected="true"] { background: var(--ph-neutral-white); color: var(--vac-ink); }
 .vac-app .vac-developer-theme .vac-request-tabs [role="tab"]:focus-visible { outline: 2px solid var(--ph-brand-cobalt); outline-offset: -4px; }
@@ -1218,8 +1217,11 @@
 
 /* PostHog.com RadixUI/ToggleGroup small variant: shared border and shaded selection. */
 .vac-experience-control { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--vac-line); font-size: 12px; }
-.vac-experience-toggle { display:inline-flex; overflow:visible; border:1px solid var(--ph-neutral-border); border-radius:var(--ph-radius-sm); background:var(--ph-neutral-background); }
-.vac-app .vac-developer-theme .vac-experience-toggle button { border:0; border-radius:var(--ph-radius-sm); padding:4px 12px; background:transparent; color:var(--ph-neutral-muted); font:500 12px/20px PlaygroundRoundHog,sans-serif; box-shadow:none; }
+.vac-experience-toggle { display:inline-flex; width:144px; overflow:visible; border:1px solid var(--ph-neutral-border); border-radius:var(--ph-radius-sm); background:var(--ph-neutral-background); }
+.vac-app .vac-developer-theme .vac-experience-toggle button { border:0; border-radius:0; width:100%; padding:4px 8px; background:transparent; color:var(--ph-neutral-muted); font:600 12px/20px PlaygroundRoundHog,sans-serif; box-shadow:none; }
+.vac-app .vac-developer-theme .vac-experience-toggle > :first-child button { border-radius:var(--ph-radius-sm) 0 0 var(--ph-radius-sm); }
+.vac-app .vac-developer-theme .vac-experience-toggle > :last-child button { border-radius:0 var(--ph-radius-sm) var(--ph-radius-sm) 0; }
+.vac-experience-toggle > * { flex:1; min-width:0; }
 .vac-app .vac-developer-theme .vac-experience-toggle > * + * button { border-left:1px solid var(--ph-neutral-border); }
 .vac-app .vac-developer-theme .vac-experience-toggle button:hover { background:var(--ph-neutral-accent); }
 .vac-app .vac-developer-theme .vac-experience-toggle button[aria-pressed="true"] { background:var(--ph-neutral-white); color:var(--ph-neutral-ink); font-weight:600; }
@@ -1661,7 +1663,7 @@ details[open] > summary .vac-disclosure-icon:not([data-expanded]) > .vac-disclos
 
 /* Approved AI evidence: connected, flat surfaces and readable UI typography.
    Chromatic status colors are fixed brand.posthog.com/catalog.json colors. */
-:root {
+.vac-app {
   --ph-brand-coral-darker: #f00008;
   --ph-brand-green-darker: #35b14e;
   --ph-status-ready: var(--ph-neutral-muted);
@@ -1674,7 +1676,7 @@ details[open] > summary .vac-disclosure-icon:not([data-expanded]) > .vac-disclos
   align-items: center;
   white-space: nowrap;
   color: var(--ph-status-ready);
-  font: 500 12px/1.7 "PlaygroundRoundHog", sans-serif;
+  font: 500 12px/1.4 "PlaygroundRoundHog", sans-serif;
 }
 .vac-app .vac-developer-theme .vac-playground-status[data-status="running"] { color: var(--ph-status-running); }
 .vac-app .vac-developer-theme .vac-playground-status:is([data-status="failed"], [data-status="active"]) { color: var(--ph-status-failed); }
@@ -1747,18 +1749,24 @@ details[open] > summary .vac-disclosure-icon:not([data-expanded]) > .vac-disclos
 /* Approved review contract: closed disclosures never expose body content. */
 .vac-app .vac-developer-theme details:not([open]) > :not(summary) { display:none !important; }
 .vac-app .vac-developer-theme .vac-lab-step > .vac-playground-disclosure { font:500 14px/1.6 PlaygroundRoundHog,sans-serif; }
+.vac-app .vac-developer-theme .vac-lab .vac-agent-terminal code,
 .vac-app .vac-developer-theme .vac-agent-terminal code { font:inherit; color:inherit; background:transparent; border:0; border-radius:0; padding:0; }
 .vac-agent-spinner { display:inline-block; vertical-align:middle; color:var(--ph-brand-yellow); }
-.vac-app .vac-developer-theme .vac-completion-title { font:600 18px/1.4 PlaygroundRoundHog,sans-serif; }
+.vac-app .vac-developer-theme .vac-lab h3.vac-completion-title,
+.vac-app .vac-developer-theme .vac-trip-milestone h3.vac-completion-title { margin:0; font:600 18px/1.35 PlaygroundRoundHog,sans-serif; }
 .vac-completion-title > :last-child { min-width:0; }
 .vac-completion-actions { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px; border-top:1px solid var(--ph-neutral-border); background:var(--ph-neutral-white); }
 .vac-completion-actions > .vac-button:last-child { margin-left:auto; }
-.vac-app .vac-developer-theme .vac-recorded-visit .vac-request-panel { border:0; padding:0; margin-top:16px; background:transparent; }
-.vac-app .vac-developer-theme .vac-recorded-visit .vac-request-tabs { border-radius:var(--ph-radius-sm); }
-.vac-app .vac-developer-theme .vac-recorded-visit .vac-request-tabs [role="tab"] { font-size:13px; overflow-wrap:anywhere; }
+.vac-app .vac-developer-theme .vac-evidence-selection > .vac-request-panel { border:0; padding:0; margin-top:16px; background:transparent; }
+.vac-app .vac-developer-theme .vac-evidence-selection > .vac-request-tabs { border-radius:var(--ph-radius-sm); }
+.vac-app .vac-developer-theme .vac-evidence-selection > .vac-request-tabs [role="tab"] { overflow-wrap:anywhere; }
 .vac-app .vac-developer-theme .vac-experience-control { justify-content:flex-end; }
 .vac-experience-option { display:inline-flex; }
 .vac-source-caption { display:block; margin-top:8px; overflow-wrap:anywhere; font:12px/1.6 var(--ph-font-code); }
 
 .vac-app .vac-developer-theme .vac-completion-actions .vac-text-button { min-height:44px; padding:8px 0; border:0; background:transparent; color:var(--ph-neutral-ink); font:13px/1.6 PlaygroundRoundHog,sans-serif; text-align:left; text-decoration:underline; text-underline-offset:3px; cursor:pointer; }
 .vac-completion-actions :focus-visible { outline:2px solid var(--ph-brand-cobalt); outline-offset:2px; }
+
+.vac-app .vac-developer-theme .vac-evidence-select { gap:12px; font:600 14px/1.6 PlaygroundRoundHog,sans-serif; }
+.vac-app .vac-developer-theme .vac-evidence-select select { padding:12px; font:400 13px/1.6 PlaygroundRoundHog,sans-serif; }
+.vac-evidence-select select:focus-visible { outline:2px solid var(--ph-brand-cobalt); outline-offset:2px; }

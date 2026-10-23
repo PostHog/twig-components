@@ -291,7 +291,7 @@ Home uses grouped `vac-home-panel` surfaces for its tour starter, Inspector entr
 
 All tour directions, including the final invitation to keep exploring event history, use the shared `LabChecklist` instruction box. Keep explanatory context outside the box.
 
-After three changes to earlier console selections, the tour prompts the down arrow to resume live tracking. Its actual follow action reveals the reset instruction; resetting then invites a few more site interactions to inspect new events. Repeated clicks on the same entry do not advance the tour. Keep all of these directions in `LabChecklist`; preserve the exit control and ordinary console behavior.
+After three changes to earlier console selections, the tour prompts the play button to resume live tracking. Its actual follow action reveals the reset instruction; resetting then invites a few more site interactions to inspect new events. Repeated clicks on the same entry do not advance the tour. Keep all of these directions in `LabChecklist`; preserve the exit control and ordinary console behavior.
 
 Home follows the [PostHog docs landing page](https://posthog.com/docs) with stacked white panels, using existing neutral borders, the small corner token, and RoundHog. The top card contains only “Take a tour” and an arrow, followed by a separate “Explore on your own” CTA card that opens the Inspector. Keep that card to its label and arrow, without an explanation or separate Inspector label. The labs panel groups Learn with labs, its one-sentence introduction, and full-width neutral product bars with indented lab rows. Keep the 16px panel spacing, 44px interaction targets, and visible focus. Scope this composition to Home; other lab menus and Inspector views keep their established styling.
 
@@ -314,7 +314,7 @@ Reset confirmation keeps the lesson mounted while replacing its visible content.
 
 | Import | Exports | Use |
 | --- | --- | --- |
-| `/code-block` | `PlaygroundCodeBlock` | Read-only code with a language/filename, copy control, and full-width yellow line highlights. Pass `code`, `highlightLines` (1-based), and optional `lineNumbers`; existing `<mark>` snippets work as children. |
+| `/code-block` | `PlaygroundCodeBlock` | Read-only code with a language header, a source-location caption when applicable, copy control, and full-width yellow line highlights. Pass `code`, `highlightLines` (1-based), and optional `lineNumbers`; existing `<mark>` snippets work as children. |
 | `/tooltip` | `PlaygroundTooltip`, `TooltipBubble`, `CopyControl` | Neutral hover/focus hints; successful copy displays `Copied!` for 500ms. No action-confirmation toast. |
 | `/wizard-command` | `WizardCommand` | PostHog.com’s dedicated gradient command and attached Learn more tab. Pass the Wizard subcommand (for example `mcp add`). All Wizard commands use this component. |
 | `/mcp-composer` | `McpComposer` | Editable local agent message, Enter/Shift+Enter behavior, plain monospace white send arrow, and stop control. `onSend` and `onStop` stay local; no inference or analytics. |
@@ -344,3 +344,5 @@ Default `PlaygroundInspectionView` uses plain exploration context, never a check
 ### Finalized Playground states
 
 `PlaygroundCodeBlock` headers use language labels; `codeLanguage(path)` supports source headers while captions retain source identity. `CopyControl` and `WizardCommand` show only transient successful-copy feedback. `McpComposer` sizes from its draft and wrapping, with a fixed right control. `LabCompletionActions` reuses the active shell footer for optional review and choose actions; standalone completions retain an inline footer. See the visual guide for disclosure, checklist, evidence-switch and spacing rules.
+
+The finalized evidence selection pattern is shared by recorded visits and booking attempts. It keeps the same connected tabs and keyboard behavior without changing captured payloads or lesson progression. Compact experience switches use equal-width semibold segments with square inner joins; completion typography must retain its 18px size inside all lab wrappers. AI completion intentionally has no Review results action.

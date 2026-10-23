@@ -186,7 +186,7 @@ export function StayLab({
       </div>
     );
   return (
-    <section className="vac-lab vac-builder vac-recorded-visit">
+    <section className="vac-lab vac-builder vac-recorded-visit vac-evidence-selection">
       <h4>Recorded visit</h4>
       <EvidenceTabs label="Recorded visit" value={String(state.events.indexOf(event))} onChange={value => select(Number(value))}
         options={state.events.map((view, index) => ({ value: String(index), label: view.actualTitle }))}>

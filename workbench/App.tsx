@@ -451,7 +451,7 @@ function Ai() {
 const bookingFacts = { stay_id: "adiron-shack", nights: 2, guests: 4, total_cents: 71000 };
 function BookingRunner() {
   const { state, dispatch } = useBookingLab();
-  return <div className="workbench-fixture" id="booking-fixture"><strong>Twig booking form</strong><p>Adiron-shack · two nights · four guests</p><button disabled={!state.applied} onClick={() => dispatch({ type: "submit", facts: bookingFacts })}>Book stay locally</button><small>{state.applied ? `Outcome: ${state.lesson}` : "Apply the lesson code first"}</small></div>;
+  return <div className="workbench-fixture" id="booking-fixture"><strong>Twig booking form</strong><p>Adiron-shack · two nights · four guests</p><button disabled={!state.applied} onClick={() => dispatch({ type: "submit", facts: bookingFacts })}>Book stay locally</button><button disabled={!state.latest} onClick={() => dispatch({ type: "invalidate" })}>Another booking attempt</button><small>{state.applied ? `Outcome: ${state.lesson}` : "Apply the lesson code first"}</small></div>;
 }
 function Booking() {
   const [stage, setStage] = useState(0);

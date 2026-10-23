@@ -31,3 +31,26 @@ export function EvidenceTabs<T extends string>({ label, value, options, onChange
     <div className="vac-request-panel" role="tabpanel" id={`${id}-panel`} aria-labelledby={`${id}-${value}`} tabIndex={0}>{children}</div>
   </>;
 }
+
+/** Browse existing evidence, rather than presenting it as a quiz answer. */
+export function EvidenceSelection<T extends string | number>({ label, value, options, onChange, children }: {
+  label: string; value: T; options: readonly { value: T; label: string }[];
+  onChange: (value: T) => void; children: ReactNode;
+}) {
+  if (options.length < 2) return <>{children}</>;
+  function choose(value: string) {
+    const option = options.find(option => String(option.value) === value);
+    if (option) onChange(option.value);
+  }
+  // The existing select field keeps longer histories usable at narrow widths.
+  if (options.length > 2) return <>
+    <label className="vac-breakdown-select vac-evidence-select">{label}
+      <select value={String(value)} onChange={event => choose(event.target.value)}>
+        {options.map(option => <option key={option.value} value={String(option.value)}>{option.label}</option>)}
+      </select>
+    </label>
+    {children}
+  </>;
+  return <><h4>{label}</h4><EvidenceTabs label={label} value={String(value)}
+    options={options.map(option => ({ ...option, value: String(option.value) }))} onChange={choose}>{children}</EvidenceTabs></>;
+}

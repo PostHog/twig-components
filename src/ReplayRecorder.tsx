@@ -338,6 +338,11 @@ export function ReplayProvider({
       if (controller.signal.aborted) return;
       captured.current = [];
       setRecording([]);
+      // The mobile Playground stacks above Twig; capture the site viewport rather
+      // than the blocked panel, preserving the real page layout and coordinates.
+      if (window.matchMedia("(max-width: 800px)").matches) {
+        document.querySelector(".vac-content")?.scrollIntoView({ block: "start", behavior: "instant" });
+      }
       let bytes = 0;
       const cleanup = record({
         blockSelector:

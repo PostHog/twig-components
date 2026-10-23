@@ -5,6 +5,7 @@ import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
 
 import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { LabChoices } from "./LabChoices.js";
+import { EvidenceSelection } from "./TripPlannerEvidenceTabs.js";
 
 import { FinishLabButton } from "./FinishLabButton.js";
 
@@ -170,7 +171,7 @@ export function AiLab({
   const run =
     selected && state.runs.includes(selected) ? selected : state.runs.at(-1);
   return (
-    <section className="vac-lab vac-builder vac-ai-lab">
+    <section className="vac-lab vac-builder vac-ai-lab vac-evidence-selection">
       {stage === 1 ? (
         <>
           {lesson === "example" ? (
@@ -362,26 +363,15 @@ export function AiLab({
             </>
           ) : (
             <>
-              {state.runs.length > 1 && (
-                <LabChoices
-                  label="Compare runs"
-                  value={run.id}
-                  onChange={(id) =>
-                    select(state.runs.find((item) => item.id === id) ?? null)
-                  }
-                  options={[...state.runs].reverse().map((item) => ({
-                    value: item.id,
-                    label: `Run ${item.id} · ${
-                      item.scenario === "success" ? "Recommendation" : "Timeout"
-                    }`,
-                  }))}
-                />
-              )}
+              <EvidenceSelection label="Compare runs" value={run.id}
+                onChange={id => select(state.runs.find(item => item.id === id) ?? null)}
+                options={[...state.runs].reverse().map(item => ({ value: item.id, label: `Run ${item.id} · ${item.scenario === "success" ? "Recommendation" : "Timeout"}` }))}>
               <PlaygroundGeneration
                 input={run.config.input ? [{ role: "user", content: run.prompt }] : []}
                 output={run.response && run.config.output ? [{ role: "assistant", content: run.response }] : []}
                 facts={!run.response && run.config.errors ? [{ label: "Model error", value: "Simulated provider timeout" }] : []}
               />
+              </EvidenceSelection>
               <div className="vac-lab-output" role="status">
                 {lesson === "observe" && (
                   <p>

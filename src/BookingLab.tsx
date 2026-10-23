@@ -6,7 +6,7 @@ import { LabPrimaryAction } from "./LabNavigation.js";
 import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
-import { LabChoices } from "./LabChoices.js";
+import { EvidenceSelection } from "./TripPlannerEvidenceTabs.js";
 import { LabChecklist } from "./LabChecklist.js";
 
 import { FinishLabButton } from "./FinishLabButton.js";
@@ -209,24 +209,7 @@ export function BookingLab({
   const before = state.runs.find(
     (item) => item.source === "click" && item.outcome === "failure"
   );
-  return (
-    <section className="vac-lab vac-builder">
-      {attempts.length > 1 && (
-        <LabChoices
-          label="Booking attempt"
-          value={run.id}
-          onChange={select}
-          options={[...attempts].reverse().map((item) => ({
-            value: item.id,
-            label: (
-              <>
-                {item.id} · {item.outcome} ·{" "}
-                {item.source === "click" ? "on click" : "on confirmation"}
-              </>
-            ),
-          }))}
-        />
-      )}
+  const evidence = <>
       <dl className="vac-event-comparison">
         <div>
           <dt>Twig’s result</dt>
@@ -321,6 +304,11 @@ export function BookingLab({
         <PlaygroundCodeBlock className="vac-booking-code">{bookingCode(run.source)}</PlaygroundCodeBlock>
         <PlaygroundCodeBlock label="JSON">{JSON.stringify(run.events, null, 2)}</PlaygroundCodeBlock>
       </details>
-    </section>
-  );
+    </>;
+  return <section className="vac-lab vac-builder vac-evidence-selection">
+    <EvidenceSelection label="Booking attempt" value={run.id} onChange={select}
+        options={[...attempts].reverse().map(item => ({ value: item.id, label: `${item.id} · ${item.outcome} · ${item.source === "click" ? "on click" : "on confirmation"}` }))}>
+        {evidence}
+      </EvidenceSelection>
+  </section>;
 }

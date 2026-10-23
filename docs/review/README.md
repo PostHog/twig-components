@@ -1,5 +1,7 @@
 # Finalized Playground review
 
+[Final Figma and nit audit](final-audit-20261023.md) · includes the final cross-consumer fixes and responsive coverage.
+
 The shared components below use the finalized Figma foundations. Actual-site flows are captured in the [Twig review index](https://github.com/PostHog/twig.com/blob/codex/twig-playground-overhaul/docs/review/finalized-playground.md), using the exact local package archive. Teaching data stays local.
 
 | Component review | Desktop | Mobile |
@@ -11,7 +13,7 @@ The shared components below use the finalized Figma foundations. Actual-site flo
 | Trends | [Desktop](trends-desktop.png) | [390px](trends-mobile.png) |
 | Full-row event focus | [Desktop](playground-event-row-focus-1360.png) | [390px](playground-event-row-focus-390.png), [320px](playground-event-row-focus-320.png) |
 
-136 shared tests pass, along with workbench/gallery builds and package-content checks. Twig passes 130 unit tests, lint, a production build, and 18 browser regressions. Actual-site review covers all six lab families and both Events experiences, every route with empty/populated accounts, keyboard focus, reduced motion, clipboard feedback, masking, fullscreen fallback, error retry/verification states and retained occurrence history. Legacy AI capture and stay-tracking consumers also pass at all three widths.
+136 shared tests pass, along with workbench/gallery builds and package-content checks. Twig passes 130 unit tests, lint, a production build, and 21 browser regressions. Actual-site review covers all six lab families and both Events experiences, every route with empty/populated accounts, keyboard focus, reduced motion, clipboard feedback, masking, fullscreen fallback, error retry/verification states and retained occurrence history. Legacy AI capture and stay-tracking consumers also pass at all three widths.
 
 Static appearance belongs to shared CSS. Only measured placement, chart widths and playback progress use inline values. RoundHog is the UI font; locally bundled Source Code Pro is reserved for code/raw identifiers, console and mock MCP text. Brand Yellow replaces the old OSButton gold shades; Active/Resolved reuse the fixed brand status tokens.
 
