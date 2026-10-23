@@ -454,7 +454,7 @@ export function AiLab({
         {stage === 2 && run && (
           <>
             <h4>Captured event JSON</h4>
-            <pre>{JSON.stringify(run.event, null, 2)}</pre>
+            <PlaygroundCodeBlock label="JSON">{JSON.stringify(run.event, null, 2)}</PlaygroundCodeBlock>
           </>
         )}
         <a

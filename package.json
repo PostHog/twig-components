@@ -213,6 +213,14 @@
     "./ai-evidence": {
       "types": "./dist/PlaygroundAiEvidence.d.ts",
       "import": "./dist/PlaygroundAiEvidence.js"
+    },
+    "./replay-controls": {
+      "types": "./dist/ReplayControls.d.ts",
+      "import": "./dist/ReplayControls.js"
+    },
+    "./error-evidence": {
+      "types": "./dist/PlaygroundErrorEvidence.d.ts",
+      "import": "./dist/PlaygroundErrorEvidence.js"
     }
   },
   "scripts": {
@@ -384,6 +392,12 @@
       ],
       "ai-evidence": [
         "dist/PlaygroundAiEvidence.d.ts"
+      ],
+      "replay-controls": [
+        "dist/ReplayControls.d.ts"
+      ],
+      "error-evidence": [
+        "dist/PlaygroundErrorEvidence.d.ts"
       ]
     }
   }

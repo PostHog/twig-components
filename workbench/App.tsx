@@ -1,3 +1,4 @@
+import { ReplayControls, RecordingControls } from "../src/ReplayControls.js";
 import { PlaygroundEvaluation, PlaygroundGeneration, PlaygroundTraceExplorer } from "../src/PlaygroundAiEvidence.js";
 import { PlaygroundStatus } from "../src/PlaygroundStatus.js";
 import { createGenerationRecord } from "../src/trip-planner-records.js";
@@ -100,7 +101,7 @@ function TripPlannerPreviewContent() {
   }
   return <>
     <div className="twig-browser workbench-twig">
-      <p style={{ display: "flex", alignItems: "center", gap: 8 }}><AiSearchIcon /> AI search</p>
+      <p className="workbench-ai-label"><AiSearchIcon /> AI search</p>
       <TripPlanner
         key={lab.revision}
         scenario={lab.lesson.capacityFixed ? "capacity-fixed" : undefined}
@@ -145,7 +146,7 @@ function DatePickerPreview() {
   const [guests, setGuests] = useState("");
   const [disabled, setDisabled] = useState(false);
   const today = "2026-10-16";
-  return <div className="twig-browser workbench-twig" style={{ maxWidth: 460, padding: 24 }}>
+  return <div className="twig-browser workbench-twig workbench-booking-controls">
     <div className="workbench-controls"><button onClick={() => { setCheckIn(""); setCheckOut(""); setGuests(""); }}>Clear details</button><button onClick={() => setDisabled(!disabled)}>{disabled ? "Enable" : "Disable"} booking controls</button></div>
     <label htmlFor="preview-check-in">Check in</label>
     <DatePicker id="preview-check-in" label="Check in" value={checkIn} minDate={today} disabled={disabled} onChange={(date) => { setCheckIn(date); if (checkOut && checkOut <= date) setCheckOut(""); }} />
@@ -518,11 +519,17 @@ export default function App() {
 }
 
 function PlaygroundControlsPreview() {
+  const [position,setPosition]=useState(0);
+  const [playing,setPlaying]=useState(false);
+  const [recording,setRecording]=useState(true);
   const [choice,setChoice]=useState("Setting");
   const [messages,setMessages]=useState<string[]>([]);
   return <LabPreview>
+    <ReplayControls position={position} duration={8000} playing={playing} onSeek={value=>{setPosition(value);setPlaying(false);}} onToggle={()=>{setPosition(position>=8000?0:position);setPlaying(!playing);}} onFullscreen={()=>{}} />
+    <div className="workbench-controls"><button onClick={()=>{setPosition(8000);setPlaying(false);}}>Show ended</button></div>
+    {recording ? <RecordingControls elapsedMs={12000} onStop={()=>setRecording(false)} /> : <button className="vac-button" onClick={()=>setRecording(true)}><span className="vac-os-button-face">Start recording</span></button>}
     <div className="vac-ai-evidence-stack">
-      {["ready", "running", "failed", "passed"].map(value => <PlaygroundStatus key={value} value={value as "ready" | "running" | "failed" | "passed"} />)}
+      {(["ready", "running", "failed", "passed", "active", "resolved"] as const).map(value => <PlaygroundStatus key={value} value={value} />)}
       <PlaygroundTraceExplorer traces={[{id:"fixture",title:"City stay for four",toolCall:"Search stays",generation:"Recommend a city stay"}]} />
       <PlaygroundGeneration input={[{role:"user",content:"Find me a city stay for four."}]} output={[{role:"assistant",content:"No city stays match your group of four."}]} facts={[{label:"Model",value:"Claude Haiku 4.5"},{label:"Duration",value:"1.1s"}]} />
       <PlaygroundEvaluation status="failed" expected="4+ guests or no match" observed="Le Nid Chic · 2 guests" />

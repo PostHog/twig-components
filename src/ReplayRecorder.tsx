@@ -10,6 +10,7 @@ import {
 } from "react";
 import { REPLAY_LIMIT, replayPage, searchValue, type ReplayFrame } from "./replay-lab.js";
 
+import { RecordingControls } from "./ReplayControls.js";
 import type { eventWithTime } from "@rrweb/types";
 
 const searchSelector = "#trip-search-destination, #stay-search";
@@ -20,6 +21,7 @@ type ReplayContextValue = {
   setExercise: (value: "ghost" | "manual") => void;
   recording: eventWithTime[];
   starting: boolean;
+  elapsedMs: number;
   frames: ReplayFrame[];
   mode: Mode;
   masked: boolean;
@@ -37,6 +39,7 @@ const ReplayContext = createContext<ReplayContextValue>({
   setExercise: () => {},
   recording: [],
   starting: false,
+  elapsedMs: 0,
   frames: [],
   mode: null,
   masked: true,
@@ -67,6 +70,7 @@ export function ReplayProvider({
   const captured = useRef<eventWithTime[]>([]);
   const stopRecorder = useRef<(() => void) | undefined>(undefined);
   const [frames, setFrames] = useState<ReplayFrame[]>([]);
+  const [elapsedMs, setElapsedMs] = useState(0);
   const [mode, setMode] = useState<Mode>(null);
   const [masked, setMasked] = useState(true);
   const [capturedMasked, setCapturedMasked] = useState(true);
@@ -78,6 +82,12 @@ export function ReplayProvider({
     masked: boolean;
     count: number;
   }>({ mode: null, start: 0, masked: true, count: 0 });
+  useEffect(() => {
+    if (!mode) return;
+    setElapsedMs(0);
+    const timer = setInterval(() => setElapsedMs(Math.max(0, performance.now() - session.current.start)), 250);
+    return () => clearInterval(timer);
+  }, [mode]);
   const abort = useRef<AbortController | null>(null);
   const pageRef = useRef(pathname);
   function stop() {
@@ -402,6 +412,7 @@ export function ReplayProvider({
         resetCount,
         recording,
         starting,
+        elapsedMs,
         frames,
         mode,
         masked,
@@ -421,12 +432,8 @@ export function ReplayProvider({
     >
       {children}
       {mode === "manual" && (
-        <div className="vac-replay-stop">
-          <strong>Recording your visit</strong>
-          <span>Local only</span>
-          <button type="button" onClick={stop}>
-            End recording and review
-          </button>
+        <div className="vac-replay-stop vac-developer-theme">
+          <RecordingControls elapsedMs={elapsedMs} onStop={stop} />
         </div>
       )}
       {/* Runtime replay coordinates position the cursor; its appearance stays in CSS. */}

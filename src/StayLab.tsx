@@ -225,13 +225,13 @@ export function StayLab({
           "The lab knows which page you opened, but the captured event doesn’t. Both visits produce indistinguishable events."
         )}
       </p>
-      <pre>
+      <PlaygroundCodeBlock label="JSON">
         {JSON.stringify(
           { event: event.event, properties: event.properties },
           null,
           2
         )}
-      </pre>
+      </PlaygroundCodeBlock>
       {repair ? (
         <>
           <h4>Views by stay</h4>

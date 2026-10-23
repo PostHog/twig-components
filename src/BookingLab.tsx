@@ -319,7 +319,7 @@ export function BookingLab({
           Start records the request. Completion depends on the code you applied.
         </p>
         <PlaygroundCodeBlock className="vac-booking-code">{bookingCode(run.source)}</PlaygroundCodeBlock>
-        <pre>{JSON.stringify(run.events, null, 2)}</pre>
+        <PlaygroundCodeBlock label="JSON">{JSON.stringify(run.events, null, 2)}</PlaygroundCodeBlock>
       </details>
     </section>
   );

@@ -327,3 +327,13 @@ Reset confirmation keeps the lesson mounted while replacing its visible content.
 | `/ai-evidence` | `PlaygroundTraceExplorer`, `PlaygroundGeneration`, `PlaygroundEvaluation`, types and generation helpers | Connected trace hierarchy, captured chat evidence, and Expected/Observed evaluation. Hosts supply actual records and callbacks. No service calls. |
 
 `PlaygroundGeneration` accepts `input`/`output` messages, readable `facts`, optional raw `details`, and optional controlled `field`/`onFieldChange`. `PlaygroundTraceExplorer` accepts traces and optional session ID, selection callback, and selected ID; only disclosures use plus/minus. `PlaygroundEvaluation` accepts name, status, expected and observed values. These compose the trip-planner lesson and Inspector. Load `lab.css` inside `.vac-app .vac-developer-theme`.
+
+
+## Finalized shared evidence controls
+
+| Import path | Exports | Contract |
+| --- | --- | --- |
+| `/replay-controls` | `ReplayControls`, `RecordingControls`, `replayTime`, `ReplayControlsProps` | Controlled playback in milliseconds: play/pause/replay, seek, fullscreen and disabled states. Recording takes `elapsedMs` and `onStop`. Every icon has a 44px target, shared tooltip and blue focus; responsive geometry and reduced motion live in `lab.css`. |
+| `/error-evidence` | `PlaygroundErrorIssue`, `PlaygroundStackTrace` | Connected issue identity/status/count and evidence content. Stack-frame buttons select their source and preserve full-row keyboard focus. |
+
+`/status` also supports Active and Resolved. `/session-player` composes the shared playback transport around the real local rrweb recording. `/replay-recorder` supplies elapsed time to every recording-control consumer. These presentation changes retain existing callbacks, lab gates and tracking; no additional analytics event is needed.

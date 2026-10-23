@@ -3,7 +3,6 @@
 import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
 import { McpComposer } from "./McpComposer.js";
 import { WizardCommand } from "./WizardCommand.js";
-import { CopyControl } from "./PlaygroundTooltip.js";
 import { LabChecklist } from "./LabChecklist.js";
 import { LabPrimaryAction } from "./LabNavigation.js";
 import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
@@ -54,7 +53,7 @@ function WebExperience({ state, dispatch }: ExperienceProps) {
   if (needsConfiguration(state)) return <div className="vac-web-evidence"><PlaygroundCodeBlock aria-label="Event capture code">{captureCode[state.step]}</PlaygroundCodeBlock><Button onClick={() => dispatch({ type: "configure" })}>{state.step === 2 ? "Apply to Twig for this lab" : "Add these properties"} →</Button></div>;
   if (!latest) return null;
   if (state.step === 5) return <div className="vac-web-evidence"><div className="vac-web-toolbar"><strong>Trends</strong></div><p><code>stay_filter_selected</code> · total events</p><p className="vac-breakdown-applied">Broken down by <code>destination_type</code></p><Counts events={events} /></div>;
-  return <>{event && <><pre aria-label="Recorded event JSON">{JSON.stringify({ event: event.event, timestamp: event.timestamp, properties: event.properties }, null, 2)}</pre><ActivityPreview events={events} selected={event} onSelect={setSelected} /><p>{insight(state.step, event)}</p></>}</>;
+  return <>{event && <><PlaygroundCodeBlock label="JSON" aria-label="Recorded event JSON">{JSON.stringify({ event: event.event, timestamp: event.timestamp, properties: event.properties }, null, 2)}</PlaygroundCodeBlock><ActivityPreview events={events} selected={event} onSelect={setSelected} /><p>{insight(state.step, event)}</p></>}</>;
 
 }
 /** Compact Activity / Explore view, following PostHog's event rows and Properties table. */
@@ -160,10 +159,7 @@ function Handoff() {
     <section className="vac-handoff-card" aria-label="Explore your data">
       <h4><span className="vac-handoff-number">2</span> Explore your data</h4>
       <LabChecklist label="Explore your project" items={[{ label: <>Copy this prompt into your <strong>coding agent</strong>.</>, done: false }]} />
-      <div className="vac-command-block vac-prompt-block">
-        <CopyControl text={handoffTask} label="Copy prompt" />
-        <pre aria-label="Agent investigation prompt"><code>{handoffTask}</code></pre>
-      </div>
+      <PlaygroundCodeBlock label="Agent prompt" code={handoffTask} aria-label="Agent investigation prompt" />
 
     </section>
   </div>;

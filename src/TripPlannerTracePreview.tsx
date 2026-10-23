@@ -1,3 +1,4 @@
+import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
 import type { TripPlannerRecord } from "./trip-planner-records.js";
 import type { TripLessonField } from "./trip-planner-lesson.js";
 import { PlaygroundGeneration, generationModelLabel, type AiTrace } from "./PlaygroundAiEvidence.js";
@@ -27,6 +28,6 @@ export function TripPlannerTracePreview({ record, field, onFieldChange }: {
       <tr><th scope="row">Model ID</th><td><code>{p.$ai_model}</code></td></tr>
       <tr><th scope="row">Trace ID</th><td><code>{p.$ai_trace_id}</code></td></tr>
       <tr><th scope="row">Generation ID</th><td><code>{p.$ai_span_id}</code></td></tr>
-      <tr><th scope="row">Captured input</th><td><details><PlaygroundSummary>Messages</PlaygroundSummary><pre className="vac-lab-table-value"><code>{JSON.stringify(p.$ai_input, null, 2)}</code></pre></details></td></tr>
+      <tr><th scope="row">Captured input</th><td><details><PlaygroundSummary>Messages</PlaygroundSummary><PlaygroundCodeBlock label="JSON">{JSON.stringify(p.$ai_input, null, 2)}</PlaygroundCodeBlock></details></td></tr>
     </tbody></table>} />;
 }

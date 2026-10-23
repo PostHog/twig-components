@@ -1,5 +1,6 @@
 "use client";
 
+import { RecordingControls } from "./ReplayControls.js";
 import { LabPrimaryAction } from "./LabNavigation.js";
 import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
@@ -13,6 +14,7 @@ export type ReplayLabViewState = {
   exercise: "ghost" | "manual";
   recording: readonly unknown[];
   starting: boolean;
+  elapsedMs?: number;
   frames: ReplayFrame[];
   mode: "ghost" | "manual" | null;
   masked: boolean;
@@ -27,20 +29,9 @@ export type ReplayLabViewState = {
 
 export function ReplayRecordingBar({ replay }: { replay: ReplayLabViewState }) {
   if (!replay.mode) return null;
-  return (
-    <div className="vac-replay-recording" role="status">
-      <span>
-        {replay.mode === "ghost"
-          ? "Ghost visit running"
-          : "Recording your visit"}
-      </span>
-      {replay.mode === "manual" && (
-        <button className="vac-text-button" onClick={replay.stop}>
-          End recording and review
-        </button>
-      )}
-    </div>
-  );
+  return replay.mode === "manual"
+    ? <RecordingControls elapsedMs={replay.elapsedMs ?? 0} onStop={replay.stop} />
+    : <p className="vac-replay-recording" role="status">Ghost visit running</p>;
 }
 
 export function ReplayLab({
@@ -115,11 +106,7 @@ export function ReplayLab({
           done: false,
         }]} />
         {replay.mode === "manual" && (
-          <LabPrimaryAction><button className="vac-button" onClick={replay.stop}>
-            <span className="vac-os-button-face">
-              End recording and review →
-            </span>
-          </button></LabPrimaryAction>
+          <LabPrimaryAction><RecordingControls elapsedMs={replay.elapsedMs ?? 0} onStop={replay.stop} /></LabPrimaryAction>
         )}
       </section>
     );
@@ -154,18 +141,14 @@ export function ReplayLab({
             <>
               {replay.mode === "manual" ? (
                 <LabChecklist label="Next replay action" items={[{
-                  label: <>Explore Twig however you like. Click around, browse stays, or try a search. When you’re ready, click <strong>End recording and review</strong> to watch your visit.</>,
+                  label: <>Explore Twig however you like. Click around, browse stays, or try a search. When you’re ready, click <strong>Stop recording</strong> to watch your visit.</>,
                   done: false,
                 }]} />
               ) : (
                 <LabChecklist label="Review your recording" items={[{ label: <>Click <strong>Watch the recording</strong> to review your visit.</>, done: false }]} />
               )}
               {replay.mode === "manual" && (
-                <LabPrimaryAction><button className="vac-button" onClick={replay.stop}>
-                  <span className="vac-os-button-face">
-                    End recording and review →
-                  </span>
-                </button></LabPrimaryAction>
+                <LabPrimaryAction><RecordingControls elapsedMs={replay.elapsedMs ?? 0} onStop={replay.stop} /></LabPrimaryAction>
               )}
               {!replay.mode && hasVisit && (
                 <LabPrimaryAction><button className="vac-button" onClick={() => onStage(2)}>
@@ -211,7 +194,7 @@ export function ReplayLab({
                       ? "Starting recorder…"
                       : source === "ghost"
                       ? "Run ghost simulation →"
-                      : "Start my recording →"}
+                      : "Start recording"}
                   </span>
                 </button></LabPrimaryAction>
               )}
@@ -256,18 +239,15 @@ export function ReplayLab({
                 aria-label="Captured interactions"
               >
                 <h4>Captured interactions</h4>
-                <ol>
+                <table className="vac-lab-table" aria-label="Recorded interactions"><thead><tr><th scope="col">Time</th><th scope="col">Interaction</th></tr></thead><tbody>
                   {replay.frames
                     .filter(
                       (item) => item.kind !== "move" && item.kind !== "scroll"
                     )
                     .map((item, i) => (
-                      <li key={i}>
-                        {(item.at / 1000).toFixed(1)}s · {item.label}
-                        {item.value !== undefined ? `: ${item.value}` : ""}
-                      </li>
+                      <tr key={i}><td>{(item.at / 1000).toFixed(1)}s</td><td>{item.label}{item.value !== undefined ? `: ${item.value}` : ""}</td></tr>
                     ))}
-                </ol>
+                </tbody></table>
               </section>
               {source === "ghost" ? (
                 <LabPrimaryAction><button

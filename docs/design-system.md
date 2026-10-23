@@ -84,7 +84,7 @@ TripSearch keeps destination, dates, guests, and Search stays visible at every w
 - Group related evidence in one restrained surface: white or neutral fill, a thin existing border, and the shared 4px Playground radius. Use spacing to show hierarchy. Avoid an extra standalone card or accent when the surrounding surface already groups the content.
 - Input/Output and similar evidence tabs form **one connected bar** above their panel. Tabs share an outer border, meet at a divider, and have at least a 44px target. The active tab uses the existing white surface and dark text; inactive tabs use the neutral fill and muted text. Do not add a blue underline, vertical selection stripe, or other decorative highlight to these tabs. Preserve a visible keyboard focus outline.
 - A current instruction is a `LabChecklist` item, not a tab. Keep its established current-step indicator and never apply tab text-decoration or tab selection rules to instruction sentences. Choice rows and event rows keep their own established selected states.
-- Use the existing dark code block and yellow `mark` treatment to point to the relevant code. Let long code scroll or wrap within the panel without making the page overflow.
+- Use the shared light `PlaygroundCodeBlock` with full-width line/section highlighting to point to relevant code. Let long code scroll or wrap within the panel without making the page overflow.
 
 ## States and responsive behavior
 
@@ -367,3 +367,18 @@ Statuses are text, with optional existing check/cross marks, never pills. Fixed 
 | Passed | `--ph-status-passed` | Green darker `#35B14E` |
 
 Keep the readable status alongside color. Missing capacity remains neutral **Not applicable**. These brand values are fixed; do not substitute product UI success/danger colors or invent shades.
+
+
+## Finalized replay, recording and error evidence
+
+Playground exposed corners use 4px; joined internal edges are square. The original raised OSButton retains its white face and proportions, with official brand Yellow `#FFA81C` for its base and Yellow darker `#E58E00` for its edge. Product vectors retain their shape and use Cobalt, Purple, Yellow and Tangerine for Product Analytics, AI Observability, Error Tracking and Session Replay. Do not alter the official PostHog logomark proportions or colors.
+
+`ReplayControls` is the flat playback transport in every player state. Use conventional Play/Pause/Replay, elapsed/total time, a cobalt seek timeline and Fullscreen. Desktop is one row; narrow containers put the timeline above the 44px control row. Ended preserves the same geometry. Loading disables transport; unavailable Fullscreen leaves playback usable. UI times and interaction labels use RoundHog, with tabular numerals for timers.
+
+Before recording, use the original **Start recording** OSButton. During recording, use `RecordingControls`: a compact neutral bar, red stop square inside a circle, and red elapsed time. The square blinks while recording and stays steady for reduced motion. Stop uses the shared tooltip and cobalt focus. This component is shared by the lesson, dock and floating recording control; host CSS owns placement only.
+
+Error investigation keeps issue identity, historical occurrence count and Active/Resolved status attached to the evidence. Exception messages and function names are actual code; filenames, labels and results use RoundHog. Stack rows select source code and take full-row focus. Source, fallback and repair snippets reuse `PlaygroundCodeBlock`, including line highlighting and copy feedback. Keep fallback and root-cause repair distinct. Before retry/verification, show a current white instruction with its blue edge and no fabricated result; after the actual action, show a completed neutral instruction and the observed result. Resolve stays disabled until the host lookup is verified; resolving retains occurrence history.
+
+Active uses the Failed brand Coral darker token (`#F00008`); Resolved uses Passed brand Green darker (`#35B14E`). Reuse `PlaygroundStatus`, not custom pills or colors. Shared CSS classes own static typography, spacing, colors, surfaces and responsive states. Inline styles are reserved for measured cursor coordinates, chart widths, tooltip placement and playback progress, with a runtime-data comment.
+
+The Playground bundles Source Code Pro Regular from [Adobe’s official distribution](https://github.com/adobe-fonts/source-code-pro/tree/release) under the SIL Open Font License. Use `--ph-font-code` for actual code, raw identifiers, JSON, console and mock MCP text. RoundHog remains the interface, chat, metadata, result and timer font. Both are served locally; previews need no font service.

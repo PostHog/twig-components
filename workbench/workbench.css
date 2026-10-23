@@ -57,3 +57,5 @@ button { cursor: pointer; }
   .workbench-inspect-preview .vac-edge-inspector { position:absolute; inset:0 52px 0 auto; width:380px; height:100%; margin:0; }
 }
 @media(prefers-reduced-motion:reduce) { .workbench-inspect-preview { transition:none; } }
+.workbench-ai-label { display: flex; align-items: center; gap: 8px; }
+.workbench-booking-controls { max-width: 460px; padding: 24px; }
