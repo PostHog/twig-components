@@ -1,6 +1,6 @@
 "use client";
 
-import { LabPrimaryAction } from "./LabNavigation.js";
+import { LabCompletionActions } from "./LabNavigation.js";
 import type { RefObject } from "react";
 import { touchpointDefinitions, type TouchpointId } from "./playground.js";
 
@@ -83,16 +83,7 @@ export function LabCompletionView({
           ))}
         </ul>
       </div>
-      {onReview && <p>
-        You’re done with this lab. Your results are still here if you want
-        another look.
-      </p>}
-      <LabPrimaryAction><button type="button" className="vac-button" onClick={onChoose}>
-        <span className="vac-os-button-face">Choose another lab</span>
-      </button></LabPrimaryAction>
-      {onReview && <button type="button" className="vac-text-button" onClick={onReview}>
-        Review results
-      </button>}
+      <LabCompletionActions onChoose={onChoose} onReview={onReview} />
     </section>
   );
 }

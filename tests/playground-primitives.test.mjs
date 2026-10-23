@@ -33,7 +33,8 @@ test('copy feedback expires without changing the code or replacing its copy icon
  await act(async()=>{document.querySelector('button').click();await Promise.resolve()});assert.equal(copied,value);assert.equal(document.querySelector('[role="tooltip"]').textContent,'Copied!');
  assert.ok(document.querySelector('.vac-copy-glyph'));
  await act(()=>new Promise(resolve=>setTimeout(resolve,550)));assert.equal(document.querySelector('[role="tooltip"]'),null);assert.equal(document.querySelector('[role="status"]'),null);
- navigator.clipboard.writeText=async()=>{throw Error('denied')};await act(async()=>{document.querySelector('button').click();await Promise.resolve()});assert.equal(document.querySelector('[role="tooltip"]').textContent,'Select and copy the code.');
+ navigator.clipboard.writeText=async()=>{throw Error('denied')};await act(async()=>{document.querySelector('button').click();await Promise.resolve()});assert.equal(document.querySelector('[role="tooltip"]'),null);
+ assert.equal(document.querySelector('button').getAttribute('aria-label'),'Copy code');
 });
 
 test('Wizard commands keep the source display and clipboard contract separate',async t=>{

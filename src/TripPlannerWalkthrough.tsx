@@ -57,7 +57,7 @@ export function TripPlannerWalkthrough({ stays, onAllLabs, renderStayCard, onEva
       </ol>
     </div>
     <Action onClick={next}>Start the lab →</Action>
-    <details className="vac-lab-step">
+    <details className="vac-lab-step" open>
       <PlaygroundSummary>How this simulation works</PlaygroundSummary>
       <p>Twig’s chat uses preset replies, and this lab builds its PostHog examples locally from the conversation. No model runs and nothing is sent to PostHog.</p>
     </details>

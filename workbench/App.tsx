@@ -30,6 +30,9 @@ import { DatePicker, addDateDays } from "../src/DatePicker.js";
 import { GuestPicker } from "../src/GuestPicker.js";
 import { PlaygroundCodeBlock } from "../src/PlaygroundCodeBlock.js";
 import { WizardCommand } from "../src/WizardCommand.js";
+import { PlaygroundSummary } from "../src/PlaygroundDisclosure.js";
+import { LabChecklist } from "../src/LabChecklist.js";
+import { LabCompletionView } from "../src/LabCompletionView.js";
 import { McpComposer } from "../src/McpComposer.js";
 import { LabChoices } from "../src/LabChoices.js";
 import { EventsLab, EventsExperienceSwitch } from "../src/EventsLab.js";
@@ -537,7 +540,10 @@ function PlaygroundControlsPreview() {
     </div>
     <LabChoices label="Break down by" value={choice} onChange={setChoice} options={["Setting","Price per night","Capacity"].map(value=>({value,label:value}))} />
     <PlaygroundCodeBlock code={'posthog.capture(\n  "twig_stay_filter_selected",\n  { setting: "Forest" }\n);'} highlightLines={[2,3]} />
+    <LabChecklist label="Completed action" items={[{ label: "Choose a setting in Twig’s Filters.", done: true }]} />
+    <details className="vac-lab-step" open><PlaygroundSummary>How this simulation works</PlaygroundSummary><p>These examples stay in this browser.</p></details>
     <WizardCommand command="mcp add" />
-    <div className="vac-agent-terminal"><div className="vac-agent-title">❯_ Twig / coding agent</div>{messages.map((message,i)=><p key={i}>❯ {message}</p>)}<McpComposer suggested="Check the latest filter event." onSend={message=>setMessages(previous=>[...previous,message])} /></div>
+    <div className="vac-agent-terminal"><div className="vac-agent-title">❯_ Twig / coding agent</div>{messages.map((message,i)=><p key={i}>❯ {message}</p>)}<McpComposer suggested="What did my last filter click record?" onSend={message=>setMessages(previous=>[...previous,message])} /></div>
+    <LabCompletionView lab="stay" headingRef={{ current: null }} onChoose={()=>{}} onReview={()=>{}} />
   </LabPreview>;
 }

@@ -6,7 +6,7 @@ import { LabPrimaryAction } from "./LabNavigation.js";
 import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
-import { LabChoices } from "./LabChoices.js";
+import { EvidenceTabs } from "./TripPlannerEvidenceTabs.js";
 
 import { FinishLabButton } from "./FinishLabButton.js";
 
@@ -91,7 +91,7 @@ export function StayLab({
           <p>You’ll visit two stays, then connect their IDs to the event.</p>
         </div>
         <Action onClick={() => onStage(1)}>Follow a stay view →</Action>
-        <details className="vac-lab-step">
+        <details className="vac-lab-step" open>
           <PlaygroundSummary>How this simulation works</PlaygroundSummary>
           <p>Opening a stay while this exercise is running creates a local view event. These events are not sent to PostHog.</p>
         </details>
@@ -186,21 +186,10 @@ export function StayLab({
       </div>
     );
   return (
-    <section className="vac-lab vac-builder">
-      <LabChoices
-        label="Recorded visit"
-        value={state.events.indexOf(event)}
-        onChange={select}
-        options={state.events.map((view, index) => ({
-          value: index,
-          label: (
-            <>
-              {index + 1}. {view.actualTitle} ·{" "}
-              <code>{view.properties.stay_id ?? "ID not captured"}</code>
-            </>
-          ),
-        }))}
-      />
+    <section className="vac-lab vac-builder vac-recorded-visit">
+      <h4>Recorded visit</h4>
+      <EvidenceTabs label="Recorded visit" value={String(state.events.indexOf(event))} onChange={value => select(Number(value))}
+        options={state.events.map((view, index) => ({ value: String(index), label: view.actualTitle }))}>
       <dl className="vac-event-comparison">
         <div>
           <dt>Viewed on Twig</dt>
@@ -265,6 +254,7 @@ export function StayLab({
           Add the missing stay ID →
         </Action>
       )}
+      </EvidenceTabs>
     </section>
   );
 }

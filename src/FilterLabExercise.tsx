@@ -22,7 +22,7 @@ export function FilterLabIntroduction({ onContinue }: { onContinue: () => void }
       <button className="vac-button" onClick={onContinue}>
         <span className="vac-os-button-face">See the worked example →</span>
       </button>
-      <details className="vac-lab-step">
+      <details className="vac-lab-step" open>
         <PlaygroundSummary>How this simulation works</PlaygroundSummary>
         <p>After you apply your configuration, this lab records filter clicks locally while the exercise is open. Nothing is sent to PostHog.</p>
         <p>Returning to the list pauses recording and keeps your work. Leaving the page resets it.</p>

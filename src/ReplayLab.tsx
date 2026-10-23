@@ -127,7 +127,7 @@ export function ReplayLab({
         <LabPrimaryAction><button className="vac-button" onClick={() => onStage(1)}>
           <span className="vac-os-button-face">Set up the ghost visit →</span>
         </button></LabPrimaryAction>
-        <details className="vac-lab-step">
+        <details className="vac-lab-step" open>
           <PlaygroundSummary>How this simulation works</PlaygroundSummary>
           <p>The ghost visit is scripted. Your own visit is recorded locally for playback in this lab. No replay is sent to PostHog.</p>
         </details>

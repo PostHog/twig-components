@@ -340,3 +340,7 @@ Reset confirmation keeps the lesson mounted while replacing its visible content.
 
 
 Default `PlaygroundInspectionView` uses plain exploration context, never a checklist. Pass tour directions through `guidance`. Track live events reuses the play icon; selection, live tracking and clearing callbacks are unchanged.
+
+### Finalized Playground states
+
+`PlaygroundCodeBlock` headers use language labels; `codeLanguage(path)` supports source headers while captions retain source identity. `CopyControl` and `WizardCommand` show only transient successful-copy feedback. `McpComposer` sizes from its draft and wrapping, with a fixed right control. `LabCompletionActions` reuses the active shell footer for optional review and choose actions; standalone completions retain an inline footer. See the visual guide for disclosure, checklist, evidence-switch and spacing rules.

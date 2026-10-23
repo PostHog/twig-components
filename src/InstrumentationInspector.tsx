@@ -3,7 +3,7 @@
 import { type ReactNode } from "react";
 import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { PlaygroundGeneration, generationMessages, generationModelLabel } from "./PlaygroundAiEvidence.js";
-import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
+import { PlaygroundCodeBlock, codeLanguage } from "./PlaygroundCodeBlock.js";
 
 export type InspectorValue = string | number | boolean | null | InspectorValue[] | { [key: string]: InspectorValue };
 
@@ -81,7 +81,7 @@ export function InstrumentationInspector({ event, timestamp, properties, element
       {drilldown && guide.sources.length > 1 && <section aria-label="Twig source code">
         <details className="vac-inspector-source">
           <InspectorSummary>Twig source code</InspectorSummary>
-          {guide.sources.slice(1).map(source => <details className="vac-inspector-source-extra" key={source.path + source.line}><InspectorSummary>{source.label ?? "PostHog configuration"}</InspectorSummary>{source.description && <div className="vac-inspector-context"><p>{source.description}</p></div>}<Source source={source} wrap /></details>)}
+          {guide.sources.slice(1).map(source => <details className="vac-inspector-source-extra" key={source.path + source.line}><InspectorSummary>{source.label ?? "Capture settings"}</InspectorSummary>{source.description && <div className="vac-inspector-context"><p>{source.description}</p></div>}<Source source={source} wrap /></details>)}
         </details>
       </section>}
     </> : element ? <section aria-label="Elements"><h4 className="vac-inspector-section-title">Elements</h4><div className="vac-inspector-node"><span aria-hidden="true">1</span><samp><ElementSyntax value={element} /></samp></div></section> : null}
@@ -97,7 +97,7 @@ export function InstrumentationInspector({ event, timestamp, properties, element
 
 export function Source({ source, compact = false, wrap = compact }: { source: InspectionSource; compact?: boolean; wrap?: boolean }) {
   const location = source.caption === "" ? null : <small title={source.caption ? undefined : source.path}>{source.caption ?? `${compact ? source.path.split("/").at(-1) : source.path}:${source.line}`}</small>;
-  return <div className="vac-inspector-source-code"><PlaygroundCodeBlock code={source.code} label={source.caption === "" ? "JavaScript" : source.path.split("/").at(-1)} highlightLines={source.highlightLines} aria-label={compact ? "Instrumentation source code" : "Source code"} />{location}</div>;
+  return <div className="vac-inspector-source-code"><PlaygroundCodeBlock code={source.code} label={source.caption === "" ? "JavaScript" : codeLanguage(source.path)} highlightLines={source.highlightLines} aria-label={compact ? "Instrumentation source code" : "Source code"} />{location}</div>;
 }
 
 export function Payload({ event, properties }: {event: string; properties: Record<string, InspectorValue>}) {

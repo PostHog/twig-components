@@ -76,7 +76,7 @@ TripSearch keeps destination, dates, guests, and Search stays visible at every w
 - Give the lab or playground a title on its first page, on deliberate progress or recap pages, and on its ending page. Intermediate teaching pages have no page title or heading-like opening sentence. Start with regular prose, evidence, and directions as needed.
 - Name labs for the PostHog concept they teach, not their Twig location or product alone. Use `touchpointDefinitions` titles consistently in directories, markers, openings, and completions. Keep intermediate pages untitled.
 - Put a `How this simulation works` disclosure on every lab's first page, after the start button. Explain what is scripted or recorded locally, whether anything is sent to PostHog, and any real-world action the lab does not perform. Use the existing `vac-lab-step` details pattern.
-- Put directions that ask the learner to click, send, choose, or otherwise interact with Twig or another surface in the shared `LabChecklist` component. Use its current, done, and upcoming states when the directions have multiple steps. Keep explanatory prose outside it. Do not substitute a bold paragraph, heading, or custom instruction card for `LabChecklist`.
+- Put directions that ask the learner to click, send, choose, or otherwise interact with Twig or the guided Playground in the shared `LabChecklist` component. Use its current, done, and upcoming states when the directions have multiple steps. Keep explanatory prose outside it. Do not substitute a bold paragraph, heading, or custom instruction card for `LabChecklist`.
 - Keep lesson navigation as its existing button or link. A control's label is not a substitute for directions when the learner needs to interact with another surface.
 
 ## Surfaces and controls
@@ -334,12 +334,12 @@ Navigation and reset actions use the original OSButton face: 4px/10px padding, e
 
 ## One lab instruction pattern
 
-Use the shared `LabChecklist` for every requested learner action: configuration, site interactions, agent messages, retries, verification, recording and mobile return. One action uses the single-step callout; sequential actions share one numbered checklist with current/done/upcoming states tied to existing lesson evidence. Never replace directions with an Activity waiting card, a plain instruction paragraph, or a separate custom card. Keep explanatory prose and recorded data outside the checklist; navigation remains a button or link.
+Use the shared `LabChecklist` for actions inside Twig and its labs: configuration, site interactions, mock-agent messages, retries, verification, recording and mobile return. Use prose for external terminal/wizard setup and real-project coding-agent handoffs. One action uses the single-step callout; sequential actions share one numbered checklist with current/done/upcoming states tied to existing lesson evidence. Never replace directions with an Activity waiting card, a plain instruction paragraph, or a separate custom card. Keep explanatory prose and recorded data outside the checklist; navigation remains a button or link.
 
 
 ## Shared Playground controls, code, and terminal
 
-All directions for user activity use `LabChecklist`, including setup, retries, repair, verification, and mobile returns. Do not use an Activity/Waiting card. A single action uses the blue-left row; sequential actions use numbered rows. Completion reflects real local state and keeps existing gates.
+Directions for interaction inside Twig use `LabChecklist`, including retries, repair, verification, and mobile returns. External terminal/wizard setup and real-project coding-agent handoffs use prose. Do not use an Activity/Waiting card. A single action uses the blue-left row; sequential actions use numbered rows. Completion reflects real local state and keeps existing gates.
 
 Choices use one connected neutral box with blue radios, white selected rows, and a full-row blue keyboard outline. Web app/Agent uses the compact joined toggle geometry from Input/Output; no inset pill.
 
@@ -387,3 +387,13 @@ The Playground bundles Source Code Pro Regular from [Adobe’s official distribu
 ## Inspector exploration and live tracking
 
 The default Inspector is free exploration. Show “Interact with Twig to explore its PostHog instrumentation.” as regular 13px RoundHog prose, including the period. Do not turn it into a current/completed checklist. Guided tour actions continue to use `LabChecklist` through the existing guidance slot. The console’s Track live events control uses the shared play icon and retains its tooltip, keyboard focus, disabled state and existing follow-latest behavior. Clear console remains a separate reset control.
+
+## Finalized Playground interaction rules
+
+- Use `LabChecklist` for actions inside Twig and the guided Playground. Completed single and multiple instructions share the same checkmark. External terminal, wizard and coding-agent handoffs use prose.
+- Every lab opening shows `How this simulation works` expanded by default. Its heading uses the same RoundHog 14px Medium treatment as `About this exercise`. Other disclosures keep their existing defaults. Collapsed sections show only their summary and plus control; hide their entire body, including code chrome and nested sections. Hover, focus and selection do not imply expansion.
+- Lesson content scrolls independently while navigation stays at the bottom of the viewport-height Playground. On mobile, the lesson footer sits above the 52px toolbar. Completion uses Review results (when supported) and Choose another lab in that footer, with no generic Previous or duplicate completion explanation.
+- Code headers identify the language. Show a source path and optional line once below the block. Only a successful copy shows the short-lived `Copied!` bubble; do not show copy-instruction or hover-label popups. Keep accessible control names and selectable code.
+- Browse alternative evidence with the connected tabs, including recorded stay visits. Genuine single-choice questions retain their shared choice rows. The Web app / Agent switch has no Experience label; its inactive option shows the contextual switch tooltip on hover or keyboard focus.
+- The mock MCP composer wraps message text beside a fixed 32px send/stop control, with 12px padding and gap and 16px surrounding spacing. Its height follows the text. A scrolling transcript never runs behind the composer. Inline code in this terminal inherits monospace response styling without prose code pills. Activity indicators use vectors, never emoji.
+- Completion recaps use the shared left-aligned title and learning surface, real bullet markers, 16px spacing, and natural wrapping. Preserve every learning point. Keep real-project handoffs distinct from recap completions.

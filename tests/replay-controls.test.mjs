@@ -41,7 +41,8 @@ test('stack selection changes the associated source and keeps the whole frame se
  await mount(t,h(PlaygroundStackTrace));
  const frames=document.querySelectorAll('[aria-label="Stack frames"] button');assert.equal(frames[0].getAttribute('aria-pressed'),'true');
  await act(()=>frames[1].click());assert.equal(frames[1].getAttribute('aria-pressed'),'true');assert.equal(frames[0].getAttribute('aria-pressed'),'false');
- assert.equal(document.querySelector('.vac-code-header').textContent,'AccountPages.tsx');assert.match(document.querySelector('pre').textContent,/readTripHost\(\{\}, stay.hostId\)/);
+ assert.equal(document.querySelector('.vac-code-header').textContent,'TypeScript');
+ assert.equal(document.querySelector('.vac-source-caption').textContent,'AccountPages.tsx');assert.match(document.querySelector('pre').textContent,/readTripHost\(\{\}, stay.hostId\)/);
 });
 test('all recording/playback glyphs are included in the distributable CSS assets',async()=>{
  const{readFileSync,existsSync}=await import('node:fs');

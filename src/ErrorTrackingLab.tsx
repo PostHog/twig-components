@@ -80,9 +80,9 @@ function PostHogIssueInvestigation({ onStage }: { onStage: (stage: number) => vo
       <LabChecklist label="Retry completed" items={[{ label: "Try again in Twig’s trip details.", done: state.successfulRetry }]} />
       {state.successfulRetry && <p>No new exception. Host name still missing.</p>}
       <h5>Current</h5>
-      <PlaygroundCodeBlock label="Trip details" code="readTripHost({}, stay.hostId);" />
+      <PlaygroundCodeBlock label="TypeScript" code="readTripHost({}, stay.hostId);" />
       <h5>Use the loaded host records</h5>
-      <PlaygroundCodeBlock label="Trip details" code={"readTripHost(\n  hosts,\n  stay.hostId\n);"} highlightLines={[2]} />
+      <PlaygroundCodeBlock label="TypeScript" code={"readTripHost(\n  hosts,\n  stay.hostId\n);"} highlightLines={[2]} />
     </PlaygroundErrorIssue>
     <p>Stay <code>{last?.stayId}</code> points to host <code>{bookedStay?.hostId}</code>. Pass Twig’s loaded host records to retrieve the name.</p>
     {state.hostLookupRepaired
@@ -132,7 +132,7 @@ export function ErrorTrackingLab({
       </ol>
     </div>
     <Continue onClick={() => onStage(1)}>Start lab →</Continue>
-    <details className="vac-lab-step"><PlaygroundSummary>How this simulation works</PlaygroundSummary><p>Your booking succeeds and is saved only in this browser. For this lesson, Twig cannot load part of its trip details. The example error stays local and is not sent to PostHog. No payment or real reservation is made.</p></details>
+    <details className="vac-lab-step" open><PlaygroundSummary>How this simulation works</PlaygroundSummary><p>Your booking succeeds and is saved only in this browser. For this lesson, Twig cannot load part of its trip details. The example error stays local and is not sent to PostHog. No payment or real reservation is made.</p></details>
   </div>;
 
   if (stage === 1) return <section className="vac-lab vac-builder">
@@ -181,9 +181,9 @@ export function ErrorTrackingLab({
   if (stage === 5) return <section className="vac-lab vac-builder">
     <p>Twig keeps a host record for each stay, saving details about the host. For this trip, the record doesn't reach the lookup, so <code>host</code> is <code>undefined</code>.</p>
     <p>Currently, there's no fallback in place when <code>host</code> is <code>undefined</code>, resulting in the generic error message seen on Twig:</p>
-    <PlaygroundErrorIssue count={count}><h5>Current</h5><PlaygroundCodeBlock label="Trip details" code="return host.name;" highlightLines={[1]} />
+    <PlaygroundErrorIssue count={count}><h5>Current</h5><PlaygroundCodeBlock label="TypeScript" code="return host.name;" highlightLines={[1]} />
     <p>The Twig code fix avoids reading a name from a missing host and shows a message if no name is available:</p>
-    <h5>With a fallback</h5><PlaygroundCodeBlock label="Trip details" code={"return host?.name ??\n  'Host information unavailable';"} highlightLines={[1, 2]} /></PlaygroundErrorIssue>
+    <h5>With a fallback</h5><PlaygroundCodeBlock label="TypeScript" code={"return host?.name ??\n  'Host information unavailable';"} highlightLines={[1, 2]} /></PlaygroundErrorIssue>
     <LabChecklist label="Apply the fallback" items={[{ label: <>Click <strong>Apply the Twig code fix</strong>.</>, done: false }]} />
     <Continue onClick={() => { dispatch({ type: "fix" }); onStage(6); }}>Apply the Twig code fix →</Continue>
   </section>;

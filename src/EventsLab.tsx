@@ -5,6 +5,8 @@ import { McpComposer } from "./McpComposer.js";
 import { WizardCommand } from "./WizardCommand.js";
 import { LabChecklist } from "./LabChecklist.js";
 import { LabPrimaryAction } from "./LabNavigation.js";
+import { PlaygroundTooltip } from "./PlaygroundTooltip.js";
+import { AgentActivityIndicator } from "./AgentActivityIndicator.js";
 import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { Children, isValidElement, useEffect, useRef, useState, type Dispatch, type ReactNode } from "react";
 import { canContinue, captureCode, currentEvents, destinationCounts, eventInspectionRequest, eventTrendsRequest, handoffTask, hasCurrentAgentReply, needsConfiguration, type EventsAction, type EventsState, type TeachingEvent } from "./events-lab.js";
@@ -140,9 +142,9 @@ function AgentExperience({ state, dispatch }: ExperienceProps) {
   }
   return <>{state.path === "mcp" && <EventsInstructions state={state} agentReply={hasCurrentResponse} />}<div className="vac-agent-terminal"><div className="vac-agent-title">❯_ Twig / coding agent <span>MCP</span></div><div className="vac-agent-transcript" ref={transcript} tabIndex={0} aria-label="Agent conversation" aria-busy={!!pending}>{currentTurns.map((turn, index) => <div className="vac-agent-turn" key={index}><p className="vac-agent-prompt">❯ {turn.prompt}</p>{turn.acknowledgement && <p className="vac-agent-muted">● {turn.acknowledgement}</p>}{turn.tool && <details className="vac-agent-tool"><PlaygroundSummary terminal>{turn.tool} ✓</PlaygroundSummary><pre>{typeof turn.request === "string" ? turn.request : JSON.stringify(turn.request, null, 2)}</pre><p>Result summary</p><pre>{JSON.stringify(turn.event ? { event: turn.event.event, properties: turn.event.properties } : turn.events ? destinationCounts(turn.events) : { updated: true }, null, 2)}</pre></details>}{turn.text && <p className="vac-agent-answer">● {turn.text}</p>}</div>)}{pending && <div className="vac-agent-turn">
     <p className="vac-agent-prompt">❯ {pending.turn.prompt}</p>
-    {pending.phase === "thinking" ? <p className="vac-agent-muted" role="status"><span className="vac-agent-spinner" aria-hidden="true">✳</span> Thinking…</p> : <>
+    {pending.phase === "thinking" ? <p className="vac-agent-muted" role="status"><AgentActivityIndicator /> Thinking…</p> : <>
       <p className="vac-agent-muted">● {pending.turn.acknowledgement}</p>
-      <p className="vac-agent-tool" role="status">↳ {pending.turn.tool} {pending.phase === "tool" ? <><span className="vac-agent-spinner" aria-hidden="true">✳</span><span className="vac-sr-only">Running</span></> : "✓"}</p>
+      <p className="vac-agent-tool" role="status">↳ {pending.turn.tool} {pending.phase === "tool" ? <><AgentActivityIndicator /><span className="vac-sr-only">Running</span></> : "✓"}</p>
       {pending.phase === "answer" && <StreamingAnswer onDone={() => finish(pending.turn, pending.action)}>{pending.turn.text}</StreamingAnswer>}
     </>}
   </div>}</div><McpComposer key={`${state.step}:${state.revision}:${latest?.id ?? "setup"}:${setup}`} suggested={suggested} disabled={!setup && !latest} pending={!!pending} onSend={run} onStop={() => { timers.current.forEach(clearTimeout); timers.current = []; setPending(null); busy.current = false; }} /></div></>;
@@ -152,13 +154,13 @@ function Handoff() {
     <h4>Try events and properties with your own project</h4>
     <section className="vac-handoff-card" aria-label="Connect PostHog">
       <h4><span className="vac-handoff-number">1</span> Connect PostHog</h4>
-      <p>You’ll need Node.js/npm and a PostHog account.</p><LabChecklist label="Connect your coding agent" items={[{ label: <>Run the command in your <strong>terminal</strong>.</>, done: false }, { label: <>Choose your <strong>coding agent</strong> in the Wizard.</>, done: false }]} />
+      <p>You’ll need Node.js/npm and a PostHog account.</p><p>Run the command in your terminal and choose your coding agent in the wizard.</p>
       <WizardCommand command="mcp add" learnMore="https://posthog.com/docs/model-context-protocol" />
       <a className="vac-browse-link" href="https://posthog.com/docs/model-context-protocol" target="_blank" rel="noreferrer">Or install manually ↗</a>
     </section>
     <section className="vac-handoff-card" aria-label="Explore your data">
       <h4><span className="vac-handoff-number">2</span> Explore your data</h4>
-      <LabChecklist label="Explore your project" items={[{ label: <>Copy this prompt into your <strong>coding agent</strong>.</>, done: false }]} />
+      <p>Copy this prompt into your coding agent.</p>
       <PlaygroundCodeBlock label="Agent prompt" code={handoffTask} aria-label="Agent investigation prompt" />
 
     </section>
@@ -214,5 +216,5 @@ export function EventRecordedNotice() {
 /** Host this alongside lab navigation, outside the lesson content. */
 export function EventsExperienceSwitch({ state, dispatch }: Pick<ExperienceProps, "state" | "dispatch">) {
   if (state.step === 0 || state.step === 6) return null;
-  return <div className="vac-experience-control"><span>Experience</span><div className="vac-experience-toggle" role="group" aria-label="Learning experience">{(["web", "mcp"] as const).map(path => <button key={path} type="button" aria-pressed={state.path === path} onClick={() => dispatch({ type: "path", path })}>{path === "web" ? "Web app" : "Agent"}</button>)}</div></div>;
+  return <div className="vac-experience-control"><div className="vac-experience-toggle" role="group" aria-label="Learning experience">{(["web", "mcp"] as const).map(path => { const button = <button type="button" aria-pressed={state.path === path} onClick={() => dispatch({ type: "path", path })}>{path === "web" ? "Web app" : "Agent"}</button>; return state.path === path ? <span className="vac-experience-option" key={path}>{button}</span> : <PlaygroundTooltip key={path} label={`Switch to ${path === "web" ? "web app" : "agent"} learning experience.`}>{button}</PlaygroundTooltip>; })}</div></div>;
 }

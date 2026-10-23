@@ -183,7 +183,7 @@ export function PlaygroundOnboarding({ phase }: {
       : phase === "another-stay" ? <LabChecklist label="Build your event history" items={[{ label: <>Open a stay from the <strong>filtered results</strong>.</>, done: false }]} />
       : phase === "history" ? <><p>The latest event’s details are already shown below.</p><LabChecklist label="Explore your event history" items={[{ label: <>Select earlier entries in the <strong>console</strong> to compare their details and tracking code.</>, done: false }]} /></>
       : phase === "compare" || phase === "compare-again" ? <LabChecklist label="Explore your event history" items={[{ label: <>Keep selecting entries to compare their event details.</>, done: false }]} />
-      : phase === "follow" ? <LabChecklist label="Resume live tracking" items={[{ label: <>Click the <strong>down arrow</strong> in the console to resume live tracking.</>, done: false }]} />
+      : phase === "follow" ? <LabChecklist label="Resume live tracking" items={[{ label: <>Click the <strong>play button</strong> in the console to resume live tracking.</>, done: false }]} />
       : phase === "reset" ? <LabChecklist label="Reset the console" items={[{ label: <>Click the <strong>reset icon</strong> to reset the console.</>, done: false }]} />
       : <LabChecklist label="Inspect new events" items={[{ label: <>Click around the site a few times to inspect <strong>new events</strong>.</>, done: false }]} />}
   </section>;
@@ -744,7 +744,8 @@ export function inspectionProduct(activity: Pick<PlaygroundActivity, "event" | "
 export function replayInspectionGuide(masked: boolean, recording: boolean): InspectionGuide {
   return {
     method: "replay",
-    description: `The local recorder captures a visit’s sequence. Search input is ${masked ? "masked" : "visible"}.`,
+    description: "The recording captures a visit’s sequence.",
+    instrumentationDescription: `Twig records this visit locally. Search input is ${masked ? "masked" : "visible"}.`,
     question: "What happened before a visitor got stuck?",
     sources: [{path:"twig-components/src/ReplayRecorder.tsx", line:335, code:"maskAllInputs: true,\n        maskInputFn: (text, element) =>\n          element.matches(searchSelector) && !masked ? text : \"[masked]\",\n        recordCanvas: false,\n        collectFonts: true,\n        sampling: { mousemove: 100, scroll: 200 },"}],
     configuration: { maskAllInputs: true, search_input_masked: masked, recording, recordCanvas: false },

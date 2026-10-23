@@ -2,7 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import { PlaygroundStatus } from "./PlaygroundStatus.js";
-import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
+import { PlaygroundCodeBlock, codeLanguage } from "./PlaygroundCodeBlock.js";
 
 /** The issue identity stays attached to evidence, fixes and verification. */
 export function PlaygroundErrorIssue({ count, resolved = false, children }: { count: number; resolved?: boolean; children?: ReactNode }) {
@@ -30,6 +30,6 @@ export function PlaygroundStackTrace() {
         <code>{frame.name}</code><span>{frame.file}</span>
       </button>)}
     </div>
-    <PlaygroundCodeBlock label={frame.file} code={frame.code} highlightLines={[frame.highlight]} />
+    <PlaygroundCodeBlock label={codeLanguage(frame.file)} code={frame.code} highlightLines={[frame.highlight]} /><small className="vac-source-caption">{frame.file}</small>
   </div>;
 }

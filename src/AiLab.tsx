@@ -105,7 +105,7 @@ export function AiIntroduction({ onContinue }: { onContinue: () => void }) {
       <button className="vac-button" onClick={onContinue}>
         <span className="vac-os-button-face">See the worked example →</span>
       </button>
-      <details className="vac-lab-step">
+      <details className="vac-lab-step" open>
         <PlaygroundSummary>How this simulation works</PlaygroundSummary>
         <p>
           Twig uses a preset request and recommendation. You’re changing what

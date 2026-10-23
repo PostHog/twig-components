@@ -115,7 +115,7 @@ export function BookingLab({
             ? "Practice a successful booking →"
             : "Continue the failure exercise →"}
         </Action>
-        <details className="vac-lab-step">
+        <details className="vac-lab-step" open>
           <PlaygroundSummary>How this simulation works</PlaygroundSummary>
           <p>Bookings and their event records are simulated locally. No reservation or payment is created, and these records are not sent to PostHog.</p>
         </details>

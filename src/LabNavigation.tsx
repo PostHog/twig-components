@@ -4,12 +4,14 @@ import { createContext, useContext, useEffect, useId, useMemo, useRef, useState,
 import { createPortal } from "react-dom";
 import type { TouchpointId } from "./playground.js";
 
-const LessonActionContext = createContext<{ active: boolean; target: HTMLDivElement | null; setTarget: (node: HTMLDivElement | null) => void } | null>(null);
+const LessonActionContext = createContext<{ active: boolean; target: HTMLDivElement | null; setTarget: (node: HTMLDivElement | null) => void; secondaryTarget: HTMLDivElement | null; setSecondaryTarget: (node: HTMLDivElement | null) => void; completion: boolean; setCompletion: (value: boolean) => void } | null>(null);
 
 /** Shared lesson shell: keep the real lesson action and its handler in a shared footer. */
 export function LessonNavigationProvider({ active, children }: { active: boolean; children: ReactNode }) {
   const [target, setTarget] = useState<HTMLDivElement | null>(null);
-  const value = useMemo(() => ({ active, target, setTarget }), [active, target]);
+  const [secondaryTarget, setSecondaryTarget] = useState<HTMLDivElement | null>(null);
+  const [completion, setCompletion] = useState(false);
+  const value = useMemo(() => ({ active, target, setTarget, secondaryTarget, setSecondaryTarget, completion, setCompletion }), [active, target, secondaryTarget, completion]);
   return <LessonActionContext.Provider value={value}>{children}</LessonActionContext.Provider>;
 }
 
@@ -26,6 +28,23 @@ export function LabPrimaryAction({ children, fallback }: { children: ReactNode; 
   if (!visible) return null;
   if (!shell?.active) return <>{fallback === undefined ? children : fallback}</>;
   return shell.target ? createPortal(children, shell.target) : null;
+}
+
+/** Completion reuses the shell footer, with review instead of generic Previous. */
+export function LabCompletionActions({ onChoose, onReview }: { onChoose: () => void; onReview?: () => void }) {
+  const shell = useContext(LessonActionContext);
+  const visible = useContext(LessonActionVisibility);
+  const setCompletion = shell?.setCompletion;
+  useEffect(() => {
+    if (!shell?.active || !visible) return;
+    setCompletion?.(true);
+    return () => setCompletion?.(false);
+  }, [shell?.active, visible, setCompletion]);
+  if (!visible) return null;
+  const review = onReview ? <button type="button" className="vac-text-button" onClick={onReview}>Review results</button> : null;
+  const choose = <button type="button" className="vac-button" onClick={onChoose}><span className="vac-os-button-face">Choose another lab</span></button>;
+  if (!shell?.active) return <footer className="vac-completion-actions">{review}{choose}</footer>;
+  return <>{shell.secondaryTarget && createPortal(review, shell.secondaryTarget)}<LabPrimaryAction>{choose}</LabPrimaryAction></>;
 }
 
 export function LabNavigationView({
@@ -119,7 +138,7 @@ export function LabNavigationView({
     </div>
   </div>;
   if (placement === "footer") return <nav className="vac-lesson-footer" aria-label="Lesson steps">
-    <div>{canGoPrevious && <button type="button" className="vac-text-button" onClick={onPrevious}>← Previous</button>}</div>
+    <div ref={shell?.setSecondaryTarget}>{!shell?.completion && canGoPrevious && <button type="button" className="vac-text-button" onClick={onPrevious}>← Previous</button>}</div>
     {returnTo ? <button type="button" className="vac-button" onClick={returnTo.onClick}><span className="vac-os-button-face">Return to lab</span></button> : <div className="vac-lesson-primary" ref={shell?.setTarget} />}
   </nav>;
   if (placement === "header") return <div className="vac-lesson-header">
