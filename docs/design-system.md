@@ -382,3 +382,8 @@ Error investigation keeps issue identity, historical occurrence count and Active
 Active uses the Failed brand Coral darker token (`#F00008`); Resolved uses Passed brand Green darker (`#35B14E`). Reuse `PlaygroundStatus`, not custom pills or colors. Shared CSS classes own static typography, spacing, colors, surfaces and responsive states. Inline styles are reserved for measured cursor coordinates, chart widths, tooltip placement and playback progress, with a runtime-data comment.
 
 The Playground bundles Source Code Pro Regular from [Adobe’s official distribution](https://github.com/adobe-fonts/source-code-pro/tree/release) under the SIL Open Font License. Use `--ph-font-code` for actual code, raw identifiers, JSON, console and mock MCP text. RoundHog remains the interface, chat, metadata, result and timer font. Both are served locally; previews need no font service.
+
+
+## Inspector exploration and live tracking
+
+The default Inspector is free exploration. Show “Interact with Twig to explore its PostHog instrumentation.” as regular 13px RoundHog prose, including the period. Do not turn it into a current/completed checklist. Guided tour actions continue to use `LabChecklist` through the existing guidance slot. The console’s Track live events control uses the shared play icon and retains its tooltip, keyboard focus, disabled state and existing follow-latest behavior. Clear console remains a separate reset control.

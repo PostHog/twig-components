@@ -68,3 +68,6 @@ The Playground controls preview exercises connected choices, highlighted code, t
 The Controls preview includes shared AI trace, captured Input/Output chat, failed/passed evaluation surfaces, and the four brand statuses. The Trip planner and Inspector previews exercise the same primitives with recorded evidence.
 
 Finalized controls are available under Playground controls: Ready/Playing/Ended playback, real seek callbacks, active recording/Start recording, Active/Resolved statuses, code highlights, connected choices and MCP composer. The Errors preview exercises booking → exception → stack frame/source → fallback → retry → repair → verify → resolve. Review current white/blue directions before each site action and completed neutral directions afterwards. No lesson action changes the historical occurrence count unless a new exception is actually captured.
+
+
+In Inspector, choose Explore on your own to see regular exploration context and the live-event play control. Simulate two interactions, select an earlier event, then use Track live events to resume following the latest event. Take a tour still uses progressive checklist directions. Check both at desktop, 390px and 320px, including keyboard focus and disabled controls.

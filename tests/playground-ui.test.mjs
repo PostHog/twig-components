@@ -465,7 +465,7 @@ test("live-event control stays visible and is available only while history is pi
   const control=document.querySelector('button[aria-label="Track live events"]');
   assert.ok(control);
   assert.equal(control.disabled,disabled);
-  assert.ok(control.querySelector('svg'));
+  assert.ok(control.querySelector('[data-icon="play"]'));
   assert.equal(control.textContent,'');
   assert.doesNotMatch(document.body.textContent,/Follow latest/);
  }

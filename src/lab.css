@@ -1412,6 +1412,8 @@
 .vac-inspector-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:16px; }
 .vac-app .vac-developer-theme .vac-inspector .vac-inspector-title { margin:0; }
 .vac-inspector-title:focus { outline:none; }
+.vac-app .vac-developer-theme .vac-inspector-introduction { margin:0 0 16px; font-size:13px; line-height:1.6; font-weight:400; }
+.vac-inspector-stream-controls .vac-replay-icon { width:16px; height:16px; }
 .vac-app .vac-inspector-history { margin:0 0 16px; padding:0; border:0; border-radius: 0; background:transparent; }
 .vac-app .vac-developer-theme .vac-inspector-history-heading { margin:0; padding:8px 0; font-size:13px; line-height:20px; font-weight:500; }
 .vac-inspector-history ol { max-height:176px; overflow-y:auto; list-style:none; margin:0; padding:0; }

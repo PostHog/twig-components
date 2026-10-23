@@ -337,3 +337,6 @@ Reset confirmation keeps the lesson mounted while replacing its visible content.
 | `/error-evidence` | `PlaygroundErrorIssue`, `PlaygroundStackTrace` | Connected issue identity/status/count and evidence content. Stack-frame buttons select their source and preserve full-row keyboard focus. |
 
 `/status` also supports Active and Resolved. `/session-player` composes the shared playback transport around the real local rrweb recording. `/replay-recorder` supplies elapsed time to every recording-control consumer. These presentation changes retain existing callbacks, lab gates and tracking; no additional analytics event is needed.
+
+
+Default `PlaygroundInspectionView` uses plain exploration context, never a checklist. Pass tour directions through `guidance`. Track live events reuses the play icon; selection, live tracking and clearing callbacks are unchanged.
