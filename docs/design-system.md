@@ -47,3 +47,16 @@ Keep these surfaces distinct. Reuse an existing component and its state styles b
 5. If a PR includes screenshots, update them when a visual change makes them stale. Show the actual site for host layout and the workbench for portable component states.
 
 When a new pattern is genuinely needed, document the gap and add the pattern here and in Twig.com's design guide with the implementation. Do not let a one-off override silently become a new system.
+
+## Compact pocket-guide figures
+
+Use `/compact` (`CompactTwig`, `TwigWordmark`, `CompactStayFilters`) with
+`/catalog.css` followed by `/compact.css`. This opt-in surface follows the approved
+current Twig palette: warm white, cobalt actions, sage filter group, neutral borders,
+DM Sans, and a lowercase wordmark. It does not restyle full-site consumers.
+
+Wrap `StayCardContent compact` in `.twig-compact-stay` for a borderless horizontal
+96×72 photo, name, location, and price. `SavedStaysView compact` uses the same cards.
+Do not add a result count or extra card background. Keep save controls when the
+lesson teaches saving. Login and profile controls retain their existing callbacks.
+The host owns simulation state, events, inspector, prose, and reset behavior.

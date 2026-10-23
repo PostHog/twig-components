@@ -175,3 +175,16 @@ The AI walkthrough reuses `LabCompletionView` for its final recap. The view acce
 ## Events and properties
 
 `/events-lab` exports the local lesson reducer, configuration gates, counts, and handoff task. `/events-lab-provider` exports `EventsLabProvider` and `useEventsLab`; the playground controller includes it and resets its state when a learner chooses a lab. A custom host can change the provider's `resetKey` to start a fresh lesson without remounting its children. `/events-lab-ui` exports `EventsLab`, `EventsExperienceSwitch`, and `EventRecordedNotice`. Render the experience switch with host navigation, outside lesson content. One entry offers two complete experiences: an Activity/Trends interface or a simulated coding agent with MCP reads. The toggle preserves recorded events and tracking configuration. The agent shows thinking, tool execution, and a streamed answer, with immediate responses when reduced motion is enabled. The final comparison explains insights and dashboards without adding a duplicate save screen. Hosts send actual destination filter clicks, result counts, and timestamps, and supply navigation callbacks. The lesson never creates clicks on behalf of the learner. Code changes and MCP results are local simulations; no model or network calls occur.
+
+## Compact pocket-guide figures
+
+Use `/compact` (`CompactTwig`, `TwigWordmark`, `CompactStayFilters`) with
+`/catalog.css` followed by `/compact.css`. This opt-in surface follows the approved
+current Twig palette: warm white, cobalt actions, sage filter group, neutral borders,
+DM Sans, and a lowercase wordmark. It does not restyle full-site consumers.
+
+Wrap `StayCardContent compact` in `.twig-compact-stay` for a borderless horizontal
+96×72 photo, name, location, and price. `SavedStaysView compact` uses the same cards.
+Do not add a result count or extra card background. Keep save controls when the
+lesson teaches saving. Login and profile controls retain their existing callbacks.
+The host owns simulation state, events, inspector, prose, and reset behavior.

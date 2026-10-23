@@ -1,3 +1,5 @@
+import { CompactTwig, CompactStayFilters } from "../src/Compact.js";
+import "../src/compact.css";
 import { useEffect, useReducer, useRef, useState, type ReactNode } from "react";
 import { TripPlanner } from "../src/TripPlanner.js";
 import { TripPlannerWalkthrough, TripPlannerLabProvider, useTripPlannerLab, canSendTripLessonMessage } from "../src/TripPlannerLab.js";
@@ -99,6 +101,24 @@ function TripPlannerPreviewContent() {
       </div>
     </div>
   </>;
+}
+
+function CompactPreview() {
+  const [setting, setSetting] = useState<StaySetting>("Forest");
+  const stay = filterStays(setting, "")[0];
+  const photo = setting === "Forest" ? "cabin" : setting === "Coast" ? "coast" : "city";
+  const [saved, setSaved] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [booked, setBooked] = useState(false);
+  return <div className="compact-review-grid"><CompactTwig><CompactStayFilters value={setting} onChange={setSetting} />
+    <article className="twig-compact-stay"><StayCardContent compact stay={stay} image={<div className="vac-image"><img src={new URL(`../assets/${photo}.jpg`, import.meta.url).href} alt={stay.images[0]?.alt ?? ""} /></div>} /></article>
+  </CompactTwig><CompactTwig>{saved ? <SavedStaysView compact stays={[stay]} renderImage={() => <div className="vac-image"><img src={new URL(`../assets/${photo}.jpg`, import.meta.url).href} alt="Stay" /></div>} stayHref={() => "#saved"} /> : <LoginView email="traveler@example.com" onLogin={() => setSaved(true)} />}</CompactTwig>
+    <CompactTwig headerActions={<ProfileMenu className="twig-compact-profile" profile={{displayName:"Edgar Hogg",email:"edgar.hogg@fakeemail.com"}} links={[]} open={menuOpen} onOpenChange={setMenuOpen} onSignOut={() => {setMenuOpen(false);setSaved(false);}} />}>
+      <article className="twig-compact-stay"><StayCardContent compact stay={stay} image={<div className="vac-image"><img src={new URL(`../assets/${photo}.jpg`, import.meta.url).href} alt="Stay" /></div>} /><div className="twig-compact-save"><SavedStay signedIn saved={bookmarked} onSavedChange={setBookmarked} stayName={stay.title ?? "Stay"} /></div></article>
+      <div className="twig-account-layout"><button className="vac-button vac-primary" disabled={booked} onClick={() => setBooked(true)}>{booked ? "Booking confirmed" : "Book stay"}</button></div>
+    </CompactTwig></div>;
+
 }
 
 function Preview() {
@@ -430,5 +450,5 @@ function ErrorTrackingPreview() { return <ErrorTrackingLabProvider active><Error
 export default function App() {
   const [view, setView] = useState<View>(() => new URLSearchParams(window.location.search).get("view") === "planner" ? "planner" : "preview");
   const current = views.find((item) => item.id === view)!;
-  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "planner" ? <TripPlannerPreview /> : view === "preview" ? <Preview /> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "products" ? <ProductMenuPreview /> : view === "reset" ? <ResetPreview /> : view === "dates" ? <DatePickerPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : view === "errors" ? <ErrorTrackingPreview /> : <Replay />}</div></main></div>;
+  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "planner" ? <TripPlannerPreview /> : view === "preview" ? <><CompactPreview /><Preview /></> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "products" ? <ProductMenuPreview /> : view === "reset" ? <ResetPreview /> : view === "dates" ? <DatePickerPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : view === "errors" ? <ErrorTrackingPreview /> : <Replay />}</div></main></div>;
 }
