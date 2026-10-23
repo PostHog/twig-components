@@ -37,6 +37,7 @@ export function SessionPlayer({ events }: { events: eventWithTime[] }) {
             ".vac-dock, .vac-playground-invite, .vac-replay-stop, .vac-ghost-cursor { visibility: hidden !important; }",
           ],
         });
+        instance.wrapper.classList.add("vac-session-canvas");
         player.current = instance;
         const total = instance.getMetaData().totalTime;
         setDuration(total);
@@ -62,7 +63,6 @@ export function SessionPlayer({ events }: { events: eventWithTime[] }) {
                 )
               : viewport.current.clientWidth / width;
           // rrweb viewport dimensions are measured at runtime; visual rules stay in CSS.
-          instance.wrapper.style.transformOrigin = "top left";
           instance.wrapper.style.transform = `scale(${scale})`;
           viewport.current.style.height = `${height * scale}px`;
         };
