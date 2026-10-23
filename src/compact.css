@@ -1,0 +1,48 @@
+/* Approved pocket-guide figures. Opt-in scope leaves full website/lab views unchanged. */
+@font-face { font-family: TwigCompactSans; src: url("./assets/DMSans.ttf") format("truetype"); font-weight: 100 1000; font-display: swap; }
+.twig-compact {
+  --vac-paper: #fffdf6;
+  --vac-ink: #2846a4;
+  --vac-text: #30362f;
+  --vac-muted: #625e57;
+  --vac-line: #e5e2d8;
+  --vac-fill: #edf1e8;
+  min-width: 0;
+  border: 1px solid var(--vac-line);
+  border-radius: 3px;
+  background: var(--vac-paper);
+  color: var(--vac-text);
+  font: 400 14px/1.5 TwigCompactSans, Arial, sans-serif;
+}
+.twig-compact * { box-sizing: border-box; }
+.twig-compact-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 12px; border-bottom: 1px solid var(--vac-line); }
+.twig-compact .twig-compact-wordmark { color: var(--vac-ink); font: 700 20px/1 TwigCompactSans, Arial, sans-serif; letter-spacing: -1.3px; }
+.twig-compact-body { padding: 16px; }
+.twig-compact .twig-compact-filters { display: flex; flex-wrap: wrap; width: fit-content; gap: 8px; margin: 0 0 16px; padding: 8px; border: 0; border-radius: 3px; background: var(--vac-fill); }
+.twig-compact-filters button { min-height: 40px; padding: 8px 12px; border: 1px solid var(--vac-line); border-radius: 3px; background: transparent; color: var(--vac-text); font: inherit; cursor: pointer; }
+.twig-compact-filters button[aria-pressed="true"] { background: var(--vac-ink); border-color: var(--vac-ink); color: var(--vac-paper); }
+.twig-compact-filters button:hover:not([aria-pressed="true"]) { border-color: var(--vac-ink); }
+.twig-compact :is(button, a, input):focus-visible { outline: 2px solid var(--vac-ink); outline-offset: 3px; }
+.twig-compact .twig-compact-stay { position: relative; display: grid; grid-template-columns: 96px minmax(0, 1fr); align-items: center; gap: 12px; padding: 0; margin: 0; border: 0; background: transparent; color: var(--vac-text); text-decoration: none; }
+.twig-compact .twig-compact-stay .vac-image { width: 96px; height: 72px; min-height: 0; aspect-ratio: 4/3; overflow: hidden; border-radius: 3px; background: var(--vac-fill); }
+.twig-compact .twig-compact-stay img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.twig-compact .twig-compact-stay-info h3 { margin: 0 0 4px; color: var(--vac-text); font: 600 16px/1.3 TwigCompactSans, Arial, sans-serif; }
+.twig-compact .twig-compact-stay-info p { margin: 4px 0 0; color: var(--vac-muted); font: 400 13px/1.5 TwigCompactSans, Arial, sans-serif; }
+.twig-compact-stay-info strong { color: var(--vac-text); font-weight: 600; }
+.twig-compact :is(.twig-login-view, .twig-profile-menu, .twig-account-layout, .twig-profile-trigger) { font-family: TwigCompactSans, Arial, sans-serif; }
+.twig-compact .twig-account-layout { width: 100%; margin: 0; display: block; }
+.twig-compact .twig-account-stay-grid { grid-template-columns: 1fr; gap: 16px; }
+.twig-compact .twig-account-page > .vac-eyebrow { display: none; }
+.twig-compact .twig-account-page > h1, .twig-compact .twig-login-card h1 { margin: 0 0 12px; font: 600 20px/1.3 TwigCompactSans, Arial, sans-serif; color: var(--vac-text); }
+.twig-compact .twig-account-page > .twig-account-muted { margin: 0 0 16px; }
+.twig-compact .twig-login-view { min-height: 0; padding: 0; }
+.twig-compact .twig-login-card { width: 100%; max-width: none; padding: 16px; border-radius: 3px; box-shadow: none; }
+.twig-compact .twig-login-hint { margin-bottom: 16px; }
+.twig-compact .twig-profile-trigger, .twig-compact .twig-profile-popover, .twig-compact .vac-button { border-radius: 3px; }
+.twig-compact .twig-save-button { font-family: inherit; }
+.twig-compact .twig-compact-save { position: absolute; top: 4px; left: 52px; }
+.twig-compact .vac-button { font-family: inherit; }
+.twig-compact .vac-primary { background: var(--vac-ink); border-color: var(--vac-ink); color: var(--vac-paper); }
+
+.twig-compact .twig-compact-muted { color: var(--vac-muted); }
+.twig-compact .twig-login-card :is(label, input), .twig-compact .twig-profile-trigger { color: var(--vac-text); }
