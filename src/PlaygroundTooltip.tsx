@@ -7,7 +7,7 @@ export function TooltipBubble({ children, className = "vac-control-tooltip", ...
 }
 
 /** Shared neutral hint; feedback stays anchored to its own control. */
-export function PlaygroundTooltip({ children, label, open = false, feedbackOnly = false }: { children: ReactNode; label: string; open?: boolean; feedbackOnly?: boolean }) {
+export function PlaygroundTooltip({ children, label, open = false, feedbackOnly = false }: { children: ReactNode; label: ReactNode; open?: boolean; feedbackOnly?: boolean }) {
   const id = useId();
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
