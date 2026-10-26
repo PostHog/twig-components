@@ -327,6 +327,7 @@ type StayViewProps = {
 };
 
 export type SavedStaysViewProps = StayViewProps & {
+  compact?: boolean;
   stays: readonly Stay[];
   browseHref?: string;
   onRemoveStay?: (stay: Stay) => void;
@@ -339,6 +340,7 @@ export function SavedStaysView({
   browseHref = "/",
   onNavigate,
   onRemoveStay,
+  compact = false,
 }: SavedStaysViewProps): ReactElement {
   return (
     <section className="twig-account-page" aria-labelledby="twig-saved-title">
@@ -351,8 +353,8 @@ export function SavedStaysView({
             const href = stayHref(stay);
             return (
               <article className="twig-account-stay-card" key={stay.id}>
-                <a href={href} onClick={(event) => followLink(event, href, onNavigate)}>
-                  <StayCardContent stay={stay} image={renderImage(stay)} linked />
+                <a className={compact ? "twig-compact-stay" : undefined} href={href} onClick={(event) => followLink(event, href, onNavigate)}>
+                  <StayCardContent stay={stay} image={renderImage(stay)} linked compact={compact} />
                 </a>
                 {onRemoveStay && (
                   <div className="twig-account-stay-save">

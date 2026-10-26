@@ -189,7 +189,12 @@
     "./events-lab-provider": {
       "types": "./dist/EventsLabProvider.d.ts",
       "import": "./dist/EventsLabProvider.js"
-    }
+    },
+    "./compact": {
+      "types": "./dist/Compact.d.ts",
+      "import": "./dist/Compact.js"
+    },
+    "./compact.css": "./dist/compact.css"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && node build-assets.mjs",
@@ -342,6 +347,9 @@
       ],
       "events-lab-provider": [
         "dist/EventsLabProvider.d.ts"
+      ],
+      "compact": [
+        "dist/Compact.d.ts"
       ]
     }
   }
