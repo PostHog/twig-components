@@ -96,3 +96,9 @@ After the first workflow release succeeds, set the package's npm **Publishing ac
 4. Run a clean `npm ci`, tests, type checking, lint, and production build in Twig.com. Review the page on desktop and mobile, then merge the host PR.
 
 Keep the host PR in draft until the published dependency is installed and verified. A locally packed preview is only for review. It does not prove that a clean consumer install works. PostHog.com needs no update for this Twig-only lesson.
+
+## Full local Twig experience
+
+Hosts that need the complete interactive site can render `TwigExperience` from `/experience`. The package owns the demo pages, local router, fixture data, photos, existing CSS, and instance-local inspection bus. The host owns its URL, authoring schemas, editor, draft storage, publishing and learner lesson content. Pass that content through the `lab` slot, and translate the allowlisted `onEvent` callback into host completion rules.
+
+This preview runtime never initializes a PostHog SDK or calls an AI/backend service. It retains browser-local demo account persistence (`twig:*` keys) for the existing save/login/booking interactions. Real Twig production routing and analytics remain the responsibility of twig.com. Reference instrumentation excerpts in `src/experience/lib/twig-instrumentation-source.json` were moved unchanged from the original preview; their paths describe the Twig site, not the consuming application's files.
