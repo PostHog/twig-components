@@ -1386,9 +1386,17 @@ body .vac-replay-stop button:focus-visible {
   .vac-edge-playground, .vac-edge-playground .vac-edge-inspector { transition:none; }
 }
 
-/* Constrain the real edge dock to Learn Studio's direct-rendered test viewport. */
-.twig-preview-viewport .vac-edge-playground { --twig-tool-rail-width:0px; }
-.twig-preview-viewport .vac-edge-playground .vac-edge-inspector { height:100cqh; max-height:100cqh; }
-
-.twig-experience-frame { height:100%; min-height:0; overflow:auto; contain:layout paint; isolation:isolate; }
+/* Keep fixed Playground chrome outside the scrolling Twig content. */
+.twig-experience-frame { height:100%; min-height:0; overflow:hidden; contain:layout paint; isolation:isolate; }
+.twig-preview-viewport { height:100%; overflow:auto; overscroll-behavior:contain; container-type:size; }
+.twig-preview-viewport .vac-app { min-height:100%; }
+.twig-preview-viewport .vac-edge-playground .vac-edge-inspector { height:100%; max-height:100%; }
+@media(min-width:801px) {
+  .twig-preview-viewport .vac-tool-rail { height:100%; }
+}
+@media(max-width:800px) {
+  .twig-preview-viewport .vac-edge-playground .vac-edge-inspector { height:48cqh; max-height:48cqh; }
+  .twig-preview-viewport .vac-edge-playground .vac-edge-inspector[data-open="false"] { height:0; }
+  .twig-preview-viewport .vac-app .vac-tool-rail-footer > .vac-tool-rail-toggle { display:grid; }
+}
 .twig-experience-image-fill { position:absolute; inset:0; width:100%; height:100%; }

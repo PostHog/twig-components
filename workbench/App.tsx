@@ -1,4 +1,5 @@
-import {TwigExperience} from "../src/TwigExperience.js";
+import PocketGuideInspector, {InspectorCode, InspectorStatus} from "../src/PocketGuideInspector.js";
+import {TwigExperience, type AuthorLabPreview} from "../src/TwigExperience.js";
 import "../src/experience/components/vacation.css";
 import { ReplayControls, RecordingControls } from "../src/ReplayControls.js";
 import { PlaygroundEvaluation, PlaygroundGeneration, PlaygroundTraceExplorer } from "../src/PlaygroundAiEvidence.js";
@@ -132,6 +133,10 @@ function TripPlannerPreviewContent() {
   </>;
 }
 
+function PocketGuideInspectorPreview() {
+  const [captured,setCaptured]=useState(false);
+  return <><button type="button" onClick={()=>setCaptured(value=>!value)}>{captured?"Reset inspector":"Capture Coast click"}</button><PocketGuideInspector>{captured?<><InspectorCode label="Clicked element" value={'<button aria-pressed="true">Coast</button>'}/><InspectorCode label="Event payload" value={JSON.stringify({event:"stay_filter_selected",timestamp:"2026-10-26T12:00:00.000Z",properties:{destination_type:"Coast"}})} meta="1 event captured"/></>:<InspectorStatus>Choose a destination on Twig to inspect its event.</InspectorStatus>}</PocketGuideInspector></>;
+}
 function CompactPreview() {
   const [setting, setSetting] = useState<StaySetting>("Forest");
   const stay = filterStays(setting, "")[0];
@@ -541,7 +546,7 @@ function ErrorTrackingPreview() { return <ErrorTrackingLabProvider active><Error
 export default function App() {
   const [view, setView] = useState<View>(() => { const requested = new URLSearchParams(window.location.search).get("view"); return views.some(item => item.id === requested) ? requested as View : "preview"; });
   const current = views.find((item) => item.id === view)!;
-  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "experience" ? <ExperiencePreview /> : view === "controls" ? <PlaygroundControlsPreview /> : view === "inspect" ? <InspectPreview /> : view === "getaway" ? <GetawayPreview /> : view === "planner" ? <TripPlannerPreview /> : view === "preview" ? <><CompactPreview /><Preview /></> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "products" ? <ProductMenuPreview /> : view === "reset" ? <ResetPreview /> : view === "dates" ? <DatePickerPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : view === "errors" ? <ErrorTrackingPreview /> : <Replay />}</div></main></div>;
+  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "experience" ? <ExperiencePreview /> : view === "controls" ? <PlaygroundControlsPreview /> : view === "inspect" ? <InspectPreview /> : view === "getaway" ? <GetawayPreview /> : view === "planner" ? <TripPlannerPreview /> : view === "preview" ? <><CompactPreview /><PocketGuideInspectorPreview /><Preview /></> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "products" ? <ProductMenuPreview /> : view === "reset" ? <ResetPreview /> : view === "dates" ? <DatePickerPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : view === "errors" ? <ErrorTrackingPreview /> : <Replay />}</div></main></div>;
 }
 
 function PlaygroundControlsPreview() {
@@ -571,4 +576,9 @@ function PlaygroundControlsPreview() {
   </LabPreview>;
 }
 
-function ExperiencePreview(){const [run,setRun]=useState(0);return <div className="workbench-experience"><TwigExperience key={run} onReset={()=>setRun(v=>v+1)}/></div>;}
+function ExperiencePreview(){
+  const [run,setRun]=useState(0);
+  const [authored,setAuthored]=useState(true);
+  const [product,setProduct]=useState<AuthorLabPreview["product"]>("Product Analytics");
+  return <><label><input type="checkbox" checked={authored} onChange={event=>{setAuthored(event.target.checked);setRun(value=>value+1);}}/> Preview authored lab</label><div className="workbench-experience"><TwigExperience key={run} onReset={()=>setRun(v=>v+1)} lab={authored ? {content:<section className="vac-lab"><h3>Preview an authored lab</h3><p>Scroll Twig, try the toolbar, then return to this lesson.</p></section>,footer:<footer className="vac-lesson-footer"><button type="button" className="vac-text-button" onClick={()=>setRun(v=>v+1)}>Restart preview</button></footer>,progress:"1 / 1",headerActions:<button type="button" className="vac-text-button" onClick={()=>setRun(v=>v+1)}>Add page</button>,product,onProductSelect:setProduct} : undefined}/></div></>;
+}

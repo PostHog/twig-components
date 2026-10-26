@@ -62,3 +62,64 @@
 @media (prefers-reduced-motion: reduce) {
   .twig-compact .twig-saved-stay-icon { transition: none; }
 }
+
+/* Exact light inspector palette, hierarchy and spacing from PostHog.com PocketGuides/PostHogInspector.
+   This opt-in scope is separate from the Playground inspector. */
+.ph-pocket-guide-inspector {
+  --pgi-border:#d3d0c8; --pgi-paper:#fffdfa; --pgi-heading:#f6f3ed; --pgi-tab:#faf8f3;
+  --pgi-text:#292724; --pgi-muted:#716c63; --pgi-summary:#5f5a52; --pgi-line:#dedad2;
+  --pgi-code-font:var(--ph-font-code,PlaygroundSourceCodePro,ui-monospace,monospace);
+  --pgi-key:#77529a; --pgi-value:#9a4b1c; --pgi-tag:#135e91; --pgi-orange:#eb9d2a; --pgi-highlight:#fff0dc;
+  min-width:0; overflow:hidden; border:1px solid var(--pgi-border); border-radius:4px;
+  background:var(--pgi-paper); color:var(--pgi-text); font-family:PlaygroundRoundHog,sans-serif; box-shadow:0 1px 2px rgb(0 0 0 / .05);
+}
+.ph-pocket-guide-inspector .ph-pocket-inspector-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; border-bottom:1px solid var(--pgi-border); background:var(--pgi-heading); padding:8px 12px; font-size:14px; line-height:20px; font-weight:600; }
+.ph-pocket-guide-inspector .ph-pocket-inspector-content { min-width:0; font-size:14px; line-height:20px; }
+.ph-pocket-guide-inspector .ph-pocket-inspector-panel { min-width:0; border-bottom:1px solid var(--pgi-border); }
+.ph-pocket-guide-inspector .ph-pocket-inspector-tabs { display:flex; align-items:center; gap:8px; border-bottom:1px solid var(--pgi-border); background:var(--pgi-tab); padding:0 12px; font-size:12px; line-height:16px; }
+.ph-pocket-guide-inspector .ph-pocket-inspector-tab { border-bottom:2px solid var(--pgi-orange); padding:8px 0; font-weight:600; }
+.ph-pocket-guide-inspector :is(.ph-pocket-inspector-meta,.ph-pocket-inspector-count) { margin-left:auto; font:10px/15px var(--pgi-code-font); }
+.ph-pocket-guide-inspector .ph-pocket-inspector-meta { color:var(--pgi-muted); }
+.ph-pocket-guide-inspector .ph-pocket-inspector-count { border:1px solid var(--pgi-border); border-radius:4px; background:var(--pgi-paper); padding:2px 8px; font-weight:600; }
+.ph-pocket-guide-inspector .ph-pocket-inspector-tree { min-width:0; overflow-x:auto; padding:8px 0; font:12px/24px var(--pgi-code-font); }
+.ph-pocket-guide-inspector .ph-pocket-inspector-element { display:flex; min-width:0; border-left:3px solid var(--pgi-orange); background:var(--pgi-highlight); padding:0 12px; }
+.ph-pocket-guide-inspector .ph-pocket-inspector-line { margin-right:16px; user-select:none; color:#878177; }
+.ph-pocket-guide-inspector :is(samp,.ph-pocket-inspector-row) { min-width:0; white-space:pre-wrap; overflow-wrap:anywhere; font:inherit; }
+.ph-pocket-guide-inspector .ph-pocket-inspector-tag { color:var(--pgi-tag); }
+.ph-pocket-guide-inspector .ph-pocket-inspector-key { color:var(--pgi-key); }
+.ph-pocket-guide-inspector .ph-pocket-inspector-value { color:var(--pgi-value); }
+.ph-pocket-guide-inspector .ph-pocket-inspector-muted { color:var(--pgi-muted); }
+.ph-pocket-guide-inspector details { min-width:0; margin:0!important; padding:0!important; border:0!important; border-radius:0!important; background:transparent!important; }
+.ph-pocket-guide-inspector details.ph-pocket-inspector-payload { padding:0 12px!important; }
+.ph-pocket-guide-inspector details > summary { display:list-item; list-style:disclosure-closed inside; cursor:pointer; user-select:none; color:var(--pgi-summary); font:inherit; margin:0; padding:0; background:transparent!important; }
+.ph-pocket-guide-inspector details[open] > summary { list-style-type:disclosure-open; }
+.ph-pocket-guide-inspector details > summary.ph-pocket-inspector-key { color:var(--pgi-key); }
+.ph-pocket-guide-inspector .ph-pocket-inspector-branch { margin-left:5px; border-left:1px solid var(--pgi-line); padding-left:16px; }
+.ph-pocket-guide-inspector .ph-pocket-inspector-status { display:flex; align-items:flex-start; gap:8px; padding:8px 12px; background:var(--pgi-tab); color:var(--pgi-summary); font-size:12px; line-height:19.5px; }
+.ph-pocket-guide-inspector .ph-pocket-inspector-status > span:first-child { flex:none; width:6px; height:6px; border-radius:50%; margin-top:5px; background:var(--pgi-orange); }
+
+/* Compact Twig controls retain the website button contract inside a PostHog editor. */
+.twig-compact .vac-button,
+.vac-app .vac-developer-theme .twig-compact .vac-button {
+  display:inline-flex; align-items:center; justify-content:center; min-height:44px;
+  padding:9px 16px; border:1px solid var(--vac-line); border-radius:3px;
+  background:var(--vac-paper); color:var(--vac-text); font:inherit;
+  text-decoration:none; cursor:pointer; box-shadow:none;
+}
+.twig-compact .vac-button:hover:not(:disabled),
+.vac-app .vac-developer-theme .twig-compact .vac-button:hover:not(:disabled) {
+  background:var(--vac-fill); border-color:var(--vac-line);
+}
+.twig-compact .vac-button.vac-primary,
+.vac-app .vac-developer-theme .twig-compact .vac-button.vac-primary {
+  background:var(--vac-ink); border-color:var(--vac-ink); color:var(--vac-paper);
+}
+.twig-compact .vac-button.vac-primary:hover:not(:disabled),
+.vac-app .vac-developer-theme .twig-compact .vac-button.vac-primary:hover:not(:disabled) {
+  background:#203884; border-color:#203884;
+}
+.twig-compact .vac-button:disabled,
+.vac-app .vac-developer-theme .twig-compact .vac-button:disabled {
+  background:var(--vac-line); border-color:var(--vac-line); color:var(--vac-muted);
+  cursor:not-allowed; opacity:.55;
+}

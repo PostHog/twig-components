@@ -243,6 +243,10 @@
     "./experience-assets": {
       "types": "./dist/experience/assets.d.ts",
       "import": "./dist/experience/assets.js"
+    },
+    "./pocket-guide-inspector": {
+      "types": "./dist/PocketGuideInspector.d.ts",
+      "import": "./dist/PocketGuideInspector.js"
     }
   },
   "scripts": {
@@ -437,6 +441,9 @@
       ],
       "experience-assets": [
         "dist/experience/assets.d.ts"
+      ],
+      "pocket-guide-inspector": [
+        "dist/PocketGuideInspector.d.ts"
       ]
     }
   }
