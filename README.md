@@ -5,12 +5,15 @@
 | Need | Start here |
 | --- | --- |
 | Find a component, its purpose, props, and current use | [Component reference](docs/components.md) |
+| Preserve the approved design on existing and new UI | [Visual system](docs/design-system.md) |
 | Contribute with a coding agent | [Agent guidance](AGENTS.md) |
 | Report a security issue | [Private vulnerability reporting](https://github.com/PostHog/twig-components/security/advisories/new) |
 | Decide which repo to change for a new lab or guide | [Integration and authoring scenarios](docs/integration.md#authoring-scenarios) |
 | Understand package setup and updates | [Integration and updates](docs/integration.md) |
 | Develop and click through components | [Workbench guide](docs/workbench.md) |
 | See static release snapshots | `npm run gallery`, then open `gallery/output/index.html` |
+
+The [visual system](docs/design-system.md) is a required contract for all existing UI and new features. Reuse shared components, CSS classes, and tokens. Only an explicitly requested or approved design-system change may alter the patterns. Keep Twig and PostHog styling separate.
 
 ## How it fits
 

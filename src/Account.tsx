@@ -183,7 +183,7 @@ export function ProfileMenu({
         </svg>
       </button>
       {open && (
-        <div id={menuId} className="twig-profile-popover">
+        <div id={menuId} className="twig-profile-popover twig-dropdown-menu">
           <div className="twig-profile-summary">
             <DefaultAvatarIcon />
             <span><strong>{profile.displayName}</strong><small>{profile.email}</small></span>
@@ -192,6 +192,7 @@ export function ProfileMenu({
             {links.map((link) => (
               <a
                 key={link.id}
+                className="twig-dropdown-item"
                 href={link.href}
                 onClick={(event) => {
                   followLink(event, link.href, onNavigate);
@@ -202,7 +203,7 @@ export function ProfileMenu({
               </a>
             ))}
           </nav>
-          <button type="button" className="twig-profile-signout" onClick={onSignOut}>Log out</button>
+          <button type="button" className="twig-profile-signout twig-dropdown-item" onClick={onSignOut}>Log out</button>
         </div>
       )}
     </div>
@@ -226,7 +227,7 @@ export function AccountLayout({
 }: AccountLayoutProps): ReactElement {
   return (
     <div className="twig-account-layout">
-      <aside className="twig-account-sidebar">
+      <aside className="twig-account-sidebar twig-dropdown-menu">
         <div className="twig-account-identity">
           <DefaultAvatarIcon />
           <span><strong>{profile.displayName}</strong><small>{profile.email}</small></span>
@@ -235,6 +236,7 @@ export function AccountLayout({
           {links.map((link) => (
             <a
               key={link.id}
+              className="twig-dropdown-item"
               href={link.href}
               aria-current={link.id === active ? "page" : undefined}
               onClick={(event) => followLink(event, link.href, onNavigate)}
@@ -274,7 +276,6 @@ export function ProfileOverview({ profile, onBioChange }: ProfileOverviewProps):
 
   return (
     <section className="twig-account-page twig-profile-page" aria-labelledby="twig-profile-title">
-      <span className="vac-eyebrow">Traveler profile</span>
       <h1 id="twig-profile-title">{profile.displayName}</h1>
       <p className="twig-account-muted">View or edit your Twig profile. This profile is shared with your host when you book a stay.</p>
       <div className="twig-profile-card">
@@ -344,7 +345,6 @@ export function SavedStaysView({
 }: SavedStaysViewProps): ReactElement {
   return (
     <section className="twig-account-page" aria-labelledby="twig-saved-title">
-      <span className="vac-eyebrow">Your account</span>
       <h1 id="twig-saved-title">Saved stays</h1>
       <p className="twig-account-muted">Keep the places you want to come back to.</p>
       {stays.length ? (
@@ -412,7 +412,6 @@ export function BookedStaysView({
 }: BookedStaysViewProps): ReactElement {
   return (
     <section className="twig-account-page" aria-labelledby="twig-bookings-title">
-      <span className="vac-eyebrow">Your account</span>
       <div className="twig-bookings-heading"><h1 id="twig-bookings-title">Booked stays</h1>{headingAccessory}</div>
       <p className="twig-account-muted">Your twig trips. All of them. Yes, including the ones you canceled.</p>
       {bookings.length ? (
@@ -543,7 +542,6 @@ export function AccountSettingsView({
   }
   return (
     <section className="twig-account-page" aria-labelledby="twig-settings-title">
-      <span className="vac-eyebrow">Your account</span>
       <h1 id="twig-settings-title">Account settings</h1>
       <p className="twig-account-muted">Review your profile and choose which messages you receive.</p>
       <form className="twig-account-settings" onSubmit={submit}>

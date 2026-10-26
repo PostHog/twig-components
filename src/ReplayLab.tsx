@@ -1,5 +1,10 @@
 "use client";
 
+import { RecordingControls } from "./ReplayControls.js";
+import { LabPrimaryAction } from "./LabNavigation.js";
+import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
+import { touchpointDefinitions } from "./playground.js";
+
 import { useEffect, useRef, type ReactNode } from "react";
 import { FinishLabButton } from "./FinishLabButton.js";
 import { LabChecklist } from "./LabChecklist.js";
@@ -9,6 +14,7 @@ export type ReplayLabViewState = {
   exercise: "ghost" | "manual";
   recording: readonly unknown[];
   starting: boolean;
+  elapsedMs?: number;
   frames: ReplayFrame[];
   mode: "ghost" | "manual" | null;
   masked: boolean;
@@ -23,20 +29,9 @@ export type ReplayLabViewState = {
 
 export function ReplayRecordingBar({ replay }: { replay: ReplayLabViewState }) {
   if (!replay.mode) return null;
-  return (
-    <div className="vac-replay-recording" role="status">
-      <span>
-        {replay.mode === "ghost"
-          ? "Ghost visit running"
-          : "Recording your visit"}
-      </span>
-      {replay.mode === "manual" && (
-        <button className="vac-text-button" onClick={replay.stop}>
-          End recording and review
-        </button>
-      )}
-    </div>
-  );
+  return replay.mode === "manual"
+    ? <RecordingControls elapsedMs={replay.elapsedMs ?? 0} onStop={replay.stop} />
+    : <p className="vac-replay-recording" role="status">Ghost visit running</p>;
 }
 
 export function ReplayLab({
@@ -111,18 +106,14 @@ export function ReplayLab({
           done: false,
         }]} />
         {replay.mode === "manual" && (
-          <button className="vac-button" onClick={replay.stop}>
-            <span className="vac-os-button-face">
-              End recording and review →
-            </span>
-          </button>
+          <LabPrimaryAction><RecordingControls elapsedMs={replay.elapsedMs ?? 0} onStop={replay.stop} /></LabPrimaryAction>
         )}
       </section>
     );
   if (stage === 0)
     return (
       <div className="vac-guide-intro">
-        <h3>Session Replay lab</h3>
+        <h3>{touchpointDefinitions.replay.title}</h3>
         <p>
           Events tell you a visitor selected Coast. Replay adds the sequence:
           where they moved, what they typed, and which stay they opened.
@@ -133,11 +124,11 @@ export function ReplayLab({
             visit.
           </p>
         </div>
-        <button className="vac-button" onClick={() => onStage(1)}>
+        <LabPrimaryAction><button className="vac-button" onClick={() => onStage(1)}>
           <span className="vac-os-button-face">Set up the ghost visit →</span>
-        </button>
-        <details className="vac-lab-step">
-          <summary>How this simulation works</summary>
+        </button></LabPrimaryAction>
+        <details className="vac-lab-step" open>
+          <PlaygroundSummary>How this simulation works</PlaygroundSummary>
           <p>The ghost visit is scripted. Your own visit is recorded locally for playback in this lab. No replay is sent to PostHog.</p>
         </details>
       </div>
@@ -150,25 +141,21 @@ export function ReplayLab({
             <>
               {replay.mode === "manual" ? (
                 <LabChecklist label="Next replay action" items={[{
-                  label: <>Explore Twig however you like. Click around, browse stays, or try a search. When you’re ready, click <strong>End recording and review</strong> to watch your visit.</>,
+                  label: <>Explore Twig however you like. Click around, browse stays, or try a search. When you’re ready, click <strong>Stop recording</strong> to watch your visit.</>,
                   done: false,
                 }]} />
               ) : (
-                <p>Your recording is ready. Play it back to see the interactions you captured.</p>
+                <LabChecklist label="Review your recording" items={[{ label: <>Click <strong>Watch the recording</strong> to review your visit.</>, done: false }]} />
               )}
               {replay.mode === "manual" && (
-                <button className="vac-button" onClick={replay.stop}>
-                  <span className="vac-os-button-face">
-                    End recording and review →
-                  </span>
-                </button>
+                <LabPrimaryAction><RecordingControls elapsedMs={replay.elapsedMs ?? 0} onStop={replay.stop} /></LabPrimaryAction>
               )}
               {!replay.mode && hasVisit && (
-                <button className="vac-button" onClick={() => onStage(2)}>
+                <LabPrimaryAction><button className="vac-button" onClick={() => onStage(2)}>
                   <span className="vac-os-button-face">
                     Watch the recording →
                   </span>
-                </button>
+                </button></LabPrimaryAction>
               )}
             </>
           ) : (
@@ -197,7 +184,7 @@ export function ReplayLab({
               {source === "ghost" && pathname !== "/" ? (
                 returnHome
               ) : (
-                <button
+                <LabPrimaryAction><button
                   className="vac-button"
                   disabled={replay.starting}
                   onClick={() => replay.start(source)}
@@ -207,9 +194,9 @@ export function ReplayLab({
                       ? "Starting recorder…"
                       : source === "ghost"
                       ? "Run ghost simulation →"
-                      : "Start my recording →"}
+                      : "Start recording"}
                   </span>
-                </button>
+                </button></LabPrimaryAction>
               )}
               {replay.message && <p role="status">{replay.message}</p>}
             </>
@@ -219,8 +206,8 @@ export function ReplayLab({
         <>
           {replay.recording.length < 2 ? (
             <>
-              <p>Record a new visit to capture the page for playback.</p>
-              <button
+              <LabChecklist label="Capture a recording" items={[{ label: <>Return to the exercise and <strong>record a new visit</strong>.</>, done: false }]} />
+              <LabPrimaryAction><button
                 className="vac-button"
                 onClick={() => {
                   replay.clear();
@@ -230,7 +217,7 @@ export function ReplayLab({
                 <span className="vac-os-button-face">
                   Continue the exercise →
                 </span>
-              </button>
+              </button></LabPrimaryAction>
             </>
           ) : (
             <>
@@ -240,33 +227,30 @@ export function ReplayLab({
               </p>
               {sessionPlayer}
               <div className="vac-lab-output">
-                <h4>Look for the search</h4>
                 <p>
                   {replay.capturedMasked
                     ? "Search words were masked before storage. You can still watch the typing and surrounding interactions."
-                    : "Search words are visible in this recording. Record another visit with masking on to compare."}
+                    : "Search words are visible in this recording."}
                 </p>
               </div>
+              {!replay.capturedMasked && <LabChecklist label="Compare masking" items={[{ label: <>Record another visit with <strong>Hide search text in the replay</strong> enabled.</>, done: false }]} />}
               <section
                 className="vac-lab-step"
                 aria-label="Captured interactions"
               >
                 <h4>Captured interactions</h4>
-                <ol>
+                <table className="vac-lab-table" aria-label="Recorded interactions"><thead><tr><th scope="col">Time</th><th scope="col">Interaction</th></tr></thead><tbody>
                   {replay.frames
                     .filter(
                       (item) => item.kind !== "move" && item.kind !== "scroll"
                     )
                     .map((item, i) => (
-                      <li key={i}>
-                        {(item.at / 1000).toFixed(1)}s · {item.label}
-                        {item.value !== undefined ? `: ${item.value}` : ""}
-                      </li>
+                      <tr key={i}><td>{(item.at / 1000).toFixed(1)}s</td><td>{item.label}{item.value !== undefined ? `: ${item.value}` : ""}</td></tr>
                     ))}
-                </ol>
+                </tbody></table>
               </section>
               {source === "ghost" ? (
-                <button
+                <LabPrimaryAction><button
                   className="vac-button"
                   onClick={() => {
                     replay.clear();
@@ -277,7 +261,7 @@ export function ReplayLab({
                   <span className="vac-os-button-face">
                     Record my own visit →
                   </span>
-                </button>
+                </button></LabPrimaryAction>
               ) : (
                 <FinishLabButton onClick={() => onStage(3)} />
               )}
@@ -286,7 +270,7 @@ export function ReplayLab({
         </>
       )}
       <details className="vac-lab-step">
-        <summary>About this exercise</summary>
+        <PlaygroundSummary>About this exercise</PlaygroundSummary>
         <p>
           This uses rrweb to record and replay actual page changes, clicks,
           scrolling, and typing. It stays in memory in this tab. The playground

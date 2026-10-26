@@ -1,14 +1,14 @@
 # Component reference
 
-Import only the pieces you need from `@posthog/twig-components/<path>`. React is a peer dependency: the host supplies React 18 or 19. Import `catalog.css` for Twig views and `lab.css` for the playground. See [integration](integration.md) for styling and update boundaries.
+Import only the pieces you need from `@posthog/twig-components/<path>`. React is a peer dependency: the host supplies React 18 or 19. Import `catalog.css` for Twig views and `lab.css` for the playground. See [integration](integration.md) for styling and update boundaries. All existing and new UI must follow the approved [visual system](design-system.md); this reference does not authorize alternate styling or host overrides.
 
-“Used in Twig” describes the Twig.com integration. Twig.com pins a published package version, while the PostHog 101 guide integration is still in progress.
+“Used in Twig” describes the Twig.com integration. Twig.com pins an exact package build (currently its checked-in local brand archive; see the host README), while the PostHog 101 guide integration is still in progress.
 
 ## Website views and data
 
 | Import path | Export | What it does | Used in Twig / what the host supplies |
 | --- | --- | --- | --- |
-| `/trip-planner` | `TripPlanner`, `TripPlannerProps` | Scripted forest → beach → kitchen → city-failure chat, with read-only prefilled prompts, a floating chat window, a compact composer, a short typing state, and reset. | Host supplies `stays`, `renderStayLink`, optional lab-only `scenario`, `accessory`, `inputId`, `hidden`, `windowClassName`, `windowAction`, `launcherLabel`, `canSendMessage`, `onReset`, and `onRequestComplete`. No model calls, persistence, or event capture. See [conversation contract](trip-planner.md). |
+| `/trip-planner` | `TripPlanner`, `TripPlannerProps`, `AiSearchIcon` | Scripted forest → beach → kitchen → city-failure chat, with read-only prefilled prompts, a floating chat window, a compact composer, a short typing state, and reset. | Host supplies `stays`, `renderStayLink`, optional lab-only `scenario`, `accessory`, `inputId`, `hidden`, `windowClassName`, `windowAction`, `launcherLabel`, `canSendMessage`, `onReset`, and `onRequestComplete`. No model calls, persistence, or event capture. See [conversation contract](trip-planner.md). |
 | `/trip-planner-lab` | `TripPlannerWalkthrough`, `TripPlannerLabProvider`, `useTripPlannerLab` | Walkthrough: session/trace/generation hierarchy, captured chat, a wrong recommendation, a failing capacity evaluation, investigation, fix, and the same evaluation passing. | Host connects chat completion to `record`, keys chat by `revision`, supplies stays, an optional `renderStayCard` for the actual homepage card, an `onAllLabs` callback for lesson navigation, and optional `onEvaluate(phase)` for a learner running the before/after check. Instructions point learners to the actual Twig controls. Load `lab.css` in the lab theme. |
 | `/trip-planner-state` | `replyToTripPlanner`, `initialTripPlannerState`, `tripPlannerSuggestions`, prompts, limits, and types | Pure, bounded conversation rules and catalog-backed responses. | Shared by the planner and regression tests. |
 | `/trip-planner-records` | `createTripPlannerRequest`, `tripPlannerModel`, request, message, identity, and record types | Builds a catalog-backed answer and a matching PostHog generation with conversation history, token usage, cost, and duration. | Local teaching data only. Caller supplies IDs and start time. No provider call or event upload. |
@@ -16,8 +16,8 @@ Import only the pieces you need from `@posthog/twig-components/<path>`. React is
 | `/account` | `TripDetailsView` | Displays trip details when they load, or only the recoverable error when they fail. Its Contact support button stays disabled until support is available. `BookedStaysView` places Cancel stay beside Trip details on the booking card. | Host supplies selected booking, host name, error state, retry, and cancellation callbacks. |
 | `/saved-stay` | `SavedStay`, `SavedStayProps` | Controlled save control with signed-out, unsaved, saved, loading, disabled, and error states. Its signed-out label says “Log in to save.” | Host supplies `stayName`, auth state, save state, callbacks, persistence, and analytics. Signed-out hosts pass `onSignIn`; signed-in hosts pass `saved` and `onSavedChange`. |
 | `/filters` | `StayFilters`, `staySettings`, `StaySetting` | Controlled Forest/Coast/City filter buttons; calls `onChange` on a click. | `Discover`; pass `value`, `onChange`, and optional CSS classes. The host filters the listings. |
-| `/browse-stays` | `BrowseStays` | Real Browse stays controls and matching results from the shared catalog. | `Discover`; pass filter/search state, callbacks, a card renderer, and an optional marker. The host owns tracking and navigation. |
-| `/stay-card` | `StayCardContent` | Listing text, location, capacity, and nightly price. | `StayCard`; pass a `stay` and `image`. The host supplies the link or card wrapper; `linked` shows an arrow. |
+| `/browse-stays` | `BrowseStays`, `TripSearch`, `TripSearchValue` | Real Browse stays controls and matching results from the shared catalog, with optional controlled search/filter disclosure (`controlsExpanded`, `onControlsExpandedChange`). Existing consumers keep expanded controls by default. | `Discover`; pass filter/search state, callbacks, a card renderer, and an optional marker. The host owns tracking and navigation. |
+| `/stay-card` | `StayCardContent` | Listing text, location, capacity, and nightly price. | `StayCard`; pass a `stay` and `image`. The host supplies the link or card wrapper; `linked` adds screen-reader-only “View stay” text. |
 | `/stay-details` | `StayDetails` | About, stay facts, sleeping arrangements, and amenities. | Stay detail page; pass the selected catalog `stay`. Host/booking sections stay in Twig.com. |
 | `/browse-stays-preview` | `BrowseStaysPreview` | Read-only Browse stays excerpt with one selected filter and stay. | Gallery only; intended for PostHog 101. Pass `selected="Forest"`, `"Coast"`, or `"City"`. No click handler or analytics. |
 | `/catalog` | `stays`, `characters`, `conciergeContent`, `discoveryCopy`, `filterStays`, `stayLabel`, `nightlyPrice`, types | Fictional catalog content and pure display/filter helpers. | Discover, stay pages, and lab fixtures; the host supplies page layout and navigation. |
@@ -67,6 +67,8 @@ import "@posthog/twig-components/catalog.css";
 ```
 
 ## Account views
+
+`AccountLayout` and `ProfileMenu` reuse the shared dropdown shell and rows, including spacing and typography at every width. The account list stays one column on mobile.
 
 Account components own Twig's visual presentation and interface behavior. They
 do not own the session, profile fixture, local storage, booking mutations, or
@@ -141,7 +143,7 @@ For directions that ask the learner to act on Twig, use `LabChecklist` in every 
 | `/replay-recorder` | `ReplayProvider`, `useReplay` | Records the current tab locally or runs a ghost visit with rrweb; pass `open` and `pathname`. | ReplayLab / Playground |
 | `/replay-lab-ui` | `ReplayLab`, `ReplayRecordingBar`, `ReplayLabViewState` | Replay lesson and recording status; host passes stage, replay state, return link, and player. | ReplayLab |
 | `/session-player` | `SessionPlayer` | Plays an rrweb recording; pass recorded `events`. | ReplayLab |
-| `/lab-navigation` | `LabNavigationView` | Keeps All labs, Previous step, and the optional `returnTo` action visible as text navigation. The labeled reset icon opens the existing confirmation in Twig.com. | FilterLab adapter |
+| `/lab-navigation` | `LabNavigationView` | Keeps All labs, Previous step, and the optional `returnTo` action visible as text navigation. Twig.com header options open the shared flat reset confirmation; legacy consumers retain their reset entry. | FilterLab adapter |
 | `/lab-completion-view` | `LabCompletionView` | Recap for one completed lab; host supplies choose/review actions and heading ref. | LabCompletion |
 | `/lab-checklist` | `LabChecklist` | Shared directions for learner interactions, with done/current/upcoming states; pass `label` and `items`. | Lab UI |
 | `/lab-choices` | `LabChoices` | Accessible radio choice group; pass `label`, `value`, `options`, and `onChange`. | Lab UI |
@@ -162,7 +164,7 @@ The state modules below contain reducers, types, fixtures, and formatting helper
 
 | Import path | Use |
 | --- | --- |
-| `/catalog.css` | Twig website views and the read-only preview; includes Twig’s Halfre font. |
+| `/catalog.css` | Twig website views and the read-only preview; uses Twig’s self-hosted DM Sans and Fraunces. Bricolage remains bundled for compatibility, not rendered as part of the approved identity. |
 | `/lab.css` | Playground and lab UI; scope it under `.vac-app .vac-developer-theme`. Its PostHog-styled UI uses RoundHog. |
 | `/assets/*` | Package font and image files referenced by the styles or explicitly imported by a host. |
 
@@ -174,7 +176,176 @@ The AI walkthrough reuses `LabCompletionView` for its final recap. The view acce
 
 ## Events and properties
 
-`/events-lab` exports the local lesson reducer, configuration gates, counts, and handoff task. `/events-lab-provider` exports `EventsLabProvider` and `useEventsLab`; the playground controller includes it and resets its state when a learner chooses a lab. A custom host can change the provider's `resetKey` to start a fresh lesson without remounting its children. `/events-lab-ui` exports `EventsLab`, `EventsExperienceSwitch`, and `EventRecordedNotice`. Render the experience switch with host navigation, outside lesson content. One entry offers two complete experiences: an Activity/Trends interface or a simulated coding agent with MCP reads. The toggle preserves recorded events and tracking configuration. The agent shows thinking, tool execution, and a streamed answer, with immediate responses when reduced motion is enabled. The final comparison explains insights and dashboards without adding a duplicate save screen. Hosts send actual destination filter clicks, result counts, and timestamps, and supply navigation callbacks. The lesson never creates clicks on behalf of the learner. Code changes and MCP results are local simulations; no model or network calls occur.
+`/events-lab` exports the local lesson reducer, configuration gates, counts, and handoff task. `/events-lab-provider` exports `EventsLabProvider` and `useEventsLab`; the playground controller includes it and resets its state when a learner chooses a lab. A custom host can change the provider's `resetKey` to start a fresh lesson without remounting its children. `/events-lab-ui` exports `EventsLab` and `EventsExperienceSwitch`. The deprecated `EventRecordedNotice` export renders nothing for compatibility. Render the experience switch with host navigation, outside lesson content. One entry offers two complete experiences: an Activity/Trends interface or a simulated coding agent with MCP reads. The toggle preserves recorded events and tracking configuration. The agent shows thinking, tool execution, and a streamed answer, with immediate responses when reduced motion is enabled. The final comparison explains insights and dashboards without adding a duplicate save screen. Hosts send actual destination filter clicks, result counts, and timestamps, and supply navigation callbacks. The lesson never creates clicks on behalf of the learner. Code changes and MCP results are local simulations; no model or network calls occur.
+
+
+`TripSearch` is a controlled destination/date/guest form using the shared date and guest pickers. Pass `value`, `minDate`, `capacity`, `errors`, `onChange`, and `onSubmit`. Destination, dates, and guests stay visible at every width; only optional setting/amenity filters use a disclosure. On mobile, destination and guests fill the form width, dates share a row, and the full-width submit action follows Filters. The host validates, filters, carries the selection into booking, and records analytics. `BrowseStays.primarySearch` replaces its old inline text search; `results` accepts the host-filtered catalog. Both are optional and preserve existing consumers. `StayCardContent` groups nightly price beside its title and attributes the stay to the existing catalog host by name and species.
+
+
+Integrated search: pass a render function to `BrowseStays.primarySearch` to receive the existing setting-filter disclosure, then render it in `TripSearch.filters`. `additionalFilters` adds amenity controls and `activeFilterCount` supplies the count. Existing React-node consumers keep their old arrangement. `TripSearch.destinations` provides catalog-location suggestions; `onDestinationSelect` reports a chosen location to the host. Suggestions support arrows, Enter, Escape, and pointer selection. `/filters` also exports `AmenityFilters`, `amenityOptions`, `StayAmenity`, and `matchesStayAmenities`. Multiple selected amenities use AND semantics. Existing setting callbacks, replay labels, and simulated event schemas remain intact.
+
+Replay opens the integrated filter disclosure before its ghost clicks and submits the destination form before opening a stay. It recognizes both `#trip-search-destination` and legacy `#stay-search`, applying the same optional search-text masking to either.
+
+
+Stay-card host identities show a small circular portrait from the existing character `portrait` field, followed by the existing host name and a separate italic Fraunces species line. Missing portraits leave the circle empty, without requesting an invalid image URL. Character names, species, and artwork remain supplied by the host catalog owner.
+
+
+The interactive browse section shows only “Browse stays” above its photos. It omits the Explore eyebrow and keeps the changing result count screen-reader-only so filtering remains announced without another visible row.
+
+`AiSearchIcon` is the decorative sparkle beside “AI trip planner”. Keep the text label and the appropriate pressed/expanded state on its control.
+
+## Integrated getaway search
+
+`SearchWorkspace` and `GetawaySearch` are exported from `/trip-planner`. They share the existing sage search surface, Twig type, cobalt controls, and 3px corners. “Search stays” is selected first; the second tab reads “AI trip planner”. AI uses catalog-backed local rules with concise fit explanations, relevant factual limitations, and “Simulated AI responses”. Unknown requirements are not verified. Hosts supply trip preferences, navigation, booking transfer and content-free outcome analytics. The original `TripPlanner` remains unchanged for guided labs. The workbench includes a Getaway search view.
+
+Guests type into the AI search field. Sending opens a non-modal chat window on the left using the existing Twig chat styling. Conversation content stays in that window; collapsing keeps a compact launcher and preserves messages and draft. Switching search modes does not close the chat. The only note reads “Simulated AI responses”. Guided Playground chat retains its existing flow.
+
+Twig views share two typefaces (DM Sans interface, Fraunces display), quiet charcoal facts, sage search surfaces, and the existing cobalt primary actions. SearchWorkspace coordinates 48px desktop controls and a mobile disclosure for optional setting and amenity filters; GetawaySearch retains its editable composer, separate collapsible window, and callbacks. See the Getaway search and Twig views workbench examples. The optional `GetawaySearch.windowClassName` lets the host place the portaled window beside its lab dock; interaction flow is unchanged.
+
+Account components use the same approved charcoal text, sage selections, neutral borders/shadows, and DM Sans/Fraunces hierarchy as the rest of Twig. Saved stay cards reuse `StayCardContent` and share browsing-card rules. Account navigation rows retain 44px targets and consistent height at 320px, including selected labels. See the visual system’s account and full-site verification requirements before changing these components.
+
+## Inspect Twig exploration
+
+`PlaygroundLauncher`, `PlaygroundExplorer`, and the `PlaygroundActivity` type are additive exports from `/playground-panels`. The compact launcher opens the workspace. Explorer composes existing PostHog menu rows, product icons, `LabChecklist`, local activity evidence, and OS buttons; it passes selections, locating, lab starts, and navigation to host callbacks. Existing `LabDirectory`, `PlaygroundInvitation`, and guided lesson APIs remain available. The workbench’s Inspect Twig preview exercises the prototype.
+
+Activity is observed local UI interaction, not captured PostHog events. Hosts must allowlist catalog actions and omit all user-entered content. No shared component sends analytics or records DOM contents.
+
+The earlier review variant used a horizontal right-edge `PlaygroundLauncher` tab and `PlaygroundDock placement="edge"`: a compact PostHog window toolbar, collapse control, and slide-in motion with a reduced-motion alternative. Hosts place the drawer and reserve room for Twig. The original inline dock remains the default for other consumers. Existing product choices, evidence, and guided lessons are unchanged.
+
+The edge launcher label reads horizontally, with logo and expand icon alongside it. Do not rotate text or use vertical writing. Narrow hosts may put the tab in the page flow to avoid obscuring controls.
+
+### Tool rail and element picker preview
+
+Sarah requested a persistent neutral tool rail with the existing PostHog logo/product icons, an inspect cursor, hover/focus labels, and a collapse control. `PlaygroundToolRail` and `PlaygroundPickerHint` are additive `/playground-panels` exports. The rail remains visible beside `PlaygroundDock placement="edge"`. `PlaygroundExplorer selectedId` lets the host select a feature without starting or changing a lesson. The host owns allowlisted element picking, DOM focus restoration, routing, and analytics. Reuse the existing neutral selected states, blue target outline, and product assets. No vertical text, raised launcher, recorded DOM content, or changed lesson copy. This remains a reviewable prototype.
+
+At narrow widths the persistent rail becomes a bottom tool strip, preserving Twig’s full content width. Keep tooltips inside the viewport and chat/replay controls above that strip. The host places those windows; search uses its own width as a container for its established responsive layouts.
+
+The rail uses the exact PostHog `IconCursorBox` glyph. Its logo is the Home button, controlled by `homeOpen` and `onHomeOpened`, with the existing tooltip, selected state, and keyboard focus. `PlaygroundHome` starts the real-interaction onboarding or opens independent inspection through host-owned callbacks. Keep the logo visible on desktop and mobile; there is no question-mark control. The edge workspace retains its rail collapse control. Legacy `helpOpen`, `onHelpOpened`, and `PlaygroundHelp` exports remain available for compatibility.
+
+The logo image is decorative inside the named Home button. `toggleRef` belongs to the separate expand/collapse control. Hosts return focus to the inspect control on mobile.
+
+`PlaygroundInstrumentationTooltip` (`/playground-panels`) takes a `touchpoint` with stable `id`/`tool`, its DOM `anchor`, optional tooltip `id`, and optional pointer enter/leave callbacks. It owns PostHog product presentation and measured viewport placement. `PlaygroundMarker` supplies hover/focus/dismissal and `aria-describedby`; the host picker may reuse it for fixed allowlisted targets. Edge docks and open rails share one neutral surface with only the content/icon-rail divider.
+
+`PlaygroundInspectionView` (`/playground-panels`) is the dedicated Inspect surface. Props: `activity`, optional `selectedId`, `onSelect(id)`, and `choose(id)`. `PlaygroundActivity` supports any `TouchpointId`, with optional `event` for the fixed instrumentation name. It shows selectable interaction history and contextual instrumentation/evidence based on PostHog.com’s pocket-guide source, including syntax-highlighted markup and expandable payload/property trees. Keep the Inspector focused on instrumentation evidence, without a lab CTA or learning prompt. It has no introductory hero, promotional card, or raised CTA. Hosts own observation, filtering, normal site interactions, mode transitions, focus, and analytics. `PlaygroundExplorer` remains the separate product exploration/directory view.
+
+`PlaygroundActivity` optionally supplies `timestamp`, structured `properties`, and a canonical safe `element` snippet. `InstrumentationInspector` is an internal shared primitive, preserving the pocket-guide structure without changing guide embeds. Never pass arbitrary DOM HTML or visitor inputs. The edge header has no collapse button; the rail remains the single collapse control.
+
+Clicking the active Inspect or product tool again collapses its workspace; clicking a different tool switches views. A closed workspace has no pressed tool. Reopening preserves the existing inspection and lesson state. Use the same toggle behavior for pointer and keyboard activation.
+
+The edge dock uses a controlled `open` prop with a reversible 240ms transition in both directions. Keep it mounted through closing; it becomes inert and hidden from assistive technology immediately, then unmounts after exit. Host page-width/mobile-height transitions use the same timing and easing. Reduced motion removes movement. Do not restore an enter-only animation or conditionally remove the dock at the start of closing.
+
+For a dock joined to the permanent rail, pass `joinedBranding` to both components. Keep the single PostHog logo fixed in the desktop rail; the expanded edge header renders only “PostHog Playground”, without a second logo or reserved logo gap. Preserve panel motion and mobile rail controls. Inline consumers retain their existing branding.
+
+Toolbar hover labels use RoundHog, the existing PostHog neutral surface and toolbar border, compact padding, and the directional pointer used by PostHog.com’s Radix tooltip. Keep them flat rather than presenting a second white card. Hover labels have a short delay; keyboard focus is immediate and Escape dismisses them. Associate each label with its tool. Mobile labels stay within the viewport.
+
+
+## Inspector teaching flow
+
+Keep one narrow, pocket-guide-style evidence frame: Console selection, one concise explanation of what happened, the actual capture call, then expandable event data. Full handlers, the tracking helper, and the autocapture comparison are disclosures. Do not force an Elements section onto non-DOM evidence or show missing-element placeholders. Reuse the existing syntax palette, native disclosures, and neutral borders. Keep explanations short and regular.
+
+Classify records by instrumentation: custom AI-feature usage events remain Product Analytics, `$ai_generation` is AI Observability, `$exception` is Error Tracking, and replay uses recording/masking configuration. Hosts may provide linked product events and local generations with the same optional `operationId`. Related-evidence links select the matching console record. Reuse the existing AIO teaching model and identify simulated generations once. Show model, latency, tokens, cost, and the supplied trace/generation IDs using the existing facts and trace views. Keep visitor messages and preferences out of site observation. The standalone example remains available for consumers without connected evidence.
+
+`PlaygroundInspectionView` accepts optional `describe(activity)` and `contexts` with `InspectionGuide` values. Hosts own exact source excerpts and safe event projection. `inspectionProduct` classifies the event rather than its feature location. `replayInspectionGuide` exposes only current privacy/recording settings; recording contents, prompts, personal details, error messages and stacks stay out of site observation. Existing inspection-selection callbacks cover related-evidence selection and lab entry.
+
+
+## Shipping toolbar scope
+
+Keep the existing tool rail, 380px dock, motion, branding, and dedicated Inspector. Product icons open one `ProductLabLanding` per product, built from the existing `vac-lab-directory-list` cards and start controls. `labsForProduct(id)` lists every existing lab for that product across all Twig routes, without duplicate per-page entries, nested feature explorers, or live activity on the landing. Keep lesson content and flow untouched.
+
+Instrumentation circles retain their product colors and hover/focus notes. Notes name the actual capture mechanism and useful properties. Clicking a marker opens its existing lab, even from Inspect; hosts may resume the selected lesson instead of resetting it. Do not turn marker clicks into another inspection context-selection step. Existing lab-start/resume and product-selection callbacks cover tracking.
+
+The open edge Playground is one neutral surface with a single divider between the icon rail and content (above the bottom rail on mobile): no outer frame or header separator. Keep the divider below the desktop rail logo in both expanded and collapsed states. Keep borders on content cards, evidence, and controls. Its content scrollbar uses a thin neutral thumb on a transparent track without a reserved gutter; hosts should also keep the page scrollbar track transparent. Closed toolbar boundaries remain unchanged.
+
+The logo opens Home through `onHomeOpened`; pass `homeOpen` for the neutral active state. It remains available on mobile, with the existing Home tooltip and keyboard focus. Selecting Home preserves lesson progress and Inspector history. The toolbar has no question-mark control.
+
+Lab names describe the PostHog concept taught. The six toolbar labs are Events and properties; Breakdowns by property; Funnels and conversion events; Traces, generations, and evaluations; Session playback and masking; and Exceptions and issue resolution. Shared `touchpointDefinitions` owns the names; stable IDs, event names, lesson exercises, and page/action labels stay unchanged.
+
+Inspector disclosures reuse [PostHog.com’s Radix Accordion](https://github.com/PostHog/posthog.com/blob/master/src/components/RadixUI/Accordion.tsx): flat full-width rows, left-aligned labels, and the exact PostHog IconPlus/IconMinus glyphs on the right. Use the shared `InspectorSummary` for code sections, nested setup, payloads, and property objects. Hide browser markers, retain native details keyboard/state semantics, use quiet neutral hover and visible focus, and keep 44px targets. The console is always visible, not a disclosure. Do not apply this change to lesson accordions or add a lab CTA.
+
+`PlaygroundInspectionView` uses one black terminal console above the selected-event Inspector. Its chronological records are the event history: select an earlier event to pin it, or use Follow latest to resume. Clear console removes prior records from the visible console and selection. Controlled `session`/`onSessionChange` retains selection and clearing across routes and toolbar unmounts. Timestamp sits above the left-aligned event name; properties align beneath the name. The console uses PostHog.com’s `borderRadius.sm` (4px) on all corners and clips child rows to that shape. Records retain the black surface without selection outlines or gray shading. The selected event name and related records sharing its `operationId` use the brand palette’s darker yellow (`#E58E00`, [source](https://brand.posthog.com/catalog.json)); unrelated event names and console controls remain neutral. Keep exactly one selected record for the detail view and keyboard focus; highlighting a related record does not select it. Clear console and Follow latest are neutral control buttons in a compact Console header joined directly above the black event area. Use compact borderless controls with the tool rail’s neutral hover/focus treatment. Clear console is a 16px Playground reset icon with an accessible name and tooltip in a 28px button; touch pointers retain 44px targets. Keep the header compact and the controls transparent at rest. The outer console frame owns the shared 4px corners and clips the joined header and event area. Controls stay outside the event output; keep disabled controls readable without underlines or bright accents. Keep the actual capture call and expandable data below. No separate History view, command prompt, duplicated full JSON, or lab CTA.
+
+`GetawaySearch` exposes optional `onReset` when “start over” clears the conversation, so hosts can start a new local AI session. It does not emit an outcome for a reset.
+
+## Selected-event drill-down
+
+The console remains unchanged. `PlaygroundInspectionView` enables the optional `InstrumentationInspector drilldown` presentation beneath it: matching neutral chrome, borders, 4px corners, and 12px alignment. Show the readable interaction title once and its explanation together, without repeating the event name already selected in the console. “How it’s tracked” opens the exact call in a quiet neutral code surface, with a compact filename below it; the full path stays available on the location. Handler & setup and event data remain expandable. Preserve the existing source, data, related-record navigation, native disclosure semantics, and keyboard focus. Scope these rules to `.vac-inspector-drilldown`; standalone examples, lesson evidence, and every console selector retain their existing design. Presentation changes reuse existing tracking.
+
+Drill-down disclosure hover keeps every row transparent, including nested property objects. Keep label text color fixed, including Handler & setup. Signal hover only through the muted-to-ink plus/minus affordance. Preserve the existing focus-visible outline and native expanded state. Do not add hover tiles, selection fills, movement, or console style changes.
+
+“How it’s tracked” preserves multiline source indentation without horizontal scrolling. Soft-wrap long lines at whitespace or identifier separators such as underscores, dots, and slashes; align continuation lines with their original indentation. Use emergency wrapping only for an otherwise unbreakable token at narrow widths. Soft-wrap hints add no characters to copied code. Format actual instrumentation calls with the event name on its own line and one property per line, then regenerate host source excerpts. Product Analytics may lead with a generated equivalent SDK capture, using `InspectionSource.caption=""` to omit the caption and file location. Keep actual file locations with the underlying Twig implementation. Hosts derive it from real event arguments and retain the actual implementation under Handler & setup. Never handwrite a divergent example or mislabel one as a literal source excerpt.
+
+Console-linked inspection uses `additionalProperties` to avoid repeating the feed. One shared preview recipe supplies both the unchanged console text and the omitted/truncated properties. Hide the data disclosure when the console shows everything. Otherwise show “More event data” containing only omitted properties and the complete values of truncated properties; never repeat the event name or timestamp. AI generation previews show model and latency, so their additional inputs, outputs, usage, and trace data remain inspectable. Preserve Recording configuration as product-specific evidence. Standalone inspectors retain their complete payload by default. Existing tracking covers the presentation change.
+
+`InspectionSource.highlightLines` optionally supplies one-based line numbers relative to the source excerpt. Wrapped drill-down sources render these lines with PostHog.com’s subtle yellow wash, preserving code text and original source locations.
+
+`InspectionGuide.instrumentationDescription` optionally explains the capture approach above the primary code example. Generation drill-downs render their metrics in a collapsed Generation details disclosure after the primary source; standalone inspectors retain their original summary placement.
+
+PostHog data tables use `vac-lab-table` from `lab.css`; use `vac-lab-table-key-value` for two-column field/value data. Use semantic row/column headers, wrap full values, and follow the shared table contract in the visual-system guide.
+
+
+`PlaygroundHome` accepts `onStart` for the first-interaction walkthrough and `onInspect` for independent exploration. The optional legacy `onSelect` prop remains compatible. `PlaygroundOnboarding` accepts `phase` (`stay`, `filter`, `another-stay`, `history`, `compare`, `compare-again`, `follow`, `reset`, `complete`); it renders the existing action checklist and compact guidance inside the live Inspector. Hosts advance it from observed site instrumentation. The workbench uses explicitly simulated controls.
+
+Pass the tour as `PlaygroundInspectionView guidance`. Use “Tour” as the heading while the tour is active and “Inspector” for independent inspection; guidance replaces its general introduction, without a separate page or milestone heading. Pass `onExitTour` alongside guidance to show the × icon control beside the Tour title. It uses the shared icon control with its light-surface variant, a 44px target, “Exit tour” hover/focus tooltip, and visible keyboard focus. Exiting returns to Playground Home and focuses its workspace heading without clearing event history. The console and source views retain their existing rendering.
+
+Home uses grouped `vac-home-panel` surfaces for its tour starter, Inspector entry, and native product disclosures. Pass `onVisitLab(id, page)` to start a selected concept lab directly; `onSelect` remains a fallback for older consumers. Introductory copy identifies Twig as the demo site and the Playground as its PostHog event/code explorer. Reuses existing neutral menu surfaces and bundled PostHog product icons, with no new visual tokens or captions.
+
+All tour directions, including the final invitation to keep exploring event history, use the shared `LabChecklist` instruction box. Keep explanatory context outside the box.
+
+After three changes to earlier console selections, the tour prompts the play button to resume live tracking. Its actual follow action reveals the reset instruction; resetting then invites a few more site interactions to inspect new events. Repeated clicks on the same entry do not advance the tour. Keep all of these directions in `LabChecklist`; preserve the exit control and ordinary console behavior.
+
+Home follows the [PostHog docs landing page](https://posthog.com/docs) with stacked white panels, using existing neutral borders, the small corner token, and RoundHog. The top card contains only “Take a tour” and an arrow, followed by a separate “Explore on your own” CTA card that opens the Inspector. Keep that card to its label and arrow, without an explanation or separate Inspector label. The labs panel groups Learn with labs, its one-sentence introduction, and full-width neutral product bars with indented lab rows. Keep the 16px panel spacing, 44px interaction targets, and visible focus. Scope this composition to Home; other lab menus and Inspector views keep their established styling.
+
+Home’s Take a tour and Explore on your own cards share one control rule and the same label typography as Learn with labs: 14px / 20px, weight 600. Do not introduce a separate larger tour label. Product disclosure rows keep the shared menu typography.
+
+Twig menus share `twig-dropdown-menu` and `twig-dropdown-item` from `catalog.css`; GuestPicker, destination suggestions and ProfileMenu reuse the same surface and row states. Calendar popovers reuse the surface with their calendar layout.
+
+`AccountLayout` hides its sidebar on narrow single-column layouts. Compose it with the existing header `ProfileMenu` so account destinations remain accessible; the menu starts closed. Desktop retains the sidebar.
+
+
+Playground lab menus share the approved full-width hover/focus rows and neutral header divider from `lab.css`. ProductMenuPreview in the workbench switches between Home and other-lab menus for pointer and keyboard review. This changes presentation only; public props, lab choices and navigation callbacks are unchanged.
+
+Playground disclosures share `DisclosureIcon` / `PlaygroundSummary` internally, including native nested details. Event rows select data without an icon and show Properties beneath the full event list. Event-table focus spans both columns. No props, lesson flow or tracking changes.
+
+Lesson navigation: LabNavigationView accepts header/footer placement; LessonActionScope suppresses actions from hidden review screens; PlaygroundDock accepts an optional footer. LessonNavigationProvider and LabPrimaryAction preserve real handlers while moving the primary action into that footer. Defaults keep existing consumers inline.
+
+Reset confirmation keeps the lesson mounted while replacing its visible content. Cancel/Escape restores the lesson and trigger focus; only the explicitly labeled Reset Twig data action invokes the host reset callback. Navigation and reset buttons retain the original OSButton proportions with an invisible 44px hit area.
+
+## Playground primitives
+
+| Import | Exports | Use |
+| --- | --- | --- |
+| `/code-block` | `PlaygroundCodeBlock` | Read-only code with a language header, a source-location caption when applicable, copy control, and full-width yellow line highlights. Pass `code`, `highlightLines` (1-based), and optional `lineNumbers`; existing `<mark>` snippets work as children. |
+| `/tooltip` | `PlaygroundTooltip`, `TooltipBubble`, `CopyControl` | Neutral hover/focus hints; successful copy displays `Copied!` for 500ms. No action-confirmation toast. |
+| `/wizard-command` | `WizardCommand` | PostHog.com’s dedicated gradient command and attached Learn more tab. Pass the Wizard subcommand (for example `mcp add`). All Wizard commands use this component. |
+| `/mcp-composer` | `McpComposer` | Editable local agent message, Enter/Shift+Enter behavior, plain monospace white send arrow, and stop control. `onSend` and `onStop` stay local; no inference or analytics. |
+
+## AI evidence primitives
+
+| Import path | Export | Contract |
+| --- | --- | --- |
+| `/status` | `PlaygroundStatus`, `PlaygroundStatusValue` | Ready, Running, Failed, Passed text statuses using fixed brand colors; neutral Not applicable for unavailable checks. |
+| `/ai-evidence` | `PlaygroundTraceExplorer`, `PlaygroundGeneration`, `PlaygroundEvaluation`, types and generation helpers | Connected trace hierarchy, captured chat evidence, and Expected/Observed evaluation. Hosts supply actual records and callbacks. No service calls. |
+
+`PlaygroundGeneration` accepts `input`/`output` messages, readable `facts`, optional raw `details`, and optional controlled `field`/`onFieldChange`. `PlaygroundTraceExplorer` accepts traces and optional session ID, selection callback, and selected ID; only disclosures use plus/minus. `PlaygroundEvaluation` accepts name, status, expected and observed values. These compose the trip-planner lesson and Inspector. Load `lab.css` inside `.vac-app .vac-developer-theme`.
+
+
+## Finalized shared evidence controls
+
+| Import path | Exports | Contract |
+| --- | --- | --- |
+| `/replay-controls` | `ReplayControls`, `RecordingControls`, `replayTime`, `ReplayControlsProps` | Controlled playback in milliseconds: play/pause/replay, seek, fullscreen and disabled states. Recording takes `elapsedMs` and `onStop`. Every icon has a 44px target, shared tooltip and blue focus; responsive geometry and reduced motion live in `lab.css`. |
+| `/error-evidence` | `PlaygroundErrorIssue`, `PlaygroundStackTrace` | Connected issue identity/status/count and evidence content. Stack-frame buttons select their source and preserve full-row keyboard focus. |
+
+`/status` also supports Active and Resolved. `/session-player` composes the shared playback transport around the real local rrweb recording. `/replay-recorder` supplies elapsed time to every recording-control consumer. These presentation changes retain existing callbacks, lab gates and tracking; no additional analytics event is needed.
+
+
+Default `PlaygroundInspectionView` uses plain exploration context, never a checklist. Pass tour directions through `guidance`. Track live events reuses the play icon; selection, live tracking and clearing callbacks are unchanged.
+
+### Finalized Playground states
+
+`PlaygroundCodeBlock` headers use language labels; `codeLanguage(path)` supports source headers while captions retain source identity. `CopyControl` and `WizardCommand` show only transient successful-copy feedback. `McpComposer` sizes from its draft and wrapping, with a fixed right control. `LabCompletionActions` reuses the active shell footer for optional review and choose actions; standalone completions retain an inline footer. See the visual guide for disclosure, checklist, evidence-switch and spacing rules.
+
+The finalized evidence selection pattern is shared by recorded visits and booking attempts. It keeps the same connected tabs and keyboard behavior without changing captured payloads or lesson progression. Compact experience switches use equal-width semibold segments with square inner joins; completion typography must retain its 18px size inside all lab wrappers. AI completion intentionally has no Review results action.
 
 ## Compact pocket-guide figures
 

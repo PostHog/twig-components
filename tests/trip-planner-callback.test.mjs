@@ -70,7 +70,7 @@ test("onEvaluate fires once per phase through the public walkthrough and only on
   await view.render();
   await view.click("Investigate this request →");
   await view.dispatch({ type: "previous" });
-  assert.match(document.querySelector('[role="status"]').textContent, /fail/);
+  assert.match(document.querySelector('[role="status"]').textContent, /Failed/);
   assert.deepEqual(phases, ["before"]);
   await view.click("Investigate this request →");
   await view.click("Inspect the recorded search →");
@@ -86,7 +86,7 @@ test("onEvaluate fires once per phase through the public walkthrough and only on
   await view.render();
   await view.click("Finish the lab →");
   await view.dispatch({ type: "previous" });
-  assert.match(document.querySelector('[role="status"]').textContent, /Before the fix.*fail.*After the fix.*pass/);
+  assert.match(document.querySelector('[role="status"]').textContent, /Before the fix.*Failed.*After the fix.*Passed/);
   assert.equal([...document.querySelectorAll("button")].some(button => button.textContent === "Run evaluation again →"), false);
   assert.deepEqual(phases, ["before", "after"]);
   await view.reset();

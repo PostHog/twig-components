@@ -1,0 +1,155 @@
+{
+  "widths": [
+    1440,
+    390,
+    320
+  ],
+  "flowGroups": 16,
+  "viewportStateChecks": 1275,
+  "coverage": [
+    {
+      "flow": "agent-motion",
+      "viewportStateChecks": 246,
+      "widths": [
+        320,
+        390,
+        1440
+      ]
+    },
+    {
+      "flow": "ai",
+      "viewportStateChecks": 120,
+      "widths": [
+        320,
+        390,
+        1440
+      ]
+    },
+    {
+      "flow": "breakdowns",
+      "viewportStateChecks": 57,
+      "widths": [
+        320,
+        390,
+        1440
+      ]
+    },
+    {
+      "flow": "chart-states",
+      "viewportStateChecks": 84,
+      "widths": [
+        320,
+        390,
+        1440
+      ]
+    },
+    {
+      "flow": "copy-feedback",
+      "viewportStateChecks": 30,
+      "widths": [
+        320,
+        390,
+        1440
+      ]
+    },
+    {
+      "flow": "errors",
+      "viewportStateChecks": 63,
+      "widths": [
+        320,
+        390,
+        1440
+      ]
+    },
+    {
+      "flow": "events-agent",
+      "viewportStateChecks": 192,
+      "widths": [
+        320,
+        390,
+        1440
+      ]
+    },
+    {
+      "flow": "events-web",
+      "viewportStateChecks": 75,
+      "widths": [
+        320,
+        390,
+        1440
+      ]
+    },
+    {
+      "flow": "funnel",
+      "viewportStateChecks": 60,
+      "widths": [
+        320,
+        390,
+        1440
+      ]
+    },
+    {
+      "flow": "home",
+      "viewportStateChecks": 54,
+      "widths": [
+        320,
+        390,
+        1440
+      ]
+    },
+    {
+      "flow": "inspector-error",
+      "viewportStateChecks": 69,
+      "widths": [
+        320,
+        390,
+        1440
+      ]
+    },
+    {
+      "flow": "inspector-evidence",
+      "viewportStateChecks": 24,
+      "widths": [
+        320,
+        390,
+        1440
+      ]
+    },
+    {
+      "flow": "inspector-replay",
+      "viewportStateChecks": 78,
+      "widths": [
+        320,
+        390,
+        1440
+      ]
+    },
+    {
+      "flow": "navigation",
+      "viewportStateChecks": 24,
+      "widths": [
+        320,
+        390,
+        1440
+      ]
+    },
+    {
+      "flow": "replay",
+      "viewportStateChecks": 69,
+      "widths": [
+        320,
+        390,
+        1440
+      ]
+    },
+    {
+      "flow": "tour",
+      "viewportStateChecks": 30,
+      "widths": [
+        320,
+        390,
+        1440
+      ]
+    }
+  ]
+}

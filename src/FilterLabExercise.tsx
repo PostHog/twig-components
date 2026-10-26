@@ -1,5 +1,10 @@
 "use client";
 
+import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
+
+import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
+import { touchpointDefinitions } from "./playground.js";
+
 import { LabChoices } from "./LabChoices.js";
 import { LabChecklist } from "./LabChecklist.js";
 import { FilterInspector } from "./FilterInspector.js";
@@ -8,7 +13,7 @@ import { filterLabCode, labPassed, type LabAction, type LabState } from "./filte
 export function FilterLabIntroduction({ onContinue }: { onContinue: () => void }) {
   return (
     <div className="vac-guide-intro">
-      <h3>Product Analytics lab</h3>
+      <h3>{touchpointDefinitions.catalog.title}</h3>
       <p>Visitors choose different filters, but your events keep recording Forest.</p>
       <div className="vac-guide-example vac-guide-lesson">
         <p>Follow a click into its event, find the fixed value, then connect the filter’s actual value.</p>
@@ -17,8 +22,8 @@ export function FilterLabIntroduction({ onContinue }: { onContinue: () => void }
       <button className="vac-button" onClick={onContinue}>
         <span className="vac-os-button-face">See the worked example →</span>
       </button>
-      <details className="vac-lab-step">
-        <summary>How this simulation works</summary>
+      <details className="vac-lab-step" open>
+        <PlaygroundSummary>How this simulation works</PlaygroundSummary>
         <p>After you apply your configuration, this lab records filter clicks locally while the exercise is open. Nothing is sent to PostHog.</p>
         <p>Returning to the list pauses recording and keeps your work. Leaving the page resets it.</p>
       </details>
@@ -28,7 +33,7 @@ export function FilterLabIntroduction({ onContinue }: { onContinue: () => void }
 
 function FilterCode({ config }: { config: LabState["config"] }) {
   return (
-    <pre>
+    <PlaygroundCodeBlock>
       {`// Inside the filter's click handler\nposthog.capture(${JSON.stringify(
         config.eventName
       )}, {\n`}
@@ -38,7 +43,7 @@ function FilterCode({ config }: { config: LabState["config"] }) {
           : JSON.stringify(config.fixedValue)
       },`}</mark>
       {"\n});"}
-    </pre>
+    </PlaygroundCodeBlock>
   );
 }
 
@@ -91,18 +96,20 @@ export function FilterLabExercise({
                     The property now reads <code>selectedDestinationType</code>{" "}
                     from each click.
                   </p>
-                  <LabChecklist label="Next filter actions" items={[{
-                    label: <>Apply the code, then test <strong>Forest</strong> and <strong>Coast</strong>.</>,
-                    done: false,
-                  }]} />
+                  <LabChecklist label="Next filter actions" items={[
+                    { label: <>Click <strong>Apply the code</strong>.</>, done: false },
+                    { label: <>Choose <strong>Forest</strong> on Twig.</>, done: false },
+                    { label: <>Choose <strong>Coast</strong> to compare the events.</>, done: false },
+                  ]} />
                 </>
               ) : (
                 <>
                   <p><code>{'"Forest"'}</code> is a fixed value.</p>
-                  <LabChecklist label="Next filter actions" items={[{
-                    label: <>Apply the code, then click <strong>Forest</strong> to see how it becomes an event. Then try <strong>Coast</strong>.</>,
-                    done: false,
-                  }]} />
+                  <LabChecklist label="Next filter actions" items={[
+                    { label: <>Click <strong>Apply the code</strong>.</>, done: false },
+                    { label: <>Choose <strong>Forest</strong> on Twig.</>, done: false },
+                    { label: <>Choose <strong>Coast</strong> to compare the events.</>, done: false },
+                  ]} />
                 </>
               )}
               <button
@@ -276,14 +283,14 @@ export function FilterLabExercise({
       )}
       {stage === 1 && (
         <details className="vac-lab-step">
-          <summary>Code and session options</summary>
-          <pre>
+          <PlaygroundSummary>Code and session options</PlaygroundSummary>
+          <PlaygroundCodeBlock>
             {filterLabCode(
               embedSource && state.step === 0
                 ? { ...example, source: embedSource }
                 : state.applied ?? state.config
             )}
-          </pre>
+          </PlaygroundCodeBlock>
           <div className="vac-lab-actions">
             {state.events.length > 0 && (
               <button

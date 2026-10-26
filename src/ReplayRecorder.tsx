@@ -9,7 +9,11 @@ import {
   type ReactNode,
 } from "react";
 import { REPLAY_LIMIT, replayPage, searchValue, type ReplayFrame } from "./replay-lab.js";
+
+import { RecordingControls } from "./ReplayControls.js";
 import type { eventWithTime } from "@rrweb/types";
+
+const searchSelector = "#trip-search-destination, #stay-search";
 
 type Mode = "ghost" | "manual" | null;
 type ReplayContextValue = {
@@ -17,6 +21,7 @@ type ReplayContextValue = {
   setExercise: (value: "ghost" | "manual") => void;
   recording: eventWithTime[];
   starting: boolean;
+  elapsedMs: number;
   frames: ReplayFrame[];
   mode: Mode;
   masked: boolean;
@@ -34,6 +39,7 @@ const ReplayContext = createContext<ReplayContextValue>({
   setExercise: () => {},
   recording: [],
   starting: false,
+  elapsedMs: 0,
   frames: [],
   mode: null,
   masked: true,
@@ -64,6 +70,7 @@ export function ReplayProvider({
   const captured = useRef<eventWithTime[]>([]);
   const stopRecorder = useRef<(() => void) | undefined>(undefined);
   const [frames, setFrames] = useState<ReplayFrame[]>([]);
+  const [elapsedMs, setElapsedMs] = useState(0);
   const [mode, setMode] = useState<Mode>(null);
   const [masked, setMasked] = useState(true);
   const [capturedMasked, setCapturedMasked] = useState(true);
@@ -75,6 +82,12 @@ export function ReplayProvider({
     masked: boolean;
     count: number;
   }>({ mode: null, start: 0, masked: true, count: 0 });
+  useEffect(() => {
+    if (!mode) return;
+    setElapsedMs(0);
+    const timer = setInterval(() => setElapsedMs(Math.max(0, performance.now() - session.current.start)), 250);
+    return () => clearInterval(timer);
+  }, [mode]);
   const abort = useRef<AbortController | null>(null);
   const pageRef = useRef(pathname);
   function stop() {
@@ -98,7 +111,7 @@ export function ReplayProvider({
     setCapturedMasked(true);
     setResetCount((value) => value + 1);
   }
-  function add(frame: Omit<ReplayFrame, "at" | "page">) {
+  function add(frame: Omit<ReplayFrame, "at" | "page">, page = pageRef.current) {
     const current = session.current;
     if (!current.mode) return;
     if (current.count >= REPLAY_LIMIT) {
@@ -112,7 +125,7 @@ export function ReplayProvider({
       {
         ...frame,
         at: Math.round(performance.now() - current.start),
-        page: pageRef.current,
+        page,
       },
     ]);
   }
@@ -152,37 +165,26 @@ export function ReplayProvider({
     };
     const click = (event: MouseEvent) => {
       if (!scope(event.target)) return;
-      const target = (event.target as Element).closest<HTMLElement>(
-        "[data-replay-label]"
-      );
-      if (target) {
-        const rect = target.getBoundingClientRect();
-        add({
-          kind: "click",
-          label: target.dataset.replayLabel!.slice(0, 100),
-          ...(event.detail
-            ? coords(event)
-            : {
-                x: Math.round(
-                  ((rect.left + rect.width / 2) / innerWidth) * 100
-                ),
-                y: Math.round(
-                  ((rect.top + rect.height / 2) / innerHeight) * 100
-                ),
-              }),
-        });
-      }
+      const target = (event.target as Element).closest<HTMLElement>("[data-replay-label]");
+      if (!target) return;
+      const rect = target.getBoundingClientRect();
+      const frame: Omit<ReplayFrame, "at" | "page"> = {
+        kind: "click", label: target.dataset.replayLabel!.slice(0, 100),
+        ...(event.detail ? coords(event) : {
+          x: Math.round(((rect.left + rect.width / 2) / innerWidth) * 100),
+          y: Math.round(((rect.top + rect.height / 2) / innerHeight) * 100),
+        }),
+      };
+      // Snapshot in capture phase, then let React finish the control's own change.
+      // Updating the provider here can restore controlled inputs before onChange.
+      const page = pageRef.current;
+      setTimeout(() => add(frame, page), 0);
     };
     const input = (event: Event) => {
-      if (
-        event.target instanceof HTMLInputElement &&
-        event.target.id === "stay-search"
-      )
-        add({
-          kind: "input",
-          label: "Search stays",
-          value: searchValue(event.target.value, session.current.masked),
-        });
+      if (!(event.target instanceof HTMLInputElement) || !event.target.matches(searchSelector)) return;
+      const value = searchValue(event.target.value, session.current.masked);
+      const page = pageRef.current;
+      setTimeout(() => add({ kind: "input", label: "Search stays", value }, page), 0);
     };
     const scroll = () => {
       if (performance.now() - lastScroll < 350) return;
@@ -284,12 +286,17 @@ export function ReplayProvider({
     };
     try {
       await wait(500);
+      const toggle = document.querySelector<HTMLButtonElement>('[aria-controls="browse-controls"]');
+      if (toggle?.getAttribute("aria-expanded") === "false") {
+        click(await target('[aria-controls="browse-controls"]'));
+        await wait(300);
+      }
       click(await target('[data-replay-label="Filter: Forest"]'));
       await wait(900);
       click(await target('[data-replay-label="Filter: Coast"]'));
       await wait(900);
       click(await target('[data-replay-label="Filter: All"]'));
-      const input = (await target("#stay-search")) as HTMLInputElement;
+      const input = (await target(searchSelector)) as HTMLInputElement;
       input.focus({ preventScroll: true });
       for (const value of ["A", "Ad", "Adi", "Adir", "Adiro", "Adiron"]) {
         Object.getOwnPropertyDescriptor(
@@ -299,6 +306,8 @@ export function ReplayProvider({
         input.dispatchEvent(new Event("input", { bubbles: true }));
         await wait(220);
       }
+      await wait(300);
+      input.closest("form")?.requestSubmit();
       await wait(900);
       click(await target('[data-replay-label="Open stay: stay-01"]'));
       await wait(1200);
@@ -329,13 +338,18 @@ export function ReplayProvider({
       if (controller.signal.aborted) return;
       captured.current = [];
       setRecording([]);
+      // The mobile Playground stacks above Twig; capture the site viewport rather
+      // than the blocked panel, preserving the real page layout and coordinates.
+      if (window.matchMedia("(max-width: 800px)").matches) {
+        document.querySelector(".vac-content")?.scrollIntoView({ block: "start", behavior: "instant" });
+      }
       let bytes = 0;
       const cleanup = record({
         blockSelector:
-          "#twig-playground, .vac-playground-invite, .vac-replay-stop, .vac-ghost-cursor, input:not(#stay-search), textarea, select",
+          "#twig-playground, .vac-playground-invite, .vac-replay-stop, .vac-ghost-cursor, input:not(#trip-search-destination):not(#stay-search), textarea, select",
         maskAllInputs: true,
         maskInputFn: (text, element) =>
-          element.id === "stay-search" && !masked ? text : "[masked]",
+          element.matches(searchSelector) && !masked ? text : "[masked]",
         recordCanvas: false,
         collectFonts: true,
         sampling: { mousemove: 100, scroll: 200 },
@@ -385,7 +399,7 @@ export function ReplayProvider({
     );
     if (activeFilter?.dataset.replayLabel)
       add({ kind: "state", label: activeFilter.dataset.replayLabel });
-    const search = document.querySelector<HTMLInputElement>("#stay-search");
+    const search = document.querySelector<HTMLInputElement>(searchSelector);
     if (search?.value)
       add({
         kind: "input",
@@ -403,6 +417,7 @@ export function ReplayProvider({
         resetCount,
         recording,
         starting,
+        elapsedMs,
         frames,
         mode,
         masked,
@@ -422,14 +437,11 @@ export function ReplayProvider({
     >
       {children}
       {mode === "manual" && (
-        <div className="vac-replay-stop">
-          <strong>Recording your visit</strong>
-          <span>Local only</span>
-          <button type="button" onClick={stop}>
-            End recording and review
-          </button>
+        <div className="vac-replay-stop vac-developer-theme">
+          <RecordingControls elapsedMs={elapsedMs} onStop={stop} />
         </div>
       )}
+      {/* Runtime replay coordinates position the cursor; its appearance stays in CSS. */}
       {cursor && (
         <div
           className="vac-ghost-cursor"

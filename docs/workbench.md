@@ -2,6 +2,12 @@
 
 The workbench is a local browser preview for package components. It uses local examples, so you can build and click through a component without starting Twig.com or signing in to PostHog.
 
+## Preserve the approved design
+
+Every existing and new example must use the [approved visual system](design-system.md), shared components, CSS classes, and tokens. Workbench-specific layout is for presenting fixtures, not an alternative product design. A new feature does not authorize a new visual pattern. Any explicitly approved system change must update the shared implementation, examples, and both design guides together.
+
+Review the real Twig pages too, including login, all account sections, stay details, empty/populated states, and fallbacks. For broad styling changes, use Twig.com’s full route/state inventory at desktop, 390px, and 320px; a correct workbench preview alone is insufficient.
+
 ## Start it
 
 From this repo:
@@ -47,3 +53,21 @@ Check both paths, the experience toggle, Previous, Reset, and both copy icons on
 ## Review the AIO trip planner
 
 Choose **Trip planner** and start the lab. Follow the chat through the city request. Run the capacity evaluation before inspecting the trace, apply the guest filter, retry the request, then run the same evaluation again. The first check fails and the second passes. Check Previous and Reset at both evaluation stages, and verify chat prompts stay locked until their lesson step.
+
+## Review mobile account navigation
+
+In the account preview, log in and check Profile, Saved stays, Booked stays and Account settings at 390px and 320px. Content appears immediately; open the header avatar to navigate. Check closed/open states, Escape returning focus, outside-click dismissal and Log out. Desktop keeps the sidebar. Add saved/booking fixtures to check populated states as well as empty states.
+
+Check plus/minus states in Product menu and the later lab steps, including nested disclosures. In Events and properties, tab to a recorded event: the blue keyboard outline spans the event and time cells.
+
+Check Events and properties in both Web app and Agent: the first filter action is a single instruction, and configuration plus distinct filter selections use one progressive checklist. Repeated clicks on the same setting must not complete the different-setting item. Check later setup, retry and mobile-return directions across every lab.
+
+
+The Playground controls preview exercises connected choices, highlighted code, transient copy feedback, Wizard commands and the editable local MCP composer. Review it at 1440, 390 and 320px, including keyboard focus, copy denial and reduced motion. The Events and properties preview exercises all five steps in both experiences, including switching from web evidence to an unsent agent request.
+
+The Controls preview includes shared AI trace, captured Input/Output chat, failed/passed evaluation surfaces, and the four brand statuses. The Trip planner and Inspector previews exercise the same primitives with recorded evidence.
+
+Finalized controls are available under Playground controls: Ready/Playing/Ended playback, real seek callbacks, active recording/Start recording, Active/Resolved statuses, code highlights, connected choices and MCP composer. The Errors preview exercises booking → exception → stack frame/source → fallback → retry → repair → verify → resolve. Review current white/blue directions before each site action and completed neutral directions afterwards. No lesson action changes the historical occurrence count unless a new exception is actually captured.
+
+
+In Inspector, choose Explore on your own to see regular exploration context and the live-event play control. Simulate two interactions, select an earlier event, then use Track live events to resume following the latest event. Take a tour still uses progressive checklist directions. Check both at desktop, 390px and 320px, including keyboard focus and disabled controls.

@@ -1,3 +1,4 @@
+import { LabPrimaryAction } from "./LabNavigation.js";
 export function TripPlannerMilestone({ onContinue }: { onContinue: () => void }) {
   return <div className="vac-lab-completion vac-trip-milestone">
     <h3 className="vac-completion-title">
@@ -13,6 +14,6 @@ export function TripPlannerMilestone({ onContinue }: { onContinue: () => void })
       </ul>
     </div>
     <p>Next, use that evidence to investigate a recommendation that looks helpful but is wrong.</p>
-    <button type="button" className="vac-button" onClick={onContinue}><span className="vac-os-button-face">Follow a failure →</span></button>
+    <LabPrimaryAction><button type="button" className="vac-button" onClick={onContinue}><span className="vac-os-button-face">Follow a failure →</span></button></LabPrimaryAction>
   </div>;
 }

@@ -1,6 +1,12 @@
 "use client";
 
-import { LabChoices } from "./LabChoices.js";
+import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
+
+import { LabPrimaryAction } from "./LabNavigation.js";
+import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
+import { touchpointDefinitions } from "./playground.js";
+
+import { EvidenceSelection } from "./TripPlannerEvidenceTabs.js";
 import { LabChecklist } from "./LabChecklist.js";
 
 import { FinishLabButton } from "./FinishLabButton.js";
@@ -65,9 +71,9 @@ function Action({
   onClick: () => void;
 }) {
   return (
-    <button type="button" className="vac-button" onClick={onClick}>
+    <LabPrimaryAction><button type="button" className="vac-button" onClick={onClick}>
       <span className="vac-os-button-face">{children}</span>
-    </button>
+    </button></LabPrimaryAction>
   );
 }
 export function BookingLab({
@@ -92,7 +98,7 @@ export function BookingLab({
   if (stage === 0)
     return (
       <div className="vac-guide-intro">
-        <h3>Product Analytics lab</h3>
+        <h3>{touchpointDefinitions.booking.title}</h3>
         <p>
           First, complete a successful booking and inspect its events. Then
           repeat the exercise with a failed request.
@@ -109,8 +115,8 @@ export function BookingLab({
             ? "Practice a successful booking →"
             : "Continue the failure exercise →"}
         </Action>
-        <details className="vac-lab-step">
-          <summary>How this simulation works</summary>
+        <details className="vac-lab-step" open>
+          <PlaygroundSummary>How this simulation works</PlaygroundSummary>
           <p>Bookings and their event records are simulated locally. No reservation or payment is created, and these records are not sent to PostHog.</p>
         </details>
       </div>
@@ -157,8 +163,8 @@ export function BookingLab({
           <Action onClick={onFocusBooking}>Show the booking form →</Action>
         )}
         <details className="vac-lab-step">
-          <summary>Applied code</summary>
-          <pre className="vac-booking-code">{bookingCode("confirmation")}</pre>
+          <PlaygroundSummary>Applied code</PlaygroundSummary>
+          <PlaygroundCodeBlock className="vac-booking-code">{bookingCode("confirmation")}</PlaygroundCodeBlock>
         </details>
       </section>
     );
@@ -176,13 +182,13 @@ export function BookingLab({
             "This request will fail. Keep the same code: it should record the attempt without recording a completed booking."
           )}
         </p>
-        {success && <LabChecklist label="Next booking action" items={[{
-          label: <>Apply it, then make a simulated booking to see <code>booking_started</code> on click and <code>booking_completed</code> after confirmation.</>,
+        {<LabChecklist label="Next booking action" items={[{
+          label: <>Click <strong>Apply the code</strong>, then complete the booking form on Twig.</>,
           done: false,
         }]} />}
-        <pre className="vac-booking-code" aria-label="Booking capture code">
+        <PlaygroundCodeBlock className="vac-booking-code" aria-label="Booking capture code">
           {bookingCode("confirmation")}
-        </pre>
+        </PlaygroundCodeBlock>
         <Action onClick={apply}>Apply the code →</Action>
       </section>
     );
@@ -203,24 +209,7 @@ export function BookingLab({
   const before = state.runs.find(
     (item) => item.source === "click" && item.outcome === "failure"
   );
-  return (
-    <section className="vac-lab vac-builder">
-      {attempts.length > 1 && (
-        <LabChoices
-          label="Booking attempt"
-          value={run.id}
-          onChange={select}
-          options={[...attempts].reverse().map((item) => ({
-            value: item.id,
-            label: (
-              <>
-                {item.id} · {item.outcome} ·{" "}
-                {item.source === "click" ? "on click" : "on confirmation"}
-              </>
-            ),
-          }))}
-        />
-      )}
+  const evidence = <>
       <dl className="vac-event-comparison">
         <div>
           <dt>Twig’s result</dt>
@@ -307,14 +296,19 @@ export function BookingLab({
       )}
 
       <details className="vac-lab-step">
-        <summary>Captured events and applied code</summary>
+        <PlaygroundSummary>Captured events and applied code</PlaygroundSummary>
         <p>
           Availability is recorded when the local availability check succeeds.
           Start records the request. Completion depends on the code you applied.
         </p>
-        <pre className="vac-booking-code">{bookingCode(run.source)}</pre>
-        <pre>{JSON.stringify(run.events, null, 2)}</pre>
+        <PlaygroundCodeBlock className="vac-booking-code">{bookingCode(run.source)}</PlaygroundCodeBlock>
+        <PlaygroundCodeBlock label="JSON">{JSON.stringify(run.events, null, 2)}</PlaygroundCodeBlock>
       </details>
-    </section>
-  );
+    </>;
+  return <section className="vac-lab vac-builder vac-evidence-selection">
+    <EvidenceSelection label="Booking attempt" value={run.id} onChange={select}
+        options={[...attempts].reverse().map(item => ({ value: item.id, label: `${item.id} · ${item.outcome} · ${item.source === "click" ? "on click" : "on confirmation"}` }))}>
+        {evidence}
+      </EvidenceSelection>
+  </section>;
 }

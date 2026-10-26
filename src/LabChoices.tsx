@@ -7,15 +7,17 @@ export function LabChoices<T extends string | number>({
   value,
   options,
   onChange,
+  disabled = false,
 }: {
   label: ReactNode;
   value: T;
   options: { value: T; label: ReactNode }[];
   onChange: (value: T) => void;
+  disabled?: boolean;
 }) {
   const name = useId();
   return (
-    <fieldset className="vac-source-picker">
+    <fieldset className="vac-source-picker" disabled={disabled}>
       <legend>{label}</legend>
       <div className="vac-lab-choice-list">
         {options.map((option) => (
