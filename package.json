@@ -226,7 +226,15 @@
       "types": "./dist/Compact.d.ts",
       "import": "./dist/Compact.js"
     },
-    "./compact.css": "./dist/compact.css"
+    "./compact.css": "./dist/compact.css",
+    "./disclosure": {
+      "types": "./dist/PlaygroundDisclosure.d.ts",
+      "import": "./dist/PlaygroundDisclosure.js"
+    },
+    "./instrumentation-inspector": {
+      "types": "./dist/InstrumentationInspector.d.ts",
+      "import": "./dist/InstrumentationInspector.js"
+    }
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && node build-assets.mjs",
@@ -406,6 +414,12 @@
       ],
       "compact": [
         "dist/Compact.d.ts"
+      ],
+      "disclosure": [
+        "dist/PlaygroundDisclosure.d.ts"
+      ],
+      "instrumentation-inspector": [
+        "dist/InstrumentationInspector.d.ts"
       ]
     }
   }

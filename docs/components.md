@@ -359,3 +359,13 @@ Wrap `StayCardContent compact` in `.twig-compact-stay` for a borderless horizont
 Do not add a result count or extra card background. Keep save controls when the
 lesson teaches saving. Login and profile controls retain their existing callbacks.
 The host owns simulation state, events, inspector, prose, and reset behavior.
+
+## Shared consumer primitives
+
+`/disclosure` exports `PlaygroundSummary` and `DisclosureIcon` for consistent native disclosures. `/instrumentation-inspector` exports `InstrumentationInspector` and its types for local captured-event views. These are existing learner-facing primitives, now available to external consumers.
+
+`TripPlanner` supports an optional `inline` region and `onRequestSent` callback for contained simulations. Default dialog behavior is unchanged. `PlaygroundTooltip` accepts a React node label for formatted hints.
+
+Authoring editors, draft schemas, validation, rich-text dependencies and publishing UI belong to Learn Studio, not this package. Hosts compose the shared controls and own routing, persistence and analytics.
+
+`GetawaySearch` accepts an optional `portalRoot` for contained chat. DatePicker and GuestPicker use the composed event path to distinguish clicks inside a Shadow DOM from outside clicks. Defaults preserve normal website placement and dismissal.
