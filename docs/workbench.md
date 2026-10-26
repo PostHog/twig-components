@@ -71,7 +71,3 @@ Finalized controls are available under Playground controls: Ready/Playing/Ended 
 
 
 In Inspector, choose Explore on your own to see regular exploration context and the live-event play control. Simulate two interactions, select an earlier event, then use Track live events to resume following the latest event. Take a tour still uses progressive checklist directions. Check both at desktop, 390px and 320px, including keyboard focus and disabled controls.
-
-## Learn Studio authoring
-
-Choose **Lab author** or **Pocket guide author**. Drafts stay in memory. Exercise product/page/component menus, renaming/removal, rich text, Test lab/Back, Preview guide/Back, figure controls and Reset. These examples use the package's local simulations, not the complete Twig website. Learn Studio supplies its own direct-render Twig adapter and browser persistence.

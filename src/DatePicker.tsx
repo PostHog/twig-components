@@ -62,7 +62,7 @@ export function DatePicker({ id, label: fieldLabel, value, minDate, onChange, on
   useEffect(() => {
     if (!open) return;
     function outside(event: PointerEvent) {
-      if (!root.current?.contains(event.target as Node)) close();
+      if (root.current && !event.composedPath().includes(root.current)) close();
     }
     document.addEventListener("pointerdown", outside);
     return () => document.removeEventListener("pointerdown", outside);

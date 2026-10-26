@@ -227,21 +227,13 @@
       "import": "./dist/Compact.js"
     },
     "./compact.css": "./dist/compact.css",
-    "./lab-author": {
-      "types": "./dist/LabAuthor.d.ts",
-      "import": "./dist/LabAuthor.js"
+    "./disclosure": {
+      "types": "./dist/PlaygroundDisclosure.d.ts",
+      "import": "./dist/PlaygroundDisclosure.js"
     },
-    "./lab-author-state": {
-      "types": "./dist/lab-author.d.ts",
-      "import": "./dist/lab-author.js"
-    },
-    "./guide-author": {
-      "types": "./dist/GuideAuthor.d.ts",
-      "import": "./dist/GuideAuthor.js"
-    },
-    "./guide-author-state": {
-      "types": "./dist/guide-author.d.ts",
-      "import": "./dist/guide-author.js"
+    "./instrumentation-inspector": {
+      "types": "./dist/InstrumentationInspector.d.ts",
+      "import": "./dist/InstrumentationInspector.js"
     }
   },
   "scripts": {
@@ -259,10 +251,7 @@
   "dependencies": {
     "@rrweb/record": "^2.1.6",
     "@rrweb/replay": "^2.1.6",
-    "@rrweb/types": "^2.1.6",
-    "@tiptap/pm": "^3.32.0",
-    "@tiptap/react": "^3.32.0",
-    "@tiptap/starter-kit": "^3.32.0"
+    "@rrweb/types": "^2.1.6"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
@@ -426,17 +415,11 @@
       "compact": [
         "dist/Compact.d.ts"
       ],
-      "lab-author": [
-        "dist/LabAuthor.d.ts"
+      "disclosure": [
+        "dist/PlaygroundDisclosure.d.ts"
       ],
-      "lab-author-state": [
-        "dist/lab-author.d.ts"
-      ],
-      "guide-author": [
-        "dist/GuideAuthor.d.ts"
-      ],
-      "guide-author-state": [
-        "dist/guide-author.d.ts"
+      "instrumentation-inspector": [
+        "dist/InstrumentationInspector.d.ts"
       ]
     }
   }

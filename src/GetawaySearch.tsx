@@ -16,7 +16,7 @@ export function SearchWorkspace({ mode, onModeChange, destination, assistant }: 
    <div id="twig-ai-search" hidden={mode!=='ai'}>{assistant}</div>
  </div>;
 }
-export function GetawaySearch({stays,preferences,onPreferencesChange,onOutcome,onReset,renderStayLink,hidden=false,onChatVisibilityChange,windowClassName}:{stays:readonly Stay[];preferences:GetawayPreferences;onPreferencesChange:(p:GetawayPreferences)=>void;onOutcome?:(reply:GetawayReply)=>void;onReset?:()=>void;renderStayLink:(stay:Stay)=>ReactNode;windowClassName?:string;hidden?:boolean;onChatVisibilityChange?:(open:boolean)=>void}) {
+export function GetawaySearch({stays,preferences,onPreferencesChange,onOutcome,onReset,renderStayLink,hidden=false,onChatVisibilityChange,windowClassName,portalRoot}:{stays:readonly Stay[];preferences:GetawayPreferences;onPreferencesChange:(p:GetawayPreferences)=>void;onOutcome?:(reply:GetawayReply)=>void;onReset?:()=>void;renderStayLink:(stay:Stay)=>ReactNode;portalRoot?:Element;windowClassName?:string;hidden?:boolean;onChatVisibilityChange?:(open:boolean)=>void}) {
  const [draft,setDraft]=useState('');
  const [turns,setTurns]=useState<{prompt:string;reply:GetawayReply}[]>([]);
  const [open,setOpen]=useState(false);
@@ -61,7 +61,7 @@ export function GetawaySearch({stays,preferences,onPreferencesChange,onOutcome,o
        </div>
      </div>
      <div className="twig-trip-planner-bottom">{composer(true)}</div>
-   </div>,document.body)}
-   {!hidden&&!open&&turns.length>0&&createPortal(<div className="twig-browser twig-getaway-launcher-wrap"><button ref={launcher} type="button" className="twig-getaway-launcher" aria-haspopup="dialog" aria-expanded="false" onClick={expand}><AiSearchIcon/> Continue your getaway</button></div>,document.body)}
+   </div>,portalRoot ?? document.body)}
+   {!hidden&&!open&&turns.length>0&&createPortal(<div className="twig-browser twig-getaway-launcher-wrap"><button ref={launcher} type="button" className="twig-getaway-launcher" aria-haspopup="dialog" aria-expanded="false" onClick={expand}><AiSearchIcon/> Continue your getaway</button></div>,portalRoot ?? document.body)}
  </>;
 }

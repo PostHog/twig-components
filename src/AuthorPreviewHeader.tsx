@@ -1,5 +1,0 @@
-"use client";
-
-export function AuthorPreviewHeader({viewport,onChange}:{viewport:string;onChange:(value:string)=>void}) {
-  return <div className="ph-author-section-header ph-author-preview-header"><h2>Preview</h2><label className="ph-author-viewport" title="Preview device"><span className="ph-author-device-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">{viewport === "desktop" ? <><rect x="3" y="3" width="18" height="13" rx="1.5"/><path d="M12 16v5m-5 0h10"/></> : <><rect x={viewport === "390" ? 4 : 6} y="2" width={viewport === "390" ? 16 : 12} height="20" rx="2"/><path d="M10 18h4"/></>}</svg><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6"/></svg></span><select aria-label="Preview device" value={viewport} onChange={e => onChange(e.target.value)}><option value="desktop">Desktop</option><option value="390">Tablet</option><option value="320">Mobile</option></select></label></div>;
-}

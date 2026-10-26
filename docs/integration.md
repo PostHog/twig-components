@@ -96,7 +96,3 @@ After the first workflow release succeeds, set the package's npm **Publishing ac
 4. Run a clean `npm ci`, tests, type checking, lint, and production build in Twig.com. Review the page on desktop and mobile, then merge the host PR.
 
 Keep the host PR in draft until the published dependency is installed and verified. A locally packed preview is only for review. It does not prove that a clean consumer install works. PostHog.com needs no update for this Twig-only lesson.
-
-## Learn Studio package adoption
-
-The authoring exports require the Playground changes in PR #28. Publish both before updating Learn Studio's dependency and lockfile, then verify a clean install and preview build. This package change does not extract the full Twig website renderer: routing, site integration, account persistence and real instrumentation remain host-owned.
