@@ -346,3 +346,16 @@ Default `PlaygroundInspectionView` uses plain exploration context, never a check
 `PlaygroundCodeBlock` headers use language labels; `codeLanguage(path)` supports source headers while captions retain source identity. `CopyControl` and `WizardCommand` show only transient successful-copy feedback. `McpComposer` sizes from its draft and wrapping, with a fixed right control. `LabCompletionActions` reuses the active shell footer for optional review and choose actions; standalone completions retain an inline footer. See the visual guide for disclosure, checklist, evidence-switch and spacing rules.
 
 The finalized evidence selection pattern is shared by recorded visits and booking attempts. It keeps the same connected tabs and keyboard behavior without changing captured payloads or lesson progression. Compact experience switches use equal-width semibold segments with square inner joins; completion typography must retain its 18px size inside all lab wrappers. AI completion intentionally has no Review results action.
+
+## Compact pocket-guide figures
+
+Use `/compact` (`CompactTwig`, `TwigWordmark`, `CompactStayFilters`) with
+`/catalog.css` followed by `/compact.css`. This opt-in surface follows the approved
+current Twig palette: warm white, cobalt actions, sage filter group, neutral borders,
+DM Sans, and a lowercase wordmark. It does not restyle full-site consumers.
+
+Wrap `StayCardContent compact` in `.twig-compact-stay` for a borderless horizontal
+96×72 photo, name, location, and price. `SavedStaysView compact` uses the same cards.
+Do not add a result count or extra card background. Keep save controls when the
+lesson teaches saving. Login and profile controls retain their existing callbacks.
+The host owns simulation state, events, inspector, prose, and reset behavior.

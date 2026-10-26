@@ -401,3 +401,16 @@ The default Inspector is free exploration. Show “Interact with Twig to explore
 Final audit: compact experience toggles use equal-width 12px semibold segments with square joined inner edges; evidence tabs retain the shared 15px semibold typography. Two-view recorded-visit, booking-attempt and legacy AI-run comparisons use connected evidence tabs. Longer attempt/run histories compose the existing labeled select field instead of crowding many tabs. Genuine quiz questions retain choice rows. Completion titles remain 18px with zero child margins and a flat white recap surface, including inside older lab wrappers. AI completion intentionally omits Review results.
 
 Mobile recording starts with Twig content in view before the initial rrweb snapshot. Keep the actual page layout and pointer coordinates; do not remove stacked panel space only during playback.
+
+## Compact pocket-guide figures
+
+Use `/compact` (`CompactTwig`, `TwigWordmark`, `CompactStayFilters`) with
+`/catalog.css` followed by `/compact.css`. This opt-in surface follows the approved
+current Twig palette: warm white, cobalt actions, sage filter group, neutral borders,
+DM Sans, and a lowercase wordmark. It does not restyle full-site consumers.
+
+Wrap `StayCardContent compact` in `.twig-compact-stay` for a borderless horizontal
+96×72 photo, name, location, and price. `SavedStaysView compact` uses the same cards.
+Do not add a result count or extra card background. Keep save controls when the
+lesson teaches saving. Login and profile controls retain their existing callbacks.
+The host owns simulation state, events, inspector, prose, and reset behavior.

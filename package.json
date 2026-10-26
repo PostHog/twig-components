@@ -221,7 +221,12 @@
     "./error-evidence": {
       "types": "./dist/PlaygroundErrorEvidence.d.ts",
       "import": "./dist/PlaygroundErrorEvidence.js"
-    }
+    },
+    "./compact": {
+      "types": "./dist/Compact.d.ts",
+      "import": "./dist/Compact.js"
+    },
+    "./compact.css": "./dist/compact.css"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && node build-assets.mjs",
@@ -398,6 +403,9 @@
       ],
       "error-evidence": [
         "dist/PlaygroundErrorEvidence.d.ts"
+      ],
+      "compact": [
+        "dist/Compact.d.ts"
       ]
     }
   }

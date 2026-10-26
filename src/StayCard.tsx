@@ -5,11 +5,21 @@ export function StayCardContent({
   stay,
   image,
   linked = false,
+  compact = false,
 }: {
   stay: Stay;
   image: ReactNode;
   linked?: boolean;
+  compact?: boolean;
 }) {
+  if (compact) return <>
+    {image}
+    <div className="twig-compact-stay-info">
+      <h3>{stayLabel(stay)}</h3>
+      <p>{stay.location ?? stay.setting}</p>
+      <p><strong>{nightlyPrice(stay)}</strong> / night USD</p>
+    </div>
+  </>;
   const host = characters.find(character => character.id === stay.hostId);
   return (
     <>

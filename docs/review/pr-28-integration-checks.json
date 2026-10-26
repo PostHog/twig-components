@@ -1,0 +1,260 @@
+{
+  "prepared_from": "15f3f27e792fa018d1bd01ed607666c4b68d3f46",
+  "integrated_main": "88e84b67f6daa249e860e4ff42c9fbd84bed3ca1",
+  "browser": "Chrome 155.0.8059.85",
+  "local_node": "26.12.0",
+  "react_matrix": {
+    "18.3.1": {
+      "unit_tests": 145,
+      "failed": 0,
+      "workbench": "pass",
+      "gallery": "pass",
+      "package_files": 177
+    },
+    "19.2.3": {
+      "unit_tests": 145,
+      "failed": 0,
+      "workbench": "pass",
+      "gallery": "pass",
+      "package_files": 177
+    }
+  },
+  "responsive_checks": 120,
+  "responsive_react": "19.2.3",
+  "responsive_groups": [
+    {
+      "width": 1440,
+      "theme": "light",
+      "motion": "reduce",
+      "states": [
+        "compact filter Forest",
+        "compact filter Coast",
+        "compact filter City",
+        "compact keyboard focus",
+        "compact login to saved stays",
+        "compact save and booking",
+        "Playground playback and recording controls",
+        "Playground MCP composer",
+        "Inspector local event evidence",
+        "Inspector collapse and reopen"
+      ],
+      "max_horizontal_overflow_px": 0
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "motion": "no-preference",
+      "states": [
+        "compact filter Forest",
+        "compact filter Coast",
+        "compact filter City",
+        "compact keyboard focus",
+        "compact login to saved stays",
+        "compact save and booking",
+        "Playground playback and recording controls",
+        "Playground MCP composer",
+        "Inspector local event evidence",
+        "Inspector collapse and reopen"
+      ],
+      "max_horizontal_overflow_px": 0
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "motion": "reduce",
+      "states": [
+        "compact filter Forest",
+        "compact filter Coast",
+        "compact filter City",
+        "compact keyboard focus",
+        "compact login to saved stays",
+        "compact save and booking",
+        "Playground playback and recording controls",
+        "Playground MCP composer",
+        "Inspector local event evidence",
+        "Inspector collapse and reopen"
+      ],
+      "max_horizontal_overflow_px": 0
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "motion": "no-preference",
+      "states": [
+        "compact filter Forest",
+        "compact filter Coast",
+        "compact filter City",
+        "compact keyboard focus",
+        "compact login to saved stays",
+        "compact save and booking",
+        "Playground playback and recording controls",
+        "Playground MCP composer",
+        "Inspector local event evidence",
+        "Inspector collapse and reopen"
+      ],
+      "max_horizontal_overflow_px": 0
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "motion": "reduce",
+      "states": [
+        "compact filter Forest",
+        "compact filter Coast",
+        "compact filter City",
+        "compact keyboard focus",
+        "compact login to saved stays",
+        "compact save and booking",
+        "Playground playback and recording controls",
+        "Playground MCP composer",
+        "Inspector local event evidence",
+        "Inspector collapse and reopen"
+      ],
+      "max_horizontal_overflow_px": 0
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "motion": "no-preference",
+      "states": [
+        "compact filter Forest",
+        "compact filter Coast",
+        "compact filter City",
+        "compact keyboard focus",
+        "compact login to saved stays",
+        "compact save and booking",
+        "Playground playback and recording controls",
+        "Playground MCP composer",
+        "Inspector local event evidence",
+        "Inspector collapse and reopen"
+      ],
+      "max_horizontal_overflow_px": 0
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "motion": "reduce",
+      "states": [
+        "compact filter Forest",
+        "compact filter Coast",
+        "compact filter City",
+        "compact keyboard focus",
+        "compact login to saved stays",
+        "compact save and booking",
+        "Playground playback and recording controls",
+        "Playground MCP composer",
+        "Inspector local event evidence",
+        "Inspector collapse and reopen"
+      ],
+      "max_horizontal_overflow_px": 0
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "motion": "no-preference",
+      "states": [
+        "compact filter Forest",
+        "compact filter Coast",
+        "compact filter City",
+        "compact keyboard focus",
+        "compact login to saved stays",
+        "compact save and booking",
+        "Playground playback and recording controls",
+        "Playground MCP composer",
+        "Inspector local event evidence",
+        "Inspector collapse and reopen"
+      ],
+      "max_horizontal_overflow_px": 0
+    },
+    {
+      "width": 320,
+      "theme": "light",
+      "motion": "reduce",
+      "states": [
+        "compact filter Forest",
+        "compact filter Coast",
+        "compact filter City",
+        "compact keyboard focus",
+        "compact login to saved stays",
+        "compact save and booking",
+        "Playground playback and recording controls",
+        "Playground MCP composer",
+        "Inspector local event evidence",
+        "Inspector collapse and reopen"
+      ],
+      "max_horizontal_overflow_px": 0
+    },
+    {
+      "width": 320,
+      "theme": "light",
+      "motion": "no-preference",
+      "states": [
+        "compact filter Forest",
+        "compact filter Coast",
+        "compact filter City",
+        "compact keyboard focus",
+        "compact login to saved stays",
+        "compact save and booking",
+        "Playground playback and recording controls",
+        "Playground MCP composer",
+        "Inspector local event evidence",
+        "Inspector collapse and reopen"
+      ],
+      "max_horizontal_overflow_px": 0
+    },
+    {
+      "width": 320,
+      "theme": "dark",
+      "motion": "reduce",
+      "states": [
+        "compact filter Forest",
+        "compact filter Coast",
+        "compact filter City",
+        "compact keyboard focus",
+        "compact login to saved stays",
+        "compact save and booking",
+        "Playground playback and recording controls",
+        "Playground MCP composer",
+        "Inspector local event evidence",
+        "Inspector collapse and reopen"
+      ],
+      "max_horizontal_overflow_px": 0
+    },
+    {
+      "width": 320,
+      "theme": "dark",
+      "motion": "no-preference",
+      "states": [
+        "compact filter Forest",
+        "compact filter Coast",
+        "compact filter City",
+        "compact keyboard focus",
+        "compact login to saved stays",
+        "compact save and booking",
+        "Playground playback and recording controls",
+        "Playground MCP composer",
+        "Inspector local event evidence",
+        "Inspector collapse and reopen"
+      ],
+      "max_horizontal_overflow_px": 0
+    }
+  ],
+  "account_checks": 18,
+  "account_react": "18.3.1",
+  "account_states": [
+    "compact Escape focus restoration",
+    "compact logout preserves login callback",
+    "compact profile menu",
+    "default account profile",
+    "default saved stay host details",
+    "default saved stay removal"
+  ],
+  "account_widths": [
+    320,
+    390,
+    1440
+  ],
+  "account_max_horizontal_overflow_px": 0,
+  "page_errors": 0,
+  "scope": "Local component workbench. Actual Twig.com route inventory and PostHog.com Shadow DOM integration were not run."
+}

@@ -1,6 +1,6 @@
 # PR #28 preparation for main
 
-This handoff records preparation on 2026-10-26. It does not authorize a merge or package release. [Components #29](https://github.com/PostHog/twig-components/pull/29) must merge first in the later merge sequence. Its implementation has not been merged or copied into this branch.
+This handoff records preparation on 2026-10-26. It does not authorize a merge or package release. [Components #29](https://github.com/PostHog/twig-components/pull/29) has now merged into main as `88e84b67f6daa249e860e4ff42c9fbd84bed3ca1`. The original investigation and plan below describe the earlier state; the integration status at the end records the subsequent conflict resolution.
 
 ## Reviewed scope and GitHub state
 
@@ -42,7 +42,9 @@ The other three overlapping files are `src/Account.tsx`, `assets/DMSans.ttf` and
 
 #29's additional files `src/Compact.tsx`, `src/compact.css` and `tests/compact.test.mjs` belong to #29 and must arrive through updated main. Do not pre-copy them into #28.
 
-## Required work after #29 merges
+## Original post-#29 integration plan
+
+This plan was recorded before #29 landed. The integration status below identifies completed work and remaining host/review gates.
 
 1. Verify #29 is merged and fetch the resulting main. Incorporate that main into #28 in an isolated checkout, resolve the seven predicted conflicts deliberately, and inspect auto-merged Account behavior. Reassess any newer commits or release metadata. Preserve the union of Playground and compact exports in both resolver maps, with all corresponding distribution files/assets.
 2. Add an explicit compact public-import regression using `@posthog/twig-components/compact` and resolve `/compact.css`; verify both compact and default stay rendering, saved-stay navigation/removal and filter state. Keep #29's tests and this PR's export/asset checks. Check that `catalog.css` plus opt-in `compact.css` retains scoped compact typography, colors, layout and interactions.
@@ -50,7 +52,7 @@ The other three overlapping files are `src/Account.tsx`, `assets/DMSans.ttf` and
 4. Review the working compact figures plus the complete affected Twig/Playground flows at desktop, 390px and 320px, including keyboard focus, disabled/error/empty/completion states and reduced motion. Brand-base tokens/fonts/broad selectors require the full Twig host route/state inventory: homepage, About, login, all stays, all four account routes, profile menu and fallbacks, plus affected labs. Verify light/dark host integration and the guide's Shadow DOM. Local builds and historical screenshots do not replace that review.
 5. Obtain fresh human review of the final main-targeted diff, specifically the unmerged brand-base work and changes after John's reviewed commit. Keep [Twig.com #35](https://github.com/PostHog/twig.com/pull/35) separate: its existing archive pins the earlier source, so eventual consumer/release adoption must use the exact reviewed integrated package. Do not publish or merge from this preparation task.
 
-## Validation of this preparation
+## Validation of the initial preparation
 
 Local runtime: Node `26.12.0`, npm `11.20.0` (GitHub CI uses Node 22).
 
@@ -64,3 +66,27 @@ Local runtime: Node `26.12.0`, npm `11.20.0` (GitHub CI uses Node 22).
 `npm ci --ignore-scripts --no-audit --no-fund` succeeded before validation; subsequent `--no-save` React matrix installs left the lockfile unchanged. The standard `npm pack --dry-run` also succeeded. Missing-export and missing-font mutations were each detected by the new checks and then restored. The workbench asset regression failed on the original path and passed on the correction; the Vite missing-logo warning is gone.
 
 React 18 emits SSR `useLayoutEffect` warnings for the MCP composer during static tests/gallery generation; commands still pass. This preparation does not change that component. No browser walkthrough, screenshot refresh, real Twig/guide integration, package publication or PR merge was performed. The existing screenshot/browser audit reports remain historical evidence for their recorded heads, not a new verification of this preparation or future integration.
+
+
+## Integration after #29 landed
+
+#29 was independently verified merged at 2026-10-26 15:24:45 UTC. Main `88e84b67f6daa249e860e4ff42c9fbd84bed3ca1` was integrated into the existing #28 branch after preparation head `15f3f27e792fa018d1bd01ed607666c4b68d3f46`. Both remote tips were refreshed again after validation and had not moved.
+
+All seven conflicts were resolved: `package.json`, `build-assets.mjs`, `src/StayCard.tsx`, `docs/components.md`, `docs/design-system.md`, `workbench/App.tsx` and `workbench/workbench.css`. Both complete export/type maps survive. Compact CSS is copied beside the Playground/Twig assets; both stylesheet families and all declared distribution targets appear in the package. The compact early rendering branch remains separate from the default host/facts/price rendering. Auto-merged Account keeps `compact`, compact link classes, forwarding, navigation and remove callbacks. `src/Compact.tsx`, `src/compact.css` and #29's original compact tests are byte-identical to merged main. The package version and lockfile are unchanged.
+
+`tests/package-exports.test.mjs` now guards compact public imports and the independent `/compact.css` export alongside Playground imports. `tests/compact-integration.test.mjs` checks both public card compositions and compact/default saved-stay navigation/removal. Both sets of workbench examples and documentation remain available.
+
+The 320px workbench exposed an 8px Inspector-page overflow: preview gutters narrowed the otherwise full-width mobile toolbar. The fixture now lets its existing rail span those gutters, matching the host layout while retaining the component's established controls. No package component styling or interaction was changed to address this fixture issue.
+
+| Integrated check | React 18.3.1 | React 19.2.3 |
+| --- | --- | --- |
+| `npm test` | 145/145 pass | 145/145 pass |
+| Workbench build | Pass | Pass |
+| Gallery build | Pass | Pass |
+| Package dry-run and export/asset assertions | Pass, 177 files | Pass, 177 files |
+
+The standard `npm pack --dry-run` passed too. Tests ran on local Node 26.12.0; exact-head GitHub CI still needs to verify Node 22 after the push. React 18's existing static `useLayoutEffect` warnings remain.
+
+Headless Chrome 155.0.8059.85 passed 120 compact/Playground state checks at 1440px, 390px and 320px in light/dark modes with normal/reduced motion. Coverage includes selected filters, 96×72 compact images, 20px DM Sans wordmark, keyboard focus, login→saved stays, save/booking state, default host rows, playback/recording, MCP submission, Inspector evidence and collapse/reopen. Another 18 account checks passed on React 18 across those widths: compact profile-menu containment, Escape/focus return, logout callback, default profile, populated saved stays and removal. There were no page errors or horizontal page overflow. Raw screenshots and browser scripts are retained in this task workspace; the [machine-readable result summary](pr-28-integration-checks.json) is checked in.
+
+Remaining gates are fresh human review of the full main-targeted diff and real Twig.com/guide integration review using the exact integrated package, including the full route/state inventory and Shadow DOM. This component workbench pass does not replace those reviews. Fresh CI, including the required separate `semgrep` context, must complete on the pushed integration head. No security workflow, required check or branch-protection rule was changed. No PR was merged or package published by this task.

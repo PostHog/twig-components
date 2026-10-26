@@ -8,7 +8,8 @@ const packageJson = JSON.parse(readFileSync("package.json", "utf8"));
 const packageName = packageJson.name;
 
 // These are consumer import paths, so resolving package conflicts must retain them.
-const playgroundExports = {
+const consumerExports = {
+  "compact": ["CompactTwig", "TwigWordmark", "CompactStayFilters"],
   "playground-panels": ["PlaygroundHome", "PlaygroundOnboarding", "PlaygroundInspectionView", "PlaygroundToolRail", "PlaygroundDock", "LabDirectory", "PlaygroundHelp", "PlaygroundInvitation", "PlaygroundExplorer", "PlaygroundLauncher"],
   "code-block": ["PlaygroundCodeBlock", "codeLanguage", "codeSegments"],
   "tooltip": ["PlaygroundTooltip", "TooltipBubble", "CopyControl", "useClipboardFeedback"],
@@ -20,8 +21,8 @@ const playgroundExports = {
   "error-evidence": ["PlaygroundErrorIssue", "PlaygroundStackTrace"],
 };
 
-test("Playground consumer imports retain their public components and helpers", async () => {
-  for (const [path, names] of Object.entries(playgroundExports)) {
+test("Playground and compact consumer imports retain their public components and helpers", async () => {
+  for (const [path, names] of Object.entries(consumerExports)) {
     const module = await import(`${packageName}/${path}`);
     for (const name of names) assert.equal(typeof module[name], "function", `${path}: ${name}`);
   }
@@ -59,5 +60,13 @@ test("workbench image URLs resolve to existing source assets", () => {
   const app = readFileSync(appUrl, "utf8");
   for (const [, reference] of app.matchAll(/new URL\(["']([^"']+)["'],\s*import\.meta\.url\)/g)) {
     assert.ok(statSync(fileURLToPath(new URL(reference, appUrl))).isFile(), `workbench: ${reference}`);
+  }
+});
+
+// A missing CSS export must fail even if the remaining styles all resolve.
+test("compact and full-surface styles remain separately importable", () => {
+  for (const path of ["compact.css", "catalog.css", "lab.css"]) {
+    const target = import.meta.resolve(`${packageName}/${path}`);
+    assert.ok(statSync(fileURLToPath(target)).isFile(), path);
   }
 });

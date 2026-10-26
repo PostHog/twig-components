@@ -59,3 +59,9 @@ button { cursor: pointer; }
 @media(prefers-reduced-motion:reduce) { .workbench-inspect-preview { transition:none; } }
 .workbench-ai-label { display: flex; align-items: center; gap: 8px; }
 .workbench-booking-controls { max-width: 460px; padding: 24px; }
+.compact-review-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); align-items: start; gap: 24px; }
+.compact-review-grid > .twig-compact { max-width: 390px; }
+/* The mobile host gives the rail the full viewport, outside the preview gutters. */
+@media(max-width:760px) {
+  .workbench-inspect-preview .vac-tool-rail { left:-16px; right:-16px; width:auto; }
+}
