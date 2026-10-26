@@ -5,14 +5,14 @@
   "local_node": "26.12.0",
   "react_matrix": {
     "18.3.1": {
-      "unit_tests": 145,
+      "unit_tests": 148,
       "failed": 0,
       "workbench": "pass",
       "gallery": "pass",
       "package_files": 177
     },
     "19.2.3": {
-      "unit_tests": 145,
+      "unit_tests": 148,
       "failed": 0,
       "workbench": "pass",
       "gallery": "pass",
@@ -256,5 +256,50 @@
   ],
   "account_max_horizontal_overflow_px": 0,
   "page_errors": 0,
-  "scope": "Local component workbench. Actual Twig.com route inventory and PostHog.com Shadow DOM integration were not run."
+  "scope": "Local component workbench. Actual Twig.com route inventory and PostHog.com Shadow DOM integration were not run.",
+  "security_followup": {
+    "finding": "CodeQL js/polynomial-redos, alert #7",
+    "fix": "Linear element-syntax tokenization, with unchanged escaped text and classes",
+    "regression": "Old render times out after 5s on 100000 hyphens; corrected render passes the bounded child-process test",
+    "additional_browser_checks": 6,
+    "browser_results": [
+      {
+        "width": 1440,
+        "colorScheme": "light",
+        "page": 1440,
+        "viewport": 1440
+      },
+      {
+        "width": 1440,
+        "colorScheme": "dark",
+        "page": 1440,
+        "viewport": 1440
+      },
+      {
+        "width": 390,
+        "colorScheme": "light",
+        "page": 390,
+        "viewport": 390
+      },
+      {
+        "width": 390,
+        "colorScheme": "dark",
+        "page": 390,
+        "viewport": 390
+      },
+      {
+        "width": 320,
+        "colorScheme": "light",
+        "page": 320,
+        "viewport": 320
+      },
+      {
+        "width": 320,
+        "colorScheme": "dark",
+        "page": 320,
+        "viewport": 320
+      }
+    ],
+    "original_integration_head": "68ab927f480844928be894f05ef878aa8e8bb0fb"
+  }
 }

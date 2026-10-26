@@ -116,6 +116,29 @@ function Value({ name, value, expanded = true }: { name: string; value: Inspecto
 }
 
 function ElementSyntax({ value }: { value: string }) {
+  // Consume each name once; an unanchored attribute regex can retry every suffix.
+  const tokens: string[] = [];
+  const isNameCharacter = (character: string | undefined) => character !== undefined && /[\w-]/.test(character);
+  let index = 0, plainStart = 0;
+  const capture = (end: number) => {
+    tokens.push(value.slice(plainStart, index), value.slice(index, end));
+    index = end;
+    plainStart = end;
+  };
+  while (index < value.length) {
+    if (value[index] === '"') {
+      const end = value.indexOf('"', index + 1);
+      if (end !== -1) { capture(end + 1); continue; }
+    }
+    const nameStart = value[index] === "<" ? index + (value[index + 1] === "/" ? 2 : 1) : index;
+    if (isNameCharacter(value[nameStart])) {
+      let end = nameStart + 1;
+      while (isNameCharacter(value[end])) end++;
+      if (nameStart !== index || value[end] === "=") capture(end);
+      else index = end;
+    } else index++;
+  }
+  tokens.push(value.slice(plainStart));
   // Render tokens as text, never HTML. Source supplies only allowlisted snapshots.
-  return <>{value.split(/("[^"]*"|<\/?[\w-]+|[\w-]+(?==))/g).map((token, index) => <span key={index} className={token.startsWith('"') ? "vac-inspector-string" : token.startsWith("<") ? "vac-inspector-tag" : /^[\w-]+$/.test(token) ? "vac-inspector-key" : undefined}>{token}</span>)}</>;
+  return <>{tokens.map((token, index) => <span key={index} className={token.startsWith('"') ? "vac-inspector-string" : token.startsWith("<") ? "vac-inspector-tag" : /^[\w-]+$/.test(token) ? "vac-inspector-key" : undefined}>{token}</span>)}</>;
 }
