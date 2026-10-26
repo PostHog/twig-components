@@ -342,7 +342,7 @@ function InspectPreview() {
     <div className="workbench-controls" aria-label="Instrumentation markers">{playgroundPage("/", stays).touchpoints.map(point => <PlaygroundMarker key={point.id} touchpoint={point} highlighted={false} onHighlight={() => {}} onChoose={id => { setChosen(id); setOpen(true); }} />)}</div>
     {picking && <p role="status">Inspection observes normal Twig interactions. Simulate an event below to preview the live feed.</p>}
     <PlaygroundDock open={open} joinedBranding embedded={false} placement="edge" onClose={() => setOpen(false)} headingRef={headingRef}
-      logo={<img src={new URL("../assets/posthog-logomark.svg", import.meta.url).href} width={26} height={26} alt="" />}
+      logo={<img src={new URL("../src/assets/posthog-logomark.svg", import.meta.url).href} width={26} height={26} alt="" />}
       navigation={null} recordingBar={null} pageKey="inspect"
       guide={homeOpen ? <PlaygroundHome onVisitLab={id => { setChosen(id); setHomeOpen(false); setPicking(false); }} onStart={() => { setHomeOpen(false); setPicking(true); setOnboarding("stay"); }} onInspect={() => { setOnboarding(null); setHomeOpen(false); setPicking(true); }} onSelect={id => { setHomeOpen(false); setPicking(false); setFeature(id as typeof feature); }} /> : <>
         {picking && onboarding && ["stay", "filter", "another-stay"].includes(onboarding) && <div className="workbench-controls"><button onClick={() => {

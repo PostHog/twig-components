@@ -105,7 +105,7 @@ When an explicitly approved new pattern is needed, document the approved decisio
 
 ## Conventional trip search
 
-Use `TripSearch` as the primary utility for vacation-rental browsing. Reuse the date and guest pickers. At narrow widths, keep destination and Search stays visible and put optional dates/guests behind their compact summary. Setting filters remain a separate disclosure. Hosts own validation, capacity/destination matching, selection transfer to booking, and content-free analytics; never imply that the local catalog has availability inventory. Keep photo, title, nightly price, location, and capacity close together. Attribute hosting with existing character names and species, without artwork or invented character copy.
+Use `TripSearch` as the primary utility for vacation-rental browsing. Reuse the date and guest pickers. At narrow widths, keep destination, paired dates, guests, and Search stays visible. Only optional setting and amenity filters use a disclosure. Hosts own validation, capacity/destination matching, selection transfer to booking, and content-free analytics; never imply that the local catalog has availability inventory. Keep photo, title, nightly price, location, and capacity close together. Attribute hosting with existing character names and species, without artwork or invented character copy.
 
 
 Destination suggestions represent places from the host catalog. Keep setting and amenity controls inside the same search area, separate from destination choices. Preserve immediate setting clicks so teaching labs can compare repeated selections. Keep the existing `destination_type` teaching property for compatibility, explaining that it records the stay setting. Amenities use distinct host analytics and do not create simulated setting events. Update both ghost and manual replay when input selectors or search submission behavior change.
@@ -131,7 +131,7 @@ Conversation preferences remain independent of conventional search. Messages nev
 
 Use two Twig typefaces: Fraunces for display headings and the existing italic species line, DM Sans for interface text and smaller headings. Use dark charcoal `#30362f` for listing titles and prices, warm charcoal for facts and field text, and cobalt for the main display heading, wordmark, links, primary actions, and chat title bar. PostHog retains RoundHog and its existing tokens.
 
-Use a 4/8/12/16/24/32px spacing rhythm. Keep the introduction compact, align the search and photographs to fluid page gutters, and retain the shared 16:9 photo crop. Search controls share 48px heights on desktop, quiet internal borders, neutral labels, and a single sage surface. Mobile retains the existing compact date/guest disclosure. Never add a capped page container or push listing photography into a large marketing hero.
+Use a 4/8/12/16/24/32px spacing rhythm. Keep the introduction compact, align the search and photographs to fluid page gutters, and retain the shared 16:9 photo crop. Search controls share 48px heights on desktop, quiet internal borders, neutral labels, and a single sage surface. Mobile keeps destination, paired dates, and guests visible; only optional setting and amenity filters collapse. Never add a capped page container or push listing photography into a large marketing hero.
 
 Listing photos use consistent framing and a restrained hover treatment, with quiet facts and compact host rows below. Preserve supplied photos, copy, empty portraits, and keyboard focus. Transitions are brief and disabled for reduced motion. Chat uses charcoal conversation text, warm-white visitor messages, sage background, cobalt title bar, and a restrained neutral shadow. Host placement aligns it with page gutters and reserves space when the lab dock is open. Keep Playground styling, size, and animation unchanged.
 
@@ -173,7 +173,7 @@ At narrow widths the persistent rail becomes a bottom tool strip, preserving Twi
 
 The rail uses the existing PostHog cursor and product icons. The logo is the Home button, controlled by `homeOpen` and `onHomeOpened`, with the same neutral selected state, tooltip, and keyboard focus as the other tools. Keep Home and collapse available on mobile, with no question-mark control. The edge workspace has no header collapse control.
 
-The rail logo is decorative: no button, link, tooltip, focus stop, or opening action. `toggleRef` belongs to the expand/collapse control. Hosts return focus to the inspect control on mobile.
+The logo image is decorative inside the named Home button. `toggleRef` belongs to the separate expand/collapse control. Hosts return focus to the inspect control on mobile.
 
 ## Seamless tools and contextual instrumentation
 
