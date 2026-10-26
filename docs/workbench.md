@@ -71,3 +71,9 @@ Finalized controls are available under Playground controls: Ready/Playing/Ended 
 
 
 In Inspector, choose Explore on your own to see regular exploration context and the live-event play control. Simulate two interactions, select an earlier event, then use Track live events to resume following the latest event. Take a tour still uses progressive checklist directions. Check both at desktop, 390px and 320px, including keyboard focus and disabled controls.
+
+In Twig experience, scroll the page to the bottom and confirm the dock footer and rail stay at the frame edges. Open Inspect, Home, and each product tool, then use Back to lab. Check collapse/expand and navigation to a stay with the authored lesson intact.
+
+Authored lab previews can supply `lab.product` and `lab.onProductSelect` to choose the authored product from the tool rail without leaving the editor. Without the callback, product buttons retain their learner behavior.
+
+The compact preview includes the PostHog.com pocket-guide inspector in empty and captured states. Use Capture Coast click to check Elements, Event data, timestamp, and count; reset returns to the empty state. This inspector is intentionally separate from Playground evidence.

@@ -414,3 +414,9 @@ Wrap `StayCardContent compact` in `.twig-compact-stay` for a borderless horizont
 Do not add a result count or extra card background. Keep save controls when the
 lesson teaches saving. Login and profile controls retain their existing callbacks.
 The host owns simulation state, events, inspector, prose, and reset behavior.
+
+Authored Playground docks can place Add page alongside the existing title using `headerActions`, and page management in the existing navigation position. Keep a single progress counter; do not repeat it in the content canvas.
+
+Pocket-guide inspector parity (Sarah requested 2026-10-26): use the published posthog.com Elements/Event data inspector, its light developer surfaces, orange selected tabs, capture timestamp, and count badge for guide figures. The self-contained styles in compact.css reproduce the website source. These website-specific choices do not alter the Playground inspector contract.
+
+Compact Twig buttons retain the website’s 44px control height, 9px/16px padding and cobalt primary color even when composed inside a PostHog developer-theme editor. Keep the fix scoped to compact figures; the editor’s OS buttons retain their existing styling.

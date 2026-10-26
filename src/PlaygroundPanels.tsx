@@ -370,10 +370,12 @@ export function PlaygroundInvitation({
 
 export function PlaygroundDock({
   embedded,
+  closeOnEscape = true,
   onClose,
   headingRef,
   logo,
   navigation,
+  headerActions,
   recordingBar,
   footer,
   pageKey,
@@ -383,10 +385,12 @@ export function PlaygroundDock({
   joinedBranding = false,
 }: {
   embedded: boolean;
+  closeOnEscape?: boolean;
   onClose: () => void;
   headingRef: RefObject<HTMLHeadingElement | null>;
   logo: ReactNode;
   navigation: ReactNode;
+  headerActions?: ReactNode;
   recordingBar: ReactNode;
   footer?: ReactNode;
   pageKey: string;
@@ -427,6 +431,7 @@ export function PlaygroundDock({
             {joinedBranding && placement === "edge" ? null : logo}
             PostHog Playground
           </h2>
+          {headerActions}
           {!embedded && placement !== "edge" && (
             <button className="vac-text-button" aria-label="Hide" title="Collapse Playground" onClick={onClose}>
               Hide
@@ -446,7 +451,7 @@ export function PlaygroundDock({
       className={`vac-dock vac-developer-theme${placement === "edge" ? " vac-edge-inspector" : ""}${joinedBranding ? " vac-joined-branding" : ""}${footer ? " vac-lesson-shell" : ""}`}
       aria-label="Twig playground"
       onKeyDown={(event) => {
-        if (event.key === "Escape" && !embedded) onClose();
+        if (event.key === "Escape" && !event.defaultPrevented && closeOnEscape && !embedded) onClose();
       }}
     >
       {placement !== "edge" && header}
@@ -480,7 +485,8 @@ function ConsoleControl({ label, disabled, onClick, children, surface = false }:
 }
 
 /** Persistent tools rail. Hosts own picking, placement, and analytics. */
-export function PlaygroundToolRail({ open, picking, selectedId, page, onOpen, onCollapse, onPick, onSelect, toggleRef, pickerRef, onHomeOpened, homeOpen, onHelpOpened, helpOpen = false, joinedBranding = false }: {
+export function PlaygroundToolRail({ open, picking, selectedId, page, onOpen, onCollapse, onPick, onSelect, toggleRef, pickerRef, onHomeOpened, homeOpen, onHelpOpened, helpOpen = false, joinedBranding = false, productSelection = false }: {
+  productSelection?: boolean;
   joinedBranding?: boolean;
   homeOpen?: boolean;
   onHomeOpened?: () => void;
@@ -526,8 +532,8 @@ export function PlaygroundToolRail({ open, picking, selectedId, page, onOpen, on
         {/* Exact IconCursorBox from @posthog/icons, matching the existing product asset source. */}
         <InspectorCursorIcon /><TooltipBubble id={`${tipId}-inspect`} role="tooltip" className="vac-tool-tip">Inspect Twig</TooltipBubble>
       </button>
-      {tools.map(item => <button key={item.tool} type="button" aria-label={`Open ${item.tool} labs`} aria-describedby={`${tipId}-${item.id}`} aria-pressed={open && !homeActive && !picking && selectedTool === item.tool} onClick={() => { if (open && !homeActive && !picking && selectedTool === item.tool) onCollapse(); else onSelect(item.id); }}>
-        <img src={productIcons[item.tool]} width={22} height={22} alt="" /><TooltipBubble id={`${tipId}-${item.id}`} role="tooltip" className="vac-tool-tip">{item.tool} labs</TooltipBubble>
+      {tools.map(item => <button key={item.tool} type="button" aria-label={productSelection ? `Choose ${item.tool}` : `Open ${item.tool} labs`} aria-describedby={`${tipId}-${item.id}`} aria-pressed={open && !homeActive && !picking && selectedTool === item.tool} onClick={() => { if (!productSelection && open && !homeActive && !picking && selectedTool === item.tool) onCollapse(); else onSelect(item.id); }}>
+        <img src={productIcons[item.tool]} width={22} height={22} alt="" /><TooltipBubble id={`${tipId}-${item.id}`} role="tooltip" className="vac-tool-tip">{productSelection ? `Choose ${item.tool}` : `${item.tool} labs`}</TooltipBubble>
       </button>)}
     </div>
     <div className="vac-tool-rail-footer">

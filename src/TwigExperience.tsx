@@ -24,9 +24,16 @@ function TwigPage({ url }: { url: URL }) {
   return <AccountPageView section={section === "saved" || section === "bookings" || section === "settings" ? section : "profile"} />;
 }
 
+export type AuthorLabPreview = {
+  content: ReactNode; footer: ReactNode; progress: string;
+  navigation?: ReactNode; headerActions?: ReactNode;
+  product?: "Product Analytics" | "AI Observability" | "Session Replay" | "Error Tracking" | null;
+  onProductSelect?: (product: NonNullable<AuthorLabPreview["product"]>) => void;
+};
+
 /** Render real Twig components directly; Shadow DOM isolates their existing styles. */
 export function TwigExperience({ startingPath = "/", onReset, onEvent, lab }: {
-  lab?: { content: ReactNode; footer: ReactNode; progress: string }; startingPath?: string; onReset: () => void;
+  lab?: AuthorLabPreview; startingPath?: string; onReset: () => void;
   onEvent?: (event: TwigExperienceEvent) => void;
 }) {
   const [history, setHistory] = useState({ entries: [isStartingPath(startingPath) ? startingPath : "/"], index: 0 });
@@ -57,7 +64,7 @@ export function TwigExperience({ startingPath = "/", onReset, onEvent, lab }: {
     if (next.origin !== "https://twig.local" || !isStartingPath(next.pathname)) return;
     const path = next.pathname + next.search;
     setHistory(previous => replace ? { ...previous, entries: previous.entries.map((entry, i) => i === previous.index ? path : entry) } : { entries: [...previous.entries.slice(0, previous.index + 1), path], index: previous.index + 1 });
-    surface?.host.scrollTo({ top: 0 });
+    surface?.content.scrollTo({ top: 0 });
   }, [surface]);
   const router = useMemo<TwigNavigationValue["router"]>(() => ({
     push: href => navigate(href), replace: href => navigate(href, true),
