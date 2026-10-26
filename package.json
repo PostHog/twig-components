@@ -226,7 +226,23 @@
       "types": "./dist/Compact.d.ts",
       "import": "./dist/Compact.js"
     },
-    "./compact.css": "./dist/compact.css"
+    "./compact.css": "./dist/compact.css",
+    "./lab-author": {
+      "types": "./dist/LabAuthor.d.ts",
+      "import": "./dist/LabAuthor.js"
+    },
+    "./lab-author-state": {
+      "types": "./dist/lab-author.d.ts",
+      "import": "./dist/lab-author.js"
+    },
+    "./guide-author": {
+      "types": "./dist/GuideAuthor.d.ts",
+      "import": "./dist/GuideAuthor.js"
+    },
+    "./guide-author-state": {
+      "types": "./dist/guide-author.d.ts",
+      "import": "./dist/guide-author.js"
+    }
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && node build-assets.mjs",
@@ -243,7 +259,10 @@
   "dependencies": {
     "@rrweb/record": "^2.1.6",
     "@rrweb/replay": "^2.1.6",
-    "@rrweb/types": "^2.1.6"
+    "@rrweb/types": "^2.1.6",
+    "@tiptap/pm": "^3.32.0",
+    "@tiptap/react": "^3.32.0",
+    "@tiptap/starter-kit": "^3.32.0"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
@@ -406,6 +425,18 @@
       ],
       "compact": [
         "dist/Compact.d.ts"
+      ],
+      "lab-author": [
+        "dist/LabAuthor.d.ts"
+      ],
+      "lab-author-state": [
+        "dist/lab-author.d.ts"
+      ],
+      "guide-author": [
+        "dist/GuideAuthor.d.ts"
+      ],
+      "guide-author-state": [
+        "dist/guide-author.d.ts"
       ]
     }
   }

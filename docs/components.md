@@ -359,3 +359,12 @@ Wrap `StayCardContent compact` in `.twig-compact-stay` for a borderless horizont
 Do not add a result count or extra card background. Keep save controls when the
 lesson teaches saving. Login and profile controls retain their existing callbacks.
 The host owns simulation state, events, inspector, prose, and reset behavior.
+
+## Learn Studio authoring
+
+- `/lab-author`: controlled `LabAuthor` and `LabPublishing`, draft factories and types. The host supplies persistence, navigation, publishing callbacks and an optional `renderTwig` adapter; the adapter can receive learner content/footer during Test lab. No iframe or real analytics is created by the package.
+- `/lab-author-state`: draft parsing, validation, ordered completion and handoff serialization.
+- `/guide-author`: controlled `GuideAuthor`, pocket guide previews and compact interactive figures; re-exports guide state helpers.
+- `/guide-author-state`: `emptyGuide`, `parseGuide`, `guideMdx`, `guideMarkdown` and draft types. Unsupported compositions report export errors.
+
+Load `catalog.css` and `lab.css`. Authoring composes existing code, checklist, disclosure, compact Twig and PostHog controls. Rich text uses separate lab/guide schemas; learner data and figure interactions remain local. Hosts own storage and PR creation. `TripPlanner` optionally accepts `inline` and `onRequestSent`; default dialog behavior is preserved. Tooltip labels accept React nodes for formatted help.

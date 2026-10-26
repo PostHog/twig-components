@@ -1,6 +1,8 @@
 import { copyFile, mkdir } from "node:fs/promises";
 await mkdir(new URL("./dist/assets/", import.meta.url), { recursive: true });
 for (const [source, target] of [
+  ["./src/assets/guide-book.svg", "assets/guide-book.svg"],
+  ["./src/assets/posthog-logo.svg", "assets/posthog-logo.svg"],
   ["./src/catalog.css", "catalog.css"],
   ["./src/lab.css", "lab.css"],
   ["./src/compact.css", "compact.css"],
