@@ -369,3 +369,11 @@ The host owns simulation state, events, inspector, prose, and reset behavior.
 Authoring editors, draft schemas, validation, rich-text dependencies and publishing UI belong to Learn Studio, not this package. Hosts compose the shared controls and own routing, persistence and analytics.
 
 `GetawaySearch` accepts an optional `portalRoot` for contained chat. DatePicker and GuestPicker use the composed event path to distinguish clicks inside a Shadow DOM from outside clicks. Defaults preserve normal website placement and dismissal.
+
+## `/experience` and `/experience.css`
+
+`TwigExperience` renders the interactive Twig website with local navigation, demo account, search, planner, and booking flows. It uses React and Shadow DOM, never an iframe or Next.js router. Import `catalog.css`, `lab.css`, and `experience.css` once in the host. Give its container a height.
+
+Props: `startingPath` (default `/`), `onReset`, optional `onEvent`, and optional `lab: {content, footer, progress}` to place the host's learner lab in the Playground. Remount with a new React key to restart the preview. Navigation stays inside the component and does not change the host URL. `onEvent` supplies allowlisted event properties only; teaching data never goes to an analytics service.
+
+`/experience-assets` exports `twigExperienceAsset(catalogPath)` resolves catalog photos to packaged assets for compact figures. Demo account persistence uses the existing browser-local `twig:*` keys. Inspector subscriptions are isolated per mounted experience. Instrumentation snippets are reference fixtures from Twig, not source locations in the consuming host.

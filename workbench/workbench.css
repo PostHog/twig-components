@@ -65,3 +65,5 @@ button { cursor: pointer; }
 @media(max-width:760px) {
   .workbench-inspect-preview .vac-tool-rail { left:-16px; right:-16px; width:auto; }
 }
+
+.workbench-experience { height: 800px; min-height: 0; }
