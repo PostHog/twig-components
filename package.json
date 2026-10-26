@@ -226,7 +226,24 @@
       "types": "./dist/Compact.d.ts",
       "import": "./dist/Compact.js"
     },
-    "./compact.css": "./dist/compact.css"
+    "./compact.css": "./dist/compact.css",
+    "./disclosure": {
+      "types": "./dist/PlaygroundDisclosure.d.ts",
+      "import": "./dist/PlaygroundDisclosure.js"
+    },
+    "./instrumentation-inspector": {
+      "types": "./dist/InstrumentationInspector.d.ts",
+      "import": "./dist/InstrumentationInspector.js"
+    },
+    "./experience": {
+      "types": "./dist/TwigExperience.d.ts",
+      "import": "./dist/TwigExperience.js"
+    },
+    "./experience.css": "./dist/experience/components/vacation.css",
+    "./experience-assets": {
+      "types": "./dist/experience/assets.d.ts",
+      "import": "./dist/experience/assets.js"
+    }
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && node build-assets.mjs",
@@ -243,7 +260,8 @@
   "dependencies": {
     "@rrweb/record": "^2.1.6",
     "@rrweb/replay": "^2.1.6",
-    "@rrweb/types": "^2.1.6"
+    "@rrweb/types": "^2.1.6",
+    "canvas-confetti": "^1.9.4"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
@@ -253,7 +271,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "typescript": "^5.0.0",
-    "vite": "^8.3.0"
+    "vite": "^8.3.0",
+    "@types/canvas-confetti": "^1.9.0"
   },
   "typesVersions": {
     "*": {
@@ -406,6 +425,18 @@
       ],
       "compact": [
         "dist/Compact.d.ts"
+      ],
+      "disclosure": [
+        "dist/PlaygroundDisclosure.d.ts"
+      ],
+      "instrumentation-inspector": [
+        "dist/InstrumentationInspector.d.ts"
+      ],
+      "experience": [
+        "dist/TwigExperience.d.ts"
+      ],
+      "experience-assets": [
+        "dist/experience/assets.d.ts"
       ]
     }
   }

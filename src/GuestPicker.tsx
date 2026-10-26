@@ -37,7 +37,7 @@ export function GuestPicker({ id, value, capacity, onChange, onClose, invalid, d
   useEffect(() => {
     if (!open) return;
     function outside(event: PointerEvent) {
-      if (!root.current?.contains(event.target as Node)) close();
+      if (root.current && !event.composedPath().includes(root.current)) close();
     }
     document.addEventListener("pointerdown", outside);
     return () => document.removeEventListener("pointerdown", outside);

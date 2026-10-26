@@ -1,4 +1,4 @@
-import { copyFile, mkdir } from "node:fs/promises";
+import { copyFile, mkdir, cp } from "node:fs/promises";
 await mkdir(new URL("./dist/assets/", import.meta.url), { recursive: true });
 for (const [source, target] of [
   ["./src/catalog.css", "catalog.css"],
@@ -38,3 +38,7 @@ for (const [source, target] of [
     new URL(`./dist/${target}`, import.meta.url)
   );
 }
+
+await mkdir(new URL("./dist/experience/components/", import.meta.url), {recursive:true});
+await copyFile(new URL("./src/experience/components/vacation.css", import.meta.url),new URL("./dist/experience/components/vacation.css", import.meta.url));
+await cp(new URL("./src/assets/experience/", import.meta.url),new URL("./dist/assets/experience/", import.meta.url),{recursive:true});

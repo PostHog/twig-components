@@ -15,6 +15,9 @@ import {
 
 export type TripPlannerProps = {
   stays: readonly Stay[];
+  /** Embedded preview, using the same conversation and controls. */
+  inline?: boolean;
+  onRequestSent?: () => void;
   /** Lab-only scenario. Remount when changing it to cancel pending answers. */
   scenario?: CapacityScenario;
   /** The host supplies routing, link presentation, and any click analytics. */
@@ -46,7 +49,7 @@ function SendIcon() {
 }
 
 /** Local scripted chat. The host owns catalog data, routing, and analytics. */
-export function TripPlanner({ scenario, stays, renderStayLink, accessory, inputId, hidden = false, windowClassName, windowAction, launcherLabel = "Continue your conversation", canSendMessage, onReset, onRequestComplete }: TripPlannerProps) {
+export function TripPlanner({ inline = false, onRequestSent, scenario, stays, renderStayLink, accessory, inputId, hidden = false, windowClassName, windowAction, launcherLabel = "Continue your conversation", canSendMessage, onReset, onRequestComplete }: TripPlannerProps) {
   const id = useId();
   const requestId = inputId ?? `${id}-request`;
   const [state, setState] = useState(initialTripPlannerState);
@@ -64,7 +67,7 @@ export function TripPlanner({ scenario, stays, renderStayLink, accessory, inputI
   const atLimit = state.turns.length >= tripPlannerTurnLimit;
   const messageLocked = !!draft.trim() && !!canSendMessage && !canSendMessage(draft);
   const started = state.turns.length > 0 || !!pending;
-  const visible = open && !hidden;
+  const visible = (inline || open) && !hidden;
 
   useEffect(() => {
     if (!pending) return;
@@ -125,6 +128,7 @@ export function TripPlanner({ scenario, stays, renderStayLink, accessory, inputI
     busy.current = true;
     setDraft("");
     setPending(next);
+    onRequestSent?.();
     setOpen(true);
     if (visible) input.current?.focus({ preventScroll: true });
   }
@@ -168,8 +172,8 @@ export function TripPlanner({ scenario, stays, renderStayLink, accessory, inputI
 
   return (
     <>
-      <section ref={entry} className="twig-trip-planner" aria-label="Plan your stay" hidden={hidden}>
-        {started || open ? (
+      <section ref={entry} className="twig-trip-planner" aria-label="Plan your stay" hidden={hidden || inline}>
+        {inline ? null : started || open ? (
           <button className="twig-trip-planner-launcher" type="button" aria-haspopup="dialog" aria-expanded={visible} onClick={() => setOpen(true)}>
             {launcherLabel} <span aria-hidden="true">↗</span>
           </button>
@@ -179,9 +183,9 @@ export function TripPlanner({ scenario, stays, renderStayLink, accessory, inputI
           {accessory}
         </div>
       </section>
-      {visible && createPortal(
-        <div className={`twig-trip-planner twig-trip-planner-window${windowClassName ? ` ${windowClassName}` : ""}`} role="dialog" aria-labelledby={`${id}-title`} onKeyDown={(event) => {
-          if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); close(); }
+      {visible && ((content: ReactNode) => inline ? content : createPortal(content, document.body))(
+        <div className={`twig-trip-planner twig-trip-planner-window${inline ? " twig-trip-planner-inline" : ""}${windowClassName ? ` ${windowClassName}` : ""}`} role={inline ? "region" : "dialog"} aria-labelledby={`${id}-title`} onKeyDown={(event) => {
+          if (!inline && event.key === "Escape") { event.preventDefault(); event.stopPropagation(); close(); }
         }}>
           <header className="twig-trip-planner-header">
             <h2 ref={heading} id={`${id}-title`} tabIndex={-1}><AiSearchIcon /> AI trip planner</h2>
@@ -189,9 +193,9 @@ export function TripPlanner({ scenario, stays, renderStayLink, accessory, inputI
               setOpen(false);
               windowAction.onSelect();
             }}>{windowAction.label}</button>}
-            <button type="button" className="twig-trip-planner-close" aria-label="Close chat" onClick={close}>
+            {!inline && <button type="button" className="twig-trip-planner-close" aria-label="Close chat" onClick={close}>
               <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
-            </button>
+            </button>}
           </header>
           <div ref={transcript} className="twig-trip-planner-history">
             <ol className="twig-trip-planner-log" role="log" aria-label="Trip planning conversation" aria-live="polite" aria-relevant="additions text" tabIndex={0}>
@@ -215,7 +219,7 @@ export function TripPlanner({ scenario, stays, renderStayLink, accessory, inputI
               <button type="button" className="twig-trip-planner-reset" onClick={reset}>Start over</button>
             </div>
           </div>
-        </div>, document.body
+        </div>
       )}
     </>
   );

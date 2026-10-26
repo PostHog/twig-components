@@ -1796,3 +1796,6 @@
 .twig-dropdown-menu .twig-profile-signout { border-top: 1px solid var(--vac-line); }
 /* Calendar cells retain their grid; only the containing surface is shared. */
 .vac-date-panel.twig-dropdown-menu { padding: 16px; }
+
+/* Optional contained planner; the default site dialog is unchanged. */
+.twig-trip-planner-window.twig-trip-planner-inline { position:relative; inset:auto; z-index:auto; width:100%; max-width:100%; height:580px; box-shadow:none; }
