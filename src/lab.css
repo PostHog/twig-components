@@ -1513,6 +1513,9 @@
 .vac-app .vac-inspector-drilldown .vac-inspector-tree-branch { border-color:var(--ph-neutral-border); padding-left:12px; }
 /* AI summary reuses the selected-event typography; scope away from source disclosures. */
 .vac-app .vac-developer-theme .vac-inspector-generation .vac-inspector-section-title { color:var(--ph-neutral-ink); }
+/* Match inspector gutters without changing standalone generation evidence. */
+.vac-app .vac-developer-theme .vac-inspector-generation > section[aria-label="AI generation"] { padding:12px; }
+.vac-app .vac-developer-theme .vac-inspector-generation .vac-ai-generation { margin:0; }
 
 /* Disclosure feedback stays on the affordance, never a rectangular row fill. */
 .vac-app .vac-inspector-drilldown .vac-inspector-disclosure:hover { background:transparent; }

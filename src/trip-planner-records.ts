@@ -38,6 +38,11 @@ export type TripPlannerRecord = {
     $ai_is_error: false;
     $ai_stop_reason: "end_turn";
     feature: "trip_planner";
+    /** Versioned local teaching setup, not a fetched managed prompt. */
+    $ai_prompt_name: "twig-trip-planner";
+    $ai_prompt_version: 1;
+    application_version: "trip-planner-v1";
+    tool_config_version: "capacity-v1" | "capacity-v2";
     scenario: "forest" | "beach" | "kitchen" | "fallback" | "capacity-broken" | "capacity-fixed";
     turn_number: number;
     selected_stay_id: string | null;
@@ -145,6 +150,9 @@ export function createGenerationRecord(
       $ai_total_cost_usd: roundCost(inputCost + outputCost), $ai_latency: duration,
       $ai_is_error: false, $ai_stop_reason: "end_turn", feature: "trip_planner",
       ...metadata,
+      $ai_prompt_name: "twig-trip-planner", $ai_prompt_version: 1,
+      application_version: "trip-planner-v1",
+      tool_config_version: metadata.scenario === "capacity-fixed" ? "capacity-v2" : "capacity-v1",
       demo_data: true, fixture_version: "trip-planner-v1", usage_source: "fixture", pricing_date: tripPlannerModel.pricingDate,
     },
   };
