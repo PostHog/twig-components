@@ -243,6 +243,10 @@
     "./experience-assets": {
       "types": "./dist/experience/assets.d.ts",
       "import": "./dist/experience/assets.js"
+    },
+    "./trip-planner-evaluations": {
+      "types": "./dist/trip-planner-evaluations.d.ts",
+      "import": "./dist/trip-planner-evaluations.js"
     }
   },
   "scripts": {
@@ -437,6 +441,9 @@
       ],
       "experience-assets": [
         "dist/experience/assets.d.ts"
+      ],
+      "trip-planner-evaluations": [
+        "dist/trip-planner-evaluations.d.ts"
       ]
     }
   }
