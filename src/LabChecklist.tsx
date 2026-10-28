@@ -5,9 +5,11 @@ import type { ReactNode } from "react";
 export function LabChecklist({
   label,
   items,
+  showStatus = items.length > 1,
 }: {
   label: string;
   items: { label: ReactNode; done: boolean }[];
+  showStatus?: boolean;
 }) {
   const current = items.findIndex((item) => !item.done);
   const numbered = items.length > 1;
@@ -21,7 +23,7 @@ export function LabChecklist({
           }
           aria-current={numbered && index === current ? "step" : undefined}
         >
-          {numbered && (
+          {showStatus && (
             <span
               className="vac-check-status"
               aria-label={

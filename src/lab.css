@@ -12,7 +12,8 @@
   --ph-radius-sm: 4px;
   --ph-font-code: PlaygroundSourceCodePro, ui-monospace, monospace;
   /* posthog.com/tailwind.config.js: colors.button, OSButton outline. */
-  --ph-os-button-border: var(--ph-brand-yellow-darker);
+  --ph-os-button-border: #b17816;
+  --ph-os-button-base: #eb9d2a;
   --ph-brand-yellow: #ffa81c;
   /* brand.posthog.com/catalog.json: yellow.darker, for selected console text. */
   --ph-brand-yellow-darker: #e58e00;
@@ -740,7 +741,7 @@
   padding: 0;
   border: 1.5px solid var(--ph-os-button-border);
   border-radius: var(--ph-radius-sm);
-  background: var(--ph-brand-yellow);
+  background: var(--ph-os-button-base);
   color: var(--vac-ink);
   font-size: 13px;
   line-height: 1.5;
@@ -764,7 +765,7 @@
   user-select: none;
 }
 .vac-app .vac-developer-theme .vac-button:hover:not(:disabled) {
-  background: var(--ph-brand-yellow);
+  background: var(--ph-os-button-base);
   border-color: var(--ph-os-button-border);
 }
 .vac-button:hover:not(:disabled) > .vac-os-button-face {
@@ -779,15 +780,15 @@
   transition: transform 100ms;
 }
 .vac-app .vac-developer-theme .vac-button:disabled {
-  opacity: 1;
-  background: var(--vac-line);
-  border-color: var(--vac-line);
+  opacity: 0.5;
+  background: var(--ph-os-button-base);
+  border-color: var(--ph-os-button-border);
   cursor: not-allowed;
 }
 .vac-button:disabled > .vac-os-button-face {
-  color: var(--vac-muted);
-  background: var(--vac-fill);
-  border-color: var(--vac-line);
+  color: var(--ph-neutral-ink);
+  background: var(--ph-neutral-white);
+  border-color: var(--ph-os-button-border);
 }
 @media (prefers-reduced-motion: reduce) {
   .vac-os-button-face {
@@ -1175,6 +1176,7 @@
 .vac-app .vac-developer-theme .vac-agent-terminal .vac-agent-muted,
 .vac-app .vac-developer-theme .vac-agent-terminal .vac-muted { color: var(--ph-neutral-border); }
 .vac-agent-tool { margin: 8px 0; }
+.vac-app .vac-developer-theme .vac-agent-terminal pre.vac-support-terminal-output { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 100%; }
 .vac-agent-tool summary { cursor: pointer; }
 .vac-app .vac-developer-theme .vac-agent-terminal pre { border: 1px solid var(--ph-neutral-muted); color: var(--ph-neutral-background); background: var(--ph-neutral-ink); font-size: 11px; }
 .vac-app .vac-developer-theme .vac-agent-suggestion { display: block; border: 0; padding: 8px 0; color: var(--ph-brand-yellow); text-align: left; background: none; text-decoration: underline; text-underline-offset: 3px; }
@@ -1743,3 +1745,56 @@ details[open] > summary .vac-disclosure-icon:not([data-expanded]) > .vac-disclos
 .vac-app .vac-developer-theme .vac-ai-generation .vac-lab-table-value code { white-space: pre-wrap; }
 .vac-app .vac-developer-theme .vac-playground-status { gap: 4px; }
 .vac-app .vac-developer-theme .vac-ai-evidence-stack > .vac-ai-generation { margin: 0; }
+
+/* Compact evaluation results, composed from the shared PostHog evidence surfaces. */
+.vac-app .vac-developer-theme .vac-support-results-header { padding: 12px; border-bottom: 1px solid var(--ph-neutral-border); }
+.vac-app .vac-developer-theme .vac-support-results-header h4 { margin: 4px 0 0; font-size: 14px; font-weight: 600; line-height: 1.4; }
+.vac-app .vac-developer-theme .vac-support-results .vac-lab-table { margin: 0; }
+.vac-app .vac-developer-theme .vac-support-results tr[data-selected="true"] { background: var(--ph-neutral-accent); }
+.vac-app .vac-developer-theme .vac-support-result-select { padding: 0; min-height: 28px; border: 0; background: transparent; color: inherit; font: inherit; font-weight: 500; text-align: left; text-decoration: none; }
+.vac-app .vac-developer-theme .vac-support-result-select:hover { text-decoration: underline; }
+.vac-app .vac-developer-theme .vac-support-result-select:focus-visible { outline: 2px solid var(--ph-brand-cobalt); outline-offset: 2px; }
+.vac-app .vac-developer-theme .vac-support-result-detail { border-top: 1px solid var(--ph-neutral-border); }
+.vac-app .vac-developer-theme .vac-support-result-reason { padding: 12px; }
+.vac-app .vac-developer-theme .vac-support-result-reason p { margin: 4px 0 0; }
+.vac-app .vac-developer-theme .vac-support-result-detail .vac-ai-generation { margin: 0 12px 12px; }
+.vac-app .vac-developer-theme .vac-support-result-detail .vac-ai-generation > h4 { display: none; }
+.vac-app .vac-developer-theme .vac-support-result-detail > details { padding: 0 12px 12px; }
+
+.vac-app .vac-developer-theme .vac-support-result-row { cursor: pointer; }
+.vac-app .vac-developer-theme .vac-support-result-row:hover { background: var(--ph-neutral-background); }
+.vac-app .vac-developer-theme .vac-support-result-row:has(:focus-visible) { outline: 2px solid var(--ph-brand-cobalt); outline-offset: -2px; }
+.vac-app .vac-developer-theme .vac-support-result-row .vac-support-result-select:focus-visible { outline: none; }
+.vac-app .vac-developer-theme .vac-support-result-icon-cell { width: 40px; vertical-align: middle; }
+.vac-app .vac-developer-theme .vac-support-result-detail-row > td { padding: 0; }
+
+/* Eval lessons use the Figma Playground lesson/section type scale and existing templates. */
+.vac-app .vac-developer-theme .vac-support-evals-lab { font: 400 13px/1.6 PlaygroundRoundHog, sans-serif; }
+.vac-app .vac-developer-theme .vac-support-evals-lab h3,
+.vac-app .vac-developer-theme #guide-panel .vac-support-evals-lab h3 { font-size: 18px; line-height: 1.35; font-weight: 600; }
+.vac-app .vac-developer-theme .vac-support-evals-lab .vac-lab-completion { margin: 0; }
+.vac-app .vac-developer-theme .vac-support-evals-lab .vac-lab-completion li { font-size: 13px; line-height: 1.6; }
+.vac-app .vac-developer-theme .vac-support-evals-lab .vac-agent-terminal { padding: 16px; }
+.vac-app .vac-developer-theme .vac-support-evals-lab .vac-agent-title { border: 0; padding-bottom: 0; }
+.vac-app .vac-developer-theme .vac-support-evals-lab .vac-agent-title + .vac-agent-turn { border-top: 0; }
+.vac-app .vac-developer-theme .vac-support-evals-lab .vac-support-terminal-output { margin: 8px 0; padding: 12px; }
+/* Horizontal composer from Playground / Mock MCP composer; opt-in preserves existing consumers. */
+.vac-app .vac-developer-theme .vac-mcp-composer-horizontal { display: flex; align-items: center; gap: 12px; }
+.vac-mcp-composer-horizontal .vac-mcp-prompt { flex: 1; align-items: baseline; }
+.vac-app .vac-developer-theme .vac-mcp-composer-horizontal textarea { field-sizing: content; min-height: 32px; max-height: 160px; height: auto; overflow-y: auto; }
+.vac-mcp-composer-horizontal .vac-mcp-controls { flex: 0 0 32px; }
+.vac-app .vac-developer-theme .vac-agent-terminal .vac-mcp-composer-horizontal .vac-mcp-send { width: 32px; height: 32px; }
+
+.vac-app .vac-developer-theme .vac-support-evals-lab .vac-lab-completion .vac-guide-example { display: flex; flex-direction: column; align-items: stretch; gap: 12px; border: 0; }
+.vac-app .vac-developer-theme .vac-support-evals-lab .vac-lab-completion h4 { width: 100%; text-align: left; }
+
+.vac-app .vac-developer-theme #guide-panel .vac-support-evals-lab .vac-completion-title { margin: 0; }
+
+/* Figma Playground / Tool call and result: one read-only evidence surface. */
+.vac-app .vac-developer-theme .vac-support-tool-interaction { margin: 16px 0; min-width: 0; overflow: hidden; border: 1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); background: var(--ph-neutral-accent); color: var(--ph-neutral-ink); }
+.vac-app .vac-developer-theme .vac-support-tool-interaction > div { padding: 12px; }
+.vac-app .vac-developer-theme .vac-support-tool-interaction > div + div { border-top: 1px solid var(--ph-neutral-border); }
+.vac-app .vac-developer-theme .vac-support-tool-interaction dt { margin: 0 0 8px; color: var(--ph-neutral-muted); font: 400 13px/1.6 PlaygroundRoundHog, sans-serif; }
+.vac-app .vac-developer-theme .vac-support-tool-interaction dd { margin: 0; }
+.vac-app .vac-developer-theme .vac-support-tool-interaction pre { margin: 0; padding: 0; min-width: 0; border: 0; border-radius: 0; background: transparent; color: inherit; white-space: pre-wrap; overflow-wrap: anywhere; font: 400 12px/20.4px var(--ph-font-code); }
+.vac-app .vac-developer-theme .vac-support-tool-interaction pre code { padding: 0; border: 0; background: none; color: inherit; font: inherit; white-space: inherit; }

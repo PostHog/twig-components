@@ -71,3 +71,5 @@ Finalized controls are available under Playground controls: Ready/Playing/Ended 
 
 
 In Inspector, choose Explore on your own to see regular exploration context and the live-event play control. Simulate two interactions, select an earlier event, then use Track live events to resume following the latest event. Take a tour still uses progressive checklist directions. Check both at desktop, 390px and 320px, including keyboard focus and disabled controls.
+
+The Offline and online evaluations preview runs the support conversation, offline coding-agent checks, online setup and three result inspections, then regression and completion. Use `?view=support` to open it.

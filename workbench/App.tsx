@@ -50,8 +50,20 @@ import "../src/catalog.css";
 import "../src/lab.css";
 import "./workbench.css";
 
-type View = "controls" | "inspect" | "getaway" | "planner" | "preview" | "saved" | "account" | "invite" | "products" | "reset" | "dates" | "filters" | "ai" | "booking" | "stay" | "replay" | "errors";
+import { SupportAgent } from "../src/SupportAgent.js";
+import { SupportEvalsProvider, SupportEvalsLab, useSupportEvals } from "../src/SupportEvalsLab.js";
+
+function SupportPreview() { return <SupportEvalsProvider><SupportPreviewContent /></SupportEvalsProvider>; }
+function SupportPreviewContent() {
+ const [stage, setStage] = useState(0);
+ const lab = useSupportEvals();
+ const key = stage >= 5 ? "production" : lab.caseId;
+ return <div className="vac-app"><div className="workbench-grid"><div><SupportAgent guided={stage > 0 && stage !== 4} conversation={stage === 4 ? [] : lab.freeConversation} pending={lab.freePending} caseId={key} run={stage === 4 ? undefined : lab.runs[key]} onSend={message => stage > 0 && stage !== 4 ? lab.send(key) : lab.sendFree(message)} onReset={() => stage > 0 ? lab.resetConversation(key) : lab.resetFree()} /></div><div className="vac-developer-theme"><SupportEvalsLab stage={stage} onStage={setStage} onAllLabs={() => setStage(0)} /></div></div></div>;
+}
+
+type View = "support" | "controls" | "inspect" | "getaway" | "planner" | "preview" | "saved" | "account" | "invite" | "products" | "reset" | "dates" | "filters" | "ai" | "booking" | "stay" | "replay" | "errors";
 const views: { id: View; label: string; description: string }[] = [
+ { id: "support", label: "Offline and online evaluations", description: "Support conversations, local tests, production evals, and regression coverage" },
   { id:"controls", label:"Playground controls", description:"Shared code, Wizard commands, connected choices, and the local MCP composer" },
   { id: "inspect", label: "Inspect Twig", description: "Console values and capture-code drill-down, with supplemental data only when the preview omits details" },
   { id: "getaway", label: "Getaway search", description: "Integrated local destination and AI search" },
@@ -515,7 +527,7 @@ function ErrorTrackingPreview() { return <ErrorTrackingLabProvider active><Error
 export default function App() {
   const [view, setView] = useState<View>(() => { const requested = new URLSearchParams(window.location.search).get("view"); return views.some(item => item.id === requested) ? requested as View : "preview"; });
   const current = views.find((item) => item.id === view)!;
-  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "controls" ? <PlaygroundControlsPreview /> : view === "inspect" ? <InspectPreview /> : view === "getaway" ? <GetawayPreview /> : view === "planner" ? <TripPlannerPreview /> : view === "preview" ? <Preview /> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "products" ? <ProductMenuPreview /> : view === "reset" ? <ResetPreview /> : view === "dates" ? <DatePickerPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : view === "errors" ? <ErrorTrackingPreview /> : <Replay />}</div></main></div>;
+  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "support" ? <SupportPreview /> : view === "controls" ? <PlaygroundControlsPreview /> : view === "inspect" ? <InspectPreview /> : view === "getaway" ? <GetawayPreview /> : view === "planner" ? <TripPlannerPreview /> : view === "preview" ? <Preview /> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "products" ? <ProductMenuPreview /> : view === "reset" ? <ResetPreview /> : view === "dates" ? <DatePickerPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : view === "errors" ? <ErrorTrackingPreview /> : <Replay />}</div></main></div>;
 }
 
 function PlaygroundControlsPreview() {

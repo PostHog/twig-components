@@ -387,3 +387,7 @@ The Playground bundles Source Code Pro Regular from [Adobe’s official distribu
 ## Inspector exploration and live tracking
 
 The default Inspector is free exploration. Show “Interact with Twig to explore its PostHog instrumentation.” as regular 13px RoundHog prose, including the period. Do not turn it into a current/completed checklist. Guided tour actions continue to use `LabChecklist` through the existing guidance slot. The console’s Track live events control uses the shared play icon and retains its tooltip, keyboard focus, disabled state and existing follow-latest behavior. Clear console remains a separate reset control.
+
+## Support evaluations lab
+
+Reuse the Twig support chat, Playground checklists, coding-agent composer, result rows, generation tabs, and completion. Only the opening and completion pages have titles. Tool call and result share one read-only panel without copy controls. Online Code, Sentiment, and LLM judge inspections use the same results surface. OS buttons use the approved white face, #EB9D2A base, and #B17816 border.
