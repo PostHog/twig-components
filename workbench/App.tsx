@@ -29,6 +29,7 @@ import {
   type AccountSettingsValue,
   type BookedStaySummary,
 } from "../src/Account.js";
+import { RouteErrorView } from "../src/RouteError.js";
 import { AmenityFilters, matchesStayAmenities, type StayAmenity, type StaySetting } from "../src/StayFilters.js";
 import { DatePicker, addDateDays } from "../src/DatePicker.js";
 import { GuestPicker } from "../src/GuestPicker.js";
@@ -146,7 +147,7 @@ function CompactPreview() {
     <CompactTwig headerActions={<ProfileMenu className="twig-compact-profile" profile={{displayName:"Edgar Hogg",email:"edgar.hogg@fakeemail.com"}} links={[]} open={menuOpen} onOpenChange={setMenuOpen} onSignOut={() => {setMenuOpen(false);setSaved(false);}} />}>
       <article className="twig-compact-stay"><StayCardContent compact stay={stay} image={<div className="vac-image"><img src={new URL(`../assets/${photo}.jpg`, import.meta.url).href} alt="Stay" /></div>} /><div className="twig-compact-save"><SavedStay signedIn saved={bookmarked} onSavedChange={setBookmarked} stayName={stay.title ?? "Stay"} /></div></article>
       <div className="twig-account-layout"><button className="vac-button vac-primary" disabled={booked} onClick={() => setBooked(true)}>{booked ? "Booking confirmed" : "Book stay"}</button></div>
-    </CompactTwig></div>;
+    </CompactTwig><CompactTwig><RouteErrorView onRetry={() => {}} /></CompactTwig></div>;
 
 }
 

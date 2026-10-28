@@ -35,6 +35,10 @@
       "types": "./dist/Account.d.ts",
       "import": "./dist/Account.js"
     },
+    "./route-error": {
+      "types": "./dist/RouteError.d.ts",
+      "import": "./dist/RouteError.js"
+    },
     "./saved-stay": {
       "types": "./dist/SavedStay.d.ts",
       "import": "./dist/SavedStay.js"
@@ -284,6 +288,9 @@
       ],
       "account": [
         "dist/Account.d.ts"
+      ],
+      "route-error": [
+        "dist/RouteError.d.ts"
       ],
       "saved-stay": [
         "dist/SavedStay.d.ts"

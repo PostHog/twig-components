@@ -6,6 +6,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { errorTrackingReducer, initialErrorTrackingState, isErrorTrackingLabComplete } from "@posthog/twig-components/error-tracking-lab";
 import { ErrorTrackingLabProvider, ErrorTrackingLab } from "@posthog/twig-components/error-tracking-lab-ui";
 import { BookedStaysView, TripDetailsView } from "@posthog/twig-components/account";
+import { RouteErrorView } from "@posthog/twig-components/route-error";
 import { labsOnOtherPages, playgroundPage } from "@posthog/twig-components/playground";
 import { stays } from "@posthog/twig-components/catalog";
 
@@ -241,4 +242,12 @@ test("every Twig action in the error lab uses single or numbered directions", ()
     assert.equal((checklist.match(/class="vac-check-status"/g) ?? []).length, steps === 1 ? 0 : steps);
   }
   assert.match(render(9, verified, "bookings"), /aria-label="Check the host repair"[\s\S]*data-state="done"/);
+});
+
+test("the route fallback shows Twig's error page and a retry only when the host passes one", () => {
+  const withRetry = renderToStaticMarkup(h(RouteErrorView, { onRetry: () => {} }));
+  assert.match(withRetry, /role="alert"/);
+  assert.match(withRetry, /Something went wrong/);
+  assert.match(withRetry, />Try again</);
+  assert.doesNotMatch(renderToStaticMarkup(h(RouteErrorView)), /Try again/);
 });
