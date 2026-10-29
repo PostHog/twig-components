@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.4](https://github.com/PostHog/twig-components/compare/v0.2.3...v0.2.4) (2026-10-29)
+
+
+### Features
+
+* add support agent and evaluations lab ([#38](https://github.com/PostHog/twig-components/issues/38)) ([3a12dbe](https://github.com/PostHog/twig-components/commit/3a12dbe6abc2c33ebb88bb39967074736b2d2b54))
+
 ## [0.2.3](https://github.com/PostHog/twig-components/compare/v0.2.2...v0.2.3) (2026-10-26)
 
 
