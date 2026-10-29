@@ -243,6 +243,18 @@
     "./experience-assets": {
       "types": "./dist/experience/assets.d.ts",
       "import": "./dist/experience/assets.js"
+    },
+    "./support-agent": {
+      "types": "./dist/SupportAgent.d.ts",
+      "import": "./dist/SupportAgent.js"
+    },
+    "./support-evals": {
+      "types": "./dist/support-evals.d.ts",
+      "import": "./dist/support-evals.js"
+    },
+    "./support-evals-lab": {
+      "types": "./dist/SupportEvalsLab.d.ts",
+      "import": "./dist/SupportEvalsLab.js"
     }
   },
   "scripts": {
@@ -437,6 +449,15 @@
       ],
       "experience-assets": [
         "dist/experience/assets.d.ts"
+      ],
+      "support-agent": [
+        "dist/SupportAgent.d.ts"
+      ],
+      "support-evals": [
+        "dist/support-evals.d.ts"
+      ],
+      "support-evals-lab": [
+        "dist/SupportEvalsLab.d.ts"
       ]
     }
   }

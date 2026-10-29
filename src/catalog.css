@@ -1799,3 +1799,8 @@
 
 /* Optional contained planner; the default site dialog is unchanged. */
 .twig-trip-planner-window.twig-trip-planner-inline { position:relative; inset:auto; z-index:auto; width:100%; max-width:100%; height:580px; box-shadow:none; }
+
+/* Support composes the approved getaway chat in a content-sized page panel. */
+.twig-trip-planner-window.twig-support-agent { height:auto; }
+
+.twig-support-agent .twig-trip-planner-footer { justify-content:flex-end; }
