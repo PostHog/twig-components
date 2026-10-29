@@ -377,3 +377,17 @@ Authoring editors, draft schemas, validation, rich-text dependencies and publish
 Props: `startingPath` (default `/`), `onReset`, optional `onEvent`, and optional `lab: {content, footer, progress}` to place the host's learner lab in the Playground. Remount with a new React key to restart the preview. Navigation stays inside the component and does not change the host URL. `onEvent` supplies allowlisted event properties only; teaching data never goes to an analytics service.
 
 `/experience-assets` exports `twigExperienceAsset(catalogPath)` resolves catalog photos to packaged assets for compact figures. Demo account persistence uses the existing browser-local `twig:*` keys. Inspector subscriptions are isolated per mounted experience. Instrumentation snippets are reference fixtures from Twig, not source locations in the consuming host.
+
+## Support conversations and evaluations
+
+`/support-agent` exports `SupportAgent`, a controlled Twig chat using the approved getaway surface. Outside a lab, it starts empty and accepts typed messages. Pass `guided` only for prepared lab inputs. Supply a fixed `caseId`, optional completed `run`, `onSend(message)`, `onReset`, optional free-chat `conversation`/`pending`, and optional marker `accessory`. The component makes no model calls and never captures analytics.
+
+`/support-evals` exports the demo policy, saved/synthetic/production cases, `createSupportRun`, `evaluateSupportRun`, and local trace/span/generation/evaluation evidence builders. Identities and timestamps come from the host/provider. The policy is a lab fixture, not a published stay policy. The code check executes an exact keyword rule. Judge and sentiment outcomes are scripted, explicitly simulated examples.
+
+`/support-evals-lab` exports `SupportEvalsProvider`, `useSupportEvals`, and `SupportEvalsLab`. Place the provider above the Twig support view and lab panel. Supply `onGeneration`, `onEvaluation`, and `onAction` to connect local inspection and safe host analytics. `SupportEvalsLab` accepts `stage` (0–12), `onStage`, and `onAllLabs`. Keep the provider mounted during navigation and remount on a fresh lab start/reset. All conversation and score state is in memory. The workbench’s Offline and online evaluations view exercises both flows and the regression fix.
+
+Support policy lookups are backend evidence. The customer chat only shows messages. The evaluation lab reveals the captured lookup and returned policy after the learner sends the saved or production request.
+
+The evaluations lab shows backend tool evidence in one read-only call/result panel, matching Figma’s Playground / Tool call and result. Both sections share the existing code surface, neutral divider, and code typography. Do not add copy controls or separate snippet cards.
+
+The evaluations lab introduces enabled online checks before capture, then guides inspection through Code (answer), Sentiment (customer input), and LLM judge (policy correctness) before the regression exercise. It reuses the checklist, result rows, generation tabs, and OS navigation.

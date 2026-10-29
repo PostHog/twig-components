@@ -11,6 +11,14 @@ function product<T extends keyof typeof productColors>(tool: T) {
 }
 
 export const touchpointDefinitions = {
+  evaluations: {
+    title: "Offline and online evaluations",
+    ...product("AI Observability"),
+    lesson: "Test a support agent, compare eval types, and catch a missed case.",
+    lab: "support-evaluations",
+    description: "Compare saved-case testing with production monitoring.",
+    evidence: "Local support generations and evaluation scores.",
+  },
   discovery: {
     title: "Traces, generations, and evaluations",
     ...product("AI Observability"),
@@ -69,10 +77,11 @@ export const touchpointDefinitions = {
 } as const;
 
 export type TouchpointId = keyof typeof touchpointDefinitions;
-type PageKind = "discover" | "stay" | "about" | "bookings";
-export type LabStartPage = "discover" | "stay";
+type PageKind = "discover" | "stay" | "about" | "bookings" | "support";
+export type LabStartPage = "discover" | "stay" | "support";
 
 const labStartPages: Record<TouchpointId, { page: LabStartPage; location: string }> = {
+  evaluations: { page: "support", location: "Support" },
   discovery: { page: "discover", location: "Find a stay" },
   catalog: { page: "discover", location: "Find a stay" },
   replay: { page: "discover", location: "Find a stay" },
@@ -84,6 +93,7 @@ const labStartPages: Record<TouchpointId, { page: LabStartPage; location: string
 const pageTouchpoints: Record<PageKind, readonly TouchpointId[]> = {
   discover: ["discovery", "catalog", "replay"],
   about: [],
+  support: ["evaluations"],
   stay: ["stay", "booking", "errors", "replay"],
   bookings: [],
 };
@@ -98,7 +108,7 @@ export function playgroundPage(
     ? catalog.find((entry) => entry.id === match[1])
     : undefined;
   const kind: PageKind | null =
-    path === "/"
+    path === "/support" ? "support" : path === "/"
       ? "discover"
       : path === "/about"
       ? "about"
@@ -113,7 +123,7 @@ export function playgroundPage(
     kind,
     stayId: stay?.id ?? null,
     label:
-      kind === "discover"
+      kind === "support" ? "Support" : kind === "discover"
         ? "Find a stay"
         : kind === "about"
         ? "About Twig"

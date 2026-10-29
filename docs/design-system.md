@@ -414,3 +414,7 @@ Wrap `StayCardContent compact` in `.twig-compact-stay` for a borderless horizont
 Do not add a result count or extra card background. Keep save controls when the
 lesson teaches saving. Login and profile controls retain their existing callbacks.
 The host owns simulation state, events, inspector, prose, and reset behavior.
+
+## Support evaluations lab
+
+Reuse the Twig support chat, Playground checklists, coding-agent composer, result rows, generation tabs, and completion. Only the opening and completion pages have titles. Tool call and result share one read-only panel without copy controls. Online Code, Sentiment, and LLM judge inspections use the same results surface. OS buttons use the approved white face, #EB9D2A base, and #B17816 border.
