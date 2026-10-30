@@ -531,12 +531,24 @@ function ErrorTrackingPreviewContent() {
   function openDetails() {
     setSelected(booking.id);
     if (canceled) { setError(false); return; }
-    setError(!state.fixed);
-    setDisplayedHost(state.fixed ? state.hostLookupRepaired ? "Woody" : "Host information unavailable" : undefined);
-    if (state.hostLookupRepaired) dispatch({ type: "verify-host" });
-    else if (state.fixed) dispatch({ type: "retry-success" });
+    setError(!state.repaired);
+    setDisplayedHost(state.repaired ? "Woody" : undefined);
+    if (state.repaired) dispatch({ type: "verify" });
     else {
-      dispatch({ type: "capture", message: "Cannot read properties of undefined (reading 'name')", stayId: booking.stay.id });
+      // Fixture fields in place of the SDK's payload.
+      dispatch({ type: "capture", exception: {
+        outcome: "local",
+        type: state.fingerprinted ? "HostNotFoundError" : "TypeError",
+        value: state.fingerprinted ? undefined : "Cannot read properties of undefined (reading 'name')",
+        handled: state.caught,
+        mechanism: "generic",
+        frames: ["readTripHost", "openTripDetails"],
+        ...(state.caught ? { surface: "trip_details", stayId: booking.stay.id } : {}),
+        ...(state.fingerprinted ? { fingerprint: `host-not-found:${booking.stay.hostId}` } : {}),
+        distinctId: "workbench-guest",
+        sessionId: "workbench-session",
+        host: booking.stay.hostId,
+      } });
       if (stage === 2) setStage(3);
     }
   }
@@ -544,8 +556,8 @@ function ErrorTrackingPreviewContent() {
     <div className="workbench-controls"><button onClick={() => setLocation("stay")}>Stay page</button><button onClick={() => setLocation("bookings")}>Booked stays</button><button onClick={() => setStage((current) => Math.max(0, current - 1))} disabled={stage === 0}>Previous step</button></div>
     <div className="twig-browser workbench-twig" id="error-trip-fixture">{location === "stay"
       ? <section className="workbench-fixture"><h3>{booking.stay.title}</h3><p>Complete a booking on Twig to reach the details view.</p><button className="vac-button" onClick={bookStay} disabled={Boolean(state.booking)}>Book stay</button></section>
-      : <BookedStaysView bookings={state.booking ? [booking] : []} renderImage={() => <div className="vac-image"><span>Stay photo</span></div>} stayHref={() => "#error-trip-fixture"} selectedBookingId={selected} highlightedTripDetailsBookingId={stage === 6 && state.successfulRetry && displayedHost === "Host information unavailable" ? booking.id : undefined} onViewDetails={openDetails} onCancelBooking={() => setCanceled(true)} renderDetails={() => <TripDetailsView booking={booking} hostName={displayedHost} errorMessage={error ? "Try to load details again." : undefined} onRetry={openDetails} />} />}</div>
-    <LabPreview><ErrorTrackingLab stage={stage} onStage={setStage} location={location} onFocusBooking={() => document.querySelector(".workbench-fixture button")?.scrollIntoView({ behavior: "smooth" })} onFocusDetails={() => { setLocation("bookings"); document.querySelector(".twig-booking-details")?.scrollIntoView({ behavior: "smooth" }); }} /></LabPreview>
+      : <BookedStaysView bookings={state.booking ? [booking] : []} renderImage={() => <div className="vac-image"><span>Stay photo</span></div>} stayHref={() => "#error-trip-fixture"} selectedBookingId={selected} onViewDetails={openDetails} onCancelBooking={() => setCanceled(true)} renderDetails={() => <TripDetailsView booking={booking} hostName={displayedHost} errorMessage={error ? "Try to load details again." : undefined} onRetry={openDetails} />} />}</div>
+    <LabPreview><ErrorTrackingLab stage={stage} onStage={setStage} location={location} onFocusBooking={() => document.querySelector(".workbench-fixture button")?.scrollIntoView({ behavior: "smooth" })} onFocusDetails={() => { setLocation("bookings"); document.querySelector(".twig-booking-details")?.scrollIntoView({ behavior: "smooth" }); }} onTriggerNoise={() => dispatch({ type: "capture", exception: { outcome: "dropped", type: "Error", value: "ResizeObserver loop completed with undelivered notifications.", handled: false, mechanism: "generic", frames: [] } })} /></LabPreview>
   </>;
 }
 function ErrorTrackingPreview() { return <ErrorTrackingLabProvider active><ErrorTrackingPreviewContent /></ErrorTrackingLabProvider>; }

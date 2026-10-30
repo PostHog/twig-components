@@ -18,7 +18,7 @@ const consumerExports = {
   "status": ["PlaygroundStatus"],
   "ai-evidence": ["PlaygroundTraceExplorer", "PlaygroundGeneration", "PlaygroundEvaluation", "generationMessages", "generationModelLabel"],
   "replay-controls": ["ReplayControls", "RecordingControls", "replayTime"],
-  "error-evidence": ["PlaygroundErrorIssue", "PlaygroundStackTrace"],
+  "error-evidence": ["PlaygroundEvidenceStatus", "PlaygroundIssueList", "PlaygroundIssuePage", "PlaygroundStackFrames"],
 };
 
 test("Playground and compact consumer imports retain their public components and helpers", async () => {

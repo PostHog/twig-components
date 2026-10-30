@@ -107,7 +107,7 @@ function RestoreErrorLab({ onRestore }: { onRestore: () => void }) {
   useEffect(() => {
     if (!account.ready || checked.current) return;
     checked.current = true;
-    if (account.errorTracking.stage > 0 && account.errorTracking.stage < 10) {
+    if (account.errorTracking.stage > 0 && account.errorTracking.stage < 12) {
       choose("errors");
       onRestore();
     }

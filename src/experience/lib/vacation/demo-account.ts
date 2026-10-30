@@ -1,5 +1,5 @@
 import type { AccountSettingsValue } from "../../../Account.js";
-import { errorTrackingReducer, initialErrorTrackingState, type ErrorTrackingAction, type ErrorTrackingState } from "../../../error-tracking-lab.js";
+import { errorTrackingReducer, initialErrorTrackingState, type CapturedException, type ErrorTrackingAction, type ErrorTrackingState } from "../../../error-tracking-lab.js";
 
 export const demoAccountStorageKey = "twig:demo-account:v2";
 export const demoLoginEmail = "edgar.hogg@fakeemail.com";
@@ -98,18 +98,16 @@ export function demoAccountReducer(
     return { ...state, savedStayIds };
   }
   if (action.type === "error-tracking-action") {
-    if (action.action.type === "capture") {
-      const { stage, state: labState } = state.errorTracking;
-      if (stage !== 4 && !(stage === 2 && labState.occurrences.length === 0)) return state;
-    }
+    if (action.action.type === "capture" && state.errorTracking.stage < 2) return state;
     const labState = errorTrackingReducer(state.errorTracking.state, action.action);
     const firstFailure = action.action.type === "capture"
       && state.errorTracking.stage === 2
+      && action.action.exception.outcome !== "dropped"
       && labState.occurrences.length > state.errorTracking.state.occurrences.length;
     return { ...state, errorTracking: { state: labState, stage: firstFailure ? 3 : state.errorTracking.stage } };
   }
   if (action.type === "error-tracking-stage") {
-    return { ...state, errorTracking: { ...state.errorTracking, stage: Math.max(0, Math.min(10, action.stage)) } };
+    return { ...state, errorTracking: { ...state.errorTracking, stage: Math.max(0, Math.min(12, action.stage)) } };
   }
   if (action.type === "cancel-booking") {
     if (!state.signedIn || !state.bookings.some((booking) => booking.id === action.bookingId && booking.status === "confirmed")) return state;
@@ -143,18 +141,10 @@ export function parseDemoAccountState(value: string | null): DemoAccountState {
       : [];
     const storedSession = parsed.errorTracking;
     const parsedLabState = isErrorTrackingState(storedSession?.state) ? storedSession.state : null;
-    const verifiedLoads = parsedLabState?.verifiedLoads ?? (parsedLabState?.hostVerified ? 1 : 0);
-    const storedLabState = parsedLabState
-      ? {
-          ...initialErrorTrackingState,
-          ...parsedLabState,
-          verifiedLoads,
-          resolved: Boolean(parsedLabState.resolved && parsedLabState.hostVerified && verifiedLoads >= 1),
-        }
-      : initialErrorTrackingState;
-    const storedStage = Number.isInteger(storedSession?.stage) ? Math.max(0, Math.min(10, storedSession!.stage)) : 0;
-    const resumedStage = storedStage === 2 && storedLabState.occurrences.length > 0 ? 3
-      : storedStage >= 8 && !storedLabState.hostLookupRepaired ? 7 : storedStage;
+    const storedLabState = parsedLabState ? { ...initialErrorTrackingState, ...parsedLabState } : initialErrorTrackingState;
+    // State from an older lab version starts over, stage included.
+    const storedStage = parsedLabState && Number.isInteger(storedSession?.stage) ? Math.max(0, Math.min(12, storedSession!.stage)) : 0;
+    const resumedStage = storedStage === 2 && storedLabState.occurrences.length > 0 ? 3 : storedStage;
     const linkedBooking = bookings.find((booking) => booking.id === storedLabState.booking?.id && booking.status === "confirmed");
     const errorTracking: ErrorTrackingSession = storedLabState.booking && !linkedBooking
       ? { state: errorTrackingReducer(storedLabState, { type: "reset" }), stage: 1 }
@@ -198,12 +188,22 @@ function isErrorTrackingState(value: unknown): value is ErrorTrackingState {
   const state = value as Partial<ErrorTrackingState>;
   return (
     (state.booking === null || (typeof state.booking?.id === "string" && typeof state.booking?.stayId === "string" && typeof state.booking?.stayTitle === "string")) &&
-    Array.isArray(state.occurrences) && state.occurrences.every((item) => item && typeof item.message === "string" && typeof item.stayId === "string") &&
-    typeof state.fixed === "boolean" && typeof state.successfulRetry === "boolean" &&
-    (state.hostLookupRepaired === undefined || typeof state.hostLookupRepaired === "boolean") &&
-    (state.hostVerified === undefined || typeof state.hostVerified === "boolean") &&
-    (state.verifiedLoads === undefined || (Number.isInteger(state.verifiedLoads) && state.verifiedLoads >= 0 && state.verifiedLoads <= 10)) &&
-    (state.issueReviewed === undefined || typeof state.issueReviewed === "boolean") &&
-    typeof state.resolved === "boolean" && Number.isInteger(state.revision)
+    Array.isArray(state.occurrences) && state.occurrences.every(isCapturedException) &&
+    typeof state.caught === "boolean" && typeof state.fingerprinted === "boolean" && typeof state.repaired === "boolean" &&
+    // Fields added after a lab started are optional. Parsing fills them from the initial state.
+    (state.sourceMapped === undefined || typeof state.sourceMapped === "boolean") &&
+    (state.noiseFiltered === undefined || typeof state.noiseFiltered === "boolean") &&
+    (state.noise === undefined || (Number.isInteger(state.noise.unfiltered) && Number.isInteger(state.noise.dropped))) &&
+    typeof state.verified === "boolean" && typeof state.resolved === "boolean" && Number.isInteger(state.revision)
+  );
+}
+
+function isCapturedException(value: unknown): value is CapturedException {
+  if (!value || typeof value !== "object") return false;
+  const item = value as Partial<CapturedException>;
+  return (
+    (item.outcome === "sent" || item.outcome === "local" || item.outcome === "dropped") &&
+    typeof item.type === "string" && typeof item.handled === "boolean" && typeof item.mechanism === "string" &&
+    Array.isArray(item.frames) && item.frames.every((frame) => typeof frame === "string")
   );
 }

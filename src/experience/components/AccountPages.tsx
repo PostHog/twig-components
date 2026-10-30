@@ -24,6 +24,7 @@ import { Marker } from "./Playground.js";
 
 import { useErrorTrackingLab } from "./ErrorTrackingLab.js";
 import { readTripHost } from "../lib/vacation/trip-details.js";
+import { latestOccurrence } from "../../error-tracking-lab.js";
 
 
 export function LoginPageView({ next = "/profile" }: { next?: string }) {
@@ -48,7 +49,7 @@ export function LoginPageView({ next = "/profile" }: { next?: string }) {
 }
 
 export function AccountPageView({ section }: { section: AccountSection }) {
-const {publishInspectionActivity,captureTwigBookingCanceled,captureTwigException}=useExperienceRuntime();
+const {captureTwigBookingCanceled,captureTwigException}=useExperienceRuntime();
 
   const account = useDemoAccount();
   const router = useRouter();
@@ -63,11 +64,12 @@ const {publishInspectionActivity,captureTwigBookingCanceled,captureTwigException
   } | null>(null);
   const visibleDetail = detail?.revision === errorLab.state.revision ? detail : null;
   const errorStage = account.errorTracking.stage;
+  const lab = errorLab.state;
   const needsTripClick = errorLab.active && (
-    (errorStage === 2 && errorLab.state.occurrences.length === 0) ||
-    errorStage === 4 ||
-    (errorStage === 6 && !errorLab.state.successfulRetry) ||
-    ((errorStage === 8 || errorStage === 9) && !errorLab.state.hostVerified)
+    (errorStage === 2 && lab.occurrences.length === 0) ||
+    (errorStage === 4 && lab.caught && !latestOccurrence(lab, (occurrence) => occurrence.handled)) ||
+    (errorStage === 10 && lab.fingerprinted && !latestOccurrence(lab, (occurrence) => Boolean(occurrence.fingerprint))) ||
+    (errorStage === 11 && lab.repaired && !lab.verified)
   );
   const linkedBookingId = errorLab.state.booking?.id;
   const linkedDetailsOpen = visibleDetail?.bookingId === linkedBookingId;
@@ -107,38 +109,28 @@ const {publishInspectionActivity,captureTwigBookingCanceled,captureTwigException
       return;
     }
     const isLabBooking = errorLab.active && booking.id === errorLab.state.booking?.id;
+    const hostId = booking.stay.hostId;
+    if (isLabBooking && !lab.repaired) {
+      setDetail({ revision: lab.revision, bookingId: booking.id, error: "Try to load details again.", host: null });
+      // No PostHog SDK runs in this preview, so the lab gets the fields the SDK would capture.
+      errorLab.dispatch({ type: "capture", exception: {
+        outcome: "local",
+        type: lab.fingerprinted ? "HostNotFoundError" : "TypeError",
+        handled: lab.caught,
+        mechanism: "generic",
+        frames: ["readTripHost", "openTripDetails"],
+        ...(lab.caught ? { surface: "trip_details", stayId: booking.stay.id } : {}),
+        ...(lab.fingerprinted ? { fingerprint: `host-not-found:${hostId}` } : {}),
+        host: hostId,
+      } });
+      return;
+    }
     try {
-      const hostName = readTripHost(
-        isLabBooking && !errorLab.state.hostLookupRepaired ? {} : hosts,
-        booking.stay.hostId,
-        isLabBooking && errorLab.state.fixed
-      );
-      setDetail({ revision: errorLab.state.revision, bookingId: booking.id, error: null, host: hostName });
-      if (isLabBooking && errorLab.state.hostLookupRepaired) errorLab.dispatch({ type: "verify-host" });
-      else if (isLabBooking && errorLab.state.fixed) errorLab.dispatch({ type: "retry-success" });
+      setDetail({ revision: lab.revision, bookingId: booking.id, error: null, host: readTripHost(hosts, hostId) });
+      if (isLabBooking) errorLab.dispatch({ type: "verify" });
     } catch (error) {
-      setDetail({ revision: errorLab.state.revision, bookingId: booking.id, error: "Try to load details again.", host: null });
-      if (isLabBooking) {
-        publishInspectionActivity(
-          "$exception",
-          {
-            exception_type: error instanceof TypeError
-              ? "TypeError"
-              : "Error",
-            surface: "trip_details"
-          },
-          {
-            simulated: true
-          }
-        );
-        errorLab.dispatch({
-          type: "capture",
-          message: error instanceof Error ? error.message : "Could not read trip host",
-          stayId: booking.stay.id,
-        });
-      } else {
-        captureTwigException(error, { surface: "trip_details", stayId: booking.stay.id });
-      }
+      setDetail({ revision: lab.revision, bookingId: booking.id, error: "Try to load details again.", host: null });
+      captureTwigException(error, { surface: "trip_details", stayId: booking.stay.id });
     }
   }
   const navigate = (href: string) => router.push(href);
@@ -163,10 +155,9 @@ const {publishInspectionActivity,captureTwigBookingCanceled,captureTwigException
           <BookedStaysView
             {...stayViewProps}
             bookings={bookings}
-            headingAccessory={<Marker id="errors" />}
+            detailsAccessory={(booking) => booking.id === linkedBookingId ? <Marker id="errors" /> : null}
             selectedBookingId={visibleDetail?.bookingId}
-            highlightedDetailsBookingId={needsTripClick && (!linkedDetailsOpen || errorStage === 8 || errorStage === 9) ? linkedBookingId : undefined}
-            highlightedTripDetailsBookingId={errorLab.active && errorStage === 6 && errorLab.state.successfulRetry && visibleDetail?.host === "Host information unavailable" ? linkedBookingId : undefined}
+            highlightedDetailsBookingId={needsTripClick && (!linkedDetailsOpen || errorStage === 11) ? linkedBookingId : undefined}
             onViewDetails={openTripDetails}
             onCancelBooking={(booking) => {
               account.cancelBooking(booking.id);
