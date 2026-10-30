@@ -75,3 +75,5 @@ In Inspector, choose Explore on your own to see regular exploration context and 
 The Offline and online evaluations preview runs the support conversation, offline coding-agent checks, online setup and three result inspections, then regression and completion. Use `?view=support` to open it.
 
 In Support, hover or keyboard-focus the reset button. The Twig tooltip appears above the title bar. Escape dismisses it; reset still clears the conversation.
+
+The Support preview now includes the real lesson footer. On its opening page, Start lab remains next to the overview, above the closed simulation disclosure. Expand it to check the transparent gray surface, start the lesson, and confirm later navigation appears in the footer. Return to the opening with Previous. Resize the support page preview to check the two-thirds desktop chat and full-width compact chat.

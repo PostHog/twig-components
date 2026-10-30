@@ -15,3 +15,11 @@ export function PlaygroundSummary({ children, className = "", terminal = false }
     <DisclosureIcon />
   </summary>;
 }
+
+/** Opening-page context stays on the lesson background, with native keyboard disclosure. */
+export function LabSimulationDisclosure({ children }: { children: ReactNode }) {
+  return <details className="vac-simulation-disclosure">
+    <PlaygroundSummary>How this simulation works</PlaygroundSummary>
+    {children}
+  </details>;
+}

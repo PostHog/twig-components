@@ -1831,3 +1831,45 @@ details[open] > summary .vac-disclosure-icon:not([data-expanded]) > .vac-disclos
 .vac-app .vac-developer-theme .vac-support-evals-lab .vac-button:hover:not(:disabled) { background:var(--ph-os-button-base); border-color:var(--ph-os-button-border); }
 .vac-app .vac-developer-theme .vac-support-evals-lab .vac-button:disabled { opacity:0.5; background:var(--ph-os-button-base); border-color:var(--ph-os-button-border); }
 .vac-support-evals-lab .vac-button:disabled > .vac-os-button-face { color:var(--ph-neutral-ink); background:var(--ph-neutral-white); border-color:var(--ph-os-button-border); }
+
+/* Approved opening layout: inline action and neutral, initially closed context. */
+.vac-app .vac-developer-theme .vac-lab-introduction {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+.vac-app .vac-developer-theme .vac-lab-introduction > :is(h3, p, .vac-guide-example) {
+  width: 100%;
+  margin: 0;
+}
+.vac-app .vac-developer-theme .vac-lab-introduction > .vac-guide-example { padding: 16px; }
+.vac-app .vac-developer-theme .vac-lab-introduction > .vac-button { width: auto; max-width: 100%; margin: 0; }
+.vac-app .vac-developer-theme .vac-simulation-disclosure {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.vac-app .vac-developer-theme .vac-simulation-disclosure > .vac-playground-disclosure {
+  min-height: 44px;
+  padding: 0 12px;
+  font: 600 12px/1.7 PlaygroundRoundHog, sans-serif;
+  cursor: pointer;
+}
+.vac-app .vac-developer-theme .vac-simulation-disclosure > p { margin: 0; }
+.vac-app .vac-developer-theme .vac-simulation-disclosure > p + p { margin-top: 12px; }
+.vac-app .vac-developer-theme .vac-simulation-disclosure > summary:focus-visible {
+  outline: 2px solid var(--ph-brand-cobalt);
+  outline-offset: -2px;
+}
+
+.vac-app .vac-developer-theme .vac-lab-introduction > .vac-guide-example > :first-child { margin-top: 0; }
+.vac-app .vac-developer-theme .vac-lab-introduction > .vac-guide-example > :last-child { margin-bottom: 0; }
+.vac-app .vac-developer-theme .vac-lab-introduction > h3,
+.vac-app .vac-developer-theme #guide-panel .vac-lab-introduction > h3 {
+  margin: 0;
+  font: 600 18px/1.35 PlaygroundRoundHog, sans-serif;
+}

@@ -12,11 +12,11 @@ import { tripPlannerTurnLimit, tripPlannerInputLimit } from "./trip-planner.js";
 import type { SupportMessage } from "./SupportAgent.js";
 import { LabChecklist } from "./LabChecklist.js";
 import { LabCompletionView } from "./LabCompletionView.js";
-import { LabPrimaryAction } from "./LabNavigation.js";
+import { LabIntroduction, LabPrimaryAction } from "./LabNavigation.js";
 import { PlaygroundGeneration } from "./PlaygroundAiEvidence.js";
 import { PlaygroundStatus } from "./PlaygroundStatus.js";
 import { McpComposer } from "./McpComposer.js";
-import { DisclosureIcon, PlaygroundSummary } from "./PlaygroundDisclosure.js";
+import { DisclosureIcon, LabSimulationDisclosure, PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
 import { touchpointDefinitions } from "./playground.js";
 import {
@@ -585,7 +585,7 @@ function SupportEvalsLesson({
     : [];
   if (stage === 0)
     return (
-      <div className="vac-guide-intro">
+      <LabIntroduction>
         <h3>{touchpointDefinitions.evaluations.title}</h3>
         <p>Learn how to evaluate whether an agent's response is correct.</p>
         <div className="vac-guide-example">
@@ -599,16 +599,15 @@ function SupportEvalsLesson({
           </p>
         </div>
         <Action onClick={() => onStage(1)}>Start lab →</Action>
-        <details className="vac-lab-step">
-          <PlaygroundSummary>How this simulation works</PlaygroundSummary>
+        <LabSimulationDisclosure>
           <p>
             Support conversations, terminal commands, scores, and PostHog views
             use fixed local examples. No model, terminal, MCP server, or hosted
             evaluation runs. No conversation or simulated AI data is sent to
             PostHog. The cancellation policy is an example for this lab.
           </p>
-        </details>
-      </div>
+        </LabSimulationDisclosure>
+      </LabIntroduction>
     );
   if (stage === 1)
     return (

@@ -3,8 +3,8 @@
 import { PlaygroundErrorIssue, PlaygroundStackTrace } from "./PlaygroundErrorEvidence.js";
 import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
 
-import { LabPrimaryAction } from "./LabNavigation.js";
-import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
+import { LabIntroduction, LabPrimaryAction } from "./LabNavigation.js";
+import { LabSimulationDisclosure } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
 import { createContext, useContext, useReducer, type ReactNode } from "react";
@@ -122,7 +122,7 @@ export function ErrorTrackingLab({
 }) {
   const { state, dispatch } = useErrorTrackingLab();
   const count = state.occurrences.length;
-  if (stage === 0) return <div className="vac-guide-intro">
+  if (stage === 0) return <LabIntroduction>
     <h3>{touchpointDefinitions.errors.title}</h3>
     <p>Book a stay on Twig, then open its trip details and investigate a recoverable error.</p>
     <div className="vac-guide-example vac-booking-overview">
@@ -132,8 +132,8 @@ export function ErrorTrackingLab({
       </ol>
     </div>
     <Continue onClick={() => onStage(1)}>Start lab →</Continue>
-    <details className="vac-lab-step" open><PlaygroundSummary>How this simulation works</PlaygroundSummary><p>Your booking succeeds and is saved only in this browser. For this lesson, Twig cannot load part of its trip details. The example error stays local and is not sent to PostHog. No payment or real reservation is made.</p></details>
-  </div>;
+    <LabSimulationDisclosure><p>Your booking succeeds and is saved only in this browser. For this lesson, Twig cannot load part of its trip details. The example error stays local and is not sent to PostHog. No payment or real reservation is made.</p></LabSimulationDisclosure>
+  </LabIntroduction>;
 
   if (stage === 1) return <section className="vac-lab vac-builder">
     <p>First, save a booking on Twig so we have a trip to investigate.</p>

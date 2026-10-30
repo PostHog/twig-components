@@ -2,8 +2,8 @@
 
 import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
 
-import { LabPrimaryAction } from "./LabNavigation.js";
-import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
+import { LabIntroduction, LabPrimaryAction } from "./LabNavigation.js";
+import { LabSimulationDisclosure, PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
 import { useEffect, useRef, type ReactNode } from "react";
@@ -46,7 +46,7 @@ export function TripPlannerWalkthrough({ stays, onAllLabs, renderStayCard, onEva
   const resetConversation = first && lab.records.at(-1)?.properties.$ai_session_id !== first.properties.$ai_session_id;
 
   if (lesson.step === 3 || lesson.step === 4) return <TripPlannerFailure stays={stays} renderStayCard={renderStayCard} onEvaluate={onEvaluate} />;
-  if (lesson.step === 0) return <div className="vac-guide-intro">
+  if (lesson.step === 0) return <LabIntroduction>
     <h3>{touchpointDefinitions.discovery.title}</h3>
     <p>Follow a chat in Twig's trip planner into PostHog. Learn how it's instrumented, how to interpret the data it collects, and fix things when they go wrong.</p>
     <div className="vac-guide-example vac-guide-lesson vac-trip-overview-card">
@@ -57,11 +57,10 @@ export function TripPlannerWalkthrough({ stays, onAllLabs, renderStayCard, onEva
       </ol>
     </div>
     <Action onClick={next}>Start the lab →</Action>
-    <details className="vac-lab-step" open>
-      <PlaygroundSummary>How this simulation works</PlaygroundSummary>
+    <LabSimulationDisclosure>
       <p>Twig’s chat uses preset replies, and this lab builds its PostHog examples locally from the conversation. No model runs and nothing is sent to PostHog.</p>
-    </details>
-  </div>;
+    </LabSimulationDisclosure>
+  </LabIntroduction>;
 
   return <section ref={view} tabIndex={-1} className="vac-lab vac-builder vac-trip-walkthrough">
     {lesson.step === 1 && <>

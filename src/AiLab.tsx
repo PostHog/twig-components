@@ -1,9 +1,10 @@
 "use client";
+import { LabIntroduction } from "./LabNavigation.js";
 
 import { PlaygroundGeneration } from "./PlaygroundAiEvidence.js";
 import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
 
-import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
+import { LabSimulationDisclosure, PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { LabChoices } from "./LabChoices.js";
 import { EvidenceSelection } from "./TripPlannerEvidenceTabs.js";
 
@@ -88,7 +89,7 @@ export function useResetAiLab() {
 
 export function AiIntroduction({ onContinue }: { onContinue: () => void }) {
   return (
-    <div className="vac-guide-intro">
+    <LabIntroduction>
       <h3>AI inputs and outputs</h3>
       <p>
         A visitor says Twig suggested the wrong stay. What would you need to see
@@ -106,15 +107,14 @@ export function AiIntroduction({ onContinue }: { onContinue: () => void }) {
       <button className="vac-button" onClick={onContinue}>
         <span className="vac-os-button-face">See the worked example →</span>
       </button>
-      <details className="vac-lab-step" open>
-        <PlaygroundSummary>How this simulation works</PlaygroundSummary>
+      <LabSimulationDisclosure>
         <p>
           Twig uses a preset request and recommendation. You’re changing what
           gets recorded, not the recommendation itself. No model runs and
           nothing is sent to PostHog.
         </p>
-      </details>
-    </div>
+      </LabSimulationDisclosure>
+    </LabIntroduction>
   );
 }
 

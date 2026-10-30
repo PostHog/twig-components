@@ -16,6 +16,14 @@ export function LessonNavigationProvider({ active, children }: { active: boolean
 }
 
 const LessonActionVisibility = createContext(true);
+const LessonInlineActions = createContext(false);
+
+/** Opening actions stay beside their overview; later actions use the lesson footer. */
+export function LabIntroduction({ children }: { children: ReactNode }) {
+  return <LessonInlineActions.Provider value={true}>
+    <div className="vac-guide-intro vac-lab-introduction">{children}</div>
+  </LessonInlineActions.Provider>;
+}
 
 /** Keep hidden completion/review screens from projecting actions into the visible footer. */
 export function LessonActionScope({ visible, children }: { visible: boolean; children: ReactNode }) {
@@ -23,9 +31,11 @@ export function LessonActionScope({ visible, children }: { visible: boolean; chi
 }
 
 export function LabPrimaryAction({ children, fallback }: { children: ReactNode; fallback?: ReactNode }) {
+  const inline = useContext(LessonInlineActions);
   const shell = useContext(LessonActionContext);
   const visible = useContext(LessonActionVisibility);
   if (!visible) return null;
+  if (inline) return <>{children}</>;
   if (!shell?.active) return <>{fallback === undefined ? children : fallback}</>;
   return shell.target ? createPortal(children, shell.target) : null;
 }
