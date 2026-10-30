@@ -420,3 +420,9 @@ The host owns simulation state, events, inspector, prose, and reset behavior.
 Reuse the Twig support chat, Playground checklists, coding-agent composer, result rows, generation tabs, and completion. Only the opening and completion pages have titles. Tool call and result share one read-only panel without copy controls. Online Code, Sentiment, and LLM judge inspections use the same results surface. OS buttons use the approved white face, #EB9D2A base, and #B17816 border.
 
 Support chat reset uses the shared tooltip with `appearance="twig"`: warm paper, neutral border, DM Sans small text, 3px corners, and the Twig dropdown shadow. It appears above the title bar on hover and keyboard focus. Escape dismisses the hint. Keep the existing reset icon and 44px target.
+
+## Approved introduction and support placement
+
+Lab introductions use `LabIntroduction`: title, regular prose, the existing white overview, an inline start action, then `LabSimulationDisclosure`. Use 16px spacing. The disclosure starts collapsed, stays transparent on the gray lesson background, and reuses the existing 44px summary and plus/minus glyphs. Later lesson actions stay in the footer. Entry choices such as Web app and Agent remain direct choices.
+
+On desktop support pages, place the complete support chat at two-thirds of the available content width, aligned left. Compact layouts below 600px of content and embedded teaching figures use full width. Hosts own this page placement. `SupportAgent` stays fluid inside its parent; do not cap individual replies or shrink unrelated chat consumers.
