@@ -144,16 +144,24 @@ test("canceling a stay keeps its history and allows another booking for the same
   assert.deepEqual(parseDemoAccountState(JSON.stringify(state)).bookings, state.bookings);
 });
 
+const uncaught = { outcome: "local", type: "TypeError", handled: false, mechanism: "onerror", frames: ["readTripHost"] };
+const labAction = (action) => ({ type: "error-tracking-action", action });
+const labBook = labAction({ type: "book", booking: { id: booking.id, stayId: booking.stayId, stayTitle: "Adiron-shack" } });
+const labCapture = labAction({ type: "capture", exception: uncaught });
+const bookedSession = () => {
+  const state = demoAccountReducer(initialDemoAccountState, { type: "login" });
+  return demoAccountReducer(demoAccountReducer(state, { type: "book", booking }), labBook);
+};
+
 test("unfinished error state survives reload until restart, and cancellation clears its link", () => {
-  let state = demoAccountReducer(initialDemoAccountState, { type: "login" });
-  state = demoAccountReducer(state, { type: "book", booking });
-  state = demoAccountReducer(state, { type: "error-tracking-action", action: { type: "book", booking: { id: booking.id, stayId: booking.stayId, stayTitle: "Adiron-shack" } } });
+  let state = bookedSession();
   state = demoAccountReducer(state, { type: "error-tracking-stage", stage: 4 });
-  state = demoAccountReducer(state, { type: "error-tracking-action", action: { type: "capture", message: "Missing host", stayId: booking.stayId } });
+  state = demoAccountReducer(state, labCapture);
   const restored = parseDemoAccountState(JSON.stringify(state));
   assert.equal(restored.errorTracking.stage, 4);
   assert.equal(restored.errorTracking.state.booking?.id, booking.id);
   assert.equal(restored.errorTracking.state.occurrences.length, 1);
+  assert.equal(restored.errorTracking.state.occurrences[0].type, "TypeError");
   const canceled = demoAccountReducer(restored, { type: "cancel-booking", bookingId: booking.id });
   assert.equal(canceled.errorTracking.stage, 1);
   assert.equal(canceled.errorTracking.state.booking, null);
@@ -162,75 +170,61 @@ test("unfinished error state survives reload until restart, and cancellation cle
 });
 
 test("the first failed trip details attempt opens the exception explanation", () => {
-  let state = demoAccountReducer(initialDemoAccountState, { type: "login" });
-  state = demoAccountReducer(state, { type: "book", booking });
-  state = demoAccountReducer(state, { type: "error-tracking-action", action: { type: "book", booking: { id: booking.id, stayId: booking.stayId, stayTitle: "Adiron-shack" } } });
+  let state = bookedSession();
   state = demoAccountReducer(state, { type: "error-tracking-stage", stage: 2 });
-  state = demoAccountReducer(state, { type: "error-tracking-action", action: { type: "capture", message: "Missing host", stayId: booking.stayId } });
+  state = demoAccountReducer(state, labCapture);
   assert.equal(state.errorTracking.stage, 3);
   assert.equal(state.errorTracking.state.occurrences.length, 1);
 
-  const oldSession = structuredClone(state);
-  oldSession.errorTracking.stage = 2;
-  assert.equal(parseDemoAccountState(JSON.stringify(oldSession)).errorTracking.stage, 3);
+  const resumed = structuredClone(state);
+  resumed.errorTracking.stage = 2;
+  assert.equal(parseDemoAccountState(JSON.stringify(resumed)).errorTracking.stage, 3);
 });
 
-test("retries before the occurrence step do not skip its instruction or raise the count", () => {
-  let state = demoAccountReducer(initialDemoAccountState, { type: "login" });
-  state = demoAccountReducer(state, { type: "book", booking });
-  state = demoAccountReducer(state, { type: "error-tracking-action", action: { type: "book", booking: { id: booking.id, stayId: booking.stayId, stayTitle: "Adiron-shack" } } });
-  const capture = { type: "error-tracking-action", action: { type: "capture", message: "Missing host", stayId: booking.stayId } };
-
-  state = demoAccountReducer(state, capture);
+test("captures wait for the open-trip step, then keep counting on later steps", () => {
+  let state = bookedSession();
+  state = demoAccountReducer(state, labCapture);
   assert.equal(state.errorTracking.state.occurrences.length, 0);
   state = demoAccountReducer(state, { type: "error-tracking-stage", stage: 2 });
-  state = demoAccountReducer(state, capture);
+  state = demoAccountReducer(state, labCapture);
   assert.equal(state.errorTracking.stage, 3);
-  for (let i = 0; i < 5; i++) state = demoAccountReducer(state, capture);
-  assert.equal(state.errorTracking.state.occurrences.length, 1);
-
+  state = demoAccountReducer(state, labCapture);
+  assert.equal(state.errorTracking.stage, 3);
+  assert.equal(state.errorTracking.state.occurrences.length, 2);
   state = demoAccountReducer(state, { type: "error-tracking-stage", stage: 4 });
-  state = demoAccountReducer(state, capture);
-  state = demoAccountReducer(state, capture);
-  assert.equal(state.errorTracking.state.occurrences.length, 3);
-  state = demoAccountReducer(state, { type: "error-tracking-stage", stage: 5 });
-  state = demoAccountReducer(state, capture);
+  state = demoAccountReducer(state, labCapture);
+  assert.equal(state.errorTracking.stage, 4);
   assert.equal(state.errorTracking.state.occurrences.length, 3);
 });
 
-test("host repair progress survives reload and older ending progress resumes at inspection", () => {
-  let state = demoAccountReducer(initialDemoAccountState, { type: "login" });
-  state = demoAccountReducer(state, { type: "book", booking });
-  state = demoAccountReducer(state, { type: "error-tracking-action", action: { type: "book", booking: { id: booking.id, stayId: booking.stayId, stayTitle: "Adiron-shack" } } });
-  state = demoAccountReducer(state, { type: "error-tracking-stage", stage: 2 });
-  state = demoAccountReducer(state, { type: "error-tracking-action", action: { type: "capture", message: "Missing host", stayId: booking.stayId } });
+test("lab repair progress survives reload, and a stored state from the old simulated lab starts over", () => {
+  let state = bookedSession();
   state = demoAccountReducer(state, { type: "error-tracking-stage", stage: 4 });
-  for (const action of [
-    { type: "capture", message: "Missing host", stayId: booking.stayId },
-    { type: "fix" }, { type: "retry-success" }, { type: "repair-host-lookup" },
-  ]) state = demoAccountReducer(state, { type: "error-tracking-action", action });
-  state = demoAccountReducer(state, { type: "error-tracking-stage", stage: 8 });
+  for (const action of [{ type: "capture", exception: uncaught }, { type: "catch" }, { type: "upload-source-maps" }, { type: "fingerprint" }, { type: "repair" }]) {
+    state = demoAccountReducer(state, labAction(action));
+  }
+  state = demoAccountReducer(state, { type: "error-tracking-stage", stage: 9 });
   const restored = parseDemoAccountState(JSON.stringify(state));
-  assert.equal(restored.errorTracking.stage, 8);
-  assert.equal(restored.errorTracking.state.hostLookupRepaired, true);
-  assert.equal(restored.errorTracking.state.hostVerified, false);
-  assert.equal(restored.errorTracking.state.verifiedLoads, 0);
-
-  const verified = demoAccountReducer(restored, { type: "error-tracking-action", action: { type: "verify-host" } });
-  assert.equal(verified.errorTracking.state.verifiedLoads, 1);
-  const resolved = demoAccountReducer(verified, { type: "error-tracking-action", action: { type: "resolve" } });
-  assert.equal(resolved.errorTracking.state.resolved, true);
+  assert.equal(restored.errorTracking.stage, 9);
+  assert.deepEqual(
+    [restored.errorTracking.state.caught, restored.errorTracking.state.fingerprinted, restored.errorTracking.state.repaired, restored.errorTracking.state.verified],
+    [true, true, true, false]
+  );
+  const verified = demoAccountReducer(restored, labAction({ type: "verify" }));
+  const resolved = demoAccountReducer(verified, labAction({ type: "resolve" }));
   assert.equal(parseDemoAccountState(JSON.stringify(resolved)).errorTracking.state.resolved, true);
 
-  const olderState = structuredClone(state);
-  delete olderState.errorTracking.state.hostLookupRepaired;
-  delete olderState.errorTracking.state.hostVerified;
-  delete olderState.errorTracking.state.verifiedLoads;
-  delete olderState.errorTracking.state.issueReviewed;
-  olderState.errorTracking.state.resolved = true;
-  const migrated = parseDemoAccountState(JSON.stringify(olderState));
-  assert.equal(migrated.errorTracking.stage, 7);
-  assert.equal(migrated.errorTracking.state.resolved, false);
+  const simulated = structuredClone(state);
+  simulated.errorTracking.state = {
+    booking: simulated.errorTracking.state.booking,
+    occurrences: [{ id: 1, message: "Missing host", stayId: booking.stayId, fingerprint: "old" }],
+    fixed: true, successfulRetry: true, hostLookupRepaired: true, hostVerified: true, verifiedLoads: 1, resolved: true, revision: 3,
+  };
+  const started = parseDemoAccountState(JSON.stringify(simulated));
+  assert.equal(started.errorTracking.state.booking, null);
+  assert.deepEqual(started.errorTracking.state.occurrences, []);
+  assert.equal(started.errorTracking.state.resolved, false);
+  assert.equal(started.bookings.length, 1);
 });
 
 test("login links return to the current page without allowing login loops or external redirects", () => {

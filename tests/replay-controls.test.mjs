@@ -5,7 +5,7 @@ import {createRoot} from 'react-dom/client';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {JSDOM} from 'jsdom';
 import {ReplayControls,RecordingControls,replayTime} from '../dist/ReplayControls.js';
-import {PlaygroundStackTrace} from '../dist/PlaygroundErrorEvidence.js';
+import {PlaygroundStackFrames} from '../dist/PlaygroundErrorEvidence.js';
 async function mount(t,component){
  const dom=new JSDOM('<!doctype html><div id="root"></div>');
  const globals={window:dom.window,document:dom.window.document,IS_REACT_ACT_ENVIRONMENT:true};
@@ -37,12 +37,21 @@ test('recording stop callback remains an accessible control with elapsed time',a
  assert.equal(document.querySelector('.vac-recording-time').textContent,'0:12');
  await act(()=>document.querySelector('[aria-label="Stop recording"]').click());assert.equal(stopped,1);
 });
-test('stack selection changes the associated source and keeps the whole frame selectable',async t=>{
- await mount(t,h(PlaygroundStackTrace));
- const frames=document.querySelectorAll('[aria-label="Stack frames"] button');assert.equal(frames[0].getAttribute('aria-pressed'),'true');
- await act(()=>frames[1].click());assert.equal(frames[1].getAttribute('aria-pressed'),'true');assert.equal(frames[0].getAttribute('aria-pressed'),'false');
- assert.equal(document.querySelector('.vac-code-header').textContent,'TypeScript');
- assert.equal(document.querySelector('.vac-source-caption').textContent,'AccountPages.tsx');assert.match(document.querySelector('pre').textContent,/readTripHost\(\{\}, stay.hostId\)/);
+test('a resolved frame opens its source, and unresolved and vendor frames are marked',async t=>{
+ await mount(t,h(PlaygroundStackFrames,{type:'TypeError',message:"Cannot read properties of undefined (reading 'name')",frames:[
+  {fn:'readTripHost',source:'src/lib/vacation/trip-details.ts@8:15',inApp:true,context:{startLine:7,failingLine:8,lines:['  // comment','  return host.name;']}},
+  {fn:'openTripDetails',source:'src/components/vacation/AccountPages.tsx@119:9',inApp:true,context:{startLine:119,failingLine:119,lines:['        readTripHost({}, hostId);']}},
+  {fn:'executeDispatch',source:'node_modules/react-dom/cjs/react-dom-client.production.js@16368:9'},
+  {fn:'L',source:'/_next/static/chunks/app.js@1:2425',unresolved:true},
+ ]}));
+ const frames=document.querySelectorAll('[aria-label="Stack trace"] li > button');
+ assert.equal(frames[0].getAttribute('aria-expanded'),'true');
+ const failing=document.querySelector('[aria-label="readTripHost source"] [data-highlighted="true"]');assert.match(failing.textContent,/return host\.name;/);assert.equal(failing.querySelector('.vac-code-number').dataset.line,'8');
+ await act(()=>frames[1].click());
+ assert.equal(frames[0].getAttribute('aria-expanded'),'false');
+ assert.match(document.querySelector('[aria-label="openTripDetails source"]').textContent,/readTripHost\(\{\}, hostId\)/);
+ assert.equal(frames[2].disabled,true);assert.ok(frames[2].querySelector('[aria-label="Vendor frame"]'));
+ assert.equal(frames[3].disabled,true);assert.ok(frames[3].querySelector('[aria-label="Unresolved frame"]'));
 });
 test('all recording/playback glyphs are included in the distributable CSS assets',async()=>{
  const{readFileSync,existsSync}=await import('node:fs');
