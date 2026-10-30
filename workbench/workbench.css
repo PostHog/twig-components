@@ -67,3 +67,10 @@ button { cursor: pointer; }
 }
 
 .workbench-experience { height: 800px; min-height: 0; }
+
+/* Page composition matches the host; the shared chat itself remains fluid. */
+.workbench-support-page { container-type: inline-size; }
+.workbench-support-chat { width: 100%; }
+@container (min-width: 600px) {
+  .workbench-support-chat { width: calc(100% * 2 / 3); }
+}

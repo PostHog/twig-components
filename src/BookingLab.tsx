@@ -2,8 +2,8 @@
 
 import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
 
-import { LabPrimaryAction } from "./LabNavigation.js";
-import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
+import { LabIntroduction, LabPrimaryAction } from "./LabNavigation.js";
+import { LabSimulationDisclosure, PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
 import { EvidenceSelection } from "./TripPlannerEvidenceTabs.js";
@@ -97,7 +97,7 @@ export function BookingLab({
   }
   if (stage === 0)
     return (
-      <div className="vac-guide-intro">
+      <LabIntroduction>
         <h3>{touchpointDefinitions.booking.title}</h3>
         <p>
           First, complete a successful booking and inspect its events. Then
@@ -115,11 +115,10 @@ export function BookingLab({
             ? "Practice a successful booking →"
             : "Continue the failure exercise →"}
         </Action>
-        <details className="vac-lab-step" open>
-          <PlaygroundSummary>How this simulation works</PlaygroundSummary>
+        <LabSimulationDisclosure>
           <p>Bookings and their event records are simulated locally. No reservation or payment is created, and these records are not sent to PostHog.</p>
-        </details>
-      </div>
+        </LabSimulationDisclosure>
+      </LabIntroduction>
     );
   if (stage === 1 && state.applied) {
     const { errors } = validateTrip(

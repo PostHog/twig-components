@@ -11,7 +11,7 @@ import { ReplayLab } from "@posthog/twig-components/replay-lab-ui";
 import { FilterLabIntroduction } from "@posthog/twig-components/filter-lab-exercise";
 import { TripPlannerLabProvider, TripPlannerWalkthrough } from "@posthog/twig-components/trip-planner-lab";
 import { ReplayProvider } from "@posthog/twig-components/replay-recorder";
-import { LabNavigationView } from "@posthog/twig-components/lab-navigation";
+import { LabNavigationView, LessonNavigationProvider } from "@posthog/twig-components/lab-navigation";
 import {
   LabDirectory,
   ProductLabLanding,
@@ -25,6 +25,9 @@ import {
   replayInspectionGuide,
   PlaygroundInvitation,
 } from "@posthog/twig-components/playground-panels";
+
+import { SupportEvalsProvider, SupportEvalsLab } from "../dist/SupportEvalsLab.js";
+import { ErrorTrackingLabProvider, ErrorTrackingLab } from "../dist/ErrorTrackingLab.js";
 
 const render = (node) => renderToStaticMarkup(node);
 const noop = () => {};
@@ -96,11 +99,12 @@ test("all portable lab entry screens render without a site router", () => {
 });
 
 test("every lab opening page names its product and explains the simulation", () => {
+  const opening = node => render(h(LessonNavigationProvider, {active: true}, node));
   const openings = [
-    [render(h(FilterLabIntroduction, { onContinue: noop })), "Events and properties"],
-    [render(h(BookingLabProvider, { active: true }, h(BookingLab, { stage: 0, onStage: noop, onFocusBooking: noop }))), "Funnels and conversion events"],
-    [render(h(StayLabProvider, null, h(StayLab, { stage: 0, onStage: noop, pathname: "/stays/stay-01", renderStayLink: () => null }))), "Breakdowns by property"],
-    [render(h(ReplayProvider, { open: false, pathname: "/" }, h(ReplayLab, {
+    [opening(h(FilterLabIntroduction, { onContinue: noop })), "Events and properties"],
+    [opening(h(BookingLabProvider, { active: true }, h(BookingLab, { stage: 0, onStage: noop, onFocusBooking: noop }))), "Funnels and conversion events"],
+    [opening(h(StayLabProvider, null, h(StayLab, { stage: 0, onStage: noop, pathname: "/stays/stay-01", renderStayLink: () => null }))), "Breakdowns by property"],
+    [opening(h(ReplayProvider, { open: false, pathname: "/" }, h(ReplayLab, {
       stage: 0, onStage: noop, pathname: "/",
       replay: {
         exercise: "ghost", recording: [], starting: false, frames: [], mode: null,
@@ -109,12 +113,18 @@ test("every lab opening page names its product and explains the simulation", () 
       },
       returnHome: null, sessionPlayer: null,
     }))), "Session playback and masking"],
-    [render(h(TripPlannerLabProvider, null, h(TripPlannerWalkthrough, { stays, onAllLabs: noop }))), "Traces, generations, and evaluations"],
-    [render(h(AiIntroduction, { onContinue: noop })), "AI inputs and outputs"],
+    [opening(h(TripPlannerLabProvider, null, h(TripPlannerWalkthrough, { stays, onAllLabs: noop }))), "Traces, generations, and evaluations"],
+    [opening(h(AiIntroduction, { onContinue: noop })), "AI inputs and outputs"],
+    [opening(h(SupportEvalsProvider, null, h(SupportEvalsLab, { stage: 0, onStage: noop, onAllLabs: noop }))), "Offline and online evaluations"],
+    [opening(h(ErrorTrackingLabProvider, null, h(ErrorTrackingLab, { stage: 0, onStage: noop, onAllLabs: noop }))), "Exceptions and issue resolution"],
   ];
   for (const [html, title] of openings) {
     assert.match(html, new RegExp(`<h3>${title}<\\/h3>`));
     assert.match(html, /class="vac-inspector-disclosure-label">How this simulation works<\/span>/);
+    assert.match(html, /vac-lab-introduction/);
+    assert.match(html, /<button class="vac-button"|<button type="button" class="vac-button"/);
+    assert.match(html, /<details class="vac-simulation-disclosure">/);
+    assert.doesNotMatch(html, /<details[^>]* open/);
   }
 });
 

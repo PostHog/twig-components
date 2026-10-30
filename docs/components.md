@@ -393,3 +393,9 @@ The evaluations lab shows backend tool evidence in one read-only call/result pan
 The evaluations lab introduces enabled online checks before capture, then guides inspection through Code (answer), Sentiment (customer input), and LLM judge (policy correctness) before the regression exercise. It reuses the checklist, result rows, generation tabs, and OS navigation.
 
 The `/tooltip` export `PlaygroundTooltip` accepts `appearance="twig"` for website controls. Import `catalog.css` and use a direct button child so the shared hover, focus, Escape, and `aria-describedby` behavior stays connected. The default appearance remains Playground.
+
+## Lab introductions
+
+`/lab-navigation` exports `LabIntroduction`. Wrap the opening title, prose, overview, start action, and simulation disclosure in it. It reuses the existing introduction styles and keeps nested `LabPrimaryAction` controls inline even when the lesson has a footer. All later actions keep their existing footer placement and handlers. Direct entry choices, such as Web app and Agent, stay in the introduction.
+
+`/disclosure` exports `LabSimulationDisclosure`. Pass the existing local-simulation explanation as children. It starts collapsed and reuses `PlaygroundSummary`, native details keyboard behavior, and the existing plus/minus icons. Both states use the gray lesson background without a card, border, or copy control.
