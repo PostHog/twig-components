@@ -58,7 +58,12 @@ test('compact support reuses the actual support composer and supports read-only 
   assert.match(html, /twig-support-agent-compact/);
   assert.match(html, /How can we help with your stay/);
   assert.match(html, /role="status">Twig is typing/);
-  assert.match(html, /aria-label="Customer message"[^>]*readOnly=""[^>]*disabled=""/);
+  const preview = new JSDOM(html);
+  const composer = preview.window.document.querySelector('textarea[aria-label="Customer message"]');
+  assert.ok(composer);
+  assert.equal(composer.readOnly, true);
+  assert.equal(composer.disabled, true);
+  preview.window.close();
   assert.doesNotMatch(html, /Reset support conversation|AI trip planner|twig-compact-chat/);
   const original = renderToStaticMarkup(h(SupportAgent, { onSend() {}, onReset() {} }));
   assert.match(original, /Reset support conversation/);
