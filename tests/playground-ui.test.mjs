@@ -125,11 +125,11 @@ test("playground directory and dock preserve accessible navigation", () => {
   assert.equal(labsOnOtherPages(page).find(({ id }) => id === "booking")?.color, "blue");
   assert.equal(labsOnOtherPages(page).find(({ id }) => id === "errors")?.color, "yellow");
   assert.deepEqual(labsOnOtherPages(page).map(({ id, page }) => [id, page]), [
-    ["stay", "stay"], ["booking", "stay"], ["errors", "stay"],
+    ["evaluations", "support"], ["stay", "stay"], ["booking", "stay"], ["errors", "stay"],
   ]);
   const directory = render(h(LabDirectory, { page, choose: noop, showMarker: noop, onVisitLab: noop }));
   assert.equal((directory.match(/>Show me where<\/button>/g) ?? []).length, page.touchpoints.length);
-  assert.equal((directory.match(/aria-label="Go to [^"]+ lab"/g) ?? []).length, 3);
+  assert.equal((directory.match(/aria-label="Go to [^"]+ lab"/g) ?? []).length, 4);
   assert.match(directory, /Explore other PostHog products on Twig/);
   assert.match(directory, /<details class="vac-lab-other-pages">/);
   assert.match(directory, /<nav class="vac-lab-other-pages-menu"/);
@@ -252,7 +252,7 @@ test("each product landing lists all of its labs once, independent of the curren
   assert.doesNotMatch(analytics,/Show me where|Activity on Twig|Local preview|Labs on other pages/);
   for(const [id,title] of [["discovery","Traces, generations, and evaluations"],["replay","Session playback and masking"],["errors","Exceptions and issue resolution"]]) {
     const html=render(h(ProductLabLanding,{selectedId:id,choose:noop}));
-    assert.ok(html.includes(`Start lab: ${title}`));assert.equal((html.match(/Start lab:/g)||[]).length,1);
+    assert.ok(html.includes(`Start lab: ${title}`));assert.equal((html.match(/Start lab:/g)||[]).length,id === "discovery" ? 2 : 1);
   }
 });
 
@@ -487,7 +487,7 @@ test("Home introduces Twig, offers a stay interaction and groups every lab by pr
   const html = render(h(PlaygroundHome, { onInspect: noop, onStart: noop, onVisitLab: noop }));
   for (const text of ["Meet Twig", "demo vacation rental site", "The PostHog Playground reveals", "Take a tour", "Explore on your own", "Learn with labs", "Go deeper with guided, hands-on lessons for each PostHog product."]) assert.ok(html.includes(text));
   assert.equal((html.match(/<details /g) ?? []).length, 4);
-  assert.equal((html.match(/aria-label="Start lab:/g) ?? []).length, 6);
+  assert.equal((html.match(/aria-label="Start lab:/g) ?? []).length, 7);
   for (const id of ["catalog", "discovery", "replay", "errors"]) assert.ok(html.includes(`${touchpointDefinitions[id].tool} labs`));
   assert.doesNotMatch(html, /<small|<caption/);
 });

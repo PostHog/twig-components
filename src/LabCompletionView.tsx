@@ -5,6 +5,7 @@ import type { RefObject } from "react";
 import { touchpointDefinitions, type TouchpointId } from "./playground.js";
 
 const recaps: Record<TouchpointId, { title: string; points: string[] }> = {
+  evaluations: { title: "Offline and online evaluations", points: ["Test known cases before shipping.", "Monitor production for missed cases.", "Choose an eval that measures the quality you care about."] },
   catalog: {
     title: "You recorded the correct setting for each click.",
     points: [

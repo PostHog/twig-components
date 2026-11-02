@@ -57,8 +57,20 @@ import "../src/catalog.css";
 import "../src/lab.css";
 import "./workbench.css";
 
-type View = "experience" | "controls" | "inspect" | "getaway" | "planner" | "preview" | "saved" | "account" | "invite" | "products" | "reset" | "dates" | "filters" | "ai" | "booking" | "stay" | "replay" | "errors";
+import { SupportAgent } from "../src/SupportAgent.js";
+import { SupportEvalsProvider, SupportEvalsLab, useSupportEvals } from "../src/SupportEvalsLab.js";
+
+function SupportPreview() { return <SupportEvalsProvider><SupportPreviewContent /></SupportEvalsProvider>; }
+function SupportPreviewContent() {
+ const [stage, setStage] = useState(0);
+ const lab = useSupportEvals();
+ const key = stage >= 5 ? "production" : lab.caseId;
+ return <div className="vac-app"><div className="workbench-grid"><div><SupportAgent guided={stage > 0 && stage !== 4} conversation={stage === 4 ? [] : lab.freeConversation} pending={lab.freePending} caseId={key} run={stage === 4 ? undefined : lab.runs[key]} onSend={message => stage > 0 && stage !== 4 ? lab.send(key) : lab.sendFree(message)} onReset={() => stage > 0 ? lab.resetConversation(key) : lab.resetFree()} /></div><div className="vac-developer-theme"><SupportEvalsLab stage={stage} onStage={setStage} onAllLabs={() => setStage(0)} /></div></div></div>;
+}
+
+type View = "support" | "experience" | "controls" | "inspect" | "getaway" | "planner" | "preview" | "saved" | "account" | "invite" | "products" | "reset" | "dates" | "filters" | "ai" | "booking" | "stay" | "replay" | "errors";
 const views: { id: View; label: string; description: string }[] = [
+ { id:"support", label:"Offline and online evaluations", description:"Support conversations, eval types, and regression coverage" },
   {id:"experience",label:"Twig experience",description:"Full interactive Twig with local navigation and events."},
   { id:"controls", label:"Playground controls", description:"Shared code, Wizard commands, connected choices, and the local MCP composer" },
   { id: "inspect", label: "Inspect Twig", description: "Console values and capture-code drill-down, with supplemental data only when the preview omits details" },
@@ -541,7 +553,7 @@ function ErrorTrackingPreview() { return <ErrorTrackingLabProvider active><Error
 export default function App() {
   const [view, setView] = useState<View>(() => { const requested = new URLSearchParams(window.location.search).get("view"); return views.some(item => item.id === requested) ? requested as View : "preview"; });
   const current = views.find((item) => item.id === view)!;
-  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "experience" ? <ExperiencePreview /> : view === "controls" ? <PlaygroundControlsPreview /> : view === "inspect" ? <InspectPreview /> : view === "getaway" ? <GetawayPreview /> : view === "planner" ? <TripPlannerPreview /> : view === "preview" ? <><CompactPreview /><Preview /></> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "products" ? <ProductMenuPreview /> : view === "reset" ? <ResetPreview /> : view === "dates" ? <DatePickerPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : view === "errors" ? <ErrorTrackingPreview /> : <Replay />}</div></main></div>;
+  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "support" ? <SupportPreview /> : view === "experience" ? <ExperiencePreview /> : view === "controls" ? <PlaygroundControlsPreview /> : view === "inspect" ? <InspectPreview /> : view === "getaway" ? <GetawayPreview /> : view === "planner" ? <TripPlannerPreview /> : view === "preview" ? <><CompactPreview /><Preview /></> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "products" ? <ProductMenuPreview /> : view === "reset" ? <ResetPreview /> : view === "dates" ? <DatePickerPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : view === "errors" ? <ErrorTrackingPreview /> : <Replay />}</div></main></div>;
 }
 
 function PlaygroundControlsPreview() {
@@ -563,7 +575,9 @@ function PlaygroundControlsPreview() {
     </div>
     <LabChoices label="Break down by" value={choice} onChange={setChoice} options={["Setting","Price per night","Capacity"].map(value=>({value,label:value}))} />
     <PlaygroundCodeBlock code={'posthog.capture(\n  "twig_stay_filter_selected",\n  { setting: "Forest" }\n);'} highlightLines={[2,3]} />
-    <LabChecklist label="Completed action" items={[{ label: "Choose a setting in Twig’s Filters.", done: true }]} />
+    <LabChecklist label="Current action" items={[{ label: <>Open <strong>Code</strong> to inspect the rule’s result.</>, done: false }]} />
+    <LabChecklist label="Completed action" items={[{ label: <>Open <strong>Code</strong> to inspect the rule’s result.</>, done: true }]} />
+    <LabChecklist label="Multiple actions" items={[{ label: <>Try <strong>LLM judge</strong>.</>, done: true }, { label: <>Try <strong>Code</strong>.</>, done: false }, { label: <>Try <strong>Sentiment</strong>.</>, done: false }]} />
     <details className="vac-lab-step" open><PlaygroundSummary>How this simulation works</PlaygroundSummary><p>These examples stay in this browser.</p></details>
     <WizardCommand command="mcp add" />
     <div className="vac-agent-terminal"><div className="vac-agent-title">❯_ Twig / coding agent</div>{messages.map((message,i)=><p key={i}>❯ {message}</p>)}<McpComposer suggested="What did my last filter click record?" onSend={message=>setMessages(previous=>[...previous,message])} /></div>
