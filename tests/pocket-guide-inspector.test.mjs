@@ -25,7 +25,7 @@ test('element evidence handles long whitespace and malformed input safely',()=>{
  assert.match(valid,/aria-pressed/);
  for(const value of ['<a '+ ' '.repeat(100000),'<button bad name="true">Coast</button>','<script>alert(1)</script>']) {
   const html=render(value);
-  assert.doesNotMatch(html,/ph-pocket-inspector-tag|<script>/);
+  assert.doesNotMatch(html,/ph-pocket-inspector-tag|<script>/i);
   assert.ok(html.includes('&lt;'));
  }
 });
