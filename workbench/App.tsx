@@ -1,3 +1,4 @@
+import { CompactAiChat, CompactRecommendedStay, type CompactChatMessage } from "../src/CompactAiChat.js";
 import {TwigExperience} from "../src/TwigExperience.js";
 import "../src/experience/components/vacation.css";
 import { ReplayControls, RecordingControls } from "../src/ReplayControls.js";
@@ -553,7 +554,7 @@ function ErrorTrackingPreview() { return <ErrorTrackingLabProvider active><Error
 export default function App() {
   const [view, setView] = useState<View>(() => { const requested = new URLSearchParams(window.location.search).get("view"); return views.some(item => item.id === requested) ? requested as View : "preview"; });
   const current = views.find((item) => item.id === view)!;
-  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "support" ? <SupportPreview /> : view === "experience" ? <ExperiencePreview /> : view === "controls" ? <PlaygroundControlsPreview /> : view === "inspect" ? <InspectPreview /> : view === "getaway" ? <GetawayPreview /> : view === "planner" ? <TripPlannerPreview /> : view === "preview" ? <><CompactPreview /><Preview /></> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "products" ? <ProductMenuPreview /> : view === "reset" ? <ResetPreview /> : view === "dates" ? <DatePickerPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : view === "errors" ? <ErrorTrackingPreview /> : <Replay />}</div></main></div>;
+  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "support" ? <SupportPreview /> : view === "experience" ? <ExperiencePreview /> : view === "controls" ? <PlaygroundControlsPreview /> : view === "inspect" ? <InspectPreview /> : view === "getaway" ? <GetawayPreview /> : view === "planner" ? <TripPlannerPreview /> : view === "preview" ? <><CompactAiPreview /><CompactPreview /><Preview /></> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "products" ? <ProductMenuPreview /> : view === "reset" ? <ResetPreview /> : view === "dates" ? <DatePickerPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : view === "errors" ? <ErrorTrackingPreview /> : <Replay />}</div></main></div>;
 }
 
 function PlaygroundControlsPreview() {
@@ -586,3 +587,21 @@ function PlaygroundControlsPreview() {
 }
 
 function ExperiencePreview(){const [run,setRun]=useState(0);return <div className="workbench-experience"><TwigExperience key={run} onReset={()=>setRun(v=>v+1)}/></div>;}
+
+function CompactAiPreview() {
+  const [sent, setSent] = useState(false);
+  const [typing, setTyping] = useState(false);
+  const [opened, setOpened] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const stay = stays.find(stay => stay.setting === "Forest")!;
+  const image = <img src={new URL("../assets/cabin.jpg", import.meta.url).href} alt={stay.images[0]?.alt ?? "Adiron-shack"} />;
+  const messages: CompactChatMessage[] = sent ? [
+    {id:"request",speaker:"visitor",content:"Find me a forest getaway for four."},
+    {id:"answer",speaker:"assistant",content:"Adiron-shack looks like a fit.",recommendation:stay,recommendationDescription:"Adirondacks, New York. Room for 4."}
+  ] : [];
+  return <div className="workbench-twig"><CompactAiChat pending={typing} messages={typing ? [{id:"pending",speaker:"visitor",content:"Find me a forest getaway for four."}] : messages} draft={sent ? "" : "Find me a forest getaway for four."} onSend={() => setSent(true)} renderImage={() => image} onViewStay={() => setOpened(true)} />
+    {opened && <CompactRecommendedStay stay={stay} image={image} saved={saved} onSavedChange={setSaved} />}
+    <SupportAgent compact pending={typing} conversation={[{input:"The heating is broken and cannot be repaired. Can you refund my stay?",output:typing ? "" : "We can offer relocation or a refund."}]} />
+    <label><input type="checkbox" checked={typing} onChange={event => setTyping(event.target.checked)} /> Show typing state</label>
+    <button type="button" onClick={() => {setSent(false);setOpened(false);setSaved(false);setTyping(false);}}>Reset compact AI example</button></div>;
+}

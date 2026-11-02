@@ -1823,3 +1823,9 @@
 }
 .twig-trip-planner-window.twig-support-agent { overflow:visible; }
 .twig-support-agent .twig-trip-planner-header { border-radius:3px 3px 0 0; }
+
+/* Condensed support reuses the website component rather than the trip-planner mock. */
+.twig-support-agent.twig-support-agent-compact .twig-trip-planner-history { padding:16px; }
+.twig-support-agent-compact .twig-trip-planner-log { margin-bottom:0; }
+.twig-support-agent-compact .twig-trip-planner-bottom { padding:12px 16px; }
+.twig-support-agent-compact .twig-trip-planner-compose textarea { min-height:48px; max-height:none; field-sizing:content; font-size:14px; line-height:22px; }
