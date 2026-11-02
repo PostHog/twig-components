@@ -602,6 +602,6 @@ function CompactAiPreview() {
   return <div className="workbench-twig"><CompactAiChat pending={typing} messages={typing ? [{id:"pending",speaker:"visitor",content:"Find me a forest getaway for four."}] : messages} draft={sent ? "" : "Find me a forest getaway for four."} onSend={() => setSent(true)} renderImage={() => image} onViewStay={() => setOpened(true)} />
     {opened && <CompactRecommendedStay stay={stay} image={image} saved={saved} onSavedChange={setSaved} />}
     <SupportAgent compact pending={typing} conversation={[{input:"The heating is broken and cannot be repaired. Can you refund my stay?",output:typing ? "" : "We can offer relocation or a refund."}]} />
-    <label><input type="checkbox" checked={typing} onChange={event => setTyping(event.target.checked)} /> Show typing state</label>
-    <button type="button" onClick={() => {setSent(false);setOpened(false);setSaved(false);setTyping(false);}}>Reset compact AI example</button></div>;
+    <div className="workbench-controls" aria-label="Compact AI example controls"><label><input type="checkbox" checked={typing} onChange={event => setTyping(event.target.checked)} /> Show typing state</label>
+    <button type="button" onClick={() => {setSent(false);setOpened(false);setSaved(false);setTyping(false);}}>Reset compact AI example</button></div></div>;
 }

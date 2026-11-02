@@ -71,7 +71,8 @@
 .twig-compact .twig-compact-chat-log { display: flex; flex-direction: column; gap: 8px; padding: 16px; }
 .twig-compact-chat-turn { min-width: 0; }
 .twig-compact .twig-compact-chat-message { margin: 0; padding: 8px 0; color: var(--vac-muted); font: 400 14px/22px TwigCompactSans, Arial, sans-serif; overflow-wrap: anywhere; }
-.twig-compact .twig-compact-chat-message[data-speaker="visitor"] { width: fit-content; max-width: 86%; margin-left: auto; padding: 8px 12px; border-radius: 3px; background: var(--vac-paper); color: var(--vac-text); }
+.twig-compact .twig-compact-chat-message[data-speaker] { width: fit-content; max-width: 86%; padding: 8px 12px; border-radius: 3px; background: var(--vac-paper); color: var(--vac-text); }
+.twig-compact .twig-compact-chat-message[data-speaker="visitor"] { margin-left: auto; }
 .twig-compact .twig-compact-chat-recommendation { display: flex; flex-direction: column; gap: 12px; padding: 16px; margin: 8px 0 0; border: 1px solid var(--vac-line); border-radius: 3px; background: var(--vac-paper); }
 .twig-compact-chat-stay { display: flex; align-items: flex-start; gap: 12px; min-width: 0; }
 .twig-compact-chat-stay > div:last-child { flex: 1; min-width: 0; }
@@ -85,7 +86,7 @@
 .twig-compact .twig-compact-chat-view:disabled { opacity: 1; cursor: default; }
 .twig-compact .twig-compact-chat-form { margin: 0; padding: 16px; }
 .twig-compact .twig-trip-planner-compose { margin: 0; }
-.twig-compact .twig-trip-planner-compose textarea { font-family: TwigCompactSans, Arial, sans-serif; }
+.twig-compact .twig-trip-planner-compose textarea { font: 400 14px/22px TwigDMSans, Arial, sans-serif; }
 
 /* Prepared messages stay fully visible as their host window narrows. */
 .twig-compact .twig-compact-chat-form textarea { max-height: none; overflow-y: hidden; }

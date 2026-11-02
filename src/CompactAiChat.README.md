@@ -13,3 +13,5 @@ A message may supply `recommendationDescription` to preserve the catalog-backed 
 The composer grows with its draft and remeasures text wrapping when resized. It keeps the existing minimum height, typography, padding, and Send button; no internal textarea scrollbar is needed.
 
 Set `pending` while preparing a reply to show the existing “Twig is typing…” status after the latest message. The host owns when the pending state ends.
+
+Visitor messages and AI responses use warm-white bubbles on opposite sides. The typing status stays outside the bubbles. Compact trip-planner and support composers share DM Sans at 14px/22px, including placeholders.
