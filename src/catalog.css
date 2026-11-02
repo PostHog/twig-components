@@ -1804,3 +1804,22 @@
 .twig-trip-planner-window.twig-support-agent { height:auto; }
 
 .twig-support-agent .twig-trip-planner-footer { justify-content:flex-end; }
+
+/* Twig hints reuse the shared tooltip behavior with the website surface. */
+.twig-tooltip-control { position:relative; display:inline-flex; min-width:0; align-items:center; }
+.twig-control-tooltip {
+  position:absolute;
+  bottom:calc(100% + 8px);
+  right:0;
+  z-index:12;
+  padding:8px 12px;
+  border:1px solid var(--vac-line);
+  border-radius:3px;
+  background:var(--vac-paper);
+  color:var(--vac-muted);
+  box-shadow:0 12px 30px #2846a426;
+  font:400 12px/18px var(--twig-font-body);
+  white-space:nowrap;
+}
+.twig-trip-planner-window.twig-support-agent { overflow:visible; }
+.twig-support-agent .twig-trip-planner-header { border-radius:3px 3px 0 0; }

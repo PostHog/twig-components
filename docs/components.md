@@ -391,3 +391,5 @@ Support policy lookups are backend evidence. The customer chat only shows messag
 The evaluations lab shows backend tool evidence in one read-only call/result panel, matching Figma’s Playground / Tool call and result. Both sections share the existing code surface, neutral divider, and code typography. Do not add copy controls or separate snippet cards.
 
 The evaluations lab introduces enabled online checks before capture, then guides inspection through Code (answer), Sentiment (customer input), and LLM judge (policy correctness) before the regression exercise. It reuses the checklist, result rows, generation tabs, and OS navigation.
+
+The `/tooltip` export `PlaygroundTooltip` accepts `appearance="twig"` for website controls. Import `catalog.css` and use a direct button child so the shared hover, focus, Escape, and `aria-describedby` behavior stays connected. The default appearance remains Playground.

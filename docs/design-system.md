@@ -418,3 +418,5 @@ The host owns simulation state, events, inspector, prose, and reset behavior.
 ## Support evaluations lab
 
 Reuse the Twig support chat, Playground checklists, coding-agent composer, result rows, generation tabs, and completion. Only the opening and completion pages have titles. Tool call and result share one read-only panel without copy controls. Online Code, Sentiment, and LLM judge inspections use the same results surface. OS buttons use the approved white face, #EB9D2A base, and #B17816 border.
+
+Support chat reset uses the shared tooltip with `appearance="twig"`: warm paper, neutral border, DM Sans small text, 3px corners, and the Twig dropdown shadow. It appears above the title bar on hover and keyboard focus. Escape dismisses the hint. Keep the existing reset icon and 44px target.

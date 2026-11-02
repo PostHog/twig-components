@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useId, useRef, useState } from "react";
+import { PlaygroundTooltip } from "./PlaygroundTooltip.js";
 import { LabResetIcon } from "./LabNavigation.js";
 import { AiSearchIcon } from "./TripPlanner.js";
 import { tripPlannerInputLimit, tripPlannerTurnLimit } from "./trip-planner.js";
@@ -71,17 +72,20 @@ export function SupportAgent({
         <h2 ref={heading} tabIndex={-1} id={id}>
           <AiSearchIcon /> Support agent
         </h2>
-        <button
-          className="twig-trip-planner-close"
-          onClick={() => {
-            setDraft("");
-            onReset();
-            if (!guided) input.current?.focus();
-          }}
-          aria-label="Reset support conversation"
-        >
-          <LabResetIcon />
-        </button>
+        <PlaygroundTooltip appearance="twig" label="Reset conversation">
+          <button
+            type="button"
+            className="twig-trip-planner-close"
+            onClick={() => {
+              setDraft("");
+              onReset();
+              if (!guided) input.current?.focus();
+            }}
+            aria-label="Reset support conversation"
+          >
+            <LabResetIcon />
+          </button>
+        </PlaygroundTooltip>
       </header>
       <div className="twig-trip-planner-history" hidden={!turns.length}>
         <ol

@@ -7,16 +7,16 @@ export function TooltipBubble({ children, className = "vac-control-tooltip", ...
 }
 
 /** Shared neutral hint; feedback stays anchored to its own control. */
-export function PlaygroundTooltip({ children, label, open = false, feedbackOnly = false }: { children: ReactNode; label: ReactNode; open?: boolean; feedbackOnly?: boolean }) {
+export function PlaygroundTooltip({ children, label, open = false, feedbackOnly = false, appearance = "playground" }: { children: ReactNode; label: ReactNode; open?: boolean; feedbackOnly?: boolean; appearance?: "playground" | "twig" }) {
   const id = useId();
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const visible = !dismissed && (open || (!feedbackOnly && (hovered || focused)));
   useEffect(() => { setDismissed(false); }, [open, label]);
-  return <span className="vac-tooltip-control" onMouseEnter={() => { setHovered(true); setDismissed(false); }} onMouseLeave={() => setHovered(false)} onFocus={() => { setFocused(true); setDismissed(false); }} onBlur={() => setFocused(false)} onKeyDown={event => { if (event.key === "Escape") { setDismissed(true); event.stopPropagation(); } }}>
+  return <span className={appearance === "twig" ? "twig-tooltip-control" : "vac-tooltip-control"} onMouseEnter={() => { setHovered(true); setDismissed(false); }} onMouseLeave={() => setHovered(false)} onFocus={() => { setFocused(true); setDismissed(false); }} onBlur={() => setFocused(false)} onKeyDown={event => { if (event.key === "Escape") { setDismissed(true); event.stopPropagation(); } }}>
     {Children.map(children, child => isValidElement<HTMLAttributes<HTMLElement>>(child) && child.type === "button" ? cloneElement(child, { "aria-describedby": visible ? id : undefined }) : child)}
-    {visible && <TooltipBubble id={id}>{label}</TooltipBubble>}
+    {visible && <TooltipBubble id={id} className={appearance === "twig" ? "twig-control-tooltip" : "vac-control-tooltip"}>{label}</TooltipBubble>}
   </span>;
 }
 

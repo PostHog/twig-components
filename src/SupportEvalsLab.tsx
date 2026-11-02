@@ -651,8 +651,8 @@ function SupportEvalsLesson({
     return (
       <>
         <p>
-          There are a few different types of evaluations. All three can be used
-          offline or online.
+          Run offline checks in your own code or CI, then report the scores to
+          PostHog. Online evals run in PostHog on captured responses.
         </p>
         <ul className="vac-trip-definitions">
           {evalTypes.map((value) => (
