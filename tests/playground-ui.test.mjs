@@ -26,8 +26,8 @@ import {
   PlaygroundInvitation,
 } from "@posthog/twig-components/playground-panels";
 
-import { SupportEvalsProvider, SupportEvalsLab } from "../dist/SupportEvalsLab.js";
-import { ErrorTrackingLabProvider, ErrorTrackingLab } from "../dist/ErrorTrackingLab.js";
+import { SupportEvalsProvider, SupportEvalsLab } from "@posthog/twig-components/support-evals-lab";
+import { ErrorTrackingLabProvider, ErrorTrackingLab } from "@posthog/twig-components/error-tracking-lab-ui";
 
 const render = (node) => renderToStaticMarkup(node);
 const noop = () => {};
