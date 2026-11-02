@@ -391,3 +391,19 @@ Contained previews retain the mobile expand control when collapsed so authored l
 ## `/pocket-guide-inspector`
 
 `PocketGuideInspector` (default), `InspectorCode`, and `InspectorStatus` reuse the exact PostHog.com pocket-guide inspector source (synced 2026-10-26). Use Elements and Event data sections for guide figures rather than the Playground InstrumentationInspector. Hosts supply captured element, timestamp, count, and event properties. Load `compact.css` and `lab.css` for the portable, scoped website styles and fonts. Existing lab/catalog CSS and APIs are unchanged.
+
+## Support conversations and evaluations
+
+`/support-agent` exports `SupportAgent`, a controlled Twig chat using the approved getaway surface. Outside a lab, it starts empty and accepts typed messages. Pass `guided` only for prepared lab inputs. Supply a fixed `caseId`, optional completed `run`, `onSend(message)`, `onReset`, optional free-chat `conversation`/`pending`, and optional marker `accessory`. The component makes no model calls and never captures analytics.
+
+`/support-evals` exports the demo policy, saved/synthetic/production cases, `createSupportRun`, `evaluateSupportRun`, and local trace/span/generation/evaluation evidence builders. Identities and timestamps come from the host/provider. The policy is a lab fixture, not a published stay policy. The code check executes an exact keyword rule. Judge and sentiment outcomes are scripted, explicitly simulated examples.
+
+`/support-evals-lab` exports `SupportEvalsProvider`, `useSupportEvals`, and `SupportEvalsLab`. Place the provider above the Twig support view and lab panel. Supply `onGeneration`, `onEvaluation`, and `onAction` to connect local inspection and safe host analytics. `SupportEvalsLab` accepts `stage` (0–12), `onStage`, and `onAllLabs`. Keep the provider mounted during navigation and remount on a fresh lab start/reset. All conversation and score state is in memory. The workbench’s Offline and online evaluations view exercises both flows and the regression fix.
+
+Support policy lookups are backend evidence. The customer chat only shows messages. The evaluation lab reveals the captured lookup and returned policy after the learner sends the saved or production request.
+
+The evaluations lab shows backend tool evidence in one read-only call/result panel, matching Figma’s Playground / Tool call and result. Both sections share the existing code surface, neutral divider, and code typography. Do not add copy controls or separate snippet cards.
+
+The evaluations lab introduces enabled online checks before capture, then guides inspection through Code (answer), Sentiment (customer input), and LLM judge (policy correctness) before the regression exercise. It reuses the checklist, result rows, generation tabs, and OS navigation.
+
+The `/tooltip` export `PlaygroundTooltip` accepts `appearance="twig"` for website controls. Import `catalog.css` and use a direct button child so the shared hover, focus, Escape, and `aria-describedby` behavior stays connected. The default appearance remains Playground.

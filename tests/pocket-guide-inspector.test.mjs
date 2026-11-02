@@ -16,3 +16,16 @@ test('empty inspector uses the same status surface without inventing captured ev
  assert.match(html,/ph-pocket-inspector-status/);
  assert.doesNotMatch(html,/capture payload|events captured/);
 });
+
+// The whitespace before the attribute must not overlap with its name (CodeQL #8).
+test('element evidence handles long whitespace and malformed input safely',()=>{
+ const render=value=>renderToStaticMarkup(h(InspectorCode,{label:'Clicked element',value}));
+ const valid=render('<button'+ ' '.repeat(100000) +'aria-pressed="true">Coast</button>');
+ assert.match(valid,/ph-pocket-inspector-tag/);
+ assert.match(valid,/aria-pressed/);
+ for(const value of ['<a '+ ' '.repeat(100000),'<button bad name="true">Coast</button>','<script>alert(1)</script>']) {
+  const html=render(value);
+  assert.doesNotMatch(html,/ph-pocket-inspector-tag|<script>/);
+  assert.ok(html.includes('&lt;'));
+ }
+});

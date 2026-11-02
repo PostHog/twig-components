@@ -77,3 +77,13 @@ In Twig experience, scroll the page to the bottom and confirm the dock footer an
 Authored lab previews can supply `lab.product` and `lab.onProductSelect` to choose the authored product from the tool rail without leaving the editor. Without the callback, product buttons retain their learner behavior.
 
 The compact preview includes the PostHog.com pocket-guide inspector in empty and captured states. Use Capture Coast click to check Elements, Event data, timestamp, and count; reset returns to the empty state. This inspector is intentionally separate from Playground evidence.
+
+The Offline and online evaluations preview runs the support conversation, offline coding-agent checks, online setup and three result inspections, then regression and completion. Use `?view=support` to open it.
+
+In Support, hover or keyboard-focus the reset button. The Twig tooltip appears above the title bar. Escape dismisses it; reset still clears the conversation.
+
+## Review Learn Studio authoring locally
+
+The HostHog preview linked from twig-components #34 was torn down after Learn Studio #2 merged. Run this workbench with `npm ci` and `npm run workbench`, then open `http://127.0.0.1:5173/?view=experience` for the authored dock, product selection, collapse/expand and Back to lab. Use `?view=preview` for the pocket-guide inspector and compact controls. These fixtures use the checked-out package source.
+
+For the complete content editor, use Learn Studio's current `main` and its README setup instructions. Its merged PR preview is no longer available.

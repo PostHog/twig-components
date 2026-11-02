@@ -217,6 +217,7 @@ export function SelectedLabHeader({ current }: { current: PlaygroundPage["touchp
 }
 
 const instrumentationSummaries: Record<TouchpointId, ReactNode> = {
+  evaluations: <>The support agent records a policy lookup and generation. Offline and online evals attach scores to that answer.</>,
   catalog: <>Filter changes call <code>trackTwigEvent</code> with <code>twig_stay_filter_selected</code>, the setting, and the matching-stay count.</>,
   discovery: <>The AI lab links model inputs and outputs using <code>$ai_trace_id</code> on <code>$ai_generation</code> records.</>,
   replay: <>The <code>rrweb</code> recorder captures clicks, navigation, and input changes with input masking.</>,

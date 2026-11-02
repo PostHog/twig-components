@@ -11,7 +11,7 @@ export function InspectorCode({label,value,meta}:{label:string;value:string;meta
  return <div className="ph-pocket-inspector-panel"><div className="ph-pocket-inspector-tabs"><span className="ph-pocket-inspector-tab">{isElement?'Elements':'Event data'}</span><span className={meta?'ph-pocket-inspector-count':'ph-pocket-inspector-meta'}>{meta??(isElement?'selected node':'selected properties')}</span></div>{isElement?<ElementTree value={value}/>:<EventTree value={value}/>}</div>;
 }
 function ElementTree({value}:{value:string}) {
- const match=value.match(/^<(\w+)\s+([^=]+)="([^"]+)">([^<]+)<\/(\w+)>$/);
+ const match=value.match(/^<(\w+)\s+([^\s=]+)="([^"]+)">([^<]+)<\/(\w+)>$/);
  return <div className="ph-pocket-inspector-tree"><div className="ph-pocket-inspector-element"><span aria-hidden="true" className="ph-pocket-inspector-line">1</span><samp>{match?<>&lt;<span className="ph-pocket-inspector-tag">{match[1]}</span>{' '}<span className="ph-pocket-inspector-key">{match[2]}</span>=<span className="ph-pocket-inspector-value">"{match[3]}"</span>&gt;{match[4]}&lt;/<span className="ph-pocket-inspector-tag">{match[5]}</span>&gt;</>:value}</samp></div></div>;
 }
 function EventTree({value}:{value:string}) {
