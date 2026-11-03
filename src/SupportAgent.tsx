@@ -22,15 +22,24 @@ export function SupportAgent({
   onReset,
   accessory,
   highlighted = false,
+  compact = false,
+  draft: preparedDraft,
+  playback = false,
 }: {
+  /** Reuse the support interface in a condensed, fixed guide figure. */
+  compact?: boolean;
+  /** Host-controlled playback shows the composer without accepting input. */
+  playback?: boolean;
+  /** Optional host-prepared message; the host owns sending and replacing it. */
+  draft?: string;
   guided?: boolean;
   conversation?: readonly SupportMessage[];
   pending?: boolean;
   highlighted?: boolean;
   caseId?: SupportCase;
   run?: SupportRun;
-  onSend: (message: string) => void;
-  onReset: () => void;
+  onSend?: (message: string) => void;
+  onReset?: () => void;
   accessory?: import("react").ReactNode;
 }) {
   const id = useId();
@@ -55,23 +64,26 @@ export function SupportAgent({
       ? [{ input: run.input, output: run.output }]
       : []
     : conversation;
-  const message = guided ? supportCases[caseId].input : draft;
+  const message = guided ? supportCases[caseId].input : preparedDraft ?? draft;
   const atLimit = !guided && turns.length >= tripPlannerTurnLimit;
   function submit() {
-    if (pending || atLimit || !message.trim()) return;
+    if (playback || !onSend || pending || atLimit || !message.trim()) return;
     sent.current = true;
     onSend(message.trim());
     if (!guided) setDraft("");
   }
   return (
     <section
-      className="twig-trip-planner twig-trip-planner-window twig-trip-planner-inline twig-getaway-window twig-support-agent"
+      className={`twig-trip-planner twig-trip-planner-window twig-trip-planner-inline twig-getaway-window twig-support-agent${compact ? " twig-support-agent-compact" : ""}`}
+      data-playback={playback || undefined}
+      data-draft-ready={playback && Boolean(preparedDraft) && !pending || undefined}
       aria-labelledby={id}
     >
       <header className="twig-trip-planner-header">
         <h2 ref={heading} tabIndex={-1} id={id}>
           <AiSearchIcon /> Support agent
         </h2>
+        {onReset && (
         <PlaygroundTooltip appearance="twig" label="Reset conversation">
           <button
             type="button"
@@ -86,6 +98,8 @@ export function SupportAgent({
             <LabResetIcon />
           </button>
         </PlaygroundTooltip>
+        )}
+
       </header>
       <div className="twig-trip-planner-history" hidden={!turns.length}>
         <ol
@@ -135,10 +149,10 @@ export function SupportAgent({
                 ref={input}
                 aria-label="Customer message"
                 placeholder="How can we help with your stay?"
-                readOnly={guided}
-                disabled={pending || atLimit}
+                readOnly={playback || guided || preparedDraft !== undefined || !onSend}
+                disabled={pending || atLimit || (!onSend && !playback)}
                 maxLength={tripPlannerInputLimit}
-                rows={3}
+                rows={compact ? 2 : 3}
                 value={message}
                 onChange={(event) => setDraft(event.target.value)}
                 onKeyDown={(event) => {
@@ -155,7 +169,7 @@ export function SupportAgent({
               <button
                 type="submit"
                 aria-label="Send customer message"
-                disabled={pending || atLimit || !message.trim()}
+                disabled={playback || pending || atLimit || !onSend || !message.trim()}
               >
                 ↑
               </button>
