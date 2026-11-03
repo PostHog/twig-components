@@ -110,3 +110,21 @@ Failure investigation has consecutive screens: the city request’s two-operatio
 The opening capture page introduces input, output, trace ID, and session ID in a small code block. It omits usage, pricing, custom metadata, and simulation details. Chat stays locked until the learner chooses Follow the chat; Previous step returns to the capture overview.
 
 The final teaching screen covers evaluations separately from the retry results. Evaluate the answer opens the capacity rule, its code call, and the recorded before/after results. Finish the lab then opens the completion recap. Previous returns through evaluation and retry without clearing either result. Chat stays locked on the evaluation screen. The lab runs this local check; it is not an automatically configured PostHog evaluation.
+
+## Versioned evidence for the AIO guide
+
+Every generation includes `$ai_prompt_name`, `$ai_prompt_version`, `application_version`,
+and `tool_config_version`. These describe the local teaching configuration, not a
+prompt fetched from PostHog. The capacity repair changes the tool version while
+keeping the prompt version stable.
+
+`@posthog/twig-components/trip-planner-evaluations` exports a repeatable regression
+runner and a versioned dataset/scorer. Before and after use identical forest, city,
+and unknown-capacity cases. The capacity rule produces boolean, numeric (0–1), and
+categorical results. N/A is excluded from the pass-rate denominator. An honest
+no-match passes this narrow capacity rule; it does not mean a stay was found or
+that the answer passed a general quality judge. This is executable local evidence,
+not an online evaluation, hosted dataset, LLM judge, or offline-evals SDK upload.
+
+Guide figures can consume these records later without duplicating the scenario or
+scoring logic. This change adds no chapter prose or new figure UI.
