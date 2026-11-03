@@ -42,6 +42,9 @@ export type ErrorTrackingState = {
   revision: number;
 };
 
+/** The newest occurrences the lab keeps. */
+const MAX_OCCURRENCES = 50;
+
 export const initialErrorTrackingState: ErrorTrackingState = {
   booking: null,
   occurrences: [],
@@ -66,7 +69,8 @@ export type ErrorTrackingAction =
   | { type: "catch" }
   | { type: "fingerprint" }
   | { type: "upload-source-maps" }
-  | { type: "noise"; at?: string }
+  /** `dropped` is what `before_send` did with it. A host without the SDK leaves it out, and the filter state decides. */
+  | { type: "noise"; at?: string; dropped?: boolean }
   | { type: "filter-noise" }
   | { type: "repair" }
   | { type: "verify" }
@@ -86,10 +90,11 @@ export function errorTrackingReducer(
     case "book":
       return state.booking ? state : { ...state, booking: action.booking };
     case "capture":
-      // Browser noise is counted through `noise`, from the browser's own error events.
+      // Browser noise is counted through `noise`, from what `before_send` did with it.
       if (action.exception.outcome === "dropped") return state;
-      if (!state.booking || state.repaired || state.occurrences.length >= 50) return state;
-      return { ...state, occurrences: [...state.occurrences, { ...action.exception, id: state.occurrences.length + 1 }] };
+      if (!state.booking || state.repaired) return state;
+      // A bounded rolling history: the oldest roll off, so later captures still arrive.
+      return { ...state, occurrences: [...state.occurrences, { ...action.exception, id: (state.occurrences.at(-1)?.id ?? 0) + 1 }].slice(-MAX_OCCURRENCES) };
     case "catch":
       return state.occurrences.some((occurrence) => !occurrence.handled) ? { ...state, caught: true } : state;
     case "upload-source-maps":
@@ -98,7 +103,7 @@ export function errorTrackingReducer(
       return state.sourceMapped ? { ...state, fingerprinted: true } : state;
     case "noise": {
       if (!state.booking) return state;
-      const noise = state.noiseFiltered
+      const noise = (action.dropped ?? state.noiseFiltered)
         ? { ...state.noise, dropped: state.noise.dropped + 1 }
         : { ...state.noise, unfiltered: state.noise.unfiltered + 1, capturedAt: [...(state.noise.capturedAt ?? []), action.at ?? ""].slice(-50) };
       return { ...state, noise };

@@ -413,7 +413,10 @@
 .vac-app .vac-developer-theme .vac-et-issue-page li + li { border-top: 1px solid var(--ph-neutral-border); }
 .vac-app .vac-developer-theme .vac-et-issue-page li span { grid-column: 1; color: var(--ph-neutral-muted); font-size: 11px; overflow-wrap: anywhere; }
 .vac-app .vac-developer-theme .vac-et-issue-page li time { grid-column: 2; grid-row: 1; color: var(--ph-neutral-muted); font: 11px/1.6 var(--ph-font-code); }
-.vac-app .vac-developer-theme .vac-et-issue-parts { display: grid; gap: 8px; margin: 12px 0; padding-left: 20px; font-size: 13px; line-height: 20.8px; }
+.vac-app .vac-developer-theme .vac-et-issue-parts { margin: 12px 0; padding-left: 20px; list-style: disc; font-size: 13px; line-height: 20.8px; }
+.vac-app .vac-developer-theme .vac-et-issue-parts li { display: list-item; }
+.vac-app .vac-developer-theme .vac-et-issue-parts li + li { margin-top: 8px; }
+.vac-app .vac-developer-theme .vac-et-issue-parts a { text-decoration: underline; text-underline-offset: 4px; }
 .vac-app .vac-developer-theme .vac-et-frames,
 .vac-app .vac-developer-theme .vac-et-issues { margin: 12px 0; overflow: hidden; border: 1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); background: var(--ph-neutral-white); }
 .vac-app .vac-developer-theme .vac-et-frames header { display: grid; gap: 2px; padding: 8px 12px; border-bottom: 1px solid var(--ph-neutral-border); }
@@ -422,16 +425,17 @@
 .vac-app .vac-developer-theme :is(.vac-et-frames, .vac-et-issues) ul { margin: 0; padding: 0; list-style: none; }
 .vac-app .vac-developer-theme .vac-et-frames li + li,
 .vac-app .vac-developer-theme .vac-et-issues li + li { border-top: 1px solid var(--ph-neutral-border); }
-.vac-app .vac-developer-theme .vac-et-frames button { display: flex; flex-wrap: nowrap; align-items: baseline; gap: 4px 8px; width: 100%; padding: 4px 12px; border: 0; border-radius: 0; background: transparent; color: var(--ph-neutral-ink); text-align: left; font: 400 11px/1.6 var(--ph-font-code); cursor: pointer; }
-.vac-app .vac-developer-theme .vac-et-frames button:disabled { cursor: default; }
+.vac-app .vac-developer-theme .vac-et-frames :is(button, .vac-et-frame-static) { display: flex; flex-wrap: nowrap; align-items: baseline; gap: 4px 8px; width: 100%; padding: 4px 12px; border: 0; border-radius: 0; background: transparent; color: var(--ph-neutral-ink); text-align: left; font: 400 11px/1.6 var(--ph-font-code); cursor: pointer; }
+.vac-app .vac-developer-theme .vac-et-frames .vac-et-frame-static { color: var(--ph-neutral-muted); cursor: default; }
 .vac-app .vac-developer-theme .vac-et-frames button:not(:disabled):hover { background: var(--ph-neutral-accent); }
 .vac-app .vac-developer-theme .vac-et-frames button:focus-visible { outline: 2px solid var(--ph-brand-cobalt); outline-offset: -2px; }
-.vac-app .vac-developer-theme .vac-et-frames button code { font-weight: 400; }
-.vac-app .vac-developer-theme .vac-et-frames li[data-in-app] button code { font-weight: 700; }
-.vac-app .vac-developer-theme .vac-et-frames button > span:not(.vac-et-frame-icon) { min-width: 0; overflow: hidden; color: var(--ph-neutral-muted); text-overflow: ellipsis; white-space: nowrap; }
-.vac-app .vac-developer-theme .vac-et-frames button > code { flex-shrink: 0; }
-.vac-app .vac-developer-theme .vac-et-frames button > span[data-unresolved] { font-style: italic; }
-.vac-app .vac-developer-theme .vac-et-frame-icon { margin-left: auto; color: var(--ph-neutral-muted); }
+.vac-app .vac-developer-theme .vac-et-frames :is(button, .vac-et-frame-static) code { font-weight: 400; }
+.vac-app .vac-developer-theme .vac-et-frames li[data-in-app] :is(button, .vac-et-frame-static) code { font-weight: 700; }
+.vac-app .vac-developer-theme .vac-et-frames :is(button, .vac-et-frame-static) > span:not(.vac-et-frame-icon, .vac-et-frame-chevron) { min-width: 0; overflow: hidden; color: var(--ph-neutral-muted); text-overflow: ellipsis; white-space: nowrap; }
+.vac-app .vac-developer-theme .vac-et-frames :is(button, .vac-et-frame-static) > code { flex-shrink: 0; }
+.vac-app .vac-developer-theme .vac-et-frame-chevron { flex-shrink: 0; width: 1ch; color: var(--ph-neutral-muted); }
+.vac-app .vac-developer-theme .vac-et-frames .vac-et-frame-static > span[data-unresolved] { font-style: italic; }
+.vac-app .vac-developer-theme .vac-et-frame-icon { flex-shrink: 0; margin-left: auto; color: var(--ph-neutral-muted); white-space: nowrap; }
 .vac-app .vac-developer-theme .vac-et-frames li > .vac-code-block { margin: 0; border: 0; border-top: 1px solid var(--ph-neutral-border); border-radius: 0; }
 .vac-app .vac-developer-theme .vac-et-issues-head { display: flex; justify-content: space-between; padding: 6px 12px; border-bottom: 1px solid var(--ph-neutral-border); color: var(--ph-neutral-muted); font: 600 10px/1.4 PlaygroundRoundHog, sans-serif; letter-spacing: 0.04em; text-transform: uppercase; }
 .vac-app .vac-developer-theme .vac-et-issues li { display: flex; align-items: center; gap: 12px; padding: 10px 12px; }
@@ -1294,7 +1298,7 @@
 .vac-app .vac-developer-theme .vac-lab-table-key-value tr > :last-child { width:60%; }
 
 /* Compact Activity/Explore table and EventDetails Properties view from app.posthog.com. */
-.vac-activity-preview { margin: 16px 0; border: 1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); overflow: hidden; background: var(--ph-neutral-white); color: var(--ph-neutral-ink); }
+.vac-activity-preview { container-type: inline-size; margin: 16px 0; border: 1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); overflow: hidden; background: var(--ph-neutral-white); color: var(--ph-neutral-ink); }
 .vac-activity-heading { display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid var(--ph-neutral-border); }
 .vac-activity-heading span { font-size: 12px; color: var(--ph-neutral-muted); border-left: 1px solid var(--ph-neutral-border); padding-left: 12px; }
 .vac-activity-list { max-height: 180px; overflow: auto; }
@@ -1305,7 +1309,7 @@
 /* An inset shadow, not background-color: Chrome composites background-color animations and can leave the last frame painted. */
 @keyframes vac-activity-new { from { box-shadow: inset 0 0 0 100vmax var(--ph-highlight); } to { box-shadow: inset 0 0 0 100vmax transparent; } }
 @media (prefers-reduced-motion: reduce) { .vac-activity-list tr[data-new] > td { animation: none; } }
-.vac-app .vac-developer-theme .vac-activity-list button { display: flex; align-items: flex-start; gap: 4px; padding: 0; width: 100%; border: none; background: none; color: inherit; text-align: left; font-size: inherit; }
+.vac-app .vac-developer-theme .vac-activity-list :is(button, .vac-activity-event) { display: flex; align-items: flex-start; gap: 4px; padding: 0; width: 100%; border: none; background: none; color: inherit; text-align: left; font-size: inherit; }
 .vac-activity-list .is-selected { background: var(--ph-neutral-accent); }
 .vac-app .vac-developer-theme .vac-activity-compact { margin: 12px 0; }
 .vac-app .vac-developer-theme .vac-activity-compact .vac-activity-heading { padding: 8px 12px; font-size: 13px; }
@@ -1314,6 +1318,15 @@
 .vac-app .vac-developer-theme .vac-activity-compact .vac-activity-property-heading { padding: 6px 12px; }
 .vac-app .vac-developer-theme .vac-activity-compact .vac-lab-table :is(th, td) { padding: 4px 10px; font-size: 12px; line-height: 1.5; }
 .vac-app .vac-developer-theme .vac-activity-compact .vac-lab-table-key-value td:first-child { white-space: nowrap; overflow-wrap: normal; }
+/* In a narrow panel each property sits above its value, so names don't break mid-word. */
+@container (max-width: 420px) {
+  .vac-app .vac-developer-theme .vac-activity-detail .vac-lab-table-key-value :is(table, tbody, tr, td) { display: block; width: auto; }
+  .vac-app .vac-developer-theme .vac-activity-detail .vac-lab-table-key-value thead { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); }
+  .vac-app .vac-developer-theme .vac-activity-detail .vac-lab-table-key-value tr { padding: 4px 0; border-bottom: 1px solid var(--ph-neutral-border); }
+  .vac-app .vac-developer-theme .vac-activity-detail .vac-lab-table-key-value tbody tr:last-child { border-bottom: 0; }
+  .vac-app .vac-developer-theme .vac-activity-detail .vac-lab-table-key-value td { padding: 0 12px; border-bottom: 0; }
+  .vac-app .vac-developer-theme .vac-activity-detail .vac-lab-table-key-value td:first-child { color: var(--ph-neutral-muted); white-space: normal; overflow-wrap: anywhere; }
+}
 .vac-activity-property-heading { padding: 10px 12px; border-bottom: 2px solid var(--ph-brand-cobalt); font-size: 12px; font-weight: 600; width: fit-content; }
 
 .vac-save-insight { margin: 20px 0; }
@@ -1682,7 +1695,7 @@ details[open] > summary .vac-disclosure-icon:not([data-expanded]) > .vac-disclos
 .vac-app .vac-developer-theme .vac-code-block pre > code { display:block; padding:0; border:0; background:none; color:inherit; font:inherit; white-space:normal; }
 .vac-code-line { display:flex; min-width:0; padding:0 12px; white-space:pre-wrap; overflow-wrap:anywhere; }
 .vac-code-line[data-highlighted="true"] { background:var(--ph-code-line-highlight); }
-.vac-code-number { flex:none; width:18px; margin-right:12px; color:var(--ph-neutral-muted); user-select:none; }
+.vac-code-number { flex:none; width:max(18px, calc(var(--vac-code-digits, 2) * 1ch)); margin-right:12px; color:var(--ph-neutral-muted); text-align:right; white-space:nowrap; user-select:none; }
 .vac-code-text { flex:1; min-width:0; white-space:pre-wrap; overflow-wrap:anywhere; }
 .vac-tooltip-control { position:relative; display:inline-flex; min-width:0; align-items:center; }
 .vac-control-tooltip { position:absolute; bottom:calc(100% + 8px); right:0; z-index:12; max-width:min(260px,calc(100vw - 32px)); padding:6px 8px; border:1px solid var(--ph-neutral-border); border-radius:var(--ph-radius-sm); background:var(--ph-neutral-background); color:var(--ph-neutral-ink); font:400 12px/20.4px PlaygroundRoundHog,sans-serif; white-space:nowrap; pointer-events:none; }
@@ -1724,7 +1737,7 @@ details[open] > summary .vac-disclosure-icon:not([data-expanded]) > .vac-disclos
 .vac-app .vac-developer-theme .vac-mcp-send:disabled { opacity:.4; background:transparent; box-shadow:none; }
 @media(prefers-reduced-motion:reduce) { .vac-app .vac-developer-theme code.vac-wizard-gradient { animation:none; } .vac-app .vac-developer-theme .vac-wizard-copy { transition:none; } }
 .vac-code-number::before { content:attr(data-line); }
-.vac-code-indent { flex:none; white-space:pre; }
+.vac-code-indent { flex:0 1 auto; max-width:30%; overflow:hidden; white-space:pre; }
 
 /* Approved AI evidence: connected, flat surfaces and readable UI typography.
    Chromatic status colors are fixed brand.posthog.com/catalog.json colors. */

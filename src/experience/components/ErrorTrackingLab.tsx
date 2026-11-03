@@ -30,5 +30,5 @@ export function ErrorTrackingLab({ stage, onStage }: { stage: number; onStage: (
     target?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "center" });
     target?.focus({ preventScroll: true });
   };
-  return <SharedErrorTrackingLab stage={stage} onStage={onStage} location={location} onFocusBooking={focusBooking} onFocusDetails={focusDetails} onBookNew={() => router.push("/")} onTriggerNoise={() => dispatch({ type: "capture", exception: { outcome: "dropped", type: "Error", value: "ResizeObserver loop completed with undelivered notifications.", handled: false, mechanism: "generic", frames: [] } })} />;
+  return <SharedErrorTrackingLab stage={stage} onStage={onStage} location={location} onFocusBooking={focusBooking} onFocusDetails={focusDetails} onBookNew={() => router.push("/")} onTriggerNoise={() => dispatch({ type: "noise", at: new Date().toISOString() })} />;
 }

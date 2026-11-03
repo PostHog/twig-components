@@ -1,6 +1,6 @@
 "use client";
 
-import { Children, Fragment, isValidElement, type ReactNode } from "react";
+import { Children, Fragment, isValidElement, type CSSProperties, type ReactNode } from "react";
 import { CopyControl } from "./PlaygroundTooltip.js";
 
 /** Source locations belong in captions, never in language labels. */
@@ -18,10 +18,12 @@ export function codeSegments(children: ReactNode, highlighted = false): { text: 
   });
 }
 
-export function PlaygroundCodeBlock({ children, code, label = "JavaScript", highlightLines = [], lineNumbers = highlightLines.length > 0, startLine = 1, className = "", "aria-label": ariaLabel }: {
+export function PlaygroundCodeBlock({ children, code, label = "JavaScript", highlightLines = [], lineNumbers = highlightLines.length > 0, startLine = 1, copyable = true, className = "", "aria-label": ariaLabel }: {
   children?: ReactNode; code?: string; label?: string; highlightLines?: readonly number[]; lineNumbers?: boolean;
   /** The number shown on the first line, for an excerpt from a longer file. `highlightLines` stays relative. */
-  startLine?: number; className?: string; "aria-label"?: string;
+  startLine?: number;
+  /** Source excerpts inside a figure aren't meant to be reused, so they hide the copy button. */
+  copyable?: boolean; className?: string; "aria-label"?: string;
 }) {
   const segments = codeSegments(code ?? children);
   const value = segments.map(segment => segment.text).join("");
@@ -33,8 +35,8 @@ export function PlaygroundCodeBlock({ children, code, label = "JavaScript", high
     line += pieces.length - 1;
   }
   const lines = value.split("\n");
-  return <div className={`vac-code-block ${className}`.trim()}>
-    <div className="vac-code-header"><span>{label}</span><CopyControl text={value} /></div>
+  return <div className={`vac-code-block ${className}`.trim()} style={lineNumbers ? { "--vac-code-digits": String(lines.length - 1 + startLine).length } as CSSProperties : undefined}>
+    <div className="vac-code-header"><span>{label}</span>{copyable && <CopyControl text={value} />}</div>
     <pre aria-label={ariaLabel}><code>{lines.map((text, i) => {
       const indent = text.match(/^\s*/)?.[0] ?? "";
       return <Fragment key={i}><span className="vac-code-line" data-highlighted={marked.has(i + 1) ? "true" : undefined}>{lineNumbers && <span className="vac-code-number" aria-hidden="true" data-line={i + startLine} />}<span className="vac-code-indent">{indent}</span><span className="vac-code-text">{text.slice(indent.length).split(/([_./])/).map((part,j) => <Fragment key={j}>{part}{/^[_./]$/.test(part) && <wbr />}</Fragment>)}</span></span>{i < lines.length - 1 ? "\n" : null}</Fragment>;

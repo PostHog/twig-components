@@ -54,6 +54,12 @@ export type PlaygroundStackFrame = {
   context?: { startLine: number; failingLine: number; lines: readonly string[] };
 };
 
+/** Drops the indentation every line shares, so a nested excerpt keeps its width in a narrow panel. */
+function dedent(lines: readonly string[]) {
+  const indent = Math.min(...lines.filter((line) => line.trim()).map((line) => line.match(/^\s*/)![0].length));
+  return Number.isFinite(indent) ? lines.map((line) => line.slice(indent)) : [...lines];
+}
+
 /** A stack trace as the issue page draws it: innermost first, unresolved frames warned, dependencies boxed. */
 export function PlaygroundStackFrames({ type, message, frames }: { type: string; message?: string; frames: readonly PlaygroundStackFrame[] }) {
   const [open, setOpen] = useState<number | null>(() => {
@@ -64,18 +70,25 @@ export function PlaygroundStackFrames({ type, message, frames }: { type: string;
     <header><strong>{type}</strong>{message && <span>{message}</span>}</header>
     <ul>
       {frames.map((frame, index) => <li key={`${frame.fn}-${index}`} data-in-app={frame.inApp ? "true" : undefined}>
-        <button type="button" disabled={!frame.context} aria-expanded={frame.context ? open === index : undefined} onClick={() => setOpen(open === index ? null : index)}>
-          <code>{frame.fn}</code>
-          <span data-unresolved={frame.unresolved ? "true" : undefined}>{frame.source}</span>
-          {frame.unresolved && <span className="vac-et-frame-icon" title="Unresolved frame: upload your source maps to see Twig's code" aria-label="Unresolved frame">⚠</span>}
-          {!frame.inApp && !frame.unresolved && <span className="vac-et-frame-icon" title="Vendor frame" aria-label="Vendor frame">▣</span>}
-        </button>
+        {frame.context
+          ? <button type="button" aria-expanded={open === index} onClick={() => setOpen(open === index ? null : index)}>
+              <span className="vac-et-frame-chevron" aria-hidden="true">{open === index ? "▾" : "▸"}</span>
+              <code>{frame.fn}</code>
+              <span>{frame.source}</span>
+            </button>
+          : <div className="vac-et-frame-static">
+              <code>{frame.fn}</code>
+              <span data-unresolved={frame.unresolved ? "true" : undefined}>{frame.source}</span>
+              {frame.unresolved && <span className="vac-et-frame-icon" title="Unresolved frame: upload your source maps to see Twig's code" aria-label="Unresolved frame">⚠</span>}
+              {!frame.inApp && !frame.unresolved && <span className="vac-et-frame-icon">Dependency code</span>}
+            </div>}
         {open === index && frame.context && <PlaygroundCodeBlock
           label={codeLanguage(frame.source.split("@")[0] ?? "")}
           aria-label={`${frame.fn} source`}
-          code={frame.context.lines.join("\n")}
+          code={dedent(frame.context.lines).join("\n")}
           startLine={frame.context.startLine}
           highlightLines={[frame.context.failingLine - frame.context.startLine + 1]}
+          copyable={false}
         />}
       </li>)}
     </ul>

@@ -10,6 +10,8 @@ const time = (timestamp?: string) => {
 };
 const show = (value: unknown) => value !== null && typeof value === "object" ? JSON.stringify(value) : String(value);
 
+const label = (event: ActivityEvent) => <><code>{event.event}</code>{event.number !== undefined && <span className="vac-activity-number">#{event.number}</span>}</>;
+
 /** PostHog's Activity tab in miniature: recorded events, newest first, and the selected event's properties. */
 export function ActivityPreview({ events, selected, onSelect, highlightNew = false, compact = false }: {
   events: readonly ActivityEvent[]; selected: ActivityEvent; onSelect: (id: string) => void;
@@ -26,10 +28,14 @@ export function ActivityPreview({ events, selected, onSelect, highlightNew = fal
     for (const event of events) if (!seen.current.has(event.id)) arrived.current.add(event.id);
   }
   const isNew = (id: string) => arrived.current.has(id);
+  // One event leaves nothing to choose between, so it gets no selection treatment.
+  const selectable = events.length > 1;
   useEffect(() => { seen.current = new Set([...(seen.current ?? []), ...events.map((event) => event.id)]); }, [events]);
   return <section className={`vac-activity-preview${compact ? " vac-activity-compact" : ""}`} aria-label="PostHog Activity preview">
     <div className="vac-activity-heading"><strong>Twig playground events</strong></div>
-    <div className="vac-activity-list"><table className="vac-lab-table" aria-label="Recorded events"><thead><tr><th scope="col">Event</th><th scope="col">Time</th></tr></thead><tbody>{[...events].reverse().map(event => <tr key={event.id} className={event.id === selected.id ? "is-selected" : undefined} data-new={isNew(event.id) ? "true" : undefined}><td><button type="button" aria-pressed={event.id === selected.id} onClick={() => onSelect(event.id)}><code>{event.event}</code>{event.number !== undefined && <span className="vac-activity-number">#{event.number}</span>}</button></td><td><time dateTime={event.timestamp}>{time(event.timestamp)}</time></td></tr>)}</tbody></table></div>
+    <div className="vac-activity-list"><table className="vac-lab-table" aria-label="Recorded events"><thead><tr><th scope="col">Event</th><th scope="col">Time</th></tr></thead><tbody>{[...events].reverse().map(event => <tr key={event.id} className={selectable && event.id === selected.id ? "is-selected" : undefined} data-new={isNew(event.id) ? "true" : undefined}><td>{selectable
+      ? <button type="button" aria-pressed={event.id === selected.id} onClick={() => onSelect(event.id)}>{label(event)}</button>
+      : <span className="vac-activity-event">{label(event)}</span>}</td><td><time dateTime={event.timestamp}>{time(event.timestamp)}</time></td></tr>)}</tbody></table></div>
     <div className="vac-activity-detail"><div className="vac-activity-property-heading">Properties</div><table className="vac-lab-table vac-lab-table-key-value" aria-label="Event properties"><thead><tr><th scope="col">Property</th><th scope="col">Value</th></tr></thead><tbody>{Object.entries(selected.properties).map(([name, value]) => <tr key={name}><td><code>{name}</code></td><td><code>{show(value)}</code></td></tr>)}{!Object.keys(selected.properties).length && <tr><td colSpan={2}>No custom properties</td></tr>}</tbody></table></div>
   </section>;
 }

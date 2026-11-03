@@ -50,8 +50,9 @@ test('a resolved frame opens its source, and unresolved and vendor frames are ma
  await act(()=>frames[1].click());
  assert.equal(frames[0].getAttribute('aria-expanded'),'false');
  assert.match(document.querySelector('[aria-label="openTripDetails source"]').textContent,/readTripHost\(\{\}, hostId\)/);
- assert.equal(frames[2].disabled,true);assert.ok(frames[2].querySelector('[aria-label="Vendor frame"]'));
- assert.equal(frames[3].disabled,true);assert.ok(frames[3].querySelector('[aria-label="Unresolved frame"]'));
+ assert.equal(frames.length,2);
+ const plain=document.querySelectorAll('[aria-label="Stack trace"] li > .vac-et-frame-static');
+ assert.match(plain[0].textContent,/Dependency code$/);assert.ok(plain[1].querySelector('[aria-label="Unresolved frame"]'));
 });
 test('all recording/playback glyphs are included in the distributable CSS assets',async()=>{
  const{readFileSync,existsSync}=await import('node:fs');

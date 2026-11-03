@@ -10,7 +10,7 @@ import { createContext, useContext, useEffect, useReducer, useRef, useState, typ
 import { LabChecklist } from "./LabChecklist.js";
 import { ActivityPreview, type ActivityEvent } from "./ActivityPreview.js";
 import {
-  PlaygroundEvidenceStatus, PlaygroundIssueList, PlaygroundIssuePage,
+  PlaygroundIssueList, PlaygroundIssuePage,
   PlaygroundStackFrames, type PlaygroundIssueRow, type PlaygroundStackFrame,
 } from "./PlaygroundErrorEvidence.js";
 import { errorTrackingReducer, initialErrorTrackingState, latestOccurrence, type CapturedException, type ErrorTrackingAction, type ErrorTrackingState } from "./error-tracking-lab.js";
@@ -217,7 +217,7 @@ export function ErrorTrackingLab({
     return <section className="vac-lab vac-builder">
       <p>Trip details calls <code>readTripHost</code> without a <code>try</code>/<code>catch</code>. The error breaks the trip details button for every customer in production:</p>
       {uncaught && <EventActivity events={state.occurrences.filter(fromTwig).map(activityEvent)} />}
-      {uncaught && <PlaygroundEvidenceStatus tone="error">This unhandled exception is caught by the PostHog Web SDK’s auto-capture. Un-handled exceptions show <code>$exception_handled: false</code>.</PlaygroundEvidenceStatus>}
+      {uncaught && <p>This unhandled exception is caught by the PostHog Web SDK’s auto-capture. Un-handled exceptions show <code>$exception_handled: false</code>.</p>}
       <p>An exception is an event like any other, so <code>distinct_id</code>, <code>$session_id</code>, and <code>$groups</code> tie it to the guest, their session, and the stay’s host.</p>
       <Continue onClick={() => onStage(4)}>Capture it yourself →</Continue>
     </section>;
@@ -238,9 +238,9 @@ export function ErrorTrackingLab({
       <LabChecklist label="Capture the retry" items={[{ label: <>Click <strong>Try again</strong> in Twig’s trip details.</>, done: handled.length > 0 }]} />
       {handled.length > 0 && <>
         <EventActivity events={state.occurrences.filter(fromTwig).map(activityEvent)} />
-        <PlaygroundEvidenceStatus tone="error">{handled.length === 1
+        <p>{handled.length === 1
           ? <>Now the event has <code>surface</code> and <code>stay_id</code>. Click <strong>Try again</strong> again.</>
-          : <>Each <strong>Try again</strong> sends another exception. You’ve sent {state.occurrences.filter(fromTwig).length}.</>}</PlaygroundEvidenceStatus>
+          : <>Each <strong>Try again</strong> sends another exception. You’ve sent {state.occurrences.filter(fromTwig).length}.</>}</p>
       </>}
       {handled.length > 0 ? <Continue onClick={() => onStage(5)}>See the issue →</Continue> : <Continue onClick={onFocusDetails}>Show your booking →</Continue>}
     </section>;
@@ -271,11 +271,13 @@ export function ErrorTrackingLab({
       properties: { $exception_types: ["Error"], $exception_values: [noiseMessage], $exception_handled: false },
     }));
     return <section className="vac-lab vac-builder">
-      {unfiltered === 0 && <p>Browsers raise errors that aren’t Twig bugs. A <code>ResizeObserver loop</code> error means a layout took more than one pass, and nothing breaks for the guest.</p>}
-      <LabChecklist label="Make some noise" items={[{ label: <>Click <strong>Trigger browser noise</strong> and watch the events.</>, done: unfiltered > 0 }]} />
-      {onTriggerNoise && <Apply onClick={onTriggerNoise}>Trigger browser noise →</Apply>}
+      {unfiltered === 0 && <>
+        <p>Browsers raise errors that aren’t Twig bugs. A <code>ResizeObserver loop</code> error means a layout took more than one pass, and nothing breaks for the guest.</p>
+        <LabChecklist label="Make some noise" items={[{ label: <>Click <strong>Trigger browser noise</strong> and watch the events.</>, done: false }]} />
+        {onTriggerNoise && <Apply onClick={onTriggerNoise}>Trigger browser noise →</Apply>}
+      </>}
       {noiseEvents.length > 0 && <EventActivity events={[...state.occurrences.filter(fromTwig).map(activityEvent), ...noiseEvents]} />}
-      {unfiltered > 0 && <PlaygroundEvidenceStatus tone="error">Every one became an exception in PostHog, and PostHog bills by event.</PlaygroundEvidenceStatus>}
+      {unfiltered > 0 && <p>Each one became an exception event. Without a filter, every one would reach PostHog, and PostHog bills by event.</p>}
       {unfiltered > 0 && <Continue onClick={() => onStage(7)}>Drop them with before_send →</Continue>}
     </section>;
   }
@@ -288,10 +290,12 @@ export function ErrorTrackingLab({
       <Apply onClick={() => dispatch({ type: "filter-noise" })}>Add before_send to Twig →</Apply>
     </section>;
     return <section className="vac-lab vac-builder">
-      <LabChecklist label="Check the filter" items={[{ label: <>Click <strong>Trigger browser noise</strong> again.</>, done: dropped > 0 }]} />
-      {onTriggerNoise && <Apply onClick={onTriggerNoise}>Trigger browser noise →</Apply>}
+      {dropped === 0 && <>
+        <LabChecklist label="Check the filter" items={[{ label: <>Click <strong>Trigger browser noise</strong> again to check that the filter drops it.</>, done: false }]} />
+        {onTriggerNoise && <Apply onClick={onTriggerNoise}>Trigger browser noise →</Apply>}
+      </>}
       {dropped > 0 && <>
-        <PlaygroundEvidenceStatus><code>before_send</code> dropped all {dropped}, so none of them reached PostHog. The issue still has {unfiltered}.</PlaygroundEvidenceStatus>
+        <p><code>before_send</code> {dropped === 1 ? "dropped it, so it didn’t reach PostHog" : `dropped all ${dropped}, so none of them reached PostHog`}. The issue still has {unfiltered}.</p>
         <Continue onClick={() => onStage(8)}>Other noise controls →</Continue>
       </>}
     </section>;
@@ -335,7 +339,7 @@ export function ErrorTrackingLab({
       <LabChecklist label="Capture the retry" items={[{ label: <>Click <strong>Try again</strong> in Twig’s trip details.</>, done: Boolean(grouped) }]} />
       {grouped && <>
         <PlaygroundIssueList issues={twigIssues(state, mappedFrames)} />
-        <PlaygroundEvidenceStatus>A fingerprint only applies to new exceptions, so earlier ones stay in the <code>TypeError</code> issue. Every new <code>HostNotFoundError</code> for this host joins <code>{grouped.fingerprint}</code>.</PlaygroundEvidenceStatus>
+        <p>A fingerprint only applies to new exceptions, so earlier ones stay in the <code>TypeError</code> issue. Every new <code>HostNotFoundError</code> for this host joins <code>{grouped.fingerprint}</code>.</p>
       </>}
       {grouped ? <Continue onClick={() => onStage(11)}>Fix the bug →</Continue> : <Continue onClick={onFocusDetails}>Show your booking →</Continue>}
     </section>;
@@ -351,10 +355,10 @@ export function ErrorTrackingLab({
       <Apply onClick={() => dispatch({ type: "repair" })}>Apply the Twig fix →</Apply>
     </section>;
     return <section className="vac-lab vac-builder">
-      <LabChecklist label="Check the fix" items={[{ label: <>Open <strong>Trip details</strong> on Twig.</>, done: state.verified }]} />
+      <LabChecklist label="Check the fix" items={[{ label: <>Click <strong>Try again</strong> to check the fix.</>, done: state.verified }]} />
       {state.verified && <>
         <PlaygroundIssueList issues={twigIssues(state, mappedFrames)} />
-        <PlaygroundEvidenceStatus>Trip details opened with no new exception.</PlaygroundEvidenceStatus>
+        <p>Trip details opened with no new exception.</p>
       </>}
       {state.verified
         ? state.resolved
