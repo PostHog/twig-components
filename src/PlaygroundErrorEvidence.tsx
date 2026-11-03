@@ -26,13 +26,17 @@ export function PlaygroundIssuePage({ type, message, status, occurrences, sessio
       <div><h4>{type}</h4><PlaygroundStatus value={status === "Resolved" ? "resolved" : "active"} /></div>
       <p>{[plural(occurrences, "occurrence"), plural(sessions, "session"), plural(users, "user")].join(" · ")}</p>
     </header>
-    <ol aria-label="Exceptions">
-      {[...exceptions].reverse().map((exception) => <li key={exception.id}>
-        <strong>{exception.type}</strong>
-        {exception.message && <span>{exception.message}</span>}
-        {exception.time && <time>{exception.time}</time>}
-      </li>)}
-    </ol>
+    {message && <code className="vac-error-message vac-et-issue-message">{message}</code>}
+    {/* The design system's event table, newest first: the same rows as the lab's running event list. */}
+    <div className="vac-activity-list">
+      <table className="vac-lab-table" aria-label="Exceptions">
+        <thead><tr><th scope="col">Exception</th><th scope="col">Time</th></tr></thead>
+        <tbody>{[...exceptions].reverse().map((exception) => <tr key={exception.id}>
+          <td><code>{exception.type}</code></td>
+          <td>{exception.time && <time>{exception.time}</time>}</td>
+        </tr>)}</tbody>
+      </table>
+    </div>
   </section>;
 }
 

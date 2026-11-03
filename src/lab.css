@@ -397,11 +397,8 @@
 .vac-app .vac-developer-theme .vac-et-status > span[aria-hidden="true"] { flex-shrink: 0; width: 6px; height: 6px; margin-top: 7px; border-radius: 50%; background: var(--ph-brand-yellow-darker); }
 .vac-app .vac-developer-theme .vac-et-status[data-tone="error"] > span[aria-hidden="true"] { background: var(--ph-status-failed); }
 .vac-app .vac-developer-theme .vac-et-issue-page { margin: 12px 0; overflow: hidden; border: 1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); background: var(--ph-neutral-white); }
-.vac-app .vac-developer-theme .vac-et-issue-page ol { max-height: 180px; margin: 0; padding: 0; overflow-y: auto; list-style: none; }
-.vac-app .vac-developer-theme .vac-et-issue-page li { display: grid; grid-template-columns: 1fr auto; gap: 0 8px; padding: 6px 12px; font-size: 12px; }
-.vac-app .vac-developer-theme .vac-et-issue-page li + li { border-top: 1px solid var(--ph-neutral-border); }
-.vac-app .vac-developer-theme .vac-et-issue-page li span { grid-column: 1; color: var(--ph-neutral-muted); font-size: 11px; overflow-wrap: anywhere; }
-.vac-app .vac-developer-theme .vac-et-issue-page li time { grid-column: 2; grid-row: 1; color: var(--ph-neutral-muted); font: 11px/1.6 var(--ph-font-code); }
+.vac-app .vac-developer-theme .vac-et-issue-message { padding: 8px 12px; border-bottom: 1px solid var(--ph-neutral-border); }
+.vac-app .vac-developer-theme .vac-et-issue-page .vac-lab-table { margin: 0; border: 0; }
 .vac-app .vac-developer-theme .vac-et-issue-parts { margin: 12px 0; padding-left: 20px; list-style: disc; font-size: 13px; line-height: 20.8px; }
 .vac-app .vac-developer-theme .vac-et-issue-parts li { display: list-item; }
 .vac-app .vac-developer-theme .vac-et-issue-parts li + li { margin-top: 8px; }

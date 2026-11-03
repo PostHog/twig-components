@@ -153,7 +153,7 @@ test("browser noise is never shown as Twig's exception, and the retry steps wait
   const issue = issueStep.querySelector('[aria-label="Issue: TypeError"]');
   assert.match(issue.querySelector(".vac-error-issue-header").textContent, /Active3 occurrences · 1 session · 1 user/);
   assert.equal(issue.querySelector(".vac-et-issue-controls"), null);
-  assert.equal(issue.querySelectorAll('[aria-label="Exceptions"] li').length, 3);
+  assert.equal(issue.querySelectorAll('[aria-label="Exceptions"] tbody tr').length, 3);
   assert.match(issueStep.body.textContent, /Drop browser noise/);
 });
 
