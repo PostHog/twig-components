@@ -255,6 +255,10 @@
     "./support-evals-lab": {
       "types": "./dist/SupportEvalsLab.d.ts",
       "import": "./dist/SupportEvalsLab.js"
+    },
+    "./trip-planner-evaluations": {
+      "types": "./dist/trip-planner-evaluations.d.ts",
+      "import": "./dist/trip-planner-evaluations.js"
     }
   },
   "scripts": {
@@ -458,6 +462,9 @@
       ],
       "support-evals-lab": [
         "dist/SupportEvalsLab.d.ts"
+      ],
+      "trip-planner-evaluations": [
+        "dist/trip-planner-evaluations.d.ts"
       ]
     }
   }
