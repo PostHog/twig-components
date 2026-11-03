@@ -2,19 +2,20 @@
 
 import { useId, type ReactNode } from "react";
 
-export function EvidenceTabs<T extends string>({ label, value, options, onChange, children }: {
+export function EvidenceTabs<T extends string>({ label, value, options, onChange, children, disabled = false }: {
   label: string;
   value: T;
   options: readonly { value: T; label: string }[];
   onChange: (value: T) => void;
-  children: ReactNode;
+  children?: ReactNode;
+  disabled?: boolean;
 }) {
   const id = useId();
   return <>
     <div className="vac-request-tabs" role="tablist" aria-label={label}>
       {options.map((option, index) => <button key={option.value} type="button" role="tab"
-        id={`${id}-${option.value}`} data-field={option.value}
-        aria-selected={value === option.value} aria-controls={`${id}-panel`}
+        disabled={disabled} id={`${id}-${option.value}`} data-field={option.value}
+        aria-selected={value === option.value} aria-controls={children === undefined ? undefined : `${id}-panel`}
         tabIndex={value === option.value ? 0 : -1}
         onClick={() => onChange(option.value)}
         onKeyDown={(event) => {
@@ -28,7 +29,7 @@ export function EvidenceTabs<T extends string>({ label, value, options, onChange
         }}
       >{option.label}</button>)}
     </div>
-    <div className="vac-request-panel" role="tabpanel" id={`${id}-panel`} aria-labelledby={`${id}-${value}`} tabIndex={0}>{children}</div>
+    {children !== undefined && <div className="vac-request-panel" role="tabpanel" id={`${id}-panel`} aria-labelledby={`${id}-${value}`} tabIndex={0}>{children}</div>}
   </>;
 }
 

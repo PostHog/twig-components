@@ -308,7 +308,7 @@ test("online walkthrough enables checks before capture, inspects all three targe
   await click("Inspect LLM judge →");
   assert.match(
     document.body.textContent,
-    /ignores the essential-heating exception/
+    /ignores the broken-amenity exception/
   );
   assert.match(document.body.textContent, /only the policy judge caught/);
   assert.equal(

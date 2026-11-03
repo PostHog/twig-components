@@ -2,8 +2,8 @@
 
 import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
 
-import { LabPrimaryAction } from "./LabNavigation.js";
-import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
+import { LabIntroduction, LabPrimaryAction } from "./LabNavigation.js";
+import { LabSimulationDisclosure, PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
 import { EvidenceTabs } from "./TripPlannerEvidenceTabs.js";
@@ -80,7 +80,7 @@ export function StayLab({
     ) ?? stays[0];
   if (stage === 0)
     return (
-      <div className="vac-guide-intro">
+      <LabIntroduction>
         <h3>{touchpointDefinitions.stay.title}</h3>
         <p>
           A view event tells you someone opened a listing. To compare listings,
@@ -91,11 +91,10 @@ export function StayLab({
           <p>You’ll visit two stays, then connect their IDs to the event.</p>
         </div>
         <Action onClick={() => onStage(1)}>Follow a stay view →</Action>
-        <details className="vac-lab-step" open>
-          <PlaygroundSummary>How this simulation works</PlaygroundSummary>
+        <LabSimulationDisclosure>
           <p>Opening a stay while this exercise is running creates a local view event. These events are not sent to PostHog.</p>
-        </details>
-      </div>
+        </LabSimulationDisclosure>
+      </LabIntroduction>
     );
   if (stage === 1 && (!state.applied || !state.running))
     return (

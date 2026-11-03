@@ -28,3 +28,23 @@ test('reset requires confirmation and Cancel or Escape preserves the lesson and 
  await open();await act(()=>document.activeElement.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Escape',bubbles:true})));assert.equal(resets,0);assert.equal(document.activeElement,document.querySelector('summary'));
  await open();await act(()=>document.querySelector('.vac-reset-confirm .vac-button').click());assert.equal(resets,1);assert.equal(document.querySelector('[role="alertdialog"]'),null);
 });
+
+test('opening action stays inline, starts once, and later actions move into the footer', async t => {
+ const {JSDOM}=await import('jsdom');const dom=new JSDOM('<div id="root"></div>');
+ const globals={window:dom.window,document:dom.window.document,IS_REACT_ACT_ENVIRONMENT:true};const previous=new Map(Object.keys(globals).map(k=>[k,Object.getOwnPropertyDescriptor(globalThis,k)]));for(const[k,v]of Object.entries(globals))Object.defineProperty(globalThis,k,{value:v,configurable:true,writable:true});
+ const {createRoot}=await import('react-dom/client');const {act}=await import('react');const {LessonNavigationProvider,LabIntroduction,LabPrimaryAction,LabNavigationView}=await import('../dist/LabNavigation.js');const {LabSimulationDisclosure}=await import('../dist/PlaygroundDisclosure.js');const root=createRoot(document.getElementById('root'));
+ t.after(async()=>{await act(()=>root.unmount());dom.window.close();for(const[k,d]of previous){if(d)Object.defineProperty(globalThis,k,d);else delete globalThis[k];}});
+ let starts=0;
+ function Example(){const[stage,setStage]=useState(0);return h(LessonNavigationProvider,{active:true},stage===0?h(LabIntroduction,null,h('p',null,'Overview'),h(LabPrimaryAction,null,h('button',{onClick:()=>{starts++;setStage(1);}},'Start lab')),h(LabSimulationDisclosure,null,h('p',null,'Fixed local examples.'))):h(LabPrimaryAction,null,h('button',null,'Continue')),h(LabNavigationView,{selected:'evaluations',stage,embedded:false,placement:'footer',onAllLabs(){},onPrevious(){setStage(0);},onReset(){}}));}
+ await act(()=>root.render(h(Example)));
+ const start=[...document.querySelectorAll('button')].find(n=>n.textContent==='Start lab');
+ assert.ok(start.closest('.vac-lab-introduction'));
+ assert.equal(document.querySelector('.vac-lesson-footer').textContent,'');
+ const details=document.querySelector('.vac-simulation-disclosure');assert.equal(details.open,false);
+ await act(()=>details.querySelector('summary').click());assert.equal(details.open,true);
+ await act(()=>start.click());assert.equal(starts,1);
+ assert.equal(document.querySelector('.vac-lab-introduction'),null);
+ assert.ok([...document.querySelectorAll('button')].find(n=>n.textContent==='Continue').closest('.vac-lesson-footer'));
+ await act(()=>[...document.querySelectorAll('button')].find(n=>n.textContent==='← Previous').click());
+ assert.ok(document.querySelector('.vac-lab-introduction'));assert.equal(document.querySelector('.vac-simulation-disclosure').open,false);
+});
