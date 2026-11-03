@@ -1,8 +1,9 @@
 "use client";
+import { LabIntroduction } from "./LabNavigation.js";
 
 import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
 
-import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
+import { LabSimulationDisclosure, PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
 import { LabChoices } from "./LabChoices.js";
@@ -12,7 +13,7 @@ import { filterLabCode, labPassed, type LabAction, type LabState } from "./filte
 
 export function FilterLabIntroduction({ onContinue }: { onContinue: () => void }) {
   return (
-    <div className="vac-guide-intro">
+    <LabIntroduction>
       <h3>{touchpointDefinitions.catalog.title}</h3>
       <p>Visitors choose different filters, but your events keep recording Forest.</p>
       <div className="vac-guide-example vac-guide-lesson">
@@ -22,12 +23,11 @@ export function FilterLabIntroduction({ onContinue }: { onContinue: () => void }
       <button className="vac-button" onClick={onContinue}>
         <span className="vac-os-button-face">See the worked example →</span>
       </button>
-      <details className="vac-lab-step" open>
-        <PlaygroundSummary>How this simulation works</PlaygroundSummary>
+      <LabSimulationDisclosure>
         <p>After you apply your configuration, this lab records filter clicks locally while the exercise is open. Nothing is sent to PostHog.</p>
         <p>Returning to the list pauses recording and keeps your work. Leaving the page resets it.</p>
-      </details>
-    </div>
+      </LabSimulationDisclosure>
+    </LabIntroduction>
   );
 }
 
