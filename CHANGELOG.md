@@ -8,10 +8,14 @@
 * add support agent and evaluations lab ([#38](https://github.com/PostHog/twig-components/issues/38)) ([3a12dbe](https://github.com/PostHog/twig-components/commit/3a12dbe6abc2c33ebb88bb39967074736b2d2b54))
 * add versioned AIO guide evidence ([#35](https://github.com/PostHog/twig-components/issues/35)) ([860adc7](https://github.com/PostHog/twig-components/commit/860adc71d52c990be8d41193bff38fff665820c5))
 
+* add compact AI chats for the AIO pocket guide ([#43](https://github.com/PostHog/twig-components/pull/43))
+* support inline Learn Studio authoring and pocket-guide inspectors ([#34](https://github.com/PostHog/twig-components/pull/34))
 
 ### Bug Fixes
 
 * keep lab start actions in their introductions ([#41](https://github.com/PostHog/twig-components/issues/41)) ([0e6f3a3](https://github.com/PostHog/twig-components/commit/0e6f3a34b0582c720ace1e8a95af7af852bf8d6b))
+
+* clarify evaluation execution and add the support reset tooltip ([#40](https://github.com/PostHog/twig-components/pull/40))
 
 ## [0.2.3](https://github.com/PostHog/twig-components/compare/v0.2.2...v0.2.3) (2026-10-26)
 
