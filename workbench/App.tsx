@@ -1,5 +1,5 @@
-import PocketGuideInspector, {InspectorCode, InspectorStatus} from "../src/PocketGuideInspector.js";
-import {TwigExperience, type AuthorLabPreview} from "../src/TwigExperience.js";
+import { CompactAiChat, CompactRecommendedStay, type CompactChatMessage } from "../src/CompactAiChat.js";
+import {TwigExperience} from "../src/TwigExperience.js";
 import "../src/experience/components/vacation.css";
 import { ReplayControls, RecordingControls } from "../src/ReplayControls.js";
 import { PlaygroundEvaluation, PlaygroundGeneration, PlaygroundTraceExplorer } from "../src/PlaygroundAiEvidence.js";
@@ -66,7 +66,7 @@ function SupportPreviewContent() {
  const [stage, setStage] = useState(0);
  const lab = useSupportEvals();
  const key = stage >= 5 ? "production" : lab.caseId;
- return <div className="vac-app"><div className="workbench-grid"><div><SupportAgent guided={stage > 0 && stage !== 4} conversation={stage === 4 ? [] : lab.freeConversation} pending={lab.freePending} caseId={key} run={stage === 4 ? undefined : lab.runs[key]} onSend={message => stage > 0 && stage !== 4 ? lab.send(key) : lab.sendFree(message)} onReset={() => stage > 0 ? lab.resetConversation(key) : lab.resetFree()} /></div><div className="vac-developer-theme"><SupportEvalsLab stage={stage} onStage={setStage} onAllLabs={() => setStage(0)} /></div></div></div>;
+ return <div className="vac-app"><div className="workbench-grid"><div className="workbench-support-page"><div className="workbench-support-chat"><SupportAgent guided={stage > 0 && stage !== 4} conversation={stage === 4 ? [] : lab.freeConversation} pending={lab.freePending} caseId={key} run={stage === 4 ? undefined : lab.runs[key]} onSend={message => stage > 0 && stage !== 4 ? lab.send(key) : lab.sendFree(message)} onReset={() => stage > 0 ? lab.resetConversation(key) : lab.resetFree()} /></div></div><LessonNavigationProvider active><div className="vac-developer-theme vac-lesson-shell"><div className="vac-dock-content"><SupportEvalsLab stage={stage} onStage={setStage} onAllLabs={() => setStage(0)} /></div><LabNavigationView selected="evaluations" stage={stage} embedded={false} onAllLabs={() => setStage(0)} onPrevious={() => setStage(Math.max(0, stage - 1))} onReset={() => { setStage(0); }} placement="footer" /></div></LessonNavigationProvider></div></div>;
 }
 
 type View = "support" | "experience" | "controls" | "inspect" | "getaway" | "planner" | "preview" | "saved" | "account" | "invite" | "products" | "reset" | "dates" | "filters" | "ai" | "booking" | "stay" | "replay" | "errors";
@@ -145,10 +145,6 @@ function TripPlannerPreviewContent() {
   </>;
 }
 
-function PocketGuideInspectorPreview() {
-  const [captured,setCaptured]=useState(false);
-  return <><button type="button" onClick={()=>setCaptured(value=>!value)}>{captured?"Reset inspector":"Capture Coast click"}</button><PocketGuideInspector>{captured?<><InspectorCode label="Clicked element" value={'<button aria-pressed="true">Coast</button>'}/><InspectorCode label="Event payload" value={JSON.stringify({event:"stay_filter_selected",timestamp:"2026-10-26T12:00:00.000Z",properties:{destination_type:"Coast"}})} meta="1 event captured"/></>:<InspectorStatus>Choose a destination on Twig to inspect its event.</InspectorStatus>}</PocketGuideInspector></>;
-}
 function CompactPreview() {
   const [setting, setSetting] = useState<StaySetting>("Forest");
   const stay = filterStays(setting, "")[0];
@@ -558,7 +554,7 @@ function ErrorTrackingPreview() { return <ErrorTrackingLabProvider active><Error
 export default function App() {
   const [view, setView] = useState<View>(() => { const requested = new URLSearchParams(window.location.search).get("view"); return views.some(item => item.id === requested) ? requested as View : "preview"; });
   const current = views.find((item) => item.id === view)!;
-  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "support" ? <SupportPreview /> : view === "experience" ? <ExperiencePreview /> : view === "controls" ? <PlaygroundControlsPreview /> : view === "inspect" ? <InspectPreview /> : view === "getaway" ? <GetawayPreview /> : view === "planner" ? <TripPlannerPreview /> : view === "preview" ? <><CompactPreview /><PocketGuideInspectorPreview /><Preview /></> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "products" ? <ProductMenuPreview /> : view === "reset" ? <ResetPreview /> : view === "dates" ? <DatePickerPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : view === "errors" ? <ErrorTrackingPreview /> : <Replay />}</div></main></div>;
+  return <div className="workbench-shell"><aside className="workbench-sidebar"><span className="workbench-eyebrow">@posthog/twig-components</span><h1>Workbench</h1><p>Build and inspect components in the browser.</p><nav aria-label="Component previews">{views.map((item) => <button key={item.id} type="button" aria-current={view === item.id ? "page" : undefined} onClick={() => setView(item.id)}>{item.label}</button>)}</nav><small>Local fixtures only. No PostHog account or event upload.</small></aside><main><header><span className="workbench-eyebrow">Live preview</span><h2>{current.label}</h2><p>{current.description}</p></header><div className="workbench-preview" key={view}>{view === "support" ? <SupportPreview /> : view === "experience" ? <ExperiencePreview /> : view === "controls" ? <PlaygroundControlsPreview /> : view === "inspect" ? <InspectPreview /> : view === "getaway" ? <GetawayPreview /> : view === "planner" ? <TripPlannerPreview /> : view === "preview" ? <><CompactAiPreview /><CompactPreview /><Preview /></> : view === "saved" ? <SavedStayPreview /> : view === "account" ? <AccountPreview /> : view === "invite" ? <InvitationPreview /> : view === "products" ? <ProductMenuPreview /> : view === "reset" ? <ResetPreview /> : view === "dates" ? <DatePickerPreview /> : view === "filters" ? <Filters /> : view === "ai" ? <Ai /> : view === "booking" ? <Booking /> : view === "stay" ? <Stay /> : view === "errors" ? <ErrorTrackingPreview /> : <Replay />}</div></main></div>;
 }
 
 function PlaygroundControlsPreview() {
@@ -590,9 +586,22 @@ function PlaygroundControlsPreview() {
   </LabPreview>;
 }
 
-function ExperiencePreview(){
-  const [run,setRun]=useState(0);
-  const [authored,setAuthored]=useState(true);
-  const [product,setProduct]=useState<AuthorLabPreview["product"]>("Product Analytics");
-  return <><label><input type="checkbox" checked={authored} onChange={event=>{setAuthored(event.target.checked);setRun(value=>value+1);}}/> Preview authored lab</label><div className="workbench-experience"><TwigExperience key={run} onReset={()=>setRun(v=>v+1)} lab={authored ? {content:<section className="vac-lab"><h3>Preview an authored lab</h3><p>Scroll Twig, try the toolbar, then return to this lesson.</p></section>,footer:<footer className="vac-lesson-footer"><button type="button" className="vac-text-button" onClick={()=>setRun(v=>v+1)}>Restart preview</button></footer>,progress:"1 / 1",headerActions:<button type="button" className="vac-text-button" onClick={()=>setRun(v=>v+1)}>Add page</button>,product,onProductSelect:setProduct} : undefined}/></div></>;
+function ExperiencePreview(){const [run,setRun]=useState(0);return <div className="workbench-experience"><TwigExperience key={run} onReset={()=>setRun(v=>v+1)}/></div>;}
+
+function CompactAiPreview() {
+  const [sent, setSent] = useState(false);
+  const [typing, setTyping] = useState(false);
+  const [opened, setOpened] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const stay = stays.find(stay => stay.setting === "Forest")!;
+  const image = <img src={new URL("../assets/cabin.jpg", import.meta.url).href} alt={stay.images[0]?.alt ?? "Adiron-shack"} />;
+  const messages: CompactChatMessage[] = sent ? [
+    {id:"request",speaker:"visitor",content:"Find me a forest getaway for four."},
+    {id:"answer",speaker:"assistant",content:"Adiron-shack looks like a fit.",recommendation:stay,recommendationDescription:"Adirondacks, New York. Room for 4."}
+  ] : [];
+  return <div className="workbench-twig"><CompactAiChat pending={typing} messages={typing ? [{id:"pending",speaker:"visitor",content:"Find me a forest getaway for four."}] : messages} draft={sent ? "" : "Find me a forest getaway for four."} onSend={() => setSent(true)} renderImage={() => image} onViewStay={() => setOpened(true)} />
+    {opened && <CompactRecommendedStay stay={stay} image={image} saved={saved} onSavedChange={setSaved} />}
+    <SupportAgent compact pending={typing} conversation={[{input:"The heating is broken and cannot be repaired. Can you refund my stay?",output:typing ? "" : "We can offer relocation or a refund."}]} />
+    <div className="workbench-controls" aria-label="Compact AI example controls"><label><input type="checkbox" checked={typing} onChange={event => setTyping(event.target.checked)} /> Show typing state</label>
+    <button type="button" onClick={() => {setSent(false);setOpened(false);setSaved(false);setTyping(false);}}>Reset compact AI example</button></div></div>;
 }
