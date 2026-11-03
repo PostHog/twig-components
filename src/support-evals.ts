@@ -15,7 +15,7 @@ export const evalNames: Record<EvalType, string> = {
 };
 // Demo policy, deliberately separate from the stays' unpublished cancellation policies.
 export const supportPolicy =
-  "Cancellations need 7 days’ notice for a full refund. Unrepairable essential heating qualifies for relocation or a refund anytime.";
+  "Cancellations need 7 days’ notice for a full refund. A broken essential amenity, such as heating, cooling, or hot water, qualifies for relocation or a refund anytime if it cannot be repaired promptly.";
 export const supportCases: Record<
   SupportCase,
   { input: string; expected: string; sentiment: "Neutral" | "Negative" }
@@ -38,7 +38,7 @@ export const supportCases: Record<
     input:
       "The heating is broken and cannot be repaired. I’m freezing and frustrated. Can you refund my stay?",
     expected:
-      "Apply the essential-heating exception and offer relocation or a refund.",
+      "Apply the broken-amenity exception and offer relocation or a refund.",
     sentiment: "Negative",
   },
 };
@@ -80,7 +80,7 @@ export function createSupportRun(
     input: supportCases[caseId].input,
     output:
       fixed && caseId === "production"
-        ? "The usual 7 days’ notice rule does not apply when essential heating is broken and cannot be repaired. We can offer relocation or a refund."
+        ? "The usual 7 days’ notice rule does not apply when an essential amenity cannot be repaired promptly. Since your heating is broken and cannot be repaired, we can offer relocation or a refund."
         : "A full refund requires at least 7 days’ notice before arrival. This request is inside that window, so I can’t offer a full refund.",
   };
 }
@@ -126,7 +126,7 @@ export function evaluateSupportRun(
     type === "judge"
       ? correct
         ? "The answer applies the relevant policy to this request."
-        : "The answer applies the cancellation window but ignores the essential-heating exception."
+        : "The response applies the cancellation window but ignores the broken-amenity exception: the visitor’s heating cannot be repaired."
       : type === "code"
       ? "The answer contains ‘7 days’. This wording check does not establish that the right policy was applied."
       : "This classifies the customer’s input, not the correctness of the support answer.";

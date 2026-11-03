@@ -414,6 +414,9 @@ Wrap `StayCardContent compact` in `.twig-compact-stay` for a borderless horizont
 Do not add a result count or extra card background. Keep save controls when the
 lesson teaches saving. Login and profile controls retain their existing callbacks.
 The host owns simulation state, events, inspector, prose, and reset behavior.
+Compact chat visitor messages and AI responses use warm-white 3px bubbles, aligned
+right and left respectively. Typing indicators remain unboxed. Both compact chat
+composers use DM Sans 14px/22px for typed content and placeholders.
 
 ## Support evaluations lab
 

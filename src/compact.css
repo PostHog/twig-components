@@ -62,3 +62,34 @@
 @media (prefers-reduced-motion: reduce) {
   .twig-compact .twig-saved-stay-icon { transition: none; }
 }
+
+/* Fixed compact chat composed from the approved Twig conversation primitives. */
+.twig-compact-chat { background: var(--vac-fill); overflow: hidden; }
+.twig-compact .twig-compact-chat-header { display: flex; align-items: center; gap: 8px; min-height: 57px; padding: 6px 20px; background: var(--vac-ink); color: var(--vac-paper); }
+.twig-compact .twig-compact-chat-header h2 { margin: 0; color: inherit; font: 600 16px/24px TwigCompactSans, Arial, sans-serif; letter-spacing: -.02em; }
+.twig-compact-chat-header .twig-ai-icon { flex: 0 0 18px; width: 18px; height: 18px; }
+.twig-compact .twig-compact-chat-log { display: flex; flex-direction: column; gap: 8px; padding: 16px; }
+.twig-compact-chat-turn { min-width: 0; }
+.twig-compact .twig-compact-chat-message { margin: 0; padding: 8px 0; color: var(--vac-muted); font: 400 14px/22px TwigCompactSans, Arial, sans-serif; overflow-wrap: anywhere; }
+.twig-compact .twig-compact-chat-message[data-speaker] { width: fit-content; max-width: 86%; padding: 8px 12px; border-radius: 3px; background: var(--vac-paper); color: var(--vac-text); }
+.twig-compact .twig-compact-chat-message[data-speaker="visitor"] { margin-left: auto; }
+.twig-compact .twig-compact-chat-recommendation { display: flex; flex-direction: column; gap: 12px; padding: 16px; margin: 8px 0 0; border: 1px solid var(--vac-line); border-radius: 3px; background: var(--vac-paper); }
+.twig-compact-chat-stay { display: flex; align-items: flex-start; gap: 12px; min-width: 0; }
+.twig-compact-chat-stay > div:last-child { flex: 1; min-width: 0; }
+.twig-compact-chat-photo { width: 88px; height: 88px; flex: 0 0 88px; overflow: hidden; border-radius: 3px; }
+.twig-compact-chat-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.twig-compact .twig-compact-chat-stay h3 { margin: 0; color: var(--vac-text); font: 600 16px/22px TwigCompactSans, Arial, sans-serif; }
+.twig-compact .twig-compact-chat-stay p { margin: 4px 0; color: var(--vac-muted); font: 400 14px/21px TwigCompactSans, Arial, sans-serif; }
+.twig-compact-chat-stay strong { color: var(--vac-text); font-weight: 600; }
+.twig-compact .twig-compact-chat-view { width: 100%; min-height: 44px; padding: 10px 16px; border: 1px solid var(--vac-ink); border-radius: 3px; background: var(--vac-ink); color: var(--vac-paper); font: 500 14px/20px TwigCompactSans, Arial, sans-serif; cursor: pointer; }
+.twig-compact .twig-compact-chat-view:not(:disabled):hover { opacity: .85; }
+.twig-compact .twig-compact-chat-view:disabled { opacity: 1; cursor: default; }
+.twig-compact .twig-compact-chat-form { margin: 0; padding: 16px; }
+.twig-compact .twig-trip-planner-compose { margin: 0; }
+.twig-compact .twig-trip-planner-compose textarea { font: 400 14px/22px TwigDMSans, Arial, sans-serif; }
+
+/* Prepared messages stay fully visible as their host window narrows. */
+.twig-compact .twig-compact-chat-form textarea { max-height: none; overflow-y: hidden; }
+
+/* Playback composers keep the real Send appearance without accepting clicks. */
+.twig-trip-planner[data-playback][data-draft-ready] button[type="submit"]:disabled { opacity: 1; }
