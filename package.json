@@ -256,6 +256,10 @@
       "types": "./dist/SupportEvalsLab.d.ts",
       "import": "./dist/SupportEvalsLab.js"
     },
+    "./pocket-guide-inspector": {
+      "types": "./dist/PocketGuideInspector.d.ts",
+      "import": "./dist/PocketGuideInspector.js"
+    },
     "./compact-ai-chat": {
       "types": "./dist/CompactAiChat.d.ts",
       "import": "./dist/CompactAiChat.js"
@@ -470,6 +474,9 @@
       ],
       "support-evals-lab": [
         "dist/SupportEvalsLab.d.ts"
+      ],
+      "pocket-guide-inspector": [
+        "dist/PocketGuideInspector.d.ts"
       ],
       "compact-ai-chat": [
         "dist/CompactAiChat.d.ts"

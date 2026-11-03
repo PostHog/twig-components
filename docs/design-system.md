@@ -418,6 +418,12 @@ Compact chat visitor messages and AI responses use warm-white 3px bubbles, align
 right and left respectively. Typing indicators remain unboxed. Both compact chat
 composers use DM Sans 14px/22px for typed content and placeholders.
 
+Authored Playground docks can place Add page alongside the existing title using `headerActions`, and page management in the existing navigation position. Keep a single progress counter; do not repeat it in the content canvas.
+
+Pocket-guide inspector parity (Sarah requested 2026-10-26): use the published posthog.com Elements/Event data inspector, its light developer surfaces, orange selected tabs, capture timestamp, and count badge for guide figures. The self-contained styles in compact.css reproduce the website source. These website-specific choices do not alter the Playground inspector contract.
+
+Compact Twig buttons retain the website’s 44px control height, 9px/16px padding and cobalt primary color even when composed inside a PostHog developer-theme editor. Keep the fix scoped to compact figures; the editor’s OS buttons retain their existing styling.
+
 ## Support evaluations lab
 
 Reuse the Twig support chat, Playground checklists, coding-agent composer, result rows, generation tabs, and completion. Only the opening and completion pages have titles. Tool call and result share one read-only panel without copy controls. Online Code, Sentiment, and LLM judge inspections use the same results surface. OS buttons use the approved white face, #EB9D2A base, and #B17816 border.

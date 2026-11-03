@@ -383,6 +383,20 @@ Props: `startingPath` (default `/`), `onReset`, optional `onEvent`, and optional
 
 `/experience-assets` exports `twigExperienceAsset(catalogPath)` resolves catalog photos to packaged assets for compact figures. Demo account persistence uses the existing browser-local `twig:*` keys. Inspector subscriptions are isolated per mounted experience. Instrumentation snippets are reference fixtures from Twig, not source locations in the consuming host.
 
+TwigExperience with a supplied `lab` keeps the shared tool rail available. Inspect, product tools, and Home show their existing panels; Back to lab restores the authored lesson. Collapse/expand preserves it. The host supplies a fixed-height frame; Twig content scrolls independently of its full-height dock and rail.
+
+Authored lab previews can supply `lab.product` and `lab.onProductSelect` to choose the authored product from the tool rail without leaving the editor. Without the callback, product buttons retain their learner behavior.
+
+`PlaygroundDock.headerActions` places host controls alongside the Playground heading. `TwigExperience.lab` forwards `headerActions` and an optional `navigation` node, replacing the default progress count when supplied.
+
+`PlaygroundDock.closeOnEscape` defaults to true. Authored previews set it false so Escape can dismiss nested controls without hiding the editor; explicit rail collapse/expand remains available. Default-prevented Escape events never close a dock.
+
+Contained previews retain the mobile expand control when collapsed so authored labs always have a visible route back to the editor.
+
+## `/pocket-guide-inspector`
+
+`PocketGuideInspector` (default), `InspectorCode`, and `InspectorStatus` reuse the exact PostHog.com pocket-guide inspector source (synced 2026-10-26). Use Elements and Event data sections for guide figures rather than the Playground InstrumentationInspector. Hosts supply captured element, timestamp, count, and event properties. Load `compact.css` and `lab.css` for the portable, scoped website styles and fonts. Existing lab/catalog CSS and APIs are unchanged.
+
 ## Support conversations and evaluations
 
 `/support-agent` exports `SupportAgent`, a controlled Twig chat using the approved getaway surface. Outside a lab, it starts empty and accepts typed messages. Pass `guided` only for prepared lab inputs. Supply a fixed `caseId`, optional completed `run`, `onSend(message)`, `onReset`, optional free-chat `conversation`/`pending`, and optional marker `accessory`. The component makes no model calls and never captures analytics.
