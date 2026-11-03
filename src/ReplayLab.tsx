@@ -1,8 +1,8 @@
 "use client";
 
 import { RecordingControls } from "./ReplayControls.js";
-import { LabPrimaryAction } from "./LabNavigation.js";
-import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
+import { LabIntroduction, LabPrimaryAction } from "./LabNavigation.js";
+import { LabSimulationDisclosure, PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
 import { useEffect, useRef, type ReactNode } from "react";
@@ -112,7 +112,7 @@ export function ReplayLab({
     );
   if (stage === 0)
     return (
-      <div className="vac-guide-intro">
+      <LabIntroduction>
         <h3>{touchpointDefinitions.replay.title}</h3>
         <p>
           Events tell you a visitor selected Coast. Replay adds the sequence:
@@ -127,11 +127,10 @@ export function ReplayLab({
         <LabPrimaryAction><button className="vac-button" onClick={() => onStage(1)}>
           <span className="vac-os-button-face">Set up the ghost visit →</span>
         </button></LabPrimaryAction>
-        <details className="vac-lab-step" open>
-          <PlaygroundSummary>How this simulation works</PlaygroundSummary>
+        <LabSimulationDisclosure>
           <p>The ghost visit is scripted. Your own visit is recorded locally for playback in this lab. No replay is sent to PostHog.</p>
-        </details>
-      </div>
+        </LabSimulationDisclosure>
+      </LabIntroduction>
     );
   return (
     <section className="vac-lab vac-builder">
