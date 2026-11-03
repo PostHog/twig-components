@@ -151,7 +151,8 @@ test("browser noise is never shown as Twig's exception, and the retry steps wait
   const issueStep = new JSDOM(renderLab(apply(once, { type: "capture", exception: handled }), 5)).window.document;
   assert.deepEqual([...issueStep.querySelectorAll(".vac-builder > p")].map((p) => p.textContent), ["To help you review them, PostHog groups similar exceptions into issues. In PostHog, you triage and resolve exceptions by issue."]);
   const issue = issueStep.querySelector('[aria-label="Issue: TypeError"]');
-  assert.match(issue.querySelector("dl").textContent, /3Occurrences1Sessions1Users/);
+  assert.match(issue.querySelector(".vac-error-issue-header").textContent, /Active3 occurrences · 1 session · 1 user/);
+  assert.equal(issue.querySelector(".vac-et-issue-controls"), null);
   assert.equal(issue.querySelectorAll('[aria-label="Exceptions"] li').length, 3);
   assert.match(issueStep.body.textContent, /Drop browser noise/);
 });
@@ -162,7 +163,7 @@ test("stack trace, source maps, grouping, and noise steps each show what PostHog
 
   const bundle = new JSDOM(renderLab(state, 9)).window.document;
   assert.deepEqual([...bundle.querySelectorAll('[aria-label="Stack trace"] li')].map((frame) => frame.textContent),
-    ["a/_next/static/chunks/app.js@1:48213⚠", "readTripHost/_next/static/chunks/app.js@1:61877⚠"]);
+    ["a/_next/static/chunks/app.js@1:48213Unresolved: no source map", "readTripHost/_next/static/chunks/app.js@1:61877Unresolved: no source map"]);
   assert.equal(bundle.querySelectorAll('[aria-label="Stack trace"] li > button').length, 0);
   assert.match(bundle.body.textContent, /Upload Twig’s source maps/);
   assert.doesNotMatch(bundle.body.textContent, /See what led up to it/);

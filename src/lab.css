@@ -382,7 +382,7 @@
 .vac-error-investigation-content { display: grid; gap: 12px; padding: 12px; min-width: 0; }
 .vac-app .vac-developer-theme .vac-error-investigation-content > :is(p,ol,table,.vac-code-block),
 .vac-app .vac-developer-theme .vac-error-investigation-content h5 { margin: 0; }
-.vac-app .vac-developer-theme .vac-error-investigation h5 { font: 600 12px/20px PlaygroundRoundHog, sans-serif; margin: 0; }
+.vac-app .vac-developer-theme :is(.vac-error-investigation, .vac-lab) h5 { font: 600 12px/20px PlaygroundRoundHog, sans-serif; margin: 0; }
 .vac-error-exception-evidence, .vac-error-stack-evidence { display: grid; gap: 12px; min-width: 0; }
 .vac-error-message { display: block; font-size: 12px; overflow-wrap: anywhere; }
 .vac-error-stack-frames { border: 1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); }
@@ -397,17 +397,6 @@
 .vac-app .vac-developer-theme .vac-et-status > span[aria-hidden="true"] { flex-shrink: 0; width: 6px; height: 6px; margin-top: 7px; border-radius: 50%; background: var(--ph-brand-yellow-darker); }
 .vac-app .vac-developer-theme .vac-et-status[data-tone="error"] > span[aria-hidden="true"] { background: var(--ph-status-failed); }
 .vac-app .vac-developer-theme .vac-et-issue-page { margin: 12px 0; overflow: hidden; border: 1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); background: var(--ph-neutral-white); }
-.vac-app .vac-developer-theme .vac-et-issue-page header { display: grid; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--ph-neutral-border); }
-.vac-app .vac-developer-theme .vac-et-issue-page header strong { display: flex; align-items: center; gap: 6px; font: 600 14px/1.4 PlaygroundRoundHog, sans-serif; }
-.vac-app .vac-developer-theme .vac-et-issue-controls { display: inline-flex; justify-self: start; border: 1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); font-size: 11px; }
-.vac-app .vac-developer-theme .vac-et-issue-controls span { padding: 2px 8px; border-right: 1px solid var(--ph-neutral-border); white-space: nowrap; }
-.vac-app .vac-developer-theme .vac-et-issue-controls span:last-child { border-right: 0; }
-.vac-app .vac-developer-theme .vac-et-issue-controls [data-status="active"] { color: var(--ph-status-failed); }
-.vac-app .vac-developer-theme .vac-et-issue-controls [data-status="resolved"] { color: var(--ph-status-passed); }
-.vac-app .vac-developer-theme .vac-et-issue-page dl { display: flex; gap: 16px; margin: 0; padding: 8px 12px; border-bottom: 1px solid var(--ph-neutral-border); }
-.vac-app .vac-developer-theme .vac-et-issue-page dl div { display: flex; align-items: baseline; gap: 4px; }
-.vac-app .vac-developer-theme .vac-et-issue-page dd { margin: 0; font: 600 13px/1.4 PlaygroundRoundHog, sans-serif; }
-.vac-app .vac-developer-theme .vac-et-issue-page dt { color: var(--ph-neutral-muted); font-size: 11px; }
 .vac-app .vac-developer-theme .vac-et-issue-page ol { max-height: 180px; margin: 0; padding: 0; overflow-y: auto; list-style: none; }
 .vac-app .vac-developer-theme .vac-et-issue-page li { display: grid; grid-template-columns: 1fr auto; gap: 0 8px; padding: 6px 12px; font-size: 12px; }
 .vac-app .vac-developer-theme .vac-et-issue-page li + li { border-top: 1px solid var(--ph-neutral-border); }
@@ -425,27 +414,26 @@
 .vac-app .vac-developer-theme :is(.vac-et-frames, .vac-et-issues) ul { margin: 0; padding: 0; list-style: none; }
 .vac-app .vac-developer-theme .vac-et-frames li + li,
 .vac-app .vac-developer-theme .vac-et-issues li + li { border-top: 1px solid var(--ph-neutral-border); }
-.vac-app .vac-developer-theme .vac-et-frames :is(button, .vac-et-frame-static) { display: flex; flex-wrap: nowrap; align-items: baseline; gap: 4px 8px; width: 100%; padding: 4px 12px; border: 0; border-radius: 0; background: transparent; color: var(--ph-neutral-ink); text-align: left; font: 400 11px/1.6 var(--ph-font-code); cursor: pointer; }
+/* Frames follow the design system's stack trace rows: the function, then its file underneath. */
+.vac-app .vac-developer-theme .vac-et-frames :is(button, .vac-et-frame-static) { display: grid; grid-template-columns: 1ch minmax(0, 1fr); gap: 2px 8px; width: 100%; padding: 8px 12px; border: 0; border-radius: 0; background: transparent; color: var(--ph-neutral-ink); text-align: left; font: 400 12px/20px var(--ph-font-code); cursor: pointer; }
+.vac-app .vac-developer-theme .vac-et-frames :is(button, .vac-et-frame-static) > :not(.vac-et-frame-chevron) { grid-column: 2; min-width: 0; }
+.vac-app .vac-developer-theme .vac-et-frames :is(button, .vac-et-frame-static) > span:not(.vac-et-frame-chevron) { color: var(--ph-neutral-muted); font-size: 11px; line-height: 16px; overflow-wrap: anywhere; }
+.vac-app .vac-developer-theme .vac-et-frames button[aria-expanded="true"] { background: var(--ph-neutral-accent); }
+.vac-app .vac-developer-theme .vac-et-frame-chevron { grid-column: 1; grid-row: 1; color: var(--ph-neutral-muted); }
+.vac-app .vac-developer-theme .vac-et-frame-note { font-family: PlaygroundRoundHog, sans-serif; }
+.vac-app .vac-developer-theme .vac-et-issues-head { display: flex; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid var(--ph-neutral-border); background: var(--ph-neutral-background); font: 600 12px/20px PlaygroundRoundHog, sans-serif; }
+.vac-app .vac-developer-theme .vac-et-issues .vac-playground-status { justify-self: start; margin-top: 4px; }
 .vac-app .vac-developer-theme .vac-et-frames .vac-et-frame-static { color: var(--ph-neutral-muted); cursor: default; }
 .vac-app .vac-developer-theme .vac-et-frames button:not(:disabled):hover { background: var(--ph-neutral-accent); }
 .vac-app .vac-developer-theme .vac-et-frames button:focus-visible { outline: 2px solid var(--ph-brand-cobalt); outline-offset: -2px; }
 .vac-app .vac-developer-theme .vac-et-frames :is(button, .vac-et-frame-static) code { font-weight: 400; }
 .vac-app .vac-developer-theme .vac-et-frames li[data-in-app] :is(button, .vac-et-frame-static) code { font-weight: 700; }
-.vac-app .vac-developer-theme .vac-et-frames :is(button, .vac-et-frame-static) > span:not(.vac-et-frame-icon, .vac-et-frame-chevron) { min-width: 0; overflow: hidden; color: var(--ph-neutral-muted); text-overflow: ellipsis; white-space: nowrap; }
-.vac-app .vac-developer-theme .vac-et-frames :is(button, .vac-et-frame-static) > code { flex-shrink: 0; }
-.vac-app .vac-developer-theme .vac-et-frame-chevron { flex-shrink: 0; width: 1ch; color: var(--ph-neutral-muted); }
-.vac-app .vac-developer-theme .vac-et-frames .vac-et-frame-static > span[data-unresolved] { font-style: italic; }
-.vac-app .vac-developer-theme .vac-et-frame-icon { flex-shrink: 0; margin-left: auto; color: var(--ph-neutral-muted); white-space: nowrap; }
 .vac-app .vac-developer-theme .vac-et-frames li > .vac-code-block { margin: 0; border: 0; border-top: 1px solid var(--ph-neutral-border); border-radius: 0; }
-.vac-app .vac-developer-theme .vac-et-issues-head { display: flex; justify-content: space-between; padding: 6px 12px; border-bottom: 1px solid var(--ph-neutral-border); color: var(--ph-neutral-muted); font: 600 10px/1.4 PlaygroundRoundHog, sans-serif; letter-spacing: 0.04em; text-transform: uppercase; }
 .vac-app .vac-developer-theme .vac-et-issues li { display: flex; align-items: center; gap: 12px; padding: 10px 12px; }
 .vac-app .vac-developer-theme .vac-et-issues li > div { display: grid; gap: 2px; min-width: 0; flex: 1; }
 .vac-app .vac-developer-theme .vac-et-issues strong { display: flex; align-items: center; gap: 6px; font: 600 13px/1.4 PlaygroundRoundHog, sans-serif; }
 .vac-app .vac-developer-theme .vac-et-issues li > div > span { font-size: 12px; overflow-wrap: anywhere; }
 .vac-app .vac-developer-theme .vac-et-issues small { color: var(--ph-neutral-muted); font-size: 11px; font-style: italic; overflow-wrap: anywhere; }
-.vac-app .vac-developer-theme .vac-et-issues em { justify-self: start; margin-top: 4px; padding: 1px 6px; border: 1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); font-size: 11px; font-style: normal; }
-.vac-app .vac-developer-theme .vac-et-issues em[data-status="active"] { color: var(--ph-status-failed); }
-.vac-app .vac-developer-theme .vac-et-issues em[data-status="resolved"] { color: var(--ph-status-passed); }
 .vac-app .vac-developer-theme .vac-et-issue-count { min-width: 48px; text-align: center; font-size: 13px; }
 
 

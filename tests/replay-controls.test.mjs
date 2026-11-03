@@ -52,7 +52,7 @@ test('a resolved frame opens its source, and unresolved and vendor frames are ma
  assert.match(document.querySelector('[aria-label="openTripDetails source"]').textContent,/readTripHost\(\{\}, hostId\)/);
  assert.equal(frames.length,2);
  const plain=document.querySelectorAll('[aria-label="Stack trace"] li > .vac-et-frame-static');
- assert.match(plain[0].textContent,/Dependency code$/);assert.ok(plain[1].querySelector('[aria-label="Unresolved frame"]'));
+ assert.match(plain[0].textContent,/Dependency code$/);assert.match(plain[1].textContent,/Unresolved: no source map$/);
 });
 test('all recording/playback glyphs are included in the distributable CSS assets',async()=>{
  const{readFileSync,existsSync}=await import('node:fs');
