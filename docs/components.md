@@ -4,10 +4,14 @@ Import only the pieces you need from `@posthog/twig-components/<path>`. React is
 
 “Used in Twig” describes the Twig.com integration. Twig.com pins an exact package build (currently its checked-in local brand archive; see the host README), while the PostHog 101 guide integration is still in progress.
 
+`SupportAgent` from `/support-agent` also supports `compact` for guide figures. It keeps the real support header, message layout, typing status, and composer. Pass `draft` for a prepared message, and `onSend` for local interactions. Omit `onSend` for a read-only preview and `onReset` when the host provides Reset. Existing website and lab props keep their behavior.
+
 ## Website views and data
 
 | Import path | Export | What it does | Used in Twig / what the host supplies |
 | --- | --- | --- | --- |
+| `/compact-ai-chat` | `CompactAiChat`, `CompactRecommendedStay` | Fixed compact conversation and controlled saved listing | Host owns scripted messages, local navigation, image rendering, and save state. |
+| `/evidence-tabs` | `EvidenceTabs` | Connected keyboard-accessible evidence selector | Host supplies options, selection, optional panel, and disabled state. |
 | `/trip-planner` | `TripPlanner`, `TripPlannerProps`, `AiSearchIcon` | Scripted forest → beach → kitchen → city-failure chat, with read-only prefilled prompts, a floating chat window, a compact composer, a short typing state, and reset. | Host supplies `stays`, `renderStayLink`, optional lab-only `scenario`, `accessory`, `inputId`, `hidden`, `windowClassName`, `windowAction`, `launcherLabel`, `canSendMessage`, `onReset`, and `onRequestComplete`. No model calls, persistence, or event capture. See [conversation contract](trip-planner.md). |
 | `/trip-planner-lab` | `TripPlannerWalkthrough`, `TripPlannerLabProvider`, `useTripPlannerLab` | Walkthrough: session/trace/generation hierarchy, captured chat, a wrong recommendation, a failing capacity evaluation, investigation, fix, and the same evaluation passing. | Host connects chat completion to `record`, keys chat by `revision`, supplies stays, an optional `renderStayCard` for the actual homepage card, an `onAllLabs` callback for lesson navigation, and optional `onEvaluate(phase)` for a learner running the before/after check. Instructions point learners to the actual Twig controls. Load `lab.css` in the lab theme. |
 | `/trip-planner-state` | `replyToTripPlanner`, `initialTripPlannerState`, `tripPlannerSuggestions`, prompts, limits, and types | Pure, bounded conversation rules and catalog-backed responses. | Shared by the planner and regression tests. |
@@ -394,6 +398,18 @@ The evaluations lab shows backend tool evidence in one read-only call/result pan
 The evaluations lab introduces enabled online checks before capture, then guides inspection through Code (answer), Sentiment (customer input), and LLM judge (policy correctness) before the regression exercise. It reuses the checklist, result rows, generation tabs, and OS navigation.
 
 The `/tooltip` export `PlaygroundTooltip` accepts `appearance="twig"` for website controls. Import `catalog.css` and use a direct button child so the shared hover, focus, Escape, and `aria-describedby` behavior stays connected. The default appearance remains Playground.
+
+## Compact AI conversations
+
+`@posthog/twig-components/compact-ai-chat` exports `CompactAiChat` and `CompactRecommendedStay`. Load `catalog.css` and `compact.css` inside a Twig styling boundary.
+
+Messages may include `recommendationDescription` for the catalog-backed reason returned by Twig; the default location/capacity summary is preserved. `pending` shows Twig’s existing typing status while the host prepares a reply. `CompactAiChat` takes controlled `messages`, `draft`, `onDraftChange`, `onSend`, `renderImage`, and an optional `onViewStay`. Without `onViewStay`, the recommendation button is disabled and has no hover treatment. Omit `onDraftChange` for a prepared, read-only message. An empty draft disables Send. The window stays fixed with no launcher or collapse control. `CompactRecommendedStay` composes the existing compact catalog card and controlled `SavedStay` bookmark.
+
+The host owns all example state, replies, routing, and PostHog evidence. These views make no network requests, generate no replies, and open no URLs. The workbench’s Twig views section exercises both chat types and local recommendation/save behavior.
+
+`@posthog/twig-components/evidence-tabs` exposes the existing connected `EvidenceTabs` control for host-owned inspectors. Omit children for a selector without a panel; pass `disabled` after saving a review. Existing panel-based usages are unchanged.
+
+For host-controlled conversation animations, `CompactAiChat` and compact `SupportAgent` accept `playback`. This shows their existing composer with the controlled `draft`, keeps input read-only and Send non-interactive, and preserves the normal Send appearance while a draft is present. Hosts animate the draft, append sent messages, and control `pending`; the components do not generate replies or timers.
 
 ## Lab introductions
 
