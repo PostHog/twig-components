@@ -50,3 +50,17 @@ test('all recording/playback glyphs are included in the distributable CSS assets
  for(const name of ['play','pause','restart','fullscreen']){assert.ok(existsSync(`dist/assets/replay-${name}.svg`));assert.match(css,new RegExp(`replay-${name}\\.svg`));}
  assert.match(css,/prefers-reduced-motion: reduce[^]*vac-recording-stop-ring/);
 });
+test('playback hints follow pointer hover and do not persist with button focus',async t=>{
+ const props={position:0,duration:8000,playing:false,onToggle(){},onSeek(){},onFullscreen(){}};
+ const{root,dom}=await mount(t,h(ReplayControls,props));
+ for(const[state,label]of [[{},'Play'],[{playing:true},'Pause'],[{position:8000},'Replay']]){
+  await act(()=>root.render(h(ReplayControls,{...props,...state})));
+  const button=document.querySelector(`[aria-label="${label}"]`);
+  await act(()=>{button.dispatchEvent(new dom.window.MouseEvent('mouseover',{bubbles:true}));button.focus();button.click();});
+  assert.equal(document.querySelector('[role="tooltip"]').textContent,label);
+  await act(()=>button.dispatchEvent(new dom.window.MouseEvent('mouseout',{bubbles:true,relatedTarget:document.body})));
+  assert.equal(document.activeElement,button);
+  assert.equal(document.querySelector('[role="tooltip"]'),null);
+  assert.equal(button.getAttribute('aria-describedby'),null);
+ }
+});

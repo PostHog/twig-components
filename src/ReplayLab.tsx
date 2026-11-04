@@ -54,7 +54,7 @@ export function ReplayLab({
   const previousMode = useRef(replay.mode);
   useEffect(() => {
     if (
-      previousMode.current === "manual" &&
+      previousMode.current !== null &&
       !replay.mode &&
       hasVisit &&
       stage === 1
@@ -136,26 +136,13 @@ export function ReplayLab({
     <section className="vac-lab vac-builder">
       {stage === 1 ? (
         <>
-          {replay.mode || hasVisit ? (
+          {replay.mode === "manual" ? (
             <>
-              {replay.mode === "manual" ? (
-                <LabChecklist label="Next replay action" items={[{
-                  label: <>Explore Twig however you like. Click around, browse stays, or try a search. When you’re ready, click <strong>Stop recording</strong> to watch your visit.</>,
-                  done: false,
-                }]} />
-              ) : (
-                <LabChecklist label="Review your recording" items={[{ label: <>Click <strong>Watch the recording</strong> to review your visit.</>, done: false }]} />
-              )}
-              {replay.mode === "manual" && (
-                <LabPrimaryAction><RecordingControls elapsedMs={replay.elapsedMs ?? 0} onStop={replay.stop} /></LabPrimaryAction>
-              )}
-              {!replay.mode && hasVisit && (
-                <LabPrimaryAction><button className="vac-button" onClick={() => onStage(2)}>
-                  <span className="vac-os-button-face">
-                    Watch the recording →
-                  </span>
-                </button></LabPrimaryAction>
-              )}
+              <LabChecklist label="Next replay action" items={[{
+                label: <>Explore Twig however you like. Click around, browse stays, or try a search. When you’re ready, click <strong>Stop recording</strong> to watch your visit.</>,
+                done: false,
+              }]} />
+              <LabPrimaryAction><RecordingControls elapsedMs={replay.elapsedMs ?? 0} onStop={replay.stop} /></LabPrimaryAction>
             </>
           ) : (
             <>

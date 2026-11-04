@@ -9,7 +9,21 @@ export type ReplayFrame = {
 };
 export const REPLAY_LIMIT = 500;
 export function replayPage(path: string) {
-  return path === "/" || /^\/stays\/[^/?#]+$/.test(path);
+  return path.startsWith("/") && !path.startsWith("//") && !/[?#]/.test(path);
+}
+/** Fixed page labels keep the interaction summary useful across the whole visit. */
+export function replayPageLabel(path: string) {
+  const labels: Record<string, string> = {
+    "/": "Find a stay",
+    "/about": "About Twig",
+    "/login": "Log in",
+    "/profile": "Profile",
+    "/profile/saved": "Saved stays",
+    "/profile/bookings": "Booked stays",
+    "/profile/settings": "Account settings",
+    "/support": "Support",
+  };
+  return labels[path] ?? (/^\/stays\/[^/]+$/.test(path) ? "Stay details" : "Twig page");
 }
 export function searchValue(value: string, masked: boolean) {
   return masked ? "[masked]" : value.slice(0, 80);

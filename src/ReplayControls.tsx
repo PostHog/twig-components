@@ -26,7 +26,7 @@ export function ReplayControls({ position, duration, playing, disabled = false, 
   const action = playing ? "Pause" : ended ? "Replay" : "Play";
   const progress = duration > 0 ? Math.min(100, Math.max(0, position / duration * 100)) : 0;
   return <div className="vac-replay-transport"><div className="vac-replay-controls" role="group" aria-label="Replay controls">
-    <PlaygroundTooltip label={action}>
+    <PlaygroundTooltip label={action} hoverOnly>
       <button type="button" className="vac-replay-control" aria-label={action} disabled={disabled} onClick={onToggle}>
         <span className="vac-replay-icon" data-icon={action.toLowerCase()} aria-hidden="true" />
       </button>
@@ -37,7 +37,7 @@ export function ReplayControls({ position, duration, playing, disabled = false, 
       const targets: Record<string, number> = { Home: 0, End: duration, ArrowLeft: position - 1000, ArrowDown: position - 1000, ArrowRight: position + 1000, ArrowUp: position + 1000, PageDown: position - duration / 10, PageUp: position + duration / 10 };
       if (event.key in targets) { event.preventDefault(); onSeek(Math.round(Math.max(0, Math.min(duration, targets[event.key])))); }
     }} />
-    <PlaygroundTooltip label={fullscreenUnavailable ? "Full screen unavailable" : fullscreen ? "Exit full screen" : "Full screen"}>
+    <PlaygroundTooltip label={fullscreenUnavailable ? "Full screen unavailable" : fullscreen ? "Exit full screen" : "Full screen"} hoverOnly>
       <button type="button" className="vac-replay-control" aria-label={fullscreen ? "Exit full screen" : "Full screen"} disabled={disabled || fullscreenUnavailable} onClick={onFullscreen}>
         <span className="vac-replay-icon" data-icon="fullscreen" aria-hidden="true" />
       </button>
