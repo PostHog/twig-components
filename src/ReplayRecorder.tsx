@@ -8,9 +8,8 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { REPLAY_LIMIT, replayPage, searchValue, type ReplayFrame } from "./replay-lab.js";
+import { REPLAY_LIMIT, replayPage, replayPageLabel, searchValue, type ReplayFrame } from "./replay-lab.js";
 
-import { RecordingControls } from "./ReplayControls.js";
 import type { eventWithTime } from "@rrweb/types";
 
 const searchSelector = "#trip-search-destination, #stay-search";
@@ -135,12 +134,12 @@ export function ReplayProvider({
     else
       add({
         kind: "page",
-        label: pathname === "/" ? "Find a stay" : "Stay details",
+        label: replayPageLabel(pathname),
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps -- Record route changes only.
   }, [pathname]);
   useEffect(() => {
-    if (!open) stop();
+    if (!open && session.current.mode === "ghost") stop();
   }, [open]);
   useEffect(() => {
     if (!mode) return;
@@ -392,7 +391,7 @@ export function ReplayProvider({
     setMode(next);
     add({
       kind: "page",
-      label: pathname === "/" ? "Find a stay" : "Stay details",
+      label: replayPageLabel(pathname),
     });
     const activeFilter = document.querySelector<HTMLElement>(
       '#stay-setting-filters [aria-pressed="true"]'
@@ -436,11 +435,6 @@ export function ReplayProvider({
       }}
     >
       {children}
-      {mode === "manual" && (
-        <div className="vac-replay-stop vac-developer-theme">
-          <RecordingControls elapsedMs={elapsedMs} onStop={stop} />
-        </div>
-      )}
       {/* Runtime replay coordinates position the cursor; its appearance stays in CSS. */}
       {cursor && (
         <div

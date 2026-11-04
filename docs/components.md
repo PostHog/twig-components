@@ -430,3 +430,9 @@ For host-controlled conversation animations, `CompactAiChat` and compact `Suppor
 `/lab-navigation` exports `LabIntroduction`. Wrap the opening title, prose, overview, start action, and simulation disclosure in it. It reuses the existing introduction styles and keeps nested `LabPrimaryAction` controls inline even when the lesson has a footer. All later actions keep their existing footer placement and handlers. Direct entry choices, such as Web app and Agent, stay in the introduction.
 
 `/disclosure` exports `LabSimulationDisclosure`. Pass the existing local-simulation explanation as children. It starts collapsed and reuses `PlaygroundSummary`, native details keyboard behavior, and the existing plus/minus icons. Both states use the gray lesson background without a card, border, or copy control.
+
+Replay labs open playback directly when a ghost or manual visit finishes. Returning to the exercise shows recorder setup. Playback transport tooltips use `PlaygroundTooltip hoverOnly`: pointer hover shows the label and moving away hides it even while the button retains focus. Buttons keep accessible names and keyboard focus.
+
+`ReplayProvider` records visits without floating recording controls over Twig. Hosts keep stop/timer controls in the lab using `ReplayRecordingBar` or `RecordingControls`.
+
+Manual visits continue through all Twig routes, including login redirects and account pages, and while the lab is collapsed. Stop recording, reset, and the existing local recording limits end capture. Form fields remain excluded or masked. Page summaries use fixed labels and omit query strings.

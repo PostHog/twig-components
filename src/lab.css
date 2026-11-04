@@ -1373,7 +1373,7 @@
 
 @media(max-width:800px) {
   .vac-tool-rail-footer { margin:0; }
-  .vac-app .vac-tool-rail-footer > .vac-tool-rail-toggle { display:none; }
+  .vac-app .vac-tool-rail-footer > .vac-tool-rail-toggle { display:grid; }
 }
 
 .vac-tool-rail-logo { display:grid; place-items:center; flex-shrink:0; width:44px; height:44px; }
@@ -1626,6 +1626,8 @@ details[open] > summary .vac-disclosure-icon:not([data-expanded]) > .vac-disclos
 .vac-code-text { flex:1; min-width:0; white-space:pre-wrap; overflow-wrap:anywhere; }
 .vac-tooltip-control { position:relative; display:inline-flex; min-width:0; align-items:center; }
 .vac-control-tooltip { position:absolute; bottom:calc(100% + 8px); right:0; z-index:12; max-width:min(260px,calc(100vw - 32px)); padding:6px 8px; border:1px solid var(--ph-neutral-border); border-radius:var(--ph-radius-sm); background:var(--ph-neutral-background); color:var(--ph-neutral-ink); font:400 12px/20.4px PlaygroundRoundHog,sans-serif; white-space:nowrap; pointer-events:none; }
+.vac-recording-controls .vac-control-tooltip,
+.vac-replay-controls > .vac-tooltip-control:first-child .vac-control-tooltip { left:0; right:auto; }
 .vac-app .vac-developer-theme .vac-code-copy { display:grid; place-items:center; width:32px; height:32px; padding:0; border:0; border-radius:var(--ph-radius-sm); background:transparent; color:var(--ph-neutral-ink); box-shadow:none; }
 .vac-app .vac-developer-theme .vac-code-copy:hover { background:var(--ph-neutral-accent); }
 .vac-app .vac-developer-theme .vac-code-copy:focus-visible { outline:2px solid var(--ph-brand-cobalt); outline-offset:1px; }

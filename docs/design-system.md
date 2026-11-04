@@ -435,3 +435,7 @@ Support chat reset uses the shared tooltip with `appearance="twig"`: warm paper,
 Lab introductions use `LabIntroduction`: title, regular prose, the existing white overview, an inline start action, then `LabSimulationDisclosure`. Use 16px spacing. The disclosure starts collapsed, stays transparent on the gray lesson background, and reuses the existing 44px summary and plus/minus glyphs. Later lesson actions stay in the footer. Entry choices such as Web app and Agent remain direct choices.
 
 On desktop support pages, place the complete support chat at two-thirds of the available content width, aligned left. Compact layouts below 600px of content and embedded teaching figures use full width. Hosts own this page placement. `SupportAgent` stays fluid inside its parent; do not cap individual replies or shrink unrelated chat consumers.
+
+Recording and playback-action tooltips align to the control’s left edge to stay inside the lab. Fullscreen tooltips retain right alignment.
+
+The mobile toolbar keeps its existing Expand/Collapse control visible in both states so learners can return to an ongoing recording.

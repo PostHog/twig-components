@@ -50,7 +50,7 @@ import { BookingLab, BookingLabProvider, useBookingLab } from "../src/BookingLab
 import { ErrorTrackingLab, ErrorTrackingLabProvider, useErrorTrackingLab } from "../src/ErrorTrackingLab.js";
 import { StayLab, StayLabProvider, useStayLab } from "../src/StayLab.js";
 import { stays, stayLabel } from "../src/catalog.js";
-import { ReplayLab, type ReplayLabViewState } from "../src/ReplayLab.js";
+import { ReplayLab, ReplayRecordingBar, type ReplayLabViewState } from "../src/ReplayLab.js";
 import { ReplayProvider, useReplay } from "../src/ReplayRecorder.js";
 import { LabDirectory, PlaygroundMarker, PlaygroundInspectionView, PlaygroundHome, PlaygroundOnboarding, PlaygroundToolRail, PlaygroundDock, PlaygroundInvitation, PlaygroundLauncher, ProductLabLanding, type PlaygroundActivity } from "../src/PlaygroundPanels.js";
 import { LabNavigationView, LessonNavigationProvider, LabPrimaryAction } from "../src/LabNavigation.js";
@@ -510,15 +510,16 @@ function Stay() { return <StayLabProvider><StayContent /></StayLabProvider>; }
 
 function ReplayRecordingPreview() {
   const replay = useReplay();
-  return <div className="workbench-fixture"><strong>Floating recording control</strong><p>Start a local visit to preview the control used while browsing Twig.</p><button disabled={replay.mode === "manual" || replay.starting} onClick={() => replay.start("manual")}>Start recording</button></div>;
+  return <div className="workbench-fixture"><strong>Lab recording control</strong><p>Start a local visit to preview the lab toolbar control.</p><button disabled={replay.mode === "manual" || replay.starting} onClick={() => replay.start("manual")}>Start recording</button><ReplayRecordingBar replay={replay} /></div>;
 }
 
 function Replay() {
   const [stage, setStage] = useState(0);
   const [exercise, setExercise] = useState<"ghost" | "manual">("ghost");
   const [recording, setRecording] = useState<unknown[]>([]);
-  const replay: ReplayLabViewState = { exercise, recording, starting: false, frames: [], mode: null, masked: true, setMasked: () => {}, capturedMasked: true, message: "", start: () => setRecording([{}, {}]), stop: () => {}, clear: () => setRecording([]), setExercise };
-  return <ReplayProvider open pathname="/"><LabPreview><div className="workbench-controls"><button onClick={() => setStage(0)} aria-pressed={stage === 0}>Intro</button><button onClick={() => setStage(1)} aria-pressed={stage === 1}>Exercise</button><button onClick={() => setStage(2)} aria-pressed={stage === 2}>Review</button><button onClick={() => setRecording([{}, {}])}>Add fixture visit</button></div><ReplayRecordingPreview /><ReplayLab stage={stage} onStage={setStage} replay={replay} pathname="/discover" returnHome={<span>Return to Twig</span>} sessionPlayer={<div className="workbench-fixture">Fixture visit preview</div>} /></LabPreview></ReplayProvider>;
+  const [mode, setMode] = useState<"ghost" | "manual" | null>(null);
+  const replay: ReplayLabViewState = { exercise, recording, starting: false, frames: [], mode, masked: true, setMasked: () => {}, capturedMasked: true, message: "", start: (nextMode) => { setRecording([]); setMode(nextMode); }, stop: () => { setRecording([{}, {}]); setMode(null); }, clear: () => setRecording([]), setExercise };
+  return <ReplayProvider open pathname="/"><LabPreview><div className="workbench-controls"><button onClick={() => setStage(0)} aria-pressed={stage === 0}>Intro</button><button onClick={() => setStage(1)} aria-pressed={stage === 1}>Exercise</button><button onClick={() => setStage(2)} aria-pressed={stage === 2}>Review</button><button disabled={!mode} onClick={replay.stop}>Finish fixture visit</button></div><ReplayRecordingPreview /><ReplayLab stage={stage} onStage={setStage} replay={replay} pathname="/" returnHome={<span>Return to Twig</span>} sessionPlayer={<div className="workbench-fixture">Fixture visit preview</div>} /></LabPreview></ReplayProvider>;
 }
 
 function ErrorTrackingPreviewContent() {

@@ -89,3 +89,9 @@ The HostHog preview linked from twig-components #34 was torn down after Learn St
 For the complete content editor, use Learn Studio's current `main` and its README setup instructions. Its merged PR preview is no longer available.
 
 The Support preview now includes the real lesson footer. On its opening page, Start lab remains next to the overview, above the closed simulation disclosure. Expand it to check the transparent gray surface, start the lesson, and confirm later navigation appears in the footer. Return to the opening with Previous. Resize the support page preview to check the two-thirds desktop chat and full-width compact chat.
+
+In Session Replay, start a fixture visit and select Finish fixture visit to open review directly. Previous returns to setup. In Playground controls, hover Play/Pause/Replay, click, then move away: the tooltip disappears while the button remains usable.
+
+The Session Replay recording example keeps the stop/timer control inside its lab preview; manual recording adds no floating page control.
+
+Verify manual route continuity in Twig: start on a stay, use Log in to book, log in, visit the account pages and return to browsing. Collapse/reopen the Playground, then stop from the lab and review the whole visit.
