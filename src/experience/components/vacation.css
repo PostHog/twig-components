@@ -589,53 +589,6 @@
   border: 1px solid var(--vac-line);
   border-radius: var(--ph-radius-sm, 4px);
 }
-body .vac-replay-stop {
-  border: 1px solid #d0d1c9;
-  background: #eeefe9;
-  color: #151515;
-  box-shadow: var(--ph-window-shadow);
-  font: 600 14px/1.4 PlaygroundRoundHog, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-body .vac-replay-stop::before {
-  content: "";
-  flex: 0 0 9px;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #ff5c1c;
-}
-body .vac-replay-stop span {
-  color: #4d4f46;
-  font-weight: 400;
-}
-body .vac-replay-stop button {
-  background: #fff;
-  color: #151515;
-  border: 1.5px solid #b17816;
-  border-radius: var(--ph-radius-sm, 4px);
-  box-shadow: 0 4px 0 #ffa81c;
-  font: inherit;
-}
-body .vac-replay-stop button:hover {
-  background: #fff;
-  box-shadow: 0 6px 0 #ffa81c;
-  transform: translateY(-2px);
-}
-body .vac-replay-stop button:active {
-  box-shadow: 0 2px 0 #ffa81c;
-  transform: translateY(2px);
-}
-body .vac-replay-stop button:focus-visible {
-  outline-color: #151515;
-}
-@media (max-width: 600px) {
-  body .vac-replay-stop {
-    flex-wrap: wrap;
-  }
-  body .vac-replay-stop button {
-    flex: 1;
-  }
-}
 .vac-dock-header {
   flex-shrink: 0;
   padding: 16px 24px;
@@ -1364,13 +1317,12 @@ body .vac-replay-stop button:focus-visible {
   .vac-edge-playground.vac-events-open .vac-edge-inspector { height:auto; max-height:none; }
   .vac-edge-playground .vac-workspace { overflow-x:clip; }
 }
-/* Keep existing floating trip and recording controls clear of the mobile tools. */
+/* Keep floating trip controls clear of the mobile tools. */
 @media(max-width:800px) {
   .vac-has-tool-rail.vac-app .twig-trip-planner-launcher,
   body:has(.vac-has-tool-rail) .twig-getaway-launcher-wrap { bottom:68px; }
   body:has(.vac-has-tool-rail) .vac-trip-chat { bottom:60px; height:calc(100dvh - 68px); }
   body:has(.vac-has-tool-rail) .twig-getaway-window { bottom:68px; max-height:calc(100dvh - 84px); }
-  body:has(.vac-has-tool-rail) .vac-replay-stop { bottom:68px; }
 }
 
 /* Position existing shared instrumentation markers without opening search controls. */

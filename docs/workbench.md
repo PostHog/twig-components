@@ -95,3 +95,5 @@ In Session Replay, start a fixture visit and select Finish fixture visit to open
 The Session Replay recording example keeps the stop/timer control inside its lab preview; manual recording adds no floating page control.
 
 Verify manual route continuity in Twig: start on a stay, use Log in to book, log in, visit the account pages and return to browsing. Collapse/reopen the Playground, then stop from the lab and review the whole visit.
+
+In Session Replay, hide the fixture lesson while recording, finish the visit, then show it again. Playback should open once, and Previous should return to clean setup. In Twig, record then open Home, Inspect, or another product: the header retains Stop. Stop there should return to playback. Repeat with the dock collapsed and the recording limit reached; reopening recovers the visit.

@@ -53,7 +53,7 @@ test('all recording/playback glyphs are included in the distributable CSS assets
 test('playback hints follow pointer hover and do not persist with button focus',async t=>{
  const props={position:0,duration:8000,playing:false,onToggle(){},onSeek(){},onFullscreen(){}};
  const{root,dom}=await mount(t,h(ReplayControls,props));
- for(const[state,label]of [[{},'Play'],[{playing:true},'Pause'],[{position:8000},'Replay']]){
+ for(const[state,label]of [[{},'Play'],[{playing:true},'Pause'],[{position:8000},'Replay'],[{},'Full screen']]){
   await act(()=>root.render(h(ReplayControls,{...props,...state})));
   const button=document.querySelector(`[aria-label="${label}"]`);
   await act(()=>{button.dispatchEvent(new dom.window.MouseEvent('mouseover',{bubbles:true}));button.focus();button.click();});
