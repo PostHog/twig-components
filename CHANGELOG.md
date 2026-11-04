@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.6](https://github.com/PostHog/twig-components/compare/v0.2.5...v0.2.6) (2026-11-04)
+
+
+### Bug Fixes
+
+* keep replay visits continuous and simplify playback controls ([#45](https://github.com/PostHog/twig-components/issues/45)) ([15bb177](https://github.com/PostHog/twig-components/commit/15bb1777925b904958d4d5faef47d635fd63fcb4))
+
 ## [0.2.5](https://github.com/PostHog/twig-components/compare/v0.2.4...v0.2.5) (2026-11-03)
 
 
