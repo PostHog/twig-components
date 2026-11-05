@@ -388,6 +388,8 @@ export type BookedStaysViewProps = StayViewProps & {
   bookings: readonly BookedStaySummary[];
   browseHref?: string;
   headingAccessory?: ReactNode;
+  /** Shown beside a booking's Trip details button, like a lab marker. */
+  detailsAccessory?: (booking: BookedStaySummary) => ReactNode;
   selectedBookingId?: string | null;
   highlightedDetailsBookingId?: string | null;
   highlightedTripDetailsBookingId?: string | null;
@@ -403,6 +405,7 @@ export function BookedStaysView({
   browseHref = "/",
   onNavigate,
   headingAccessory,
+  detailsAccessory,
   selectedBookingId,
   highlightedDetailsBookingId,
   highlightedTripDetailsBookingId,
@@ -441,6 +444,7 @@ export function BookedStaysView({
                     >
                       Trip details
                     </button>
+                    {detailsAccessory?.(booking)}
                     {onCancelBooking && booking.status !== "canceled" && <BookingCancelControl booking={booking} onCancel={onCancelBooking} />}
                   </div>
                 </div>
