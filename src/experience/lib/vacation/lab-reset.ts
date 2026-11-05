@@ -1,3 +1,4 @@
+import { replayPage } from "../../../replay-lab.js";
 import type { TouchpointId } from "../../../playground.js";
 
 export function labStartPath(id: TouchpointId, firstStayId: string): string {
@@ -13,6 +14,7 @@ export function labResumePath(id: TouchpointId, stage: number, startedAt: string
 
 export function isLabResumeLocation(id: TouchpointId, stage: number, pathname: string, resumePath: string): boolean {
   if (pathname === resumePath) return true;
+  if (id === "replay" && stage > 0) return replayPage(pathname);
   // Stay-based lessons let learners move between listings without leaving the lab area.
   if (["stay", "booking", "errors"].includes(id) && (id !== "errors" || stage < 2)) {
     return /^\/stays\/[^/]+$/.test(pathname);

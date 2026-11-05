@@ -375,7 +375,7 @@ Playground exposed corners use 4px; joined internal edges are square. The origin
 
 `ReplayControls` is the flat playback transport in every player state. Use conventional Play/Pause/Replay, elapsed/total time, a cobalt seek timeline and Fullscreen. Desktop is one row; narrow containers put the timeline above the 44px control row. Ended preserves the same geometry. Loading disables transport; unavailable Fullscreen leaves playback usable. UI times and interaction labels use RoundHog, with tabular numerals for timers.
 
-Before recording, use the original **Start recording** OSButton. During recording, use `RecordingControls`: a compact neutral bar, red stop square inside a circle, and red elapsed time. The square blinks while recording and stays steady for reduced motion. Stop uses the shared tooltip and cobalt focus. This component is shared by the lesson, dock and floating recording control; host CSS owns placement only.
+Before recording, use the original **Start recording** OSButton. During recording, use `RecordingControls`: a compact neutral bar, red stop square inside a circle, and red elapsed time. The square blinks while recording and stays steady for reduced motion. Stop uses the shared tooltip and cobalt focus. This component is shared by the lesson and dock header; host CSS owns placement only.
 
 Error investigation keeps issue identity, historical occurrence count and Active/Resolved status attached to the evidence. Exception messages and function names are actual code; filenames, labels and results use RoundHog. Stack rows select source code and take full-row focus. Source, fallback and repair snippets reuse `PlaygroundCodeBlock`, including line highlighting and copy feedback. Keep fallback and root-cause repair distinct. Before retry/verification, show a current white instruction with its blue edge and no fabricated result; after the actual action, show a completed neutral instruction and the observed result. Resolve stays disabled until the host lookup is verified; resolving retains occurrence history.
 
@@ -439,3 +439,5 @@ On desktop support pages, place the complete support chat at two-thirds of the a
 Recording and playback-action tooltips align to the control’s left edge to stay inside the lab. Fullscreen tooltips retain right alignment.
 
 The mobile toolbar keeps its existing Expand/Collapse control visible in both states so learners can return to an ongoing recording.
+
+Manual recording controls stay in the dock header when Home, the Inspector, or a product view is selected. Finished visits open playback when the lab is visible again; Previous returns to setup without a completion message.

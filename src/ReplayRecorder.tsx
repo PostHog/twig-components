@@ -20,6 +20,8 @@ type ReplayContextValue = {
   setExercise: (value: "ghost" | "manual") => void;
   recording: eventWithTime[];
   starting: boolean;
+  pendingReview: boolean;
+  acknowledgeReview: () => void;
   elapsedMs: number;
   frames: ReplayFrame[];
   mode: Mode;
@@ -38,6 +40,8 @@ const ReplayContext = createContext<ReplayContextValue>({
   setExercise: () => {},
   recording: [],
   starting: false,
+  pendingReview: false,
+  acknowledgeReview: () => {},
   elapsedMs: 0,
   frames: [],
   mode: null,
@@ -66,6 +70,8 @@ export function ReplayProvider({
   const [resetCount, setResetCount] = useState(0);
   const [recording, setRecording] = useState<eventWithTime[]>([]);
   const [starting, setStarting] = useState(false);
+  const [pendingReview, setPendingReview] = useState(false);
+  const pendingStart = useRef<Mode>(null);
   const captured = useRef<eventWithTime[]>([]);
   const stopRecorder = useRef<(() => void) | undefined>(undefined);
   const [frames, setFrames] = useState<ReplayFrame[]>([]);
@@ -90,7 +96,9 @@ export function ReplayProvider({
   const abort = useRef<AbortController | null>(null);
   const pageRef = useRef(pathname);
   function stop() {
+    if (session.current.mode && captured.current.length > 1) setPendingReview(true);
     session.current.mode = null;
+    pendingStart.current = null;
     abort.current?.abort();
     stopRecorder.current?.();
     stopRecorder.current = undefined;
@@ -102,6 +110,7 @@ export function ReplayProvider({
   function reset() {
     stop();
     captured.current = [];
+    setPendingReview(false);
     setRecording([]);
     setFrames([]);
     setMessage("");
@@ -139,7 +148,7 @@ export function ReplayProvider({
     // eslint-disable-next-line react-hooks/exhaustive-deps -- Record route changes only.
   }, [pathname]);
   useEffect(() => {
-    if (!open && session.current.mode === "ghost") stop();
+    if (!open && (session.current.mode === "ghost" || pendingStart.current === "ghost")) stop();
   }, [open]);
   useEffect(() => {
     if (!mode) return;
@@ -325,12 +334,15 @@ export function ReplayProvider({
   }
   async function start(next: Exclude<Mode, null>) {
     stop();
+    setPendingReview(false);
+    setMessage("");
     if (!replayPage(pathname) || (next === "ghost" && pathname !== "/")) {
       setMessage("Return to Find a stay to run the ghost visit.");
       return;
     }
     const controller = new AbortController();
     abort.current = controller;
+    pendingStart.current = next;
     setStarting(true);
     try {
       const { record } = await import("@rrweb/record");
@@ -345,7 +357,7 @@ export function ReplayProvider({
       let bytes = 0;
       const cleanup = record({
         blockSelector:
-          "#twig-playground, .vac-playground-invite, .vac-replay-stop, .vac-ghost-cursor, input:not(#trip-search-destination):not(#stay-search), textarea, select",
+          "#twig-playground, .vac-playground-invite, .vac-ghost-cursor, input:not(#trip-search-destination):not(#stay-search), textarea, select",
         maskAllInputs: true,
         maskInputFn: (text, element) =>
           element.matches(searchSelector) && !masked ? text : "[masked]",
@@ -374,10 +386,14 @@ export function ReplayProvider({
         return;
       }
     } catch {
-      setStarting(false);
-      setMessage("Could not start the page recorder. Please try again.");
+      if (!controller.signal.aborted) {
+        pendingStart.current = null;
+        setStarting(false);
+        setMessage("Could not start the page recorder. Please try again.");
+      }
       return;
     }
+    pendingStart.current = null;
     setStarting(false);
     session.current = {
       mode: next,
@@ -416,6 +432,8 @@ export function ReplayProvider({
         resetCount,
         recording,
         starting,
+        pendingReview,
+        acknowledgeReview: () => { setPendingReview(false); setMessage(""); },
         elapsedMs,
         frames,
         mode,
@@ -428,6 +446,7 @@ export function ReplayProvider({
         clear: () => {
           stop();
           captured.current = [];
+          setPendingReview(false);
           setRecording([]);
           setFrames([]);
           setMessage("");

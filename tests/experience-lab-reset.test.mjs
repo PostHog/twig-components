@@ -49,3 +49,12 @@ test("a fresh lab starts with no prior account activity and keeps unrelated stor
   assert.deepEqual([...values], [["other-app:settings", "keep"]]);
   assert.deepEqual(parseDemoAccountState(values.get(demoAccountStorageKey) ?? null), initialDemoAccountState);
 });
+
+test("embedded replay resume preserves every recorded Twig route", () => {
+  for (const stage of [1, 2, 3]) {
+    for (const path of ["/", "/stays/stay-01", "/login", "/profile/settings", "/profile/bookings", "/about", "/support"]) {
+      assert.equal(isLabResumeLocation("replay", stage, path, "/"), true);
+    }
+    assert.equal(isLabResumeLocation("replay", stage, "//example.com", "/"), false);
+  }
+});
