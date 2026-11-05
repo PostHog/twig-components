@@ -4,13 +4,18 @@ Import only the pieces you need from `@posthog/twig-components/<path>`. React is
 
 “Used in Twig” describes the Twig.com integration. Twig.com pins an exact package build (currently its checked-in local brand archive; see the host README), while the PostHog 101 guide integration is still in progress.
 
+`SupportAgent` from `/support-agent` also supports `compact` for guide figures. It keeps the real support header, message layout, typing status, and composer. Pass `draft` for a prepared message, and `onSend` for local interactions. Omit `onSend` for a read-only preview and `onReset` when the host provides Reset. Existing website and lab props keep their behavior.
+
 ## Website views and data
 
 | Import path | Export | What it does | Used in Twig / what the host supplies |
 | --- | --- | --- | --- |
+| `/compact-ai-chat` | `CompactAiChat`, `CompactRecommendedStay` | Fixed compact conversation and controlled saved listing | Host owns scripted messages, local navigation, image rendering, and save state. |
+| `/evidence-tabs` | `EvidenceTabs` | Connected keyboard-accessible evidence selector | Host supplies options, selection, optional panel, and disabled state. |
 | `/trip-planner` | `TripPlanner`, `TripPlannerProps`, `AiSearchIcon` | Scripted forest → beach → kitchen → city-failure chat, with read-only prefilled prompts, a floating chat window, a compact composer, a short typing state, and reset. | Host supplies `stays`, `renderStayLink`, optional lab-only `scenario`, `accessory`, `inputId`, `hidden`, `windowClassName`, `windowAction`, `launcherLabel`, `canSendMessage`, `onReset`, and `onRequestComplete`. No model calls, persistence, or event capture. See [conversation contract](trip-planner.md). |
 | `/trip-planner-lab` | `TripPlannerWalkthrough`, `TripPlannerLabProvider`, `useTripPlannerLab` | Walkthrough: session/trace/generation hierarchy, captured chat, a wrong recommendation, a failing capacity evaluation, investigation, fix, and the same evaluation passing. | Host connects chat completion to `record`, keys chat by `revision`, supplies stays, an optional `renderStayCard` for the actual homepage card, an `onAllLabs` callback for lesson navigation, and optional `onEvaluate(phase)` for a learner running the before/after check. Instructions point learners to the actual Twig controls. Load `lab.css` in the lab theme. |
 | `/trip-planner-state` | `replyToTripPlanner`, `initialTripPlannerState`, `tripPlannerSuggestions`, prompts, limits, and types | Pure, bounded conversation rules and catalog-backed responses. | Shared by the planner and regression tests. |
+| `/trip-planner-evaluations` | `plannerRegressionDataset`, `plannerCapacityScorer`, `scorePlannerCapacity`, `runPlannerRegression` | Versioned capacity cases and boolean, numeric, and categorical scores for guide comparisons. | Local deterministic checks. No judge, hosted dataset, or SDK upload. N/A is excluded from pass rates. |
 | `/trip-planner-records` | `createTripPlannerRequest`, `tripPlannerModel`, request, message, identity, and record types | Builds a catalog-backed answer and a matching PostHog generation with conversation history, token usage, cost, and duration. | Local teaching data only. Caller supplies IDs and start time. No provider call or event upload. |
 | `/account` | `LoginView`, `ProfileMenu`, `AccountLayout`, `ProfileOverview`, `SavedStaysView`, `BookedStaysView`, `AccountSettingsView`, types | Reusable Twig account visuals, accessible profile-menu behavior, traveler profile, empty/populated stay views, and settings form. | Host supplies profile content, fixed login email, state, callbacks, routes, images, bookings, persistence, and analytics. |
 | `/account` | `TripDetailsView` | Displays trip details when they load, or only the recoverable error when they fail. Its Contact support button stays disabled until support is available. `BookedStaysView` places Cancel stay beside Trip details on the booking card. | Host supplies selected booking, host name, error state, retry, and cancellation callbacks. |
@@ -378,6 +383,20 @@ Props: `startingPath` (default `/`), `onReset`, optional `onEvent`, and optional
 
 `/experience-assets` exports `twigExperienceAsset(catalogPath)` resolves catalog photos to packaged assets for compact figures. Demo account persistence uses the existing browser-local `twig:*` keys. Inspector subscriptions are isolated per mounted experience. Instrumentation snippets are reference fixtures from Twig, not source locations in the consuming host.
 
+TwigExperience with a supplied `lab` keeps the shared tool rail available. Inspect, product tools, and Home show their existing panels; Back to lab restores the authored lesson. Collapse/expand preserves it. The host supplies a fixed-height frame; Twig content scrolls independently of its full-height dock and rail.
+
+Authored lab previews can supply `lab.product` and `lab.onProductSelect` to choose the authored product from the tool rail without leaving the editor. Without the callback, product buttons retain their learner behavior.
+
+`PlaygroundDock.headerActions` places host controls alongside the Playground heading. `TwigExperience.lab` forwards `headerActions` and an optional `navigation` node, replacing the default progress count when supplied.
+
+`PlaygroundDock.closeOnEscape` defaults to true. Authored previews set it false so Escape can dismiss nested controls without hiding the editor; explicit rail collapse/expand remains available. Default-prevented Escape events never close a dock.
+
+Contained previews retain the mobile expand control when collapsed so authored labs always have a visible route back to the editor.
+
+## `/pocket-guide-inspector`
+
+`PocketGuideInspector` (default), `InspectorCode`, and `InspectorStatus` reuse the exact PostHog.com pocket-guide inspector source (synced 2026-10-26). Use Elements and Event data sections for guide figures rather than the Playground InstrumentationInspector. Hosts supply captured element, timestamp, count, and event properties. Load `compact.css` and `lab.css` for the portable, scoped website styles and fonts. Existing lab/catalog CSS and APIs are unchanged.
+
 ## Support conversations and evaluations
 
 `/support-agent` exports `SupportAgent`, a controlled Twig chat using the approved getaway surface. Outside a lab, it starts empty and accepts typed messages. Pass `guided` only for prepared lab inputs. Supply a fixed `caseId`, optional completed `run`, `onSend(message)`, `onReset`, optional free-chat `conversation`/`pending`, and optional marker `accessory`. The component makes no model calls and never captures analytics.
@@ -391,3 +410,29 @@ Support policy lookups are backend evidence. The customer chat only shows messag
 The evaluations lab shows backend tool evidence in one read-only call/result panel, matching Figma’s Playground / Tool call and result. Both sections share the existing code surface, neutral divider, and code typography. Do not add copy controls or separate snippet cards.
 
 The evaluations lab introduces enabled online checks before capture, then guides inspection through Code (answer), Sentiment (customer input), and LLM judge (policy correctness) before the regression exercise. It reuses the checklist, result rows, generation tabs, and OS navigation.
+
+The `/tooltip` export `PlaygroundTooltip` accepts `appearance="twig"` for website controls. Import `catalog.css` and use a direct button child so the shared hover, focus, Escape, and `aria-describedby` behavior stays connected. The default appearance remains Playground.
+
+## Compact AI conversations
+
+`@posthog/twig-components/compact-ai-chat` exports `CompactAiChat` and `CompactRecommendedStay`. Load `catalog.css` and `compact.css` inside a Twig styling boundary.
+
+Messages may include `recommendationDescription` for the catalog-backed reason returned by Twig; the default location/capacity summary is preserved. `pending` shows Twig’s existing typing status while the host prepares a reply. `CompactAiChat` takes controlled `messages`, `draft`, `onDraftChange`, `onSend`, `renderImage`, and an optional `onViewStay`. Without `onViewStay`, the recommendation button is disabled and has no hover treatment. Omit `onDraftChange` for a prepared, read-only message. An empty draft disables Send. The window stays fixed with no launcher or collapse control. `CompactRecommendedStay` composes the existing compact catalog card and controlled `SavedStay` bookmark.
+
+The host owns all example state, replies, routing, and PostHog evidence. These views make no network requests, generate no replies, and open no URLs. The workbench’s Twig views section exercises both chat types and local recommendation/save behavior.
+
+`@posthog/twig-components/evidence-tabs` exposes the existing connected `EvidenceTabs` control for host-owned inspectors. Omit children for a selector without a panel; pass `disabled` after saving a review. Existing panel-based usages are unchanged.
+
+For host-controlled conversation animations, `CompactAiChat` and compact `SupportAgent` accept `playback`. This shows their existing composer with the controlled `draft`, keeps input read-only and Send non-interactive, and preserves the normal Send appearance while a draft is present. Hosts animate the draft, append sent messages, and control `pending`; the components do not generate replies or timers.
+
+## Lab introductions
+
+`/lab-navigation` exports `LabIntroduction`. Wrap the opening title, prose, overview, start action, and simulation disclosure in it. It reuses the existing introduction styles and keeps nested `LabPrimaryAction` controls inline even when the lesson has a footer. All later actions keep their existing footer placement and handlers. Direct entry choices, such as Web app and Agent, stay in the introduction.
+
+`/disclosure` exports `LabSimulationDisclosure`. Pass the existing local-simulation explanation as children. It starts collapsed and reuses `PlaygroundSummary`, native details keyboard behavior, and the existing plus/minus icons. Both states use the gray lesson background without a card, border, or copy control.
+
+Replay labs open playback directly when a ghost or manual visit finishes. Returning to the exercise shows recorder setup. Playback transport tooltips use `PlaygroundTooltip hoverOnly`: pointer hover shows the label and moving away hides it even while the button retains focus. Buttons keep accessible names and keyboard focus.
+
+`ReplayProvider` records visits without floating recording controls over Twig. Hosts keep stop/timer controls in the lab using `ReplayRecordingBar` or `RecordingControls`.
+
+Manual visits continue through all Twig routes, including login redirects and account pages, and while the lab is collapsed. Stop recording, reset, and the existing local recording limits end capture. Form fields remain excluded or masked. Page summaries use fixed labels and omit query strings.

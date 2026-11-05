@@ -95,7 +95,7 @@ test("the lab starts on stay listings and has no entry on booked stays", () => {
   assert.ok(!labsOnOtherPages(bookingsPage).some((item) => item.id === "errors"));
   const html = renderLab(initialErrorTrackingState, 0, "stay");
   assert.match(html, /Exceptions and issue resolution/);
-  assert.match(html, /How this lab works/);
+  assert.match(html, /How this simulation works/);
   assert.match(html, /in this browser rather than sending it to PostHog/);
 });
 

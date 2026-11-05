@@ -125,7 +125,7 @@ function EventsLayoutMarker({ active }: { active: boolean }) {
   return null;
 }
 
-type AuthorLabPreview = { content: ReactNode; footer: ReactNode; progress: string };
+type AuthorLabPreview = import("../../TwigExperience.js").AuthorLabPreview;
 export function VacationShell({ children, authorLab }: { children: ReactNode; authorLab?: AuthorLabPreview }) {
   return <DemoAccountProvider><VacationShellContent authorLab={authorLab}>{children}</VacationShellContent></DemoAccountProvider>;
 }
@@ -141,7 +141,9 @@ const {trackTwigEvent,trackTwigLabStarted,capturePlaygroundLabResume,capturePlay
   const page = playgroundPage(pathname, stays);
   const authorPreview = !!useTwigPreview();
   const [requestedOpen, setOpen] = useState(true);
-  const open = !!authorLab || (requestedOpen && !authorPreview);
+  const open = requestedOpen && (!authorPreview || !!authorLab);
+  const [authorToolOpen, setAuthorToolOpen] = useState(false);
+  const showingAuthorLab = !!authorLab && !authorToolOpen;
   const [inspectionMode, setInspectionMode] = useState(false);
   const [inspectionId, setInspectionId] = useState<TouchpointId | null>(null);
   const [exploring, setExploring] = useState(true);
@@ -256,6 +258,12 @@ const {trackTwigEvent,trackTwigLabStarted,capturePlaygroundLabResume,capturePlay
     setOpen(true);
   }, [page.kind, open]);
   function selectProduct(id: TouchpointId, source: "rail" | "home" = "rail") {
+    if (authorLab?.onProductSelect) {
+      authorLab.onProductSelect(touchpointDefinitions[id].tool);
+      setAuthorToolOpen(false); setHomeOpen(false); setInspectionMode(false); setOpen(true);
+      return;
+    }
+    setAuthorToolOpen(true);
     setHomeOpen(false);
     setInspectionMode(false);
     setExploring(true);
@@ -266,6 +274,7 @@ const {trackTwigEvent,trackTwigLabStarted,capturePlaygroundLabResume,capturePlay
     if (window.matchMedia("(max-width: 800px)").matches) requestAnimationFrame(() => document.getElementById("twig-playground")?.scrollIntoView({ block: "start" }));
   }
   function openInspector() {
+    setAuthorToolOpen(true);
     setHomeOpen(false);
     if (!inspectionMode || !open) trackTwigEvent("twig_playground_inspector_opened", { page_kind: twigPageKind(page.kind) });
     setInspectionMode(true);
@@ -417,15 +426,16 @@ const {trackTwigEvent,trackTwigLabStarted,capturePlaygroundLabResume,capturePlay
                   )}
                 </nav>
               </header>
-              {!authorPreview && <PlaygroundToolRail
+              {(!authorPreview || authorLab) && <PlaygroundToolRail
                 joinedBranding
                 page={page} open={visibleOpen} picking={inspectionMode}
-                homeOpen={homeOpen}
+                homeOpen={!showingAuthorLab && homeOpen}
                 onHomeOpened={() => {
                   if (!homeOpen || !open) trackTwigEvent("twig_playground_home_opened", { source: "logo" });
-                  setHomeOpen(true); setInspectionMode(false); setExploring(true); launch();
+                  setAuthorToolOpen(true); setHomeOpen(true); setInspectionMode(false); setExploring(true); launch();
                 }}
-                selectedId={selected && !exploring ? selected : inspectionId ?? (page.kind === "stay" ? "stay" : "catalog")}
+                productSelection={!!authorLab?.onProductSelect}
+                selectedId={showingAuthorLab ? (Object.keys(touchpointDefinitions) as TouchpointId[]).find(id => touchpointDefinitions[id].tool === authorLab?.product) ?? null : selected && !exploring ? selected : inspectionId ?? (page.kind === "stay" ? "stay" : "catalog")}
                 toggleRef={toggleRef} pickerRef={pickerRef}
                 onOpen={() => { if (!exploring && selected && resumePath && awayFromLab) returnToLab(selected, resumePath); else launch(); }}
                 onCollapse={close}
@@ -442,16 +452,17 @@ const {trackTwigEvent,trackTwigLabStarted,capturePlaygroundLabResume,capturePlay
                     )}
                   {children}
                 </div>
-                  {authorLab && <PlaygroundDock headingRef={dockHeadingRef} recordingBar={null} open joinedBranding placement="edge" embedded onClose={() => {}} navigation={<span>{authorLab.progress}</span>} guide={authorLab.content} footer={authorLab.footer} pageKey={authorLab.progress} logo={<Image src="/twig/posthog-logomark.svg" width={30} height={30} alt="" />} />}
-                  {!authorPreview && <PlaygroundDock
+                  {authorLab && showingAuthorLab && <PlaygroundDock headingRef={dockHeadingRef} recordingBar={null} open={visibleOpen} joinedBranding placement="edge" embedded={false} closeOnEscape={false} onClose={close} headerActions={authorLab.headerActions} navigation={authorLab.navigation ?? <span>{authorLab.progress}</span>} guide={authorLab.content} footer={authorLab.footer} pageKey={authorLab.progress} logo={<Image src="/twig/posthog-logomark.svg" width={30} height={30} alt="" />} />}
+                  {(!authorPreview || (authorLab && authorToolOpen)) && <PlaygroundDock
                     open={visibleOpen}
                     joinedBranding
                     placement="edge"
                     embedded={false}
+                    closeOnEscape={!authorLab}
                     onClose={close}
                     headingRef={dockHeadingRef}
                     logo={<Image src="/twig/posthog-logomark.svg" width={30} height={30} alt="" />}
-                    footer={!exploring && selected ? <LabNavigation placement="footer" pageKind={twigPageKind(page.kind)} onResetTwig={resetTwigAndRestartLab} returnTo={selected && resumePath && awayFromLab ? { label: resumeLabel, onClick: () => returnToLab(selected, resumePath) } : undefined} /> : undefined}
+                    footer={authorLab ? <footer className="vac-lesson-footer"><button type="button" className="vac-text-button" onClick={() => { setAuthorToolOpen(false); setInspectionMode(false); setOpen(true); }}>← Back to lab</button></footer> : !exploring && selected ? <LabNavigation placement="footer" pageKind={twigPageKind(page.kind)} onResetTwig={resetTwigAndRestartLab} returnTo={selected && resumePath && awayFromLab ? { label: resumeLabel, onClick: () => returnToLab(selected, resumePath) } : undefined} /> : undefined}
                     navigation={exploring ? null : <LabNavigation
                       placement="header"
                       pageKind={twigPageKind(page.kind)}

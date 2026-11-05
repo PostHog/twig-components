@@ -2,8 +2,8 @@
 
 import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
 
-import { LabPrimaryAction } from "./LabNavigation.js";
-import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
+import { LabIntroduction, LabPrimaryAction } from "./LabNavigation.js";
+import { LabSimulationDisclosure } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
 import { createContext, useContext, useEffect, useReducer, useRef, useState, type ReactNode } from "react";
@@ -167,7 +167,7 @@ export function ErrorTrackingLab({
   onTriggerNoise?: () => void;
 }) {
   const { state, dispatch } = useErrorTrackingLab();
-  if (stage === 0) return <div className="vac-guide-intro">
+  if (stage === 0) return <LabIntroduction>
     <h3>{touchpointDefinitions.errors.title}</h3>
     <p>Book a stay on Twig, then open its trip details. Twig fails on purpose. Each step shows the exception event the PostHog SDK builds in your browser.</p>
     <div className="vac-guide-example vac-booking-overview">
@@ -178,8 +178,8 @@ export function ErrorTrackingLab({
       </ol>
     </div>
     <Continue onClick={() => onStage(1)}>Start lab →</Continue>
-    <details className="vac-lab-step" open><PlaygroundSummary>How this lab works</PlaygroundSummary><p>Your booking is saved only in this browser. The PostHog SDK builds a real event for each exception. Twig’s <code>before_send</code> keeps it in this browser rather than sending it to PostHog. No payment or real reservation is made.</p></details>
-  </div>;
+    <LabSimulationDisclosure><p>Your booking is saved only in this browser. The PostHog SDK builds a real event for each exception. Twig’s <code>before_send</code> keeps it in this browser rather than sending it to PostHog. No payment or real reservation is made.</p></LabSimulationDisclosure>
+  </LabIntroduction>;
 
   if (stage === 1) return <section className="vac-lab vac-builder">
     <p>First, book a stay on Twig to get a trip to investigate.</p>

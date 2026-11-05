@@ -12,11 +12,11 @@ import { tripPlannerTurnLimit, tripPlannerInputLimit } from "./trip-planner.js";
 import type { SupportMessage } from "./SupportAgent.js";
 import { LabChecklist } from "./LabChecklist.js";
 import { LabCompletionView } from "./LabCompletionView.js";
-import { LabPrimaryAction } from "./LabNavigation.js";
+import { LabIntroduction, LabPrimaryAction } from "./LabNavigation.js";
 import { PlaygroundGeneration } from "./PlaygroundAiEvidence.js";
 import { PlaygroundStatus } from "./PlaygroundStatus.js";
 import { McpComposer } from "./McpComposer.js";
-import { DisclosureIcon, PlaygroundSummary } from "./PlaygroundDisclosure.js";
+import { DisclosureIcon, LabSimulationDisclosure, PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { PlaygroundCodeBlock } from "./PlaygroundCodeBlock.js";
 import { touchpointDefinitions } from "./playground.js";
 import {
@@ -283,7 +283,7 @@ function OfflineTerminal({
     }
   }, [result]);
   const instruction = fixed
-    ? "Save the heating complaint as a regression case. Apply the heating exception first, then rerun the evals."
+    ? "Save the heating complaint as a regression case. Apply the broken-amenity exception first, then rerun the evals."
     : type === "judge"
     ? "Run the saved support case and check the answer against the cancellation policy."
     : type === "code"
@@ -319,7 +319,7 @@ function OfflineTerminal({
               fixed ? " --compare-fix" : ""
             }\n\n${
               fixed
-                ? "Saved regression case: heating complaint\nBaseline policy judge: false\nUpdated prompt: apply the heating exception first\n"
+                ? "Saved regression case: heating complaint\nBaseline policy judge: false\nUpdated prompt: apply the broken-amenity exception first\n"
                 : ""
             }Loaded saved input and demo policy\nRan support agent\n${
               type === "code" && !fixed ? 'Executed: "7 days" in output\n' : ""
@@ -585,7 +585,7 @@ function SupportEvalsLesson({
     : [];
   if (stage === 0)
     return (
-      <div className="vac-guide-intro">
+      <LabIntroduction>
         <h3>{touchpointDefinitions.evaluations.title}</h3>
         <p>Learn how to evaluate whether an agent's response is correct.</p>
         <div className="vac-guide-example">
@@ -599,16 +599,15 @@ function SupportEvalsLesson({
           </p>
         </div>
         <Action onClick={() => onStage(1)}>Start lab →</Action>
-        <details className="vac-lab-step">
-          <PlaygroundSummary>How this simulation works</PlaygroundSummary>
+        <LabSimulationDisclosure>
           <p>
             Support conversations, terminal commands, scores, and PostHog views
             use fixed local examples. No model, terminal, MCP server, or hosted
             evaluation runs. No conversation or simulated AI data is sent to
             PostHog. The cancellation policy is an example for this lab.
           </p>
-        </details>
-      </div>
+        </LabSimulationDisclosure>
+      </LabIntroduction>
     );
   if (stage === 1)
     return (
@@ -651,8 +650,8 @@ function SupportEvalsLesson({
     return (
       <>
         <p>
-          There are a few different types of evaluations. All three can be used
-          offline or online.
+          Run offline checks in your own code or CI, then report the scores to
+          PostHog. Online evals run in PostHog on captured responses.
         </p>
         <ul className="vac-trip-definitions">
           {evalTypes.map((value) => (
@@ -818,7 +817,7 @@ function SupportEvalsLesson({
         : stage === 8
         ? "Sentiment is Negative because the customer is freezing and frustrated. It measures the customer’s tone, not the support answer’s correctness."
         : stage === 9
-        ? "The LLM judge fails the answer: it applies the ordinary cancellation rule and ignores the broken-heating exception."
+        ? "The LLM judge fails the answer: it applies the ordinary cancellation rule and ignores the broken-amenity exception."
         : "PostHog has evaluated the captured heating complaint. Inspect each result to see what it measures and what it misses.";
     const instruction =
       stage === 7
@@ -879,7 +878,7 @@ function SupportEvalsLesson({
         <p>
           A production failure becomes an offline regression test. Your coding
           agent saves the heating request, updates the prompt to apply the
-          heating exception first, and reruns the same evals locally or in CI.
+          broken-amenity exception first, and reruns the same evals locally or in CI.
         </p>
         <LabChecklist
           label="Test the fix"

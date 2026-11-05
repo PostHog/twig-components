@@ -1,8 +1,8 @@
 "use client";
 
 import { RecordingControls } from "./ReplayControls.js";
-import { LabPrimaryAction } from "./LabNavigation.js";
-import { PlaygroundSummary } from "./PlaygroundDisclosure.js";
+import { LabIntroduction, LabPrimaryAction } from "./LabNavigation.js";
+import { LabSimulationDisclosure, PlaygroundSummary } from "./PlaygroundDisclosure.js";
 import { touchpointDefinitions } from "./playground.js";
 
 import { useEffect, useRef, type ReactNode } from "react";
@@ -54,7 +54,7 @@ export function ReplayLab({
   const previousMode = useRef(replay.mode);
   useEffect(() => {
     if (
-      previousMode.current === "manual" &&
+      previousMode.current !== null &&
       !replay.mode &&
       hasVisit &&
       stage === 1
@@ -112,7 +112,7 @@ export function ReplayLab({
     );
   if (stage === 0)
     return (
-      <div className="vac-guide-intro">
+      <LabIntroduction>
         <h3>{touchpointDefinitions.replay.title}</h3>
         <p>
           Events tell you a visitor selected Coast. Replay adds the sequence:
@@ -127,36 +127,22 @@ export function ReplayLab({
         <LabPrimaryAction><button className="vac-button" onClick={() => onStage(1)}>
           <span className="vac-os-button-face">Set up the ghost visit →</span>
         </button></LabPrimaryAction>
-        <details className="vac-lab-step" open>
-          <PlaygroundSummary>How this simulation works</PlaygroundSummary>
+        <LabSimulationDisclosure>
           <p>The ghost visit is scripted. Your own visit is recorded locally for playback in this lab. No replay is sent to PostHog.</p>
-        </details>
-      </div>
+        </LabSimulationDisclosure>
+      </LabIntroduction>
     );
   return (
     <section className="vac-lab vac-builder">
       {stage === 1 ? (
         <>
-          {replay.mode || hasVisit ? (
+          {replay.mode === "manual" ? (
             <>
-              {replay.mode === "manual" ? (
-                <LabChecklist label="Next replay action" items={[{
-                  label: <>Explore Twig however you like. Click around, browse stays, or try a search. When you’re ready, click <strong>Stop recording</strong> to watch your visit.</>,
-                  done: false,
-                }]} />
-              ) : (
-                <LabChecklist label="Review your recording" items={[{ label: <>Click <strong>Watch the recording</strong> to review your visit.</>, done: false }]} />
-              )}
-              {replay.mode === "manual" && (
-                <LabPrimaryAction><RecordingControls elapsedMs={replay.elapsedMs ?? 0} onStop={replay.stop} /></LabPrimaryAction>
-              )}
-              {!replay.mode && hasVisit && (
-                <LabPrimaryAction><button className="vac-button" onClick={() => onStage(2)}>
-                  <span className="vac-os-button-face">
-                    Watch the recording →
-                  </span>
-                </button></LabPrimaryAction>
-              )}
+              <LabChecklist label="Next replay action" items={[{
+                label: <>Explore Twig however you like. Click around, browse stays, or try a search. When you’re ready, click <strong>Stop recording</strong> to watch your visit.</>,
+                done: false,
+              }]} />
+              <LabPrimaryAction><RecordingControls elapsedMs={replay.elapsedMs ?? 0} onStop={replay.stop} /></LabPrimaryAction>
             </>
           ) : (
             <>

@@ -1,6 +1,6 @@
 {
   "name": "@posthog/twig-components",
-  "version": "0.2.3",
+  "version": "0.2.6",
   "private": false,
   "publishConfig": {
     "access": "public"
@@ -255,6 +255,22 @@
     "./support-evals-lab": {
       "types": "./dist/SupportEvalsLab.d.ts",
       "import": "./dist/SupportEvalsLab.js"
+    },
+    "./pocket-guide-inspector": {
+      "types": "./dist/PocketGuideInspector.d.ts",
+      "import": "./dist/PocketGuideInspector.js"
+    },
+    "./compact-ai-chat": {
+      "types": "./dist/CompactAiChat.d.ts",
+      "import": "./dist/CompactAiChat.js"
+    },
+    "./evidence-tabs": {
+      "types": "./dist/TripPlannerEvidenceTabs.d.ts",
+      "import": "./dist/TripPlannerEvidenceTabs.js"
+    },
+    "./trip-planner-evaluations": {
+      "types": "./dist/trip-planner-evaluations.d.ts",
+      "import": "./dist/trip-planner-evaluations.js"
     }
   },
   "scripts": {
@@ -458,6 +474,18 @@
       ],
       "support-evals-lab": [
         "dist/SupportEvalsLab.d.ts"
+      ],
+      "pocket-guide-inspector": [
+        "dist/PocketGuideInspector.d.ts"
+      ],
+      "compact-ai-chat": [
+        "dist/CompactAiChat.d.ts"
+      ],
+      "evidence-tabs": [
+        "dist/TripPlannerEvidenceTabs.d.ts"
+      ],
+      "trip-planner-evaluations": [
+        "dist/trip-planner-evaluations.d.ts"
       ]
     }
   }
