@@ -34,7 +34,7 @@ export function SessionPlayer({ events }: { events: eventWithTime[] }) {
           showDebug: false,
           // Preserve layout when hiding overlays so recorded pointer coordinates stay aligned.
           insertStyleRules: [
-            ".vac-dock, .vac-playground-invite, .vac-replay-stop, .vac-ghost-cursor { visibility: hidden !important; }",
+            ".vac-dock, .vac-playground-invite, .vac-ghost-cursor { visibility: hidden !important; }",
           ],
         });
         instance.wrapper.classList.add("vac-session-canvas");

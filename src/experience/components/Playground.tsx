@@ -338,7 +338,7 @@ const {trackTwigEvent,trackTwigLabStarted,capturePlaygroundLabResume,capturePlay
   }
 
   return (
-    <ReplayProvider key={resetEpoch} open={open && !exploring && page.kind !== "bookings"}>
+    <ReplayProvider key={resetEpoch} open={open && !exploring}>
       <StayLabProvider open={open && !exploring && page.kind !== "bookings"}>
         <FilterLabProvider
           pendingSelection={pendingLab?.path === pathname ? pendingLab.id : null}
@@ -452,7 +452,7 @@ const {trackTwigEvent,trackTwigLabStarted,capturePlaygroundLabResume,capturePlay
                     )}
                   {children}
                 </div>
-                  {authorLab && showingAuthorLab && <PlaygroundDock headingRef={dockHeadingRef} recordingBar={null} open={visibleOpen} joinedBranding placement="edge" embedded={false} closeOnEscape={false} onClose={close} headerActions={authorLab.headerActions} navigation={authorLab.navigation ?? <span>{authorLab.progress}</span>} guide={authorLab.content} footer={authorLab.footer} pageKey={authorLab.progress} logo={<Image src="/twig/posthog-logomark.svg" width={30} height={30} alt="" />} />}
+                  {authorLab && showingAuthorLab && <PlaygroundDock headingRef={dockHeadingRef} recordingBar={<ReplayRecordingBar onReviewReady={visibleOpen && showingAuthorLab ? () => { setAuthorToolOpen(true); setHomeOpen(false); setInspectionMode(false); setExploring(false); } : undefined} />} open={visibleOpen} joinedBranding placement="edge" embedded={false} closeOnEscape={false} onClose={close} headerActions={authorLab.headerActions} navigation={authorLab.navigation ?? <span>{authorLab.progress}</span>} guide={authorLab.content} footer={authorLab.footer} pageKey={authorLab.progress} logo={<Image src="/twig/posthog-logomark.svg" width={30} height={30} alt="" />} />}
                   {(!authorPreview || (authorLab && authorToolOpen)) && <PlaygroundDock
                     open={visibleOpen}
                     joinedBranding
@@ -472,7 +472,7 @@ const {trackTwigEvent,trackTwigLabStarted,capturePlaygroundLabResume,capturePlay
                         onClick: () => returnToLab(selected, resumePath),
                       } : undefined}
                     />}
-                    recordingBar={exploring ? null : <ReplayRecordingBar />}
+                    recordingBar={<ReplayRecordingBar onReviewReady={visibleOpen && !exploring && !authorToolOpen ? () => { setHomeOpen(false); setInspectionMode(false); setExploring(false); } : undefined} />}
                     pageKey={page.key}
                     guide={homeOpen ? <PlaygroundHome onVisitLab={visitLab} onStart={startOnboarding} onInspect={openInspector} onSelect={id => selectProduct(id, "home")} /> : <PlaygroundGuide onExitTour={inspectionMode && onboarding !== "idle" ? dismissOnboarding : undefined} inspectionGuidance={inspectionMode && onboarding !== "idle" ? <PlaygroundOnboarding phase={onboarding} /> : undefined} inspectionSession={inspectionSession} onInspectionSessionChange={updateInspectionSession} inspectionOnly={inspectionMode} activity={inspectionActivity} inspectionId={inspectionId} exploring={exploring} onInspectionChange={setInspectionId} page={page} onVisitLab={visitLab} onStartLab={startLab} />}
                   />}

@@ -436,3 +436,5 @@ Replay labs open playback directly when a ghost or manual visit finishes. Return
 `ReplayProvider` records visits without floating recording controls over Twig. Hosts keep stop/timer controls in the lab using `ReplayRecordingBar` or `RecordingControls`.
 
 Manual visits continue through all Twig routes, including login redirects and account pages, and while the lab is collapsed. Stop recording, reset, and the existing local recording limits end capture. Form fields remain excluded or masked. Page summaries use fixed labels and omit query strings.
+
+`useReplay()` exposes `pendingReview` and `acknowledgeReview()`. A completed capture stays pending while the lesson is unmounted. `ReplayLab` consumes it on stage 1 and opens playback; acknowledging review clears completion messages. Reset, clear, and a new visit clear the pending state. Repeated Stop calls without an active session do not create another review. Hosts keep `ReplayRecordingBar` mounted in every dock view and restore the active replay lesson when review becomes pending. Closing the dock cancels ghost startup as well as an active ghost visit.

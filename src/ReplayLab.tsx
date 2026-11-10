@@ -14,6 +14,8 @@ export type ReplayLabViewState = {
   exercise: "ghost" | "manual";
   recording: readonly unknown[];
   starting: boolean;
+  pendingReview?: boolean;
+  acknowledgeReview?: () => void;
   elapsedMs?: number;
   frames: ReplayFrame[];
   mode: "ghost" | "manual" | null;
@@ -52,17 +54,21 @@ export function ReplayLab({
   const source = replay.exercise;
   const hasVisit = replay.recording.length > 1;
   const previousMode = useRef(replay.mode);
+  const reviewedRecording = useRef<readonly unknown[] | null>(null);
   useEffect(() => {
     if (
-      previousMode.current !== null &&
+      (replay.pendingReview ?? (previousMode.current !== null)) &&
+      reviewedRecording.current !== replay.recording &&
       !replay.mode &&
       hasVisit &&
       stage === 1
     ) {
+      reviewedRecording.current = replay.recording;
+      replay.acknowledgeReview?.();
       onStage(2);
     }
     previousMode.current = replay.mode;
-  }, [replay.mode, hasVisit, stage, onStage]);
+  }, [replay.mode, replay.pendingReview, replay.recording, replay.acknowledgeReview, hasVisit, stage, onStage]);
   if (replay.mode === "ghost" || (replay.starting && source === "ghost")) {
     const latest = [...replay.frames].reverse().find(
       (frame) =>

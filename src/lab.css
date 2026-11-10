@@ -576,13 +576,6 @@
   background: var(--ph-brand-yellow);
   color: var(--ph-neutral-ink);
 }
-.vac-replay-stop {
-  position: fixed;
-  z-index: 10001;
-  left: 50%;
-  bottom: 20px;
-  transform: translateX(-50%);
-}
 .vac-session-canvas { transform-origin: top left; }
 .vac-session-viewport {
   position: relative;

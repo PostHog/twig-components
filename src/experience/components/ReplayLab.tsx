@@ -2,6 +2,7 @@
 import {useExperienceRuntime} from "../Runtime.js";
 
 import { useEffect, useRef, type ReactNode } from "react";
+import { usePlaygroundLab } from "../../PlaygroundController.js";
 import Link from "./TwigNavigation.js";
 import {replayInspectionActivity} from "../lib/twig-inspection.js";
 import { usePathname } from "./TwigNavigation.js";
@@ -38,8 +39,18 @@ const {publishLocalInspectionActivity}=useExperienceRuntime();
   return null;
 }
 
-export function ReplayRecordingBar() {
-  return <SharedReplayRecordingBar replay={useReplay()} />;
+export function ReplayRecordingBar({ onReviewReady }: { onReviewReady?: () => void }) {
+  const replay = useReplay();
+  const { selected, choose, setStage } = usePlaygroundLab();
+  const requestedReview = useRef(false);
+  useEffect(() => {
+    if (!replay.pendingReview) { requestedReview.current = false; return; }
+    if (!onReviewReady || requestedReview.current) return;
+    requestedReview.current = true;
+    if (selected !== "replay") { choose("replay"); setStage(1); }
+    onReviewReady();
+  }, [replay.pendingReview, onReviewReady, selected, choose, setStage]);
+  return <SharedReplayRecordingBar replay={replay} />;
 }
 
 export function ReplayLab({ stage, onStage }: { stage: number; onStage: (stage: number) => void }) {
