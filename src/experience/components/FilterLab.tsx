@@ -276,7 +276,7 @@ const {trackTwigEvent,trackTwigLabCompleted,trackTwigLabMilestone,trackTwigLabSt
           ) : current.lab === "session-replay" ? (
             <ReplayLab key={resetCount} stage={stage} onStage={onStage} />
           ) : current.lab === "error-tracking" ? (
-            <ErrorTrackingLab key={errors.state.revision} stage={stage === 10 && !complete ? 9 : stage} onStage={onStage} />
+            <ErrorTrackingLab key={errors.state.revision} stage={stage === 12 && !complete ? 11 : stage} onStage={onStage} />
           ) : current.lab === "filter-events" ? (
             <FilterLab />
           ) : null}

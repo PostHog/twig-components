@@ -1,35 +1,112 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { PlaygroundStatus } from "./PlaygroundStatus.js";
 import { PlaygroundCodeBlock, codeLanguage } from "./PlaygroundCodeBlock.js";
+import { PlaygroundStatus } from "./PlaygroundStatus.js";
 
-/** The issue identity stays attached to evidence, fixes and verification. */
-export function PlaygroundErrorIssue({ count, resolved = false, children }: { count: number; resolved?: boolean; children?: ReactNode }) {
-  return <section className="vac-error-investigation" aria-label="Issue: Trip host name is missing">
+// Error Tracking evidence in the Playground design system's error investigation pattern:
+// a plain issue header, stack frames as rows, and status words without controls.
+
+const plural = (count: number, noun: string) => `${count.toLocaleString("en-US")} ${noun}${count === 1 ? "" : "s"}`;
+
+/** One line under an evidence frame saying what just happened, like the guide's inspector status. */
+export function PlaygroundEvidenceStatus({ children, tone = "neutral" }: { children: ReactNode; tone?: "neutral" | "error" }) {
+  return <p className="vac-et-status" data-tone={tone} role="status"><span aria-hidden="true" /><span>{children}</span></p>;
+}
+
+export type PlaygroundIssueException = { id: string | number; type: string; message?: string; time?: string };
+
+/** An issue as PostHog's issue page opens it: name, status, totals, then its exceptions, newest first. */
+export function PlaygroundIssuePage({ type, message, status, occurrences, sessions, users, exceptions }: {
+  type: string; message?: string; status: "Active" | "Resolved"; occurrences: number; sessions: number; users: number;
+  exceptions: readonly PlaygroundIssueException[];
+}) {
+  return <section className="vac-et-issue-page" aria-label={`Issue: ${type}`}>
     <header className="vac-error-issue-header">
-      <div><h4>Issue: Trip host name is missing</h4><PlaygroundStatus value={resolved ? "resolved" : "active"} /></div>
-      <p>{count} {count === 1 ? "occurrence" : "occurrences"}</p>
+      <div><h4>{type}</h4><PlaygroundStatus value={status === "Resolved" ? "resolved" : "active"} /></div>
+      <p>{[plural(occurrences, "occurrence"), plural(sessions, "session"), plural(users, "user")].join(" · ")}</p>
     </header>
-    {children && <div className="vac-error-investigation-content">{children}</div>}
+    {message && <code className="vac-error-message vac-et-issue-message">{message}</code>}
+    {/* The design system's event table, newest first: the same rows as the lab's running event list. */}
+    <div className="vac-activity-list">
+      <table className="vac-lab-table" aria-label="Exceptions">
+        <thead><tr><th scope="col">Exception</th><th scope="col">Time</th></tr></thead>
+        <tbody>{[...exceptions].reverse().map((exception) => <tr key={exception.id}>
+          <td><code>{exception.type}</code></td>
+          <td>{exception.time && <time>{exception.time}</time>}</td>
+        </tr>)}</tbody>
+      </table>
+    </div>
   </section>;
 }
 
-/** A frame selects its source; it does not expand or collapse the event. */
-export function PlaygroundStackTrace() {
-  const [selected, setSelected] = useState(0);
-  const frames = [
-    { name: "readTripHost", file: "trip-details.ts", code: "const host = hosts[hostId];\nreturn host.name;", highlight: 2 },
-    { name: "openTripDetails", file: "AccountPages.tsx", code: "readTripHost({}, stay.hostId);", highlight: 1 },
-  ];
-  const frame = frames[selected];
-  return <div className="vac-error-stack-evidence">
-    <h5>Stack trace</h5>
-    <div className="vac-error-stack-frames" role="group" aria-label="Stack frames">
-      {frames.map((frame, index) => <button type="button" key={frame.name} aria-pressed={selected === index} onClick={() => setSelected(index)}>
-        <code>{frame.name}</code><span>{frame.file}</span>
-      </button>)}
-    </div>
-    <PlaygroundCodeBlock label={codeLanguage(frame.file)} code={frame.code} highlightLines={[frame.highlight]} /><small className="vac-source-caption">{frame.file}</small>
-  </div>;
+export type PlaygroundStackFrame = {
+  fn: string;
+  /** A bundle path and position when unresolved; a repository path and position when resolved. */
+  source: string;
+  inApp?: boolean;
+  unresolved?: boolean;
+  /** Source around the failing line. Only resolved frames carry it. */
+  context?: { startLine: number; failingLine: number; lines: readonly string[] };
+};
+
+/** Drops the indentation every line shares, so a nested excerpt keeps its width in a narrow panel. */
+function dedent(lines: readonly string[]) {
+  const indent = Math.min(...lines.filter((line) => line.trim()).map((line) => line.match(/^\s*/)![0].length));
+  return Number.isFinite(indent) ? lines.map((line) => line.slice(indent)) : [...lines];
+}
+
+/** A stack trace as the issue page draws it: innermost first, with unresolved and dependency frames labeled in text. */
+export function PlaygroundStackFrames({ type, message, frames }: { type: string; message?: string; frames: readonly PlaygroundStackFrame[] }) {
+  const [open, setOpen] = useState<number | null>(() => {
+    const first = frames.findIndex((frame) => frame.context);
+    return first === -1 ? null : first;
+  });
+  return <section className="vac-et-frames" aria-label="Stack trace">
+    <header><strong>{type}</strong>{message && <span>{message}</span>}</header>
+    <ul>
+      {frames.map((frame, index) => <li key={`${frame.fn}-${index}`} data-in-app={frame.inApp ? "true" : undefined}>
+        {frame.context
+          ? <button type="button" aria-expanded={open === index} onClick={() => setOpen(open === index ? null : index)}>
+              <span className="vac-et-frame-chevron" aria-hidden="true">{open === index ? "▾" : "▸"}</span>
+              <code>{frame.fn}</code>
+              <span>{frame.source}</span>
+            </button>
+          : <div className="vac-et-frame-static">
+              <code>{frame.fn}</code>
+              <span data-unresolved={frame.unresolved ? "true" : undefined}>{frame.source}</span>
+              {frame.unresolved && <span className="vac-et-frame-note">Unresolved: no source map</span>}
+              {!frame.inApp && !frame.unresolved && <span className="vac-et-frame-note">Dependency code</span>}
+            </div>}
+        {open === index && frame.context && <PlaygroundCodeBlock
+          label={codeLanguage(frame.source.split("@")[0] ?? "")}
+          aria-label={`${frame.fn} source`}
+          code={dedent(frame.context.lines).join("\n")}
+          startLine={frame.context.startLine}
+          highlightLines={[frame.context.failingLine - frame.context.startLine + 1]}
+          copyable={false}
+        />}
+      </li>)}
+    </ul>
+  </section>;
+}
+
+export type PlaygroundIssueRow = { key: string; type: string; message: string; frame?: string; status: "Active" | "Resolved"; occurrences: number };
+
+/** Twig's issue list: one row per issue, with its status and how many exceptions it holds. */
+export function PlaygroundIssueList({ issues }: { issues: readonly PlaygroundIssueRow[] }) {
+  return <section className="vac-et-issues" aria-label="Issues">
+    <div className="vac-et-issues-head" aria-hidden="true"><span>Issue</span><span>Occurrences</span></div>
+    <ul>
+      {issues.map((issue) => <li key={issue.key} aria-label={`Issue: ${issue.type}`}>
+        <div>
+          <strong>{issue.type}</strong>
+          <span>{issue.message}</span>
+          {issue.frame && <small>{issue.frame}</small>}
+          <PlaygroundStatus value={issue.status === "Resolved" ? "resolved" : "active"} />
+        </div>
+        <span className="vac-et-issue-count">{issue.occurrences.toLocaleString("en-US")}</span>
+      </li>)}
+    </ul>
+  </section>;
 }

@@ -382,7 +382,7 @@
 .vac-error-investigation-content { display: grid; gap: 12px; padding: 12px; min-width: 0; }
 .vac-app .vac-developer-theme .vac-error-investigation-content > :is(p,ol,table,.vac-code-block),
 .vac-app .vac-developer-theme .vac-error-investigation-content h5 { margin: 0; }
-.vac-app .vac-developer-theme .vac-error-investigation h5 { font: 600 12px/20px PlaygroundRoundHog, sans-serif; margin: 0; }
+.vac-app .vac-developer-theme :is(.vac-error-investigation, .vac-lab) h5 { font: 600 12px/20px PlaygroundRoundHog, sans-serif; margin: 0; }
 .vac-error-exception-evidence, .vac-error-stack-evidence { display: grid; gap: 12px; min-width: 0; }
 .vac-error-message { display: block; font-size: 12px; overflow-wrap: anywhere; }
 .vac-error-stack-frames { border: 1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); }
@@ -392,6 +392,46 @@
 .vac-app .vac-developer-theme .vac-error-stack-frames button[aria-pressed="true"], .vac-app .vac-developer-theme .vac-error-stack-frames button:hover { background: var(--ph-neutral-accent); }
 .vac-app .vac-developer-theme .vac-error-stack-frames button:focus-visible { outline: 2px solid var(--ph-brand-cobalt); outline-offset: -2px; }
 .vac-error-stack-frames button > span { color: var(--ph-neutral-muted); }
+/* Error Tracking evidence, after the posthog.com Error Tracking pocket guide's figures. */
+.vac-app .vac-developer-theme .vac-et-status { display: flex; align-items: flex-start; gap: 8px; margin: 12px 0; padding: 8px 12px; border-radius: var(--ph-radius-sm); background: var(--ph-neutral-accent); color: var(--ph-neutral-ink); font-size: 13px; line-height: 1.5; }
+.vac-app .vac-developer-theme .vac-et-status > span[aria-hidden="true"] { flex-shrink: 0; width: 6px; height: 6px; margin-top: 7px; border-radius: 50%; background: var(--ph-brand-yellow-darker); }
+.vac-app .vac-developer-theme .vac-et-status[data-tone="error"] > span[aria-hidden="true"] { background: var(--ph-status-failed); }
+.vac-app .vac-developer-theme .vac-et-issue-page { margin: 12px 0; overflow: hidden; border: 1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); background: var(--ph-neutral-white); }
+.vac-app .vac-developer-theme .vac-et-issue-message { padding: 8px 12px; border-bottom: 1px solid var(--ph-neutral-border); }
+.vac-app .vac-developer-theme .vac-et-issue-page .vac-lab-table { margin: 0; border: 0; }
+.vac-app .vac-developer-theme .vac-et-issue-parts { margin: 12px 0; padding-left: 20px; list-style: disc; font-size: 13px; line-height: 20.8px; }
+.vac-app .vac-developer-theme .vac-et-issue-parts li { display: list-item; }
+.vac-app .vac-developer-theme .vac-et-issue-parts li + li { margin-top: 8px; }
+.vac-app .vac-developer-theme .vac-et-issue-parts a { text-decoration: underline; text-underline-offset: 4px; }
+.vac-app .vac-developer-theme .vac-et-frames,
+.vac-app .vac-developer-theme .vac-et-issues { margin: 12px 0; overflow: hidden; border: 1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); background: var(--ph-neutral-white); }
+.vac-app .vac-developer-theme .vac-et-frames header { display: grid; gap: 2px; padding: 8px 12px; border-bottom: 1px solid var(--ph-neutral-border); }
+.vac-app .vac-developer-theme .vac-et-frames header strong { font: 600 13px/1.4 PlaygroundRoundHog, sans-serif; }
+.vac-app .vac-developer-theme .vac-et-frames header span { color: var(--ph-neutral-muted); font-size: 12px; overflow-wrap: anywhere; }
+.vac-app .vac-developer-theme :is(.vac-et-frames, .vac-et-issues) ul { margin: 0; padding: 0; list-style: none; }
+.vac-app .vac-developer-theme .vac-et-frames li + li,
+.vac-app .vac-developer-theme .vac-et-issues li + li { border-top: 1px solid var(--ph-neutral-border); }
+/* Frames follow the design system's stack trace rows: the function, then its file underneath. */
+.vac-app .vac-developer-theme .vac-et-frames :is(button, .vac-et-frame-static) { display: grid; grid-template-columns: 1ch minmax(0, 1fr); gap: 2px 8px; width: 100%; padding: 8px 12px; border: 0; border-radius: 0; background: transparent; color: var(--ph-neutral-ink); text-align: left; font: 400 12px/20px var(--ph-font-code); cursor: pointer; }
+.vac-app .vac-developer-theme .vac-et-frames :is(button, .vac-et-frame-static) > :not(.vac-et-frame-chevron) { grid-column: 2; min-width: 0; }
+.vac-app .vac-developer-theme .vac-et-frames :is(button, .vac-et-frame-static) > span:not(.vac-et-frame-chevron) { color: var(--ph-neutral-muted); font-size: 11px; line-height: 16px; overflow-wrap: anywhere; }
+.vac-app .vac-developer-theme .vac-et-frames button[aria-expanded="true"] { background: var(--ph-neutral-accent); }
+.vac-app .vac-developer-theme .vac-et-frame-chevron { grid-column: 1; grid-row: 1; color: var(--ph-neutral-muted); }
+.vac-app .vac-developer-theme .vac-et-frame-note { font-family: PlaygroundRoundHog, sans-serif; }
+.vac-app .vac-developer-theme .vac-et-issues-head { display: flex; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid var(--ph-neutral-border); background: var(--ph-neutral-background); font: 600 12px/20px PlaygroundRoundHog, sans-serif; }
+.vac-app .vac-developer-theme .vac-et-issues .vac-playground-status { justify-self: start; margin-top: 4px; }
+.vac-app .vac-developer-theme .vac-et-frames .vac-et-frame-static { color: var(--ph-neutral-muted); cursor: default; }
+.vac-app .vac-developer-theme .vac-et-frames button:not(:disabled):hover { background: var(--ph-neutral-accent); }
+.vac-app .vac-developer-theme .vac-et-frames button:focus-visible { outline: 2px solid var(--ph-brand-cobalt); outline-offset: -2px; }
+.vac-app .vac-developer-theme .vac-et-frames :is(button, .vac-et-frame-static) code { font-weight: 400; }
+.vac-app .vac-developer-theme .vac-et-frames li[data-in-app] :is(button, .vac-et-frame-static) code { font-weight: 700; }
+.vac-app .vac-developer-theme .vac-et-frames li > .vac-code-block { margin: 0; border: 0; border-top: 1px solid var(--ph-neutral-border); border-radius: 0; }
+.vac-app .vac-developer-theme .vac-et-issues li { display: flex; align-items: center; gap: 12px; padding: 10px 12px; }
+.vac-app .vac-developer-theme .vac-et-issues li > div { display: grid; gap: 2px; min-width: 0; flex: 1; }
+.vac-app .vac-developer-theme .vac-et-issues strong { display: flex; align-items: center; gap: 6px; font: 600 13px/1.4 PlaygroundRoundHog, sans-serif; }
+.vac-app .vac-developer-theme .vac-et-issues li > div > span { font-size: 12px; overflow-wrap: anywhere; }
+.vac-app .vac-developer-theme .vac-et-issues small { color: var(--ph-neutral-muted); font-size: 11px; font-style: italic; overflow-wrap: anywhere; }
+.vac-app .vac-developer-theme .vac-et-issue-count { min-width: 48px; text-align: center; font-size: 13px; }
 
 
 .vac-ai-fields {
@@ -1236,14 +1276,35 @@
 .vac-app .vac-developer-theme .vac-lab-table-key-value tr > :last-child { width:60%; }
 
 /* Compact Activity/Explore table and EventDetails Properties view from app.posthog.com. */
-.vac-activity-preview { margin: 16px 0; border: 1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); overflow: hidden; background: var(--ph-neutral-white); color: var(--ph-neutral-ink); }
+.vac-activity-preview { container-type: inline-size; margin: 16px 0; border: 1px solid var(--ph-neutral-border); border-radius: var(--ph-radius-sm); overflow: hidden; background: var(--ph-neutral-white); color: var(--ph-neutral-ink); }
 .vac-activity-heading { display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid var(--ph-neutral-border); }
 .vac-activity-heading span { font-size: 12px; color: var(--ph-neutral-muted); border-left: 1px solid var(--ph-neutral-border); padding-left: 12px; }
 .vac-activity-list { max-height: 180px; overflow: auto; }
 .vac-activity-list th:first-child { width: 68%; }
 .vac-activity-list time { white-space: normal; font-variant-numeric: tabular-nums; }
-.vac-app .vac-developer-theme .vac-activity-list button { display: flex; align-items: flex-start; gap: 4px; padding: 0; width: 100%; border: none; background: none; color: inherit; text-align: left; font-size: inherit; }
+.vac-activity-list tr[data-new] > td { animation: vac-activity-new 1.2s ease-out; }
+.vac-app .vac-developer-theme .vac-activity-number { margin-left: auto; color: var(--ph-neutral-muted); font: 11px/1.6 var(--ph-font-code); }
+/* An inset shadow, not background-color: Chrome composites background-color animations and can leave the last frame painted. */
+@keyframes vac-activity-new { from { box-shadow: inset 0 0 0 100vmax var(--ph-highlight); } to { box-shadow: inset 0 0 0 100vmax transparent; } }
+@media (prefers-reduced-motion: reduce) { .vac-activity-list tr[data-new] > td { animation: none; } }
+.vac-app .vac-developer-theme .vac-activity-list :is(button, .vac-activity-event) { display: flex; align-items: flex-start; gap: 4px; padding: 0; width: 100%; border: none; background: none; color: inherit; text-align: left; font-size: inherit; }
 .vac-activity-list .is-selected { background: var(--ph-neutral-accent); }
+.vac-app .vac-developer-theme .vac-activity-compact { margin: 12px 0; }
+.vac-app .vac-developer-theme .vac-activity-compact .vac-activity-heading { padding: 8px 12px; font-size: 13px; }
+.vac-app .vac-developer-theme .vac-activity-compact .vac-activity-list { max-height: 116px; }
+.vac-app .vac-developer-theme .vac-activity-compact .vac-activity-detail { max-height: 150px; overflow-y: auto; }
+.vac-app .vac-developer-theme .vac-activity-compact .vac-activity-property-heading { padding: 6px 12px; }
+.vac-app .vac-developer-theme .vac-activity-compact .vac-lab-table :is(th, td) { padding: 4px 10px; font-size: 12px; line-height: 1.5; }
+.vac-app .vac-developer-theme .vac-activity-compact .vac-lab-table-key-value td:first-child { white-space: nowrap; overflow-wrap: normal; }
+/* In a narrow panel each property sits above its value, so names don't break mid-word. */
+@container (max-width: 420px) {
+  .vac-app .vac-developer-theme .vac-activity-detail .vac-lab-table-key-value :is(table, tbody, tr, td) { display: block; width: auto; }
+  .vac-app .vac-developer-theme .vac-activity-detail .vac-lab-table-key-value thead { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); }
+  .vac-app .vac-developer-theme .vac-activity-detail .vac-lab-table-key-value tr { padding: 4px 0; border-bottom: 1px solid var(--ph-neutral-border); }
+  .vac-app .vac-developer-theme .vac-activity-detail .vac-lab-table-key-value tbody tr:last-child { border-bottom: 0; }
+  .vac-app .vac-developer-theme .vac-activity-detail .vac-lab-table-key-value td { padding: 0 12px; border-bottom: 0; }
+  .vac-app .vac-developer-theme .vac-activity-detail .vac-lab-table-key-value td:first-child { color: var(--ph-neutral-muted); white-space: normal; overflow-wrap: anywhere; }
+}
 .vac-activity-property-heading { padding: 10px 12px; border-bottom: 2px solid var(--ph-brand-cobalt); font-size: 12px; font-weight: 600; width: fit-content; }
 
 .vac-save-insight { margin: 20px 0; }
@@ -1615,7 +1676,7 @@ details[open] > summary .vac-disclosure-icon:not([data-expanded]) > .vac-disclos
 .vac-app .vac-developer-theme .vac-code-block pre > code { display:block; padding:0; border:0; background:none; color:inherit; font:inherit; white-space:normal; }
 .vac-code-line { display:flex; min-width:0; padding:0 12px; white-space:pre-wrap; overflow-wrap:anywhere; }
 .vac-code-line[data-highlighted="true"] { background:var(--ph-code-line-highlight); }
-.vac-code-number { flex:none; width:18px; margin-right:12px; color:var(--ph-neutral-muted); user-select:none; }
+.vac-code-number { flex:none; width:max(18px, calc(var(--vac-code-digits, 2) * 1ch)); margin-right:12px; color:var(--ph-neutral-muted); text-align:right; white-space:nowrap; user-select:none; }
 .vac-code-text { flex:1; min-width:0; white-space:pre-wrap; overflow-wrap:anywhere; }
 .vac-tooltip-control { position:relative; display:inline-flex; min-width:0; align-items:center; }
 .vac-control-tooltip { position:absolute; bottom:calc(100% + 8px); right:0; z-index:12; max-width:min(260px,calc(100vw - 32px)); padding:6px 8px; border:1px solid var(--ph-neutral-border); border-radius:var(--ph-radius-sm); background:var(--ph-neutral-background); color:var(--ph-neutral-ink); font:400 12px/20.4px PlaygroundRoundHog,sans-serif; white-space:nowrap; pointer-events:none; }
@@ -1659,7 +1720,7 @@ details[open] > summary .vac-disclosure-icon:not([data-expanded]) > .vac-disclos
 .vac-app .vac-developer-theme .vac-mcp-send:disabled { opacity:.4; background:transparent; box-shadow:none; }
 @media(prefers-reduced-motion:reduce) { .vac-app .vac-developer-theme code.vac-wizard-gradient { animation:none; } .vac-app .vac-developer-theme .vac-wizard-copy { transition:none; } }
 .vac-code-number::before { content:attr(data-line); }
-.vac-code-indent { flex:none; white-space:pre; }
+.vac-code-indent { flex:0 1 auto; max-width:30%; overflow:hidden; white-space:pre; }
 
 /* Approved AI evidence: connected, flat surfaces and readable UI typography.
    Chromatic status colors are fixed brand.posthog.com/catalog.json colors. */
@@ -1679,7 +1740,7 @@ details[open] > summary .vac-disclosure-icon:not([data-expanded]) > .vac-disclos
   font: 500 12px/1.4 "PlaygroundRoundHog", sans-serif;
 }
 .vac-app .vac-developer-theme .vac-playground-status[data-status="running"] { color: var(--ph-status-running); }
-.vac-app .vac-developer-theme .vac-playground-status:is([data-status="failed"], [data-status="active"]) { color: var(--ph-status-failed); }
+.vac-app .vac-developer-theme .vac-playground-status:is([data-status="failed"], [data-status="active"], [data-status="caught"]) { color: var(--ph-status-failed); }
 .vac-app .vac-developer-theme .vac-playground-status:is([data-status="passed"], [data-status="resolved"]) { color: var(--ph-status-passed); }
 .vac-app .vac-developer-theme :is(.vac-ai-evaluation, .vac-ai-tool-call, .vac-ai-trace-tree, .vac-ai-generation-surface) {
   min-width: 0;

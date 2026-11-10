@@ -42,11 +42,11 @@ const recaps: Record<TouchpointId, { title: string; points: string[] }> = {
     ],
   },
   errors: {
-    title: "You traced the trip-details error, repaired Twig's host lookup, and resolved the example issue.",
+    title: "You captured Twig's trip-details exception, fixed the host lookup, and resolved the issue.",
     points: [
-      "Used the exception and stack trace to find where Twig failed.",
-      "Used the stay ID to inspect the broken host lookup.",
-      "Saw the host name return without adding a new exception.",
+      "Saw autocapture catch an uncaught error, then sent a caught one with captureException.",
+      "Read the stack trace and grouped missing hosts with a fingerprint.",
+      "Dropped browser noise in before_send and saw the IDs that join exceptions to other data.",
     ],
   },
 };

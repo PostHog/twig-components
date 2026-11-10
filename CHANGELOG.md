@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.7](https://github.com/PostHog/twig-components/compare/v0.2.6...v0.2.7) (2026-11-05)
+
+
+### Features
+
+* rebuild the Error Tracking lab around real exceptions ([34ce7f1](https://github.com/PostHog/twig-components/commit/34ce7f1356504a84ac6c1a6345a1f0dd86bd5dde))
+
 ## [0.2.6](https://github.com/PostHog/twig-components/compare/v0.2.5...v0.2.6) (2026-11-04)
 
 

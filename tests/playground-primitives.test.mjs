@@ -27,6 +27,13 @@ test('code highlighting preserves exact multiline code and joins highlighted lin
  assert.equal(dom.window.document.querySelector('.vac-code-header').textContent,'JavaScript');dom.window.close();
 });
 
+test('a code block sizes its line-number gutter to the widest number and can hide copy',()=>{
+ const doc=new JSDOM(renderToStaticMarkup(h(PlaygroundCodeBlock,{code:'a\nb\nc',lineNumbers:true,startLine:98,copyable:false}))).window.document;
+ assert.equal(doc.querySelector('.vac-code-block').getAttribute('style'),'--vac-code-digits:3');
+ assert.equal(doc.querySelector('.vac-code-copy'),null);
+ assert.ok(new JSDOM(renderToStaticMarkup(h(PlaygroundCodeBlock,{code:'a'}))).window.document.querySelector('.vac-code-copy'));
+});
+
 test('copy feedback expires without changing the code or replacing its copy icon',async t=>{
  const value='const stay = "Forest";';let copied;
  await mount(t,h(CopyControl,{text:value}));navigator.clipboard.writeText=async value=>{copied=value};
