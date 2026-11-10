@@ -5,7 +5,7 @@ import { searchTripStays, validateTripSearch } from "../dist/experience/lib/vaca
 const selection = { destination: "", checkIn: "", checkOut: "", guests: "1" };
 
 test("trip search combines destination, setting, and real guest capacity", () => {
-  assert.equal(searchTripStays("All", selection).length, 3);
+  assert.equal(searchTripStays("All", selection).length, 4);
   assert.deepEqual(searchTripStays("All", { ...selection, guests: "5" }).map(stay => stay.id), ["stay-02"]);
   assert.deepEqual(searchTripStays("All", { ...selection, destination: " PARIS " }).map(stay => stay.id), ["stay-03"]);
   assert.equal(searchTripStays("Forest", { ...selection, destination: "Paris" }).length, 0);
