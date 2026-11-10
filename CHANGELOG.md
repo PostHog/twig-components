@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.8](https://github.com/PostHog/twig-components/compare/v0.2.7...v0.2.8) (2026-11-10)
+
+
+### Bug Fixes
+
+* recover recordings after leaving the replay lesson ([#47](https://github.com/PostHog/twig-components/issues/47)) ([e8fd28b](https://github.com/PostHog/twig-components/commit/e8fd28baf3b41c17f4c9a824dd467b59f377c6d5))
+
 ## [0.2.7](https://github.com/PostHog/twig-components/compare/v0.2.6...v0.2.7) (2026-11-05)
 
 
