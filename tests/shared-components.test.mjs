@@ -379,10 +379,10 @@ test("shared catalog keeps filter results and stay cards consistent", async () =
   const { StayCardContent } = await import(
     "@posthog/twig-components/stay-card"
   );
-  assert.equal(filterStays("All").length, 3);
+  assert.equal(filterStays("All").length, 4);
   assert.equal(filterStays("Forest").length, 1);
   assert.equal(filterStays("Coast").length, 1);
-  assert.equal(filterStays("City").length, 1);
+  assert.equal(filterStays("City").length, 2);
   assert.equal(filterStays("City")[0].hostId, "colette");
   assert.equal(filterStays("All", "Paris")[0].id, "stay-03");
   assert.equal(filterStays("All", "Adiron")[0].id, "stay-01");

@@ -79,6 +79,18 @@ export const characters: readonly CharacterContent[] = [
       "Sarah's character direction: Colette is a Eurasian magpie from Paris, impossibly chic and effortlessly cool. Her voice is spare, self-assured, and fashion-forward. Keep practical stay details clear and avoid making her sound impressed with herself.",
     approvedExamples: [],
   },
+  {
+    id: "frankie",
+    revision: "2026-11-10",
+    name: "Frankie",
+    species: "Rock pigeon",
+    portrait: null,
+    biography:
+      "Born on this roof. Raised on bagel crumbs. I was into this neighborhood before it had a cold brew place on every corner, and I'll still be here when they're gone. Two bedrooms, room for four, and the best damn sunset in Brooklyn. Don't feed the other pigeons. They're not with me.",
+    voiceGuidance:
+      "Sarah's character direction: Frankie is a Brooklyn rock pigeon and a hipster, one of the cool ones. Born on the roof of this brownstone and unbothered by everything. Talks fast, means well, swears casually, and has opinions about your pizza order. Keep practical stay details clear.",
+    approvedExamples: [],
+  },
 ];
 
 export const conciergeContent = {
@@ -220,6 +232,27 @@ export const stays: readonly Stay[] = [
           "https://unsplash.com/photos/a-bed-with-pillows-and-a-book-on-it-GmCI4X9Kz4s",
       },
     ],
+  },
+  {
+    id: "stay-04",
+    hostId: "frankie",
+    setting: "City",
+    title: "The Coop",
+    location: "Brooklyn, New York",
+    accommodationType: "Rooftop brownstone apartment",
+    vibe: "Four flights up. Worth every one.",
+    description:
+      "The Coop sits at the top of a Brooklyn brownstone, four flights up. Two queen bedrooms sleep four, and there's a full kitchen and a washer for longer stays. The roof deck looks out at the Manhattan skyline, which Frankie considers his. The subway is two blocks away and the bodega cat runs the corner.",
+    nightlyRate: 260,
+    currency: "USD",
+    capacity: 4,
+    bedrooms: 2,
+    bathrooms: 1,
+    sleepingArrangements: ["Queen bed", "Queen bed"],
+    amenities: ["Roof deck", "Full kitchen", "Washer", "Wi-Fi"],
+    cancellationPolicy: null,
+    // TODO before merging: add licensed photos (Unsplash, with credit and creditUrl like the other stays).
+    images: [],
   },
 ];
 
