@@ -110,7 +110,7 @@ export function TripPlannerFailure({ stays, renderStayCard, onEvaluate }: { stay
         <LabChecklist label="Next chat action" items={[{ done: false, label: <>Send <strong>“Find me a city stay for four.”</strong> in the highlighted AI trip planner.</> }]} />
         <div className="vac-trip-mobile-hint"><LabChecklist label="Return to the lab" items={[{ label: <>Tap <strong>Playground</strong> in the chat to return here.</>, done: false }]} /></div>
       </> : <>
-        <p>Twig searched with <code>guests: 4</code> and found no matching listings. PostHog shows those results in the new search span:</p>
+        <p>The new search span shows the <code>guests: 4</code> filter and its results.</p>
         <div className="vac-ai-tool-call"><div className="vac-ai-evaluation-header"><strong>Tool call: Search stays</strong></div>
           <table className="vac-lab-table vac-lab-table-key-value" aria-label="Corrected catalog search filters and results">
             <thead><tr><th scope="col">Property</th><th scope="col">Value</th></tr></thead><tbody>
@@ -118,7 +118,7 @@ export function TripPlannerFailure({ stays, renderStayCard, onEvaluate }: { stay
               <tr><td>Results</td><td>{correctedLookup?.$ai_output_state.length ? correctedLookup.$ai_output_state.map(stay => <div key={stay.id}>{stay.name} · {stay.capacity} guests</div>) : "No matches"}</td></tr>
             </tbody></table>
         </div>
-        <p>Twig passes the empty results to the model. PostHog shows the model’s response in the new generation:</p>
+        <p>Twig passes those results to the model, and the new generation shows its response.</p>
         <TripPlannerFailureTrace record={after} />
         {action("Evaluate the answer →", () => dispatch({ type: "next" }))}
       </>}
