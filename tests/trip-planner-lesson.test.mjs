@@ -189,7 +189,7 @@ test("investigation pages preserve evidence and only unlock chat on the retry pa
   assert.equal(reduce(state, { type: "next" }), state);
   state = reduce(state, { type: "run-evaluation" });
   assert.equal(state.afterEvaluation.result, "pass");
-  assert.match(state.afterEvaluation.reason, /does not mean a matching stay was found/);
+  assert.equal(state.afterEvaluation.reason, "The Coop sleeps 4, enough for 4.");
   assert.equal(state.beforeEvaluation.result, "fail");
   state = reduce(state, { type: "next" });
   assert.equal(state.step, 5);

@@ -5,10 +5,10 @@ import { initialTripPlannerState, tripPlannerPrompts } from "./trip-planner.js";
 
 /** Versioned local teaching data. No PostHog dataset, judge, or upload is created. */
 export const plannerRegressionDataset = {
-  id: "twig-recommendations", version: 1,
+  id: "twig-recommendations", version: 2,
   cases: [
     { id: "forest-four", input: tripPlannerPrompts.forest, expected: "supported" },
-    { id: "city-four", input: capacityPrompt, expected: "no-match" },
+    { id: "city-four", input: capacityPrompt, expected: "supported" },
     { id: "unknown-capacity", input: capacityPrompt, expected: "not-applicable" },
   ],
 } as const;

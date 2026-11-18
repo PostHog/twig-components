@@ -28,9 +28,11 @@ test('missing guest filter produces an undersized recommendation without a model
 test('fix really filters catalog matches instead of merely replacing the answer or evaluation', () => {
   const after = request(true);
   assert.deepEqual(after.record.capacityEvidence.lookup.properties.$ai_input_state, {setting: 'City', guests: 4});
-  assert.deepEqual(after.record.capacityEvidence.lookup.properties.$ai_output_state, []);
-  assert.equal(after.state.selectedStayId, null);
-  assert.match(after.state.turns[0].reply, /isn’t a city stay for four/);
+  assert.deepEqual(after.record.capacityEvidence.lookup.properties.$ai_output_state, [
+    { id: 'stay-04', name: 'The Coop', capacity: 4 },
+  ]);
+  assert.equal(after.state.selectedStayId, 'stay-04');
+  assert.match(after.state.turns[0].reply, /The Coop/);
   assert.equal(after.record.capacityEvidence.evaluation.result, 'pass');
   // A changed catalog must produce a matching recommendation instead of a hardcoded refusal.
   const largerCity = stays.map(stay => stay.id === 'stay-03' ? {...stay, capacity: 5} : stay);
@@ -38,6 +40,11 @@ test('fix really filters catalog matches instead of merely replacing the answer 
   assert.equal(changed.state.selectedStayId, 'stay-03');
   assert.equal(changed.record.capacityEvidence.lookup.properties.$ai_output_state[0].capacity, 5);
   assert.equal(changed.record.capacityEvidence.evaluation.result, 'pass');
+  const noMatch = request(true, stays.filter(stay => stay.id !== 'stay-04'));
+  assert.deepEqual(noMatch.record.capacityEvidence.lookup.properties.$ai_output_state, []);
+  assert.equal(noMatch.state.selectedStayId, null);
+  assert.match(noMatch.state.turns[0].reply, /isn’t a city stay for four/);
+  assert.equal(noMatch.record.capacityEvidence.evaluation.result, 'pass');
   assert.equal(stays.find(stay => stay.id === 'stay-03').capacity, 2);
   assert.equal(evaluateCapacity({id:'unknown', name:'Unknown', capacity:null}, 4).result, 'not-applicable');
 });

@@ -590,9 +590,9 @@ function PlaygroundControlsPreview() {
     <div className="vac-ai-evidence-stack">
       {(["ready", "running", "failed", "passed", "active", "resolved"] as const).map(value => <PlaygroundStatus key={value} value={value} />)}
       <PlaygroundTraceExplorer traces={[{id:"fixture",title:"City stay for four",toolCall:"Search stays",generation:"Recommend a city stay"}]} />
-      <PlaygroundGeneration input={[{role:"user",content:"Find me a city stay for four."}]} output={[{role:"assistant",content:"No city stays match your group of four."}]} facts={[{label:"Model",value:"Claude Haiku 4.5"},{label:"Duration",value:"1.1s"}]} />
+      <PlaygroundGeneration input={[{role:"user",content:"Find me a city stay for four."}]} output={[{role:"assistant",content:"The Coop is my recommendation for your city getaway for four."}]} facts={[{label:"Model",value:"Claude Haiku 4.5"},{label:"Duration",value:"1.1s"}]} />
       <PlaygroundEvaluation status="failed" expected="4+ guests or no match" observed="Le Nid Chic · 2 guests" />
-      <PlaygroundEvaluation status="passed" expected="4+ guests or no match" observed="No stay recommended" />
+      <PlaygroundEvaluation status="passed" expected="4+ guests or no match" observed="The Coop · 4 guests" />
     </div>
     <LabChoices label="Break down by" value={choice} onChange={setChoice} options={["Setting","Price per night","Capacity"].map(value=>({value,label:value}))} />
     <PlaygroundCodeBlock code={'posthog.capture(\n  "twig_stay_filter_selected",\n  { setting: "Forest" }\n);'} highlightLines={[2,3]} />

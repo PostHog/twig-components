@@ -8,6 +8,7 @@ test("the fixed lookup improves the same versioned dataset without counting skip
  const before = runPlannerRegression(stays, identity("before"), "before");
  const after = runPlannerRegression(stays, identity("after"), "after");
  assert.equal(before.datasetVersion, plannerRegressionDataset.version);
+ assert.equal(after.datasetVersion, before.datasetVersion);
  assert.equal(before.scorerVersion, after.scorerVersion);
  assert.deepEqual(before.items.map(i=>i.caseId), after.items.map(i=>i.caseId));
  assert.equal(before.passRate, 0.5);
@@ -20,7 +21,9 @@ test("the fixed lookup improves the same versioned dataset without counting skip
  assert.equal(cityBefore.score.numeric, 0);
  assert.equal(cityBefore.score.category, "capacity-mismatch");
  assert.equal(cityAfter.score.numeric, plannerCapacityScorer.passingScore);
- assert.equal(cityAfter.score.category, "no-match");
+ assert.equal(cityAfter.expected, "supported");
+ assert.equal(cityAfter.score.category, cityAfter.expected);
+ assert.equal(cityAfter.record.properties.selected_stay_id, "stay-04");
  assert.equal(cityAfter.record.properties.tool_config_version, "capacity-v2");
  assert.equal(cityBefore.record.properties.tool_config_version, "capacity-v1");
  // The fix changes the tool filter, not the model prompt.
